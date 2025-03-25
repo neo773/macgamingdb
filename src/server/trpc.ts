@@ -1,17 +1,21 @@
-import { initTRPC } from '@trpc/server';
-import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
-import prisma from '@/lib/prisma';
-import superjson from 'superjson';
+import { initTRPC } from "@trpc/server";
+import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import prisma from "@/lib/prisma";
+import superjson from "superjson";
 
 // Create context interface that can be used on both server and client
 export interface TrpcContext {
-  headers?: Record<string, string | string[]>;
-  cookies?: Record<string, string>;
   prisma: typeof prisma;
 }
 
 export const createTRPCContext = async (
-  opts: FetchCreateContextFnOptions | { headers?: Record<string, string | string[]>; cookies?: Record<string, string> } = {}
+  opts:
+    | FetchCreateContextFnOptions
+    | {
+        prisma: typeof prisma;
+      } = {
+    prisma,
+  }
 ): Promise<TrpcContext> => {
   return {
     prisma,
@@ -24,4 +28,4 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 });
 
 export const router = t.router;
-export const procedure = t.procedure; 
+export const procedure = t.procedure;

@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description: "Database of games for Mac",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // Forward headers from the browser to the API
-  const headersList = headers();
+  const headersList = await headers();
   const headersObj: Record<string, string> = {};
   
   headersList.forEach((value, key) => {
