@@ -1,14 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { SteamGame } from '@/lib/algolia';
+import { useState } from 'react';
 import { trpc } from '@/lib/trpc/provider';
+import { useRouter } from 'next/navigation';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogClose
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-export default function AddReviewPage({ params }: { params: { id: string } }) {
-  const id = params.id;
+type AddReviewDialogProps = {
+  gameId: string;
+  gameName: string;
+};
+
+export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   
@@ -26,25 +41,14 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
     userId: 'user-' + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
   });
   
-  // Fetch game data using tRPC query
-  const { data: gameData, isLoading } = trpc.game.getById.useQuery(
-    { id },
-    { 
-      retry: 1,
-      // onError(err) {
-      //   setError('Error loading game details. Please try again.');
-      //   console.error(err);
-      // }
-    }
-  );
-  
   // Create review mutation
   const createReviewMutation = trpc.review.create.useMutation({
     onSuccess: () => {
       setSuccess(true);
-      // Redirect after successful submission
+      // Refresh the page after successful submission
       setTimeout(() => {
-        router.push(`/games/${id}`);
+        setOpen(false);
+        router.refresh();
       }, 2000);
     },
     onError: (error) => {
@@ -70,7 +74,7 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
       // Only include translationLayer if method is CROSSOVER
       const reviewData = {
         ...formData,
-        gameId: id,
+        gameId,
         fps: formData.fps ? parseInt(formData.fps) : null,
         translationLayer: formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null
       };
@@ -82,43 +86,19 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
       console.error(error);
     }
   };
-  
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8 flex justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-      </div>
-    );
-  }
-  
-  if (!gameData?.game) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p>Game not found. Please try again or return to the home page.</p>
-          <Link href="/" className="text-blue-500 hover:underline mt-2 inline-block">
-            Return to Home
-          </Link>
-        </div>
-      </div>
-    );
-  }
-  
-  const gameDetails = gameData.game;
-  
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Link 
-          href={`/games/${id}`} 
-          className="text-blue-500 hover:text-blue-700 inline-flex items-center"
-        >
-          ← Back to game details
-        </Link>
-      </div>
-      
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-        <h1 className="text-2xl font-bold mb-4">Add Experience for {gameDetails.name}</h1>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>Add Experience Report</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Add Experience for {gameName}</DialogTitle>
+          <DialogDescription>
+            Share your experience running this game on your Mac.
+          </DialogDescription>
+        </DialogHeader>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -128,14 +108,14 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
         
         {success && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            Your review has been submitted successfully! Redirecting...
+            Your review has been submitted successfully!
           </div>
         )}
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">Play Method</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Play Method</label>
               <select
                 name="playMethod"
                 value={formData.playMethod}
@@ -151,8 +131,8 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
             </div>
             
             {formData.playMethod === 'CROSSOVER' && (
-              <div>
-                <label className="block text-sm font-medium mb-1">Translation Layer</label>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Translation Layer</label>
                 <select
                   name="translationLayer"
                   value={formData.translationLayer}
@@ -167,8 +147,8 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
               </div>
             )}
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Performance Rating</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Performance Rating</label>
               <select
                 name="performance"
                 value={formData.performance}
@@ -184,20 +164,19 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
               </select>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">FPS (optional)</label>
-              <input
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">FPS (optional)</label>
+              <Input
                 type="number"
                 name="fps"
                 value={formData.fps}
                 onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 placeholder="e.g. 60"
               />
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Graphics Settings</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Graphics Settings</label>
               <select
                 name="graphicsSettings"
                 value={formData.graphicsSettings}
@@ -211,20 +190,19 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
               </select>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Resolution (optional)</label>
-              <input
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Resolution (optional)</label>
+              <Input
                 type="text"
                 name="resolution"
                 value={formData.resolution}
                 onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 placeholder="e.g. 1920x1080"
               />
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Chipset</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Chipset</label>
               <select
                 name="chipset"
                 value={formData.chipset}
@@ -238,8 +216,8 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
               </select>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Chipset Variant</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Chipset Variant</label>
               <select
                 name="chipsetVariant"
                 value={formData.chipsetVariant}
@@ -255,8 +233,8 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium mb-1">Notes (optional)</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium">Notes (optional)</label>
             <textarea
               name="notes"
               value={formData.notes}
@@ -266,19 +244,21 @@ export default function AddReviewPage({ params }: { params: { id: string } }) {
             />
           </div>
           
-          <div className="flex justify-end">
-            <button
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" type="button" disabled={isSubmitting}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button 
               type="submit"
               disabled={isSubmitting || success}
-              className={`px-4 py-2 rounded bg-blue-500 text-white ${
-                (isSubmitting || success) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-              }`}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Review'}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 } 

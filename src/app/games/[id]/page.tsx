@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createServerHelpers } from '@/lib/trpc/server';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
+import AddReviewDialog from './AddReviewDialog';
 
 // Generate metadata for SEO
 export async function generateMetadata(
@@ -64,12 +65,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
               
               
               <div className="mt-6">
-                <Link 
-                  href={`/games/${id}/add-review`}
-                  className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                >
-                  Add Experience Report
-                </Link>
+                <AddReviewDialog gameId={id} gameName={game.name} />
               </div>
             </div>
           </div>
@@ -179,12 +175,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
           ) : (
             <div className="text-center py-8">
               <p className="text-gray-600 dark:text-gray-400 mb-4">No experience reports yet</p>
-              <Link 
-                href={`/games/${id}/add-review`}
-                className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-              >
-                Add the First Report
-              </Link>
+              <AddReviewDialog gameId={id} gameName={game.name} />
             </div>
           )}
         </div>
