@@ -4,50 +4,56 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SteamGame } from '@/lib/algolia';
+import { trpc } from '@/lib/trpc/provider';
 
-export default async function AddReviewPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default function AddReviewPage({ params }: { params: { id: string } }) {
+  const id = params.id;
   const router = useRouter();
-  const [gameDetails, setGameDetails] = useState<SteamGame | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   
   // Form state
   const [formData, setFormData] = useState({
-    playMethod: 'CROSSOVER',
-    translationLayer: 'DXVK',
-    performance: 'GOOD',
+    playMethod: 'CROSSOVER' as const,
+    translationLayer: 'DXVK' as const,
+    performance: 'GOOD' as const,
     fps: '',
-    graphicsSettings: 'HIGH',
+    graphicsSettings: 'HIGH' as const,
     resolution: '',
-    chipset: 'M1',
-    chipsetVariant: 'BASE',
+    chipset: 'M1' as const,
+    chipsetVariant: 'BASE' as const,
     notes: '',
     userId: 'user-' + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
   });
   
-  // Fetch game details
-  useEffect(() => {
-    async function fetchGameDetails() {
-      try {
-        const res = await fetch(`/api/games/${id}`);
-        if (!res.ok) {
-          throw new Error('Failed to fetch game details');
-        }
-        const data = await res.json();
-        setGameDetails(data.game);
-      } catch (error) {
-        setError('Error loading game details. Please try again.');
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
+  // Fetch game data using tRPC query
+  const { data: gameData, isLoading } = trpc.game.getById.useQuery(
+    { id },
+    { 
+      retry: 1,
+      // onError(err) {
+      //   setError('Error loading game details. Please try again.');
+      //   console.error(err);
+      // }
     }
-    
-    fetchGameDetails();
-  }, [id]);
+  );
+  
+  // Create review mutation
+  const createReviewMutation = trpc.review.create.useMutation({
+    onSuccess: () => {
+      setSuccess(true);
+      // Redirect after successful submission
+      setTimeout(() => {
+        router.push(`/games/${id}`);
+      }, 2000);
+    },
+    onError: (error) => {
+      setError('Error submitting review. Please try again.');
+      console.error(error);
+    }
+  });
+  
+  const isSubmitting = createReviewMutation.isPending;
   
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -58,7 +64,6 @@ export default async function AddReviewPage({ params }: { params: Promise<{ id: 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError(null);
     
     try {
@@ -70,31 +75,11 @@ export default async function AddReviewPage({ params }: { params: Promise<{ id: 
         translationLayer: formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null
       };
       
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reviewData),
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to submit review');
-      }
-      
-      setSuccess(true);
-      
-      // Redirect after successful submission
-      setTimeout(() => {
-        router.push(`/games/${id}`);
-      }, 2000);
+      createReviewMutation.mutate(reviewData);
       
     } catch (error) {
       setError('Error submitting review. Please try again.');
       console.error(error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
   
@@ -106,7 +91,7 @@ export default async function AddReviewPage({ params }: { params: Promise<{ id: 
     );
   }
   
-  if (!gameDetails) {
+  if (!gameData?.game) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
@@ -118,6 +103,8 @@ export default async function AddReviewPage({ params }: { params: Promise<{ id: 
       </div>
     );
   }
+  
+  const gameDetails = gameData.game;
   
   return (
     <div className="container mx-auto px-4 py-8">

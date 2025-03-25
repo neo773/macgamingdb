@@ -5,45 +5,29 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { SteamGame } from '@/lib/algolia';
+import { trpc } from '@/lib/trpc/provider';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SteamGame[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Handle search
-  const handleSearch = useCallback(
-    async (searchQuery: string) => {
-      if (!searchQuery.trim()) {
-        setResults([]);
-        return;
-      }
-
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/games/search?q=${encodeURIComponent(searchQuery)}`);
-        const data = await response.json();
-        setResults(data.games || []);
-      } catch (error) {
-        console.error('Search error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    []
+  const { data, isLoading } = trpc.game.search.useQuery(
+    { query: query },
+    { 
+      enabled: query.trim().length > 0,
+      placeholderData: (prev) => prev,
+    }
   );
 
-  // Debounce search
+  // Update results when data changes
   useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      if (query) handleSearch(query);
-    }, 300);
-
-    return () => clearTimeout(debounceTimer);
-  }, [query, handleSearch]);
+    if (data) {
+      setResults(data.games || []);
+    }
+  }, [data]);
 
   // Handle click outside to close results
   useEffect(() => {

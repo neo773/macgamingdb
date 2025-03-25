@@ -1,58 +1,48 @@
-import { SteamGame } from '@/lib/algolia';
-import { Prisma } from '@prisma/client';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { trpc } from '@/lib/trpc/provider';
 
-// Type for combined game data from API
-type GameDetails = {
-  game: SteamGame;
-  reviews: any[];
-  stats: {
-    totalReviews: number;
-    methods: {
-      native: number;
-      crossover: number;
-      parallels: number;
-      other: number;
-    };
-    averagePerformance: number;
-    translationLayers: Record<string, { count: number; averagePerformance: number }>;
-  } | null;
-};
+export default function GamePage({ params }: { params: { id: string } }) {
+  const id = params.id;
+  const [error, setError] = useState<string | null>(null);
 
-// Convert performance number to rating text
-function performanceToText(rating: number): string {
-  if (rating >= 3.5) return 'Excellent';
-  if (rating >= 2.5) return 'Good';
-  if (rating >= 1.5) return 'Playable';
-  if (rating >= 0.5) return 'Barely Playable';
-  return 'Unplayable';
-}
+  // Fetch game data using tRPC
+  const { data, isLoading } = trpc.game.getById.useQuery(
+    { id },
+    { 
+      retry: 1,
+      onError(err) {
+        setError('Error loading game details. Please try again.');
+        console.error(err);
+      }
+    }
+  );
 
-// Get color class based on performance rating
-function getPerformanceColorClass(rating: number): string {
-  if (rating >= 3.5) return 'text-green-500';
-  if (rating >= 2.5) return 'text-lime-500';
-  if (rating >= 1.5) return 'text-yellow-500';
-  if (rating >= 0.5) return 'text-orange-500';
-  return 'text-red-500';
-}
-
-async function getGameDetails(id: string): Promise<GameDetails> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/games/${id}`, { 
-    cache: 'no-store' 
-  });
-  
-  if (!res.ok) {
-    throw new Error('Failed to fetch game details');
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
   }
-  
-  return res.json();
-}
 
-export default async function GamePage({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const gameData = await getGameDetails(id);
-  
+  if (error || !data) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>{error || 'Failed to load game details'}</p>
+          <Link href="/" className="text-blue-500 hover:underline mt-2 inline-block">
+            Return to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const { game, reviews, stats } = data;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -64,170 +54,144 @@ export default async function GamePage({ params }: { params: { id: string } }) {
         </Link>
       </div>
       
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-        <h1 className="text-3xl font-bold mb-2">{gameData.game.name}</h1>
-        
-        <div className="flex flex-wrap gap-2 mb-4">
-          {gameData.game.tags?.slice(0, 5).map((tag, index) => (
-            <span 
-              key={index} 
-              className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Game Details</h2>
-            <div className="space-y-2">
-              <p><span className="font-medium">Release Year:</span> {gameData.game.releaseYear || 'Unknown'}</p>
-              <p><span className="font-medium">Steam ID:</span> {gameData.game.objectID}</p>
-              <p><span className="font-medium">User Score:</span> {gameData.game.userScore ? `${gameData.game.userScore.toFixed(1)}/10` : 'N/A'}</p>
-              <p>
-                <span className="font-medium">Platforms:</span>{' '}
-                {gameData.game.oslist?.join(', ') || 'Unknown'}
-              </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Game info section */}
+        <div className="md:col-span-2">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+            <h1 className="text-3xl font-bold mb-2">{game.name}</h1>
+            {game.releaseYear && (
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Released: {game.releaseYear}</p>
+            )}
+            
+            {game.description && (
+              <div className="mt-4">
+                <h2 className="text-xl font-semibold mb-2">About</h2>
+                <p className="text-gray-700 dark:text-gray-300">{game.description}</p>
+              </div>
+            )}
+            
+            <div className="mt-6">
+              <Link 
+                href={`/games/${id}/add-review`}
+                className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+              >
+                Add Experience Report
+              </Link>
             </div>
           </div>
-          
-          <div>
-            <h2 className="text-xl font-semibold mb-3">Mac Compatibility</h2>
-            {gameData.stats ? (
-              <div className="space-y-4">
-                <div>
-                  <p className="font-medium mb-1">Overall Rating:</p>
-                  <div className={`text-2xl font-bold ${getPerformanceColorClass(gameData.stats.averagePerformance)}`}>
-                    {performanceToText(gameData.stats.averagePerformance)}
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Based on {gameData.stats.totalReviews} user {gameData.stats.totalReviews === 1 ? 'report' : 'reports'}
-                  </p>
+        </div>
+        
+        {/* Stats section */}
+        <div>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">Mac Performance Stats</h2>
+            
+            {stats ? (
+              <>
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-2">Experience Reports</h3>
+                  <p className="text-3xl font-bold">{stats.totalReviews}</p>
                 </div>
                 
-                <div>
-                  <p className="font-medium mb-2">Play Methods:</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {Object.entries(gameData.stats.methods).map(([method, count]) => (
-                      count > 0 && (
-                        <div key={method} className="flex justify-between">
-                          <span className="capitalize">{method}:</span>
-                          <span>{count}</span>
-                        </div>
-                      )
-                    ))}
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-2">Play Methods</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span>Native</span>
+                      <span className="font-medium">{stats.methods.native}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>CrossOver</span>
+                      <span className="font-medium">{stats.methods.crossover}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Parallels</span>
+                      <span className="font-medium">{stats.methods.parallels}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Other</span>
+                      <span className="font-medium">{stats.methods.other}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+                
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-2">Average Rating</h3>
+                  <div className="flex items-center">
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                      <div 
+                        className="bg-blue-600 h-2.5 rounded-full" 
+                        style={{ width: `${(stats.averagePerformance / 4) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span>{stats.averagePerformance.toFixed(1)}/4</span>
+                  </div>
+                </div>
+              </>
             ) : (
-              <p className="text-gray-500 dark:text-gray-400">
-                No compatibility reports yet. Be the first to add one!
-              </p>
+              <p className="text-gray-600 dark:text-gray-400">No experience reports yet</p>
             )}
           </div>
         </div>
       </div>
       
-      {gameData.stats && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Translation Layer Performance</h2>
-          
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="bg-gray-100 dark:bg-gray-700">
-                  <th className="px-4 py-2 text-left">Layer</th>
-                  <th className="px-4 py-2 text-left">Reports</th>
-                  <th className="px-4 py-2 text-left">Performance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(gameData.stats.translationLayers).map(([layer, data]) => (
-                  data.count > 0 && (
-                    <tr key={layer} className="border-t border-gray-200 dark:border-gray-700">
-                      <td className="px-4 py-3">{layer === 'NONE' ? 'Native' : layer}</td>
-                      <td className="px-4 py-3">{data.count}</td>
-                      <td className="px-4 py-3">
-                        <span className={getPerformanceColorClass(data.averagePerformance)}>
-                          {performanceToText(data.averagePerformance)}
-                        </span>
-                      </td>
-                    </tr>
-                  )
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-      
+      {/* Reviews section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">User Reports</h2>
-          <Link
-            href={`/games/${id}/add-review`}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Add your experience
-          </Link>
-        </div>
+        <h2 className="text-2xl font-semibold mb-6">Experience Reports</h2>
         
-        {gameData.reviews.length > 0 ? (
+        {reviews && reviews.length > 0 ? (
           <div className="space-y-6">
-            {gameData.reviews.map((review) => (
-              <div key={review.id} className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                <div className="flex flex-wrap justify-between mb-2">
-                  <div className="font-medium">
-                    Play Method: <span className="capitalize">{review.playMethod.toLowerCase()}</span>
-                    {review.translationLayer && review.translationLayer !== 'NONE' && (
-                      <span> / {review.translationLayer}</span>
+            {reviews.map((review: any) => (
+              <div key={review.id} className="border-b border-gray-200 pb-6 last:border-0">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <span className="font-medium">Method: </span>
+                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                      {review.playMethod}
+                    </span>
+                    
+                    {review.translationLayer && (
+                      <span className="ml-2 bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
+                        {review.translationLayer}
+                      </span>
                     )}
                   </div>
-                  <div className={getPerformanceColorClass(
-                    ['UNPLAYABLE', 'BARELY_PLAYABLE', 'PLAYABLE', 'GOOD', 'EXCELLENT'].indexOf(review.performance)
-                  )}>
-                    {review.performance.replace('_', ' ')}
+                  <div>
+                    <span className="font-medium">Performance: </span>
+                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                      {review.performance}
+                    </span>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <span className="font-medium">Hardware:</span> {review.chipset} {review.chipsetVariant.toLowerCase()}
+                    <p><span className="font-medium">Graphics:</span> {review.graphicsSettings}</p>
+                    {review.fps && <p><span className="font-medium">FPS:</span> {review.fps}</p>}
+                    {review.resolution && <p><span className="font-medium">Resolution:</span> {review.resolution}</p>}
                   </div>
-                  {review.fps && (
-                    <div>
-                      <span className="font-medium">FPS:</span> {review.fps}
-                    </div>
-                  )}
-                  {review.resolution && (
-                    <div>
-                      <span className="font-medium">Resolution:</span> {review.resolution}
-                    </div>
-                  )}
-                  {review.graphicsSettings && (
-                    <div>
-                      <span className="font-medium">Graphics:</span> {review.graphicsSettings.toLowerCase()}
-                    </div>
-                  )}
+                  <div>
+                    <p><span className="font-medium">Hardware:</span> {review.chipset} {review.chipsetVariant}</p>
+                  </div>
                 </div>
                 
                 {review.notes && (
-                  <div className="mt-2 text-gray-600 dark:text-gray-400">
-                    {review.notes}
+                  <div className="mt-4 bg-gray-50 dark:bg-gray-700 p-3 rounded">
+                    <p className="text-gray-700 dark:text-gray-300">{review.notes}</p>
                   </div>
                 )}
-                
-                <div className="mt-2 text-xs text-gray-500">
-                  Posted on {new Date(review.createdAt).toLocaleDateString()}
-                </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-gray-500">
-            <p className="mb-4">No user reports yet for this game.</p>
-            <p>Be the first to share your experience!</p>
+          <div className="text-center py-8">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">No experience reports yet</p>
+            <Link 
+              href={`/games/${id}/add-review`}
+              className="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+            >
+              Add the First Report
+            </Link>
           </div>
         )}
       </div>
