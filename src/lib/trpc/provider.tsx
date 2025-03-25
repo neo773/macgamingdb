@@ -6,7 +6,7 @@ import { httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { type AppRouter } from '@/server/routers/_app';
 import { getUrl } from '@/lib/trpc/utils';
-import superJSON from 'superjson';
+import superjson from 'superjson';
 
 export const trpc = createTRPCReact<AppRouter>({
   overrides: {
@@ -44,6 +44,7 @@ export function TRPCProvider({
               ...headers,
             };
           },
+          transformer: superjson,
         }),
       ],
     })
