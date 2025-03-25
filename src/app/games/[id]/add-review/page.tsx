@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SteamGame } from '@/lib/algolia';
 
-export default function AddReviewPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function AddReviewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const router = useRouter();
   const [gameDetails, setGameDetails] = useState<SteamGame | null>(null);
   const [isLoading, setIsLoading] = useState(true);

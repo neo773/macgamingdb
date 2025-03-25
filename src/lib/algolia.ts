@@ -28,9 +28,9 @@ export interface SteamGame {
 }
 
 // Function to search for games
-export async function searchGames(query: string, page = 0, hitsPerPage = 50): Promise<any> {
+export async function searchGames(query: string, page = 0, hitsPerPage = 50): Promise<SteamGame[]> {
   try {
-    const result = await searchClient.search({
+    const result = await searchClient.search<SteamGame>({
       requests: [
         {
           indexName: ALGOLIA_INDEX_NAME,
@@ -40,7 +40,9 @@ export async function searchGames(query: string, page = 0, hitsPerPage = 50): Pr
         }
       ]
     });
-    return result;
+    
+    // Type assertion to handle the SearchResult union type issue
+    return (result.results[0] as { hits: SteamGame[] }).hits;
   } catch (error) {
     console.error('Error searching games:', error);
     throw error;
