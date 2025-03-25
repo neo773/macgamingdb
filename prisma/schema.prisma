@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id       String       @id // Steam ID
+  reviews  GameReview[]
+}
+
+model GameReview {
+  id               String            @id @default(cuid())
+  gameId           String
+  game             Game              @relation(fields: [gameId], references: [id])
+  userId           String
+  playMethod       PlayMethod
+  translationLayer TranslationLayer?
+  performance      PerformanceRating
+  
+  // Performance metrics
+  fps              Int?
+  graphicsSettings GraphicsSetting?
+  resolution       String?           // Format: "1920x1080"
+  
+  // Simplified hardware information
+  chipset          String            // e.g., "M1", "M2", "M3" 
+  chipsetVariant   ChipsetVariant    // e.g., "BASE", "PRO", "MAX", "ULTRA"
+  
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+enum PlayMethod {
+  NATIVE
+  CROSSOVER
+  PARALLELS
+  OTHER
+}
+
+enum TranslationLayer {
+  DXVK
+  DXMT
+  D3D_METAL
+  NONE
+}
+
+enum PerformanceRating {
+  UNPLAYABLE
+  BARELY_PLAYABLE
+  PLAYABLE
+  GOOD
+  EXCELLENT
+}
+
+enum GraphicsSetting {
+  LOW
+  MEDIUM
+  HIGH
+  ULTRA
+}
+
+enum ChipsetVariant {
+  BASE
+  PRO
+  MAX
+  ULTRA
+}
