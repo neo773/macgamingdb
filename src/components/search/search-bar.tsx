@@ -11,6 +11,7 @@ export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SteamGame[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -48,8 +49,29 @@ export default function SearchBar() {
     setQuery('');
   };
 
+  // Add keyboard navigation
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!showResults) return;
+    
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => Math.min(prev + 1, results.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => Math.max(prev - 1, -1));
+        break;
+      case 'Enter':
+        if (selectedIndex >= 0) {
+          handleGameSelect(results[selectedIndex].objectID);
+        }
+        break;
+    }
+  }, [showResults, results, selectedIndex]);
+
   return (
-    <div className="relative w-full max-w-2xl" ref={searchRef}>
+    <div className="relative w-full max-w-4xl" ref={searchRef}>
       <div className="relative">
         <input
           type="text"
@@ -57,38 +79,59 @@ export default function SearchBar() {
           onChange={(e) => {
             setQuery(e.target.value);
             setShowResults(true);
+            setSelectedIndex(-1);
           }}
           onFocus={() => setShowResults(true)}
+          onKeyDown={handleKeyDown}
           placeholder="Search for a game..."
-          className="w-full h-12 px-4 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+          className="w-full h-14 px-6 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800/60 dark:border-gray-700 text-lg backdrop-blur-sm"
         />
-        <div className="absolute right-3 top-3 text-gray-400">
-          <Search size={20} />
+        <div className="absolute right-4 top-4 text-gray-400">
+          <Search size={24} />
         </div>
       </div>
 
       {showResults && results.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-96 overflow-y-auto">
-          <ul className="py-2">
-            {results.map((game) => (
-              <li
+        <div className="absolute z-10 w-full mt-4 bg-black/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 max-h-[70vh] overflow-y-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {results.map((game, index) => (
+              <div
                 key={game.objectID}
-                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                className={`relative group cursor-pointer transition-transform duration-200 hover:scale-105 ${
+                  selectedIndex === index ? 'ring-2 ring-blue-500 rounded-xl' : ''
+                }`}
                 onClick={() => handleGameSelect(game.objectID)}
+                onMouseEnter={() => setSelectedIndex(index)}
               >
-                <div className="font-medium">{game.name}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {game.releaseYear ? `Released: ${game.releaseYear}` : ''}
+                <div className="aspect-[460/215] rounded-xl overflow-hidden">
+                  <img
+                    src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
+                    alt={game.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/placeholder-game.jpg' // Make sure to add a placeholder image
+                    }}
+                  />
                 </div>
-              </li>
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent rounded-b-xl">
+                  <div className="font-medium text-white group-hover:text-blue-400 transition-colors">
+                    {game.name}
+                  </div>
+                  {game.releaseYear && (
+                    <div className="text-sm text-gray-300">
+                      {game.releaseYear}
+                    </div>
+                  )}
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
 
       {isLoading && (
-        <div className="absolute right-3 top-3 text-blue-500">
-          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <div className="absolute right-4 top-4 text-blue-500">
+          <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path
               className="opacity-75"

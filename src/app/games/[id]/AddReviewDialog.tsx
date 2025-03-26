@@ -21,22 +21,30 @@ type AddReviewDialogProps = {
   gameName: string;
 };
 
+// Define types for the form data
+type PlayMethod = 'NATIVE' | 'CROSSOVER' | 'PARALLELS' | 'OTHER';
+type TranslationLayer = 'DXVK' | 'DXMT' | 'D3D_METAL' | 'NONE';
+type Performance = 'EXCELLENT' | 'GOOD' | 'PLAYABLE' | 'BARELY_PLAYABLE' | 'UNPLAYABLE';
+type GraphicsSettings = 'ULTRA' | 'HIGH' | 'MEDIUM' | 'LOW';
+type Chipset = 'M1' | 'M2' | 'M3';
+type ChipsetVariant = 'BASE' | 'PRO' | 'MAX' | 'ULTRA';
+
 export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   
-  // Form state
+  // Form state with proper typing
   const [formData, setFormData] = useState({
-    playMethod: 'CROSSOVER' as const,
-    translationLayer: 'DXVK' as const,
-    performance: 'GOOD' as const,
+    playMethod: 'CROSSOVER' as PlayMethod,
+    translationLayer: 'DXVK' as TranslationLayer,
+    performance: 'GOOD' as Performance,
     fps: '',
-    graphicsSettings: 'HIGH' as const,
+    graphicsSettings: 'HIGH' as GraphicsSettings,
     resolution: '',
-    chipset: 'M1' as const,
-    chipsetVariant: 'BASE' as const,
+    chipset: 'M1' as Chipset,
+    chipsetVariant: 'BASE' as ChipsetVariant,
     notes: '',
     userId: 'user-' + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
   });
@@ -87,6 +95,21 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
     }
   };
 
+  // Handle play method selection with fixed typing
+  const handlePlayMethodSelect = (method: PlayMethod) => {
+    setFormData(prev => ({ ...prev, playMethod: method }));
+  };
+
+  // Handle combined chipset selection with fixed typing
+  const handleChipsetSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [chipset, chipsetVariant] = e.target.value.split('-');
+    setFormData(prev => ({ 
+      ...prev, 
+      chipset: chipset as Chipset, 
+      chipsetVariant: chipsetVariant as ChipsetVariant 
+    }));
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -116,21 +139,80 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="block text-sm font-medium">Play Method</label>
-              <select
-                name="playMethod"
-                value={formData.playMethod}
-                onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
-                required
-              >
-                <option value="NATIVE">Native</option>
-                <option value="CROSSOVER">CrossOver</option>
-                <option value="PARALLELS">Parallels</option>
-                <option value="OTHER">Other</option>
-              </select>
+              <div className="flex gap-4 justify-between">
+                <div 
+                  className={`cursor-pointer flex flex-col items-center ${
+                    formData.playMethod === 'NATIVE' 
+                      ? 'text-blue-600 font-medium' 
+                      : 'text-gray-600 dark:text-gray-400'
+                  }`}
+                  onClick={() => handlePlayMethodSelect('NATIVE')}
+                >
+                  <div className={`relative p-1 rounded-lg ${
+                    formData.playMethod === 'NATIVE' 
+                      ? 'ring-2 ring-blue-500' 
+                      : ''
+                  }`}>
+                    <img 
+                      src="/images/native.png" 
+                      alt="Native" 
+                      className="w-14 h-14 object-contain" 
+                    />
+                  </div>
+                  <span className="mt-1 text-sm">Native</span>
+                </div>
+                
+                <div 
+                  className={`cursor-pointer flex flex-col items-center ${
+                    formData.playMethod === 'CROSSOVER' 
+                      ? 'text-blue-600 font-medium' 
+                      : 'text-gray-600 dark:text-gray-400'
+                  }`}
+                  onClick={() => handlePlayMethodSelect('CROSSOVER')}
+                >
+                  <div className={`relative p-1 rounded-lg ${
+                    formData.playMethod === 'CROSSOVER' 
+                      ? 'ring-2 ring-blue-500' 
+                      : ''
+                  }`}>
+                    <img 
+                      src="/images/crossover.png" 
+                      alt="CrossOver" 
+                      className="w-14 h-14 object-contain" 
+                    />
+                  </div>
+                  <span className="mt-1 text-sm">CrossOver</span>
+                </div>
+                
+                <div 
+                  className={`cursor-pointer flex flex-col items-center ${
+                    formData.playMethod === 'PARALLELS' 
+                      ? 'text-blue-600 font-medium' 
+                      : 'text-gray-600 dark:text-gray-400'
+                  }`}
+                  onClick={() => handlePlayMethodSelect('PARALLELS')}
+                >
+                  <div className={`relative p-1 rounded-lg ${
+                    formData.playMethod === 'PARALLELS' 
+                      ? 'ring-2 ring-blue-500' 
+                      : ''
+                  }`}>
+                    <img 
+                      src="/images/parallels.png" 
+                      alt="Parallels" 
+                      className="w-14 h-14 object-contain" 
+                    />
+                  </div>
+                  <span className="mt-1 text-sm">Parallels</span>
+                </div>
+              </div>
             </div>
+        <div>
+
+        </div>
+
             
-            {formData.playMethod === 'CROSSOVER' && (
+        {formData.playMethod === 'CROSSOVER' && (
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Translation Layer</label>
                 <select
@@ -163,6 +245,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 <option value="UNPLAYABLE">Unplayable</option>
               </select>
             </div>
+            
             
             <div className="space-y-2">
               <label className="block text-sm font-medium">FPS (optional)</label>
@@ -202,33 +285,26 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             </div>
             
             <div className="space-y-2">
-              <label className="block text-sm font-medium">Chipset</label>
+              <label className="block text-sm font-medium">Mac Chipset</label>
               <select
-                name="chipset"
-                value={formData.chipset}
-                onChange={handleInputChange}
+                name="combinedChipset"
+                value={`${formData.chipset}-${formData.chipsetVariant}`}
+                onChange={handleChipsetSelect}
                 className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 required
               >
-                <option value="M1">M1</option>
-                <option value="M2">M2</option>
-                <option value="M3">M3</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="block text-sm font-medium">Chipset Variant</label>
-              <select
-                name="chipsetVariant"
-                value={formData.chipsetVariant}
-                onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
-                required
-              >
-                <option value="BASE">Base</option>
-                <option value="PRO">Pro</option>
-                <option value="MAX">Max</option>
-                <option value="ULTRA">Ultra</option>
+                <option value="M1-BASE">M1</option>
+                <option value="M1-PRO">M1 Pro</option>
+                <option value="M1-MAX">M1 Max</option>
+                <option value="M1-ULTRA">M1 Ultra</option>
+                <option value="M2-BASE">M2</option>
+                <option value="M2-PRO">M2 Pro</option>
+                <option value="M2-MAX">M2 Max</option>
+                <option value="M2-ULTRA">M2 Ultra</option>
+                <option value="M3-BASE">M3</option>
+                <option value="M3-PRO">M3 Pro</option>
+                <option value="M3-MAX">M3 Max</option>
+                <option value="M3-ULTRA">M3 Ultra</option>
               </select>
             </div>
           </div>
