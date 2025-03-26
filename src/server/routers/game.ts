@@ -1,20 +1,190 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
-import { getGameById } from '@/lib/algolia';
+import { searchGames } from '@/lib/algolia';
 
-// Add proper search function
-// This will need to be implemented in the algolia.ts file
-async function searchGames(query: string) {
-  try {
-    // This is a placeholder - implement the actual search in @/lib/algolia
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/games/search?q=${encodeURIComponent(query)}`);
-    const data = await response.json();
-    return { games: data.games || [] };
-  } catch (error) {
-    console.error('Search error:', error);
-    throw new Error('Failed to search games');
-  }
+interface SteamApp {
+  [key:string]: {
+    success: boolean;
+    data: SteamAppData;
+  };
 }
+
+interface SteamAppData {
+  type: string;
+  name: string;
+  steam_appid: number;
+  required_age: string;
+  is_free: boolean;
+  detailed_description: string;
+  about_the_game: string;
+  short_description: string;
+  supported_languages: string;
+  header_image: string;
+  capsule_image: string;
+  capsule_imagev5: string;
+  website: string;
+  pc_requirements: Pc_requirements;
+  mac_requirements: Mac_requirements;
+  linux_requirements: Linux_requirements;
+  legal_notice: string;
+  ext_user_account_notice: string;
+  developers: string[];
+  publishers: string[];
+  price_overview: Price_overview;
+  packages: number[];
+  package_groups: PackageGroupsItem[];
+  platforms: Platforms;
+  categories: CategoriesItem[];
+  genres: GenresItem[];
+  screenshots: ScreenshotsItem[];
+  movies: MoviesItem[];
+  recommendations: Recommendations;
+  achievements: Achievements;
+  release_date: Release_date;
+  support_info: Support_info;
+  background: string;
+  background_raw: string;
+  content_descriptors: Content_descriptors;
+  ratings: Ratings;
+}
+interface Pc_requirements {
+  minimum: string;
+  recommended: string;
+}
+interface Mac_requirements {
+  minimum: string;
+  recommended: string;
+}
+interface Linux_requirements {
+  minimum: string;
+  recommended: string;
+}
+interface Price_overview {
+  currency: string;
+  initial: number;
+  'final': number;
+  discount_percent: number;
+  initial_formatted: string;
+  final_formatted: string;
+}
+interface PackageGroupsItem {
+  name: string;
+  title: string;
+  description: string;
+  selection_text: string;
+  save_text: string;
+  display_type: number;
+  is_recurring_subscription: string;
+  subs: SubsItem[];
+}
+interface SubsItem {
+  packageid: number;
+  percent_savings_text: string;
+  percent_savings: number;
+  option_text: string;
+  option_description: string;
+  can_get_free_license: string;
+  is_free_license: boolean;
+  price_in_cents_with_discount: number;
+}
+interface Platforms {
+  windows: boolean;
+  mac: boolean;
+  linux: boolean;
+}
+interface CategoriesItem {
+  id: number;
+  description: string;
+}
+interface GenresItem {
+  id: string;
+  description: string;
+}
+interface ScreenshotsItem {
+  id: number;
+  path_thumbnail: string;
+  path_full: string;
+}
+interface MoviesItem {
+  id: number;
+  name: string;
+  thumbnail: string;
+  webm: Webm;
+  mp4: Mp4;
+  highlight: boolean;
+}
+interface Webm {
+  480: string;
+  max: string;
+}
+interface Mp4 {
+  480: string;
+  max: string;
+}
+interface Recommendations {
+  total: number;
+}
+interface Achievements {
+  total: number;
+  highlighted: HighlightedItem[];
+}
+interface HighlightedItem {
+  name: string;
+  path: string;
+}
+interface Release_date {
+  coming_soon: boolean;
+  date: string;
+}
+interface Support_info {
+  url: string;
+  email: string;
+}
+interface Content_descriptors {
+  ids: number[];
+  notes: string;
+}
+interface Ratings {
+  esrb: Esrb;
+  pegi: Pegi;
+  usk: Usk;
+  dejus: Dejus;
+  steam_germany: Steam_germany;
+}
+interface Esrb {
+  rating: string;
+  descriptors: string;
+  use_age_gate: string;
+  required_age: string;
+}
+interface Pegi {
+  rating: string;
+  descriptors: string;
+  use_age_gate: string;
+  required_age: string;
+}
+interface Usk {
+  rating: string;
+  required_age: string;
+}
+interface Dejus {
+  rating_generated: string;
+  rating: string;
+  required_age: string;
+  banned: string;
+  use_age_gate: string;
+  descriptors: string;
+}
+interface Steam_germany {
+  rating_generated: string;
+  rating: string;
+  required_age: string;
+  banned: string;
+  use_age_gate: string;
+  descriptors: string;
+}
+
+
 
 export const gameRouter = router({
   search: procedure
@@ -33,8 +203,9 @@ export const gameRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         // Get game details from Algolia
-        const gameDetails = await getGameById(input.id);
-        
+        const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${input.id}`)
+        const gameDetails = await response.json() as SteamApp;
+        console.log(gameDetails, 'gameDetails');
         if (!gameDetails) {
           throw new Error('Game not found');
         }
@@ -60,7 +231,7 @@ export const gameRouter = router({
           : null;
         
         return { 
-          game: gameDetails,
+          game: gameDetails[input.id].data,
           reviews,
           stats: reviewStats
         };

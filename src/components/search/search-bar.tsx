@@ -25,7 +25,7 @@ export default function SearchBar() {
   // Update results when data changes
   useEffect(() => {
     if (data) {
-      setResults(data.games || []);
+      setResults(data || []);
     }
   }, [data]);
 

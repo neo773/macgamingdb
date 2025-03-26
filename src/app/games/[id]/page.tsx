@@ -59,8 +59,8 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
           <div className="md:col-span-2">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
               <h1 className="text-3xl font-bold mb-2">{game.name}</h1>
-              {game.releaseYear && (
-                <p className="text-gray-600 dark:text-gray-400 mb-4">Released: {game.releaseYear}</p>
+              {game.release_date && (
+                <p className="text-gray-600 dark:text-gray-400 mb-4">Released: {game.release_date.date}</p>
               )}
               
               

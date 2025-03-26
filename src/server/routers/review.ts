@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
-import { getGameById } from '@/lib/algolia';
 
 // Define schemas using Zod
 const createReviewSchema = z.object({
@@ -23,7 +22,9 @@ export const reviewRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         // Validate the game exists in Algolia
-        const gameExists = await getGameById(input.gameId);
+        const gameExists = await ctx.prisma.game.findUnique({
+          where: { id: input.gameId }
+        });
         if (!gameExists) {
           throw new Error('Game not found');
         }
