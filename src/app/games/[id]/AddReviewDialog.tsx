@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc/provider';
 import { useRouter } from 'next/navigation';
 import { 
@@ -15,19 +15,25 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { 
+  PlayMethod, 
+  TranslationLayer, 
+  Performance, 
+  GraphicsSettings, 
+  Chipset, 
+  ChipsetVariant 
+} from '@/server/routers/review';
 
 type AddReviewDialogProps = {
   gameId: string;
   gameName: string;
 };
 
-// Define types for the form data
-type PlayMethod = 'NATIVE' | 'CROSSOVER' | 'PARALLELS' | 'OTHER';
-type TranslationLayer = 'DXVK' | 'DXMT' | 'D3D_METAL' | 'NONE';
-type Performance = 'EXCELLENT' | 'GOOD' | 'PLAYABLE' | 'BARELY_PLAYABLE' | 'UNPLAYABLE';
-type GraphicsSettings = 'ULTRA' | 'HIGH' | 'MEDIUM' | 'LOW';
-type Chipset = 'M1' | 'M2' | 'M3';
-type ChipsetVariant = 'BASE' | 'PRO' | 'MAX' | 'ULTRA';
+// Interface for chipset combinations
+interface ChipsetCombination {
+  value: string;
+  label: string;
+}
 
 export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogProps) {
   const router = useRouter();
@@ -35,19 +41,38 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   
+  // Fetching enum values from server
+  const { data: enumValues, isLoading: isLoadingEnums } = trpc.review.getEnumValues.useQuery();
+  const { data: chipsetCombinations, isLoading: isLoadingChipsets } = trpc.review.getChipsetCombinations.useQuery();
+  
   // Form state with proper typing
   const [formData, setFormData] = useState({
-    playMethod: 'CROSSOVER' as PlayMethod,
-    translationLayer: 'DXVK' as TranslationLayer,
-    performance: 'GOOD' as Performance,
+    playMethod: '' as PlayMethod,
+    translationLayer: '' as TranslationLayer,
+    performance: '' as Performance,
     fps: '',
-    graphicsSettings: 'HIGH' as GraphicsSettings,
+    graphicsSettings: '' as GraphicsSettings,
     resolution: '',
-    chipset: 'M1' as Chipset,
-    chipsetVariant: 'BASE' as ChipsetVariant,
+    chipset: '' as Chipset,
+    chipsetVariant: '' as ChipsetVariant,
     notes: '',
     userId: 'user-' + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
   });
+  
+  // Initialize form with default values once enum values are loaded
+  useEffect(() => {
+    if (enumValues) {
+      setFormData(prev => ({
+        ...prev,
+        playMethod: enumValues.playMethods[1], // Default to CROSSOVER
+        translationLayer: enumValues.translationLayers[0], // Default to DXVK
+        performance: enumValues.performanceRatings[1], // Default to GOOD
+        graphicsSettings: enumValues.graphicsSettings[1], // Default to HIGH
+        chipset: enumValues.chipsets[0], // Default to M1
+        chipsetVariant: enumValues.chipsetVariants[0], // Default to BASE
+      }));
+    }
+  }, [enumValues]);
   
   // Create review mutation
   const createReviewMutation = trpc.review.create.useMutation({
@@ -66,6 +91,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   });
   
   const isSubmitting = createReviewMutation.isPending;
+  const isLoading = isLoadingEnums || isLoadingChipsets;
   
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -110,6 +136,11 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
     }));
   };
 
+  // If loading, show a loading state
+  if (isLoading) {
+    return <Button disabled>Loading...</Button>;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -140,79 +171,41 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             <div className="space-y-2">
               <label className="block text-sm font-medium">Play Method</label>
               <div className="flex gap-4 justify-between">
-                <div 
-                  className={`cursor-pointer flex flex-col items-center ${
-                    formData.playMethod === 'NATIVE' 
-                      ? 'text-blue-600 font-medium' 
-                      : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                  onClick={() => handlePlayMethodSelect('NATIVE')}
-                >
-                  <div className={`relative p-1 rounded-lg ${
-                    formData.playMethod === 'NATIVE' 
-                      ? 'ring-2 ring-blue-500' 
-                      : ''
-                  }`}>
-                    <img 
-                      src="/images/native.png" 
-                      alt="Native" 
-                      className="w-14 h-14 object-contain" 
-                    />
+                {enumValues?.playMethods.map(method => (
+                  <div 
+                    key={method}
+                    className={`cursor-pointer flex flex-col items-center ${
+                      formData.playMethod === method 
+                        ? 'text-blue-600 font-medium' 
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}
+                    onClick={() => handlePlayMethodSelect(method)}
+                  >
+                    <div className={`relative p-1 rounded-lg ${
+                      formData.playMethod === method 
+                        ? 'ring-2 ring-blue-500' 
+                        : ''
+                    }`}>
+                      <img 
+                        src={`/images/${method.toLowerCase()}.png`} 
+                        alt={method} 
+                        className="w-14 h-14 object-contain" 
+                      />
+                    </div>
+                    <span className="mt-1 text-sm">
+                      {method === 'NATIVE' ? 'Native' : 
+                       method === 'CROSSOVER' ? 'CrossOver' : 
+                       method === 'PARALLELS' ? 'Parallels' : 'Other'}
+                    </span>
                   </div>
-                  <span className="mt-1 text-sm">Native</span>
-                </div>
-                
-                <div 
-                  className={`cursor-pointer flex flex-col items-center ${
-                    formData.playMethod === 'CROSSOVER' 
-                      ? 'text-blue-600 font-medium' 
-                      : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                  onClick={() => handlePlayMethodSelect('CROSSOVER')}
-                >
-                  <div className={`relative p-1 rounded-lg ${
-                    formData.playMethod === 'CROSSOVER' 
-                      ? 'ring-2 ring-blue-500' 
-                      : ''
-                  }`}>
-                    <img 
-                      src="/images/crossover.png" 
-                      alt="CrossOver" 
-                      className="w-14 h-14 object-contain" 
-                    />
-                  </div>
-                  <span className="mt-1 text-sm">CrossOver</span>
-                </div>
-                
-                <div 
-                  className={`cursor-pointer flex flex-col items-center ${
-                    formData.playMethod === 'PARALLELS' 
-                      ? 'text-blue-600 font-medium' 
-                      : 'text-gray-600 dark:text-gray-400'
-                  }`}
-                  onClick={() => handlePlayMethodSelect('PARALLELS')}
-                >
-                  <div className={`relative p-1 rounded-lg ${
-                    formData.playMethod === 'PARALLELS' 
-                      ? 'ring-2 ring-blue-500' 
-                      : ''
-                  }`}>
-                    <img 
-                      src="/images/parallels.png" 
-                      alt="Parallels" 
-                      className="w-14 h-14 object-contain" 
-                    />
-                  </div>
-                  <span className="mt-1 text-sm">Parallels</span>
-                </div>
+                ))}
               </div>
             </div>
-        <div>
-
-        </div>
-
             
-        {formData.playMethod === 'CROSSOVER' && (
+            <div>
+            </div>
+            
+            {formData.playMethod === 'CROSSOVER' && (
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Translation Layer</label>
                 <select
@@ -221,10 +214,13 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                   onChange={handleInputChange}
                   className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 >
-                  <option value="DXVK">DXVK</option>
-                  <option value="DXMT">DXMT</option>
-                  <option value="D3D_METAL">D3D Metal</option>
-                  <option value="NONE">None / Default</option>
+                  {enumValues?.translationLayers.map(layer => (
+                    <option key={layer} value={layer}>
+                      {layer === 'DXVK' ? 'DXVK' : 
+                       layer === 'DXMT' ? 'DXMT' : 
+                       layer === 'D3D_METAL' ? 'D3D Metal' : 'None / Default'}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
@@ -238,14 +234,16 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 required
               >
-                <option value="EXCELLENT">Excellent</option>
-                <option value="GOOD">Good</option>
-                <option value="PLAYABLE">Playable</option>
-                <option value="BARELY_PLAYABLE">Barely Playable</option>
-                <option value="UNPLAYABLE">Unplayable</option>
+                {enumValues?.performanceRatings.map(rating => (
+                  <option key={rating} value={rating}>
+                    {rating === 'EXCELLENT' ? 'Excellent' : 
+                     rating === 'GOOD' ? 'Good' : 
+                     rating === 'PLAYABLE' ? 'Playable' : 
+                     rating === 'BARELY_PLAYABLE' ? 'Barely Playable' : 'Unplayable'}
+                  </option>
+                ))}
               </select>
             </div>
-            
             
             <div className="space-y-2">
               <label className="block text-sm font-medium">FPS (optional)</label>
@@ -266,10 +264,13 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 onChange={handleInputChange}
                 className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
               >
-                <option value="ULTRA">Ultra</option>
-                <option value="HIGH">High</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="LOW">Low</option>
+                {enumValues?.graphicsSettings.map(setting => (
+                  <option key={setting} value={setting}>
+                    {setting === 'ULTRA' ? 'Ultra' : 
+                     setting === 'HIGH' ? 'High' : 
+                     setting === 'MEDIUM' ? 'Medium' : 'Low'}
+                  </option>
+                ))}
               </select>
             </div>
             
@@ -293,18 +294,11 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                 required
               >
-                <option value="M1-BASE">M1</option>
-                <option value="M1-PRO">M1 Pro</option>
-                <option value="M1-MAX">M1 Max</option>
-                <option value="M1-ULTRA">M1 Ultra</option>
-                <option value="M2-BASE">M2</option>
-                <option value="M2-PRO">M2 Pro</option>
-                <option value="M2-MAX">M2 Max</option>
-                <option value="M2-ULTRA">M2 Ultra</option>
-                <option value="M3-BASE">M3</option>
-                <option value="M3-PRO">M3 Pro</option>
-                <option value="M3-MAX">M3 Max</option>
-                <option value="M3-ULTRA">M3 Ultra</option>
+                {chipsetCombinations?.map((combo: ChipsetCombination) => (
+                  <option key={combo.value} value={combo.value}>
+                    {combo.label}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

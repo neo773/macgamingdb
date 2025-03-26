@@ -51,3 +51,18 @@ export async function searchGames(
     throw error;
   }
 }
+
+
+export async function getGameBySteamId(steamId: string): Promise<SteamGame | null> {
+  try {
+    const result = await searchClient.getObject({
+      indexName: ALGOLIA_INDEX_NAME,
+      objectID: steamId,
+    });
+    return result as unknown as SteamGame;
+  } catch (error) {
+    console.error("Error fetching game by Steam ID:", error);
+    throw error;
+  }
+}
+

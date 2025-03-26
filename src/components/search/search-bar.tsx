@@ -103,7 +103,8 @@ export default function SearchBar() {
                 onClick={() => handleGameSelect(game.objectID)}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
-                <div className="aspect-[460/215] rounded-xl overflow-hidden">
+                <div className="aspect-[460/215] rounded-xl overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 z-10" />
                   <img
                     src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
                     alt={game.name}
@@ -113,7 +114,7 @@ export default function SearchBar() {
                     }}
                   />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent rounded-b-xl">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/90 z-20">
                   <div className="font-medium text-white group-hover:text-blue-400 transition-colors">
                     {game.name}
                   </div>
