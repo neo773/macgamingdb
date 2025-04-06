@@ -3,6 +3,7 @@ import { createServerHelpers } from "@/lib/trpc/server";
 import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import AddReviewDialog from "./AddReviewDialog";
+import ExpandableDescription from "./ExpandableDescription";
 import {
   Card,
   CardContent,
@@ -154,9 +155,7 @@ export default async function GamePage({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-gray-300">
-                  <div className="mt-2">
-                    <AddReviewDialog gameId={id} gameName={game.name} />
-                  </div>
+                  <ExpandableDescription description={game.detailed_description} />
                 </CardContent>
               </Card>
             </div>
@@ -328,10 +327,13 @@ export default async function GamePage({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-gray-900/50 rounded-lg border border-gray-800">
-                <p className="text-gray-400 mb-4">No experience reports yet</p>
+              <Card className="bg-[#1F1F1F]">
+                <CardContent className="flex flex-col justify-center p-4 items-center">
+
+                <p className="mb-4">No experience reports yet</p>
                 <AddReviewDialog gameId={id} gameName={game.name} />
-              </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         </main>
