@@ -26,6 +26,7 @@ import type {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
+import { PlusIcon } from 'lucide-react';
 
 type AddReviewDialogProps = {
   gameId: string;
@@ -154,7 +155,9 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add Experience Report</Button>
+        <Button size={"lg"}>
+          <PlusIcon/>
+          Add Experience Report</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] rounded-3xl bg-black border border-[#272727]">
         <DialogHeader>

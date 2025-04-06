@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import * as React from "react";
 import { SVGProps } from "react";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 // Game controller icon component
@@ -148,26 +148,25 @@ export default async function GamePage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Game info and stats section */}
             <div className="md:col-span-2">
-              <Card className=" shadow-lg mb-8 bg-[#1F1F1F]">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-white">
+                  <h1 className="text-2xl text-white font-semibold ">
                     Game Information
-                  </CardTitle>
-                </CardHeader>
+                  </h1>
+              <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
                 <CardContent className="text-gray-300">
-                  <ExpandableDescription description={game.detailed_description} />
+                  <ExpandableDescription
+                    description={game.detailed_description}
+                  />
                 </CardContent>
               </Card>
             </div>
 
             {/* Stats section */}
             <div>
-              <Card className=" shadow-lg mb-8 bg-[#1F1F1F]">
-                <CardHeader>
-                  <CardTitle className="text-xl text-white">
-                    Mac Performance Stats
-                  </CardTitle>
-                </CardHeader>
+            <h1 className="text-2xl text-white font-semibold ">
+            Mac Performance Stats
+                  </h1>
+              <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
+      
                 <CardContent>
                   {stats ? (
                     <>
@@ -244,94 +243,101 @@ export default async function GamePage({
           {/* Experience Reports section */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-semibold text-white">
                 Experience Reports
               </h2>
-              <AddReviewDialog gameId={id} gameName={game.name} />
+              {reviews && reviews.length > 0 && (
+                <AddReviewDialog gameId={id} gameName={game.name} />
+              )}
             </div>
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {reviews.map((review) => (
-                  <Card key={review.id} className="bg-[#1F1F1F]">
-                    <CardContent>
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center">
+                  <Card
+                    key={review.id}
+                    className="bg-[#1F1F1F] overflow-hidden"
+                  >
+                    <CardHeader>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3">
                           <img
                             src={`/images/${review.playMethod.toLowerCase()}.png`}
                             alt={formatMethodName(review.playMethod)}
-                            className="size-12 object-contain mr-2"
+                            className="size-10 object-contain"
                           />
                           <div>
                             <p className="font-medium text-white">
                               {formatMethodName(review.playMethod)}
                             </p>
                             {review.translationLayer && (
-                              <Badge variant="secondary">
+                              <Badge variant="secondary" className="mt-1">
                                 {review.translationLayer}
                               </Badge>
                             )}
                           </div>
                         </div>
-                        <Badge 
-                          variant="outline" 
-                          className={`${getPerformanceColor(review.performance)}`}
+                        <Badge
+                          variant="outline"
+                          className={`${getPerformanceColor(
+                            review.performance
+                          )}`}
                         >
                           {review.performance.replace("_", " ")}
                         </Badge>
                       </div>
-                      <br />
-                      <hr />
+                    </CardHeader>
 
-                      <div className="space-y-2 text-sm text-gray-300 my-4">
-                        <div className="flex justify-between">
-                          <span className="font-medium">Graphics:</span>
-                          <span>{review.graphicsSettings}</span>
-                        </div>
-
-                        {review.fps && (
+                    <CardContent>
+                      <div className="border-t border-white/20 pt-3 pb-2">
+                        <dl className="space-y-2 text-sm text-gray-300">
                           <div className="flex justify-between">
-                            <span className="font-medium">FPS:</span>
-                            <span>{review.fps}</span>
+                            <dt className="font-medium">Graphics:</dt>
+                            <dd>{review.graphicsSettings}</dd>
                           </div>
-                        )}
 
-                        {review.resolution && (
+                          {review.fps && (
+                            <div className="flex justify-between">
+                              <dt className="font-medium">FPS:</dt>
+                              <dd>{review.fps}</dd>
+                            </div>
+                          )}
+
+                          {review.resolution && (
+                            <div className="flex justify-between">
+                              <dt className="font-medium">Resolution:</dt>
+                              <dd>{review.resolution}</dd>
+                            </div>
+                          )}
+
                           <div className="flex justify-between">
-                            <span className="font-medium">Resolution:</span>
-                            <span>{review.resolution}</span>
+                            <dt className="font-medium">Hardware:</dt>
+                            <dd>
+                              {review.chipset} {review.chipsetVariant}
+                            </dd>
                           </div>
-                        )}
-
-                        <div className="flex justify-between">
-                          <span className="font-medium">Hardware:</span>
-                          <span>
-                            {review.chipset} {review.chipsetVariant}
-                          </span>
-                        </div>
+                        </dl>
                       </div>
 
-                      <hr />
-                      <div className="my-4">
-                        <span className="text-sm font-medium text-gray-300">
-                          Review Note:
-                        </span>
-                        {review.notes && (
-                          <div className="mt-2 bg-[#363636] p-3 rounded-lg text-sm text-gray-300">
+                      {review.notes && (
+                        <div className="border-t border-white/20 pt-3 mt-2">
+                          <h4 className="text-sm font-medium text-gray-300 mb-2">
+                            Review Note:
+                          </h4>
+                          <div className="bg-[#363636] p-3 rounded-lg text-sm text-gray-300">
                             <p className="line-clamp-3">{review.notes}</p>
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : (
               <Card className="bg-[#1F1F1F]">
-                <CardContent className="flex flex-col justify-center p-4 items-center">
-
-                <p className="mb-4">No experience reports yet</p>
-                <AddReviewDialog gameId={id} gameName={game.name} />
+                <CardContent className="flex flex-col items-center justify-center py-8 gap-4">
+                  <h1 className="text-xl font-medium">No experience reports yet</h1>
+                  <AddReviewDialog gameId={id} gameName={game.name} />
                 </CardContent>
               </Card>
             )}

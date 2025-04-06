@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface ExpandableDescriptionProps {
   description: string;
@@ -8,36 +9,46 @@ interface ExpandableDescriptionProps {
 
 export default function ExpandableDescription({ description }: ExpandableDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [plainText, setPlainText] = useState("");
   const [isTooLong, setIsTooLong] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // Create a temporary div to parse HTML content safely
-    const div = document.createElement('div');
-    div.innerHTML = description;
-    const text = div.textContent || div.innerText || '';
-    setPlainText(text);
-    setIsTooLong(text.length > 300);
+    // Check if content is too long by comparing scrollHeight to clientHeight
+    if (contentRef.current) {
+      const fullContent = contentRef.current;
+      setIsTooLong(fullContent.scrollHeight > 150);
+    }
   }, [description]);
+  
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
   
   return (
     <div className="mt-2">
-      {isExpanded ? (
-        <div dangerouslySetInnerHTML={{ __html: description }} />
-      ) : (
-        <div>
-          <p>{plainText.substring(0, 300)}{isTooLong ? '...' : ''}</p>
-        </div>
-      )}
+      <div 
+        className={`overflow-hidden relative ${isExpanded ? '' : 'max-h-[200px]'}`}
+        style={{ transition: 'max-height 0.3s ease-in-out' }}
+      >
+        <div 
+          ref={contentRef}
+          dangerouslySetInnerHTML={{ __html: description }} 
+        />
+        
+        {!isExpanded && isTooLong && (
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#1F1F1F] to-transparent" />
+        )}
+      </div>
       
       {isTooLong && (
-        <button 
-          onClick={() => setIsExpanded(!isExpanded)} 
-          className="mt-4 text-blue-400 hover:text-blue-300 font-medium"
+        <Button 
+          onClick={toggleExpand} 
+          variant="link"
+          className="mt-2 text-blue-400 hover:text-blue-300 p-0 h-auto"
         >
           {isExpanded ? "Show Less" : "Read More"}
-        </button>
+        </Button>
       )}
     </div>
   );
-} 
+}
