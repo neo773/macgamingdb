@@ -25,6 +25,7 @@ import type {
 } from '@/server/routers/review';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from "sonner"
 
 type AddReviewDialogProps = {
   gameId: string;
@@ -121,6 +122,8 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
       };
       
       createReviewMutation.mutate(reviewData);
+      toast("Your review has been submitted successfully!")
+      setOpen(false)
       
     } catch (error) {
       setError('Error submitting review. Please try again.');
@@ -164,12 +167,6 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
-          </div>
-        )}
-        
-        {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            Your review has been submitted successfully!
           </div>
         )}
         

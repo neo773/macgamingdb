@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
+          <Toaster/>
         </ThemeProvider>
       </body>
     </html>
