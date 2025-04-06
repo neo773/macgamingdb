@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { SteamGame } from '@/lib/algolia';
 import * as React from "react";
 import { SVGProps } from "react";
+import { useRouter } from 'next/navigation';
 
 const GameIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -49,51 +50,10 @@ const featuredGames = [
   }
 ];
 
-// Game card component to display either featured or search result games
-const GameCard = ({ game }: { game: SteamGame }) => (
-  <div 
-    className="relative group cursor-pointer transition-transform duration-200 hover:scale-105"
-  >
-    <div className="aspect-[460/215] rounded-xl overflow-hidden relative">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
-      <img
-        src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
-        alt={game.name}
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-game.jpg'
-        }}
-      />
-    </div>
-    <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-transparent">
-      <div className="font-medium text-white group-hover:text-blue-400 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
-        {game.name}
-      </div>
-      {game.releaseYear && (
-        <div className="text-sm text-gray-300">
-          {game.releaseYear}
-        </div>
-      )}
-    </div>
-  </div>
-);
-
-// Loading skeleton for game cards
-const GameCardSkeleton = () => (
-  <div className="relative">
-    <div className="aspect-[460/215] rounded-xl overflow-hidden bg-gray-800 animate-pulse">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-    </div>
-    <div className="absolute bottom-0 left-0 right-0 p-4">
-      <div className="h-5 bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
-      <div className="h-4 bg-gray-700 rounded animate-pulse w-1/3"></div>
-    </div>
-  </div>
-);
-
 export default function Home() {
   const [searchResults, setSearchResults] = useState<SteamGame[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // Handle search results updates
   const handleSearchResultsChange = (results: SteamGame[] | null) => {
@@ -105,6 +65,54 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  // Navigate to game page when a game is selected
+  const handleGameClick = (gameId: string) => {
+    router.push(`/games/${gameId}`);
+  };
+
+  // Game card component to display either featured or search result games
+  const GameCard = ({ game }: { game: SteamGame }) => (
+    <div 
+      className="relative group cursor-pointer transition-transform duration-200 hover:scale-105"
+      onClick={() => handleGameClick(game.objectID)}
+    >
+      <div className="aspect-[460/215] rounded-xl overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
+        <img
+          src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
+          alt={game.name}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder-game.jpg'
+          }}
+        />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-transparent">
+        <div className="font-medium text-white group-hover:text-blue-400 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+          {game.name}
+        </div>
+        {game.releaseYear && (
+          <div className="text-sm text-gray-300">
+            {game.releaseYear}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Loading skeleton for game cards
+  const GameCardSkeleton = () => (
+    <div className="relative">
+      <div className="aspect-[460/215] rounded-xl overflow-hidden bg-gray-800 animate-pulse">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <div className="h-5 bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-700 rounded animate-pulse w-1/3"></div>
+      </div>
+    </div>
+  );
 
   // Display loading skeletons while waiting for search results
   const renderGameCards = () => {
@@ -126,7 +134,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-black via-gray-900 to-black">
+    <div className="min-h-screen flex flex-col bg-black">
       <header className="w-full pt-8 pb-4 px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center mb-6">
@@ -141,17 +149,19 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-12">
-        <h2 className="text-2xl font-bold text-white mb-8">
-          {isLoading ? 'Loading...' : (searchResults && searchResults.length > 0 ? 'Search Results' : 'Featured Games')}
-        </h2>
+      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+        {!isLoading && searchResults !== null && searchResults.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-xl text-gray-400">No games found matching your search.</p>
+          </div>
+        )}
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {renderGameCards()}
         </div>
       </main>
 
-      <footer className="mt-auto w-full py-6 border-t border-gray-800 text-center text-gray-400">
+      <footer className="mt-auto w-full py-4 border-t border-gray-900 text-center text-gray-600">
         <p>© {new Date().getFullYear()} MacGamingDB - A community resource for Mac gamers</p>
       </footer>
     </div>
