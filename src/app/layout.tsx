@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider";
 import { headers } from "next/headers";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -19,17 +20,22 @@ export default async function RootLayout({
   // Forward headers from the browser to the API
   const headersList = await headers();
   const headersObj: Record<string, string> = {};
-  
+
   headersList.forEach((value, key) => {
     headersObj[key] = value;
   });
-  
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <TRPCProvider headers={headersObj}>
-          {children}
-        </TRPCProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

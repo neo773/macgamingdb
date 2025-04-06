@@ -1,19 +1,11 @@
+"use client";
+
 import SearchBar from '@/components/search/search-bar';
 import Image from 'next/image';
-import { Metadata } from 'next';
-import * as React from "react"
-import { SVGProps } from "react"
-
-export const metadata: Metadata = {
-  title: 'MacGamingDB - Game Compatibility Database for Mac',
-  description: 'Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.',
-  openGraph: {
-    title: 'MacGamingDB - Game Compatibility Database for Mac',
-    description: 'Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.',
-    type: 'website',
-  },
-};
-
+import { useState } from 'react';
+import { SteamGame } from '@/lib/algolia';
+import * as React from "react";
+import { SVGProps } from "react";
 
 const GameIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -29,23 +21,137 @@ const GameIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
+// Featured games data
+const featuredGames = [
+  {
+    name: "Grand Theft Auto V Legacy",
+    objectID: "271590"
+  },
+  {
+    name: "The Witcher 3: Wild Hunt",
+    objectID: "292030"
+  },
+  {
+    name: "Red Dead Redemption 2",
+    objectID: "1174180"
+  },
+  {
+    name: "Cyberpunk 2077",
+    objectID: "1091500"
+  },
+  {
+    name: "Elden Ring",
+    objectID: "1245620"
+  },
+  {
+    name: "Counter-Strike 2",
+    objectID: "730"
+  }
+];
+
+// Game card component to display either featured or search result games
+const GameCard = ({ game }: { game: SteamGame }) => (
+  <div 
+    className="relative group cursor-pointer transition-transform duration-200 hover:scale-105"
+  >
+    <div className="aspect-[460/215] rounded-xl overflow-hidden relative">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
+      <img
+        src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
+        alt={game.name}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/placeholder-game.jpg'
+        }}
+      />
+    </div>
+    <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-transparent">
+      <div className="font-medium text-white group-hover:text-blue-400 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
+        {game.name}
+      </div>
+      {game.releaseYear && (
+        <div className="text-sm text-gray-300">
+          {game.releaseYear}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+// Loading skeleton for game cards
+const GameCardSkeleton = () => (
+  <div className="relative">
+    <div className="aspect-[460/215] rounded-xl overflow-hidden bg-gray-800 animate-pulse">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+    </div>
+    <div className="absolute bottom-0 left-0 right-0 p-4">
+      <div className="h-5 bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-700 rounded animate-pulse w-1/3"></div>
+    </div>
+  </div>
+);
 
 export default function Home() {
+  const [searchResults, setSearchResults] = useState<SteamGame[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle search results updates
+  const handleSearchResultsChange = (results: SteamGame[] | null) => {
+    // If results is an empty array, it means we're loading
+    if (results && results.length === 0) {
+      setIsLoading(true);
+    } else {
+      setSearchResults(results);
+      setIsLoading(false);
+    }
+  };
+
+  // Display loading skeletons while waiting for search results
+  const renderGameCards = () => {
+    if (isLoading) {
+      return Array(6).fill(0).map((_, index) => (
+        <GameCardSkeleton key={`skeleton-${index}`} />
+      ));
+    }
+
+    if (searchResults && searchResults.length > 0) {
+      return searchResults.map((game) => (
+        <GameCard key={game.objectID} game={game} />
+      ));
+    }
+
+    return featuredGames.map((game) => (
+      <GameCard key={game.objectID} game={game as SteamGame} />
+    ));
+  };
+
   return (
-    <div className="min-h-screen flex flex-col p-8">
-      <header className="flex-1 w-full max-w-7xl flex flex-col items-center justify-center py-12 text-center mx-auto">
-        <h1 className="text-4xl font-bold mb-4">
-          <GameIcon className="w-10 h-10 inline-block mr-2" fill="#000" />
-          MacGamingDB
-        </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
-          Find out how your favorite games perform on Mac across different compatibility layers
-        </p>
-        
-        <SearchBar />
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-black via-gray-900 to-black">
+      <header className="w-full pt-8 pb-4 px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center mb-6">
+            <GameIcon className="w-10 h-10 mr-2" fill="#fff" />
+            <h1 className="text-4xl font-bold text-white">MacGamingDB</h1>
+          </div>
+          <p className="text-xl text-gray-300 mb-6 max-w-2xl">
+            Find out how your favorite games perform on Mac across different compatibility layers
+          </p>
+          
+          <SearchBar onResultsChange={handleSearchResultsChange} />
+        </div>
       </header>
 
-      <footer className="mt-auto w-full py-6 border-t border-gray-200 dark:border-gray-800 text-center text-gray-600 dark:text-gray-400">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-12">
+        <h2 className="text-2xl font-bold text-white mb-8">
+          {isLoading ? 'Loading...' : (searchResults && searchResults.length > 0 ? 'Search Results' : 'Featured Games')}
+        </h2>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {renderGameCards()}
+        </div>
+      </main>
+
+      <footer className="mt-auto w-full py-6 border-t border-gray-800 text-center text-gray-400">
         <p>© {new Date().getFullYear()} MacGamingDB - A community resource for Mac gamers</p>
       </footer>
     </div>
