@@ -23,6 +23,8 @@ import type {
   Chipset, 
   ChipsetVariant 
 } from '@/server/routers/review';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 type AddReviewDialogProps = {
   gameId: string;
@@ -99,6 +101,11 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
+  // Handle select changes
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+  
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,7 +153,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
       <DialogTrigger asChild>
         <Button>Add Experience Report</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] rounded-3xl bg-black border border-[#272727]">
         <DialogHeader>
           <DialogTitle>Add Experience for {gameName}</DialogTitle>
           <DialogDescription>
@@ -176,7 +183,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                     key={method}
                     className={`cursor-pointer flex flex-col items-center ${
                       formData.playMethod === method 
-                        ? 'text-blue-600 font-medium' 
+                        ? 'text-blue-500 font-medium' 
                         : 'text-gray-600 dark:text-gray-400'
                     }`}
                     onClick={() => handlePlayMethodSelect(method)}
@@ -208,41 +215,47 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             {formData.playMethod === 'CROSSOVER' && (
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Translation Layer</label>
-                <select
-                  name="translationLayer"
+                <Select
                   value={formData.translationLayer}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
+                  onValueChange={(value) => handleSelectChange("translationLayer", value)}
                 >
-                  {enumValues?.translationLayers.map(layer => (
-                    <option key={layer} value={layer}>
-                      {layer === 'DXVK' ? 'DXVK' : 
-                       layer === 'DXMT' ? 'DXMT' : 
-                       layer === 'D3D_METAL' ? 'D3D Metal' : 'None / Default'}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select translation layer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enumValues?.translationLayers.map(layer => (
+                      <SelectItem key={layer} value={layer}>
+                        {layer === 'DXVK' ? 'DXVK' : 
+                         layer === 'DXMT' ? 'DXMT' : 
+                         layer === 'D3D_METAL' ? 'D3D Metal' : 'None / Default'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
             
             <div className="space-y-2">
               <label className="block text-sm font-medium">Performance Rating</label>
-              <select
-                name="performance"
+              <Select
                 value={formData.performance}
-                onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
+                onValueChange={(value) => handleSelectChange("performance", value)}
                 required
               >
-                {enumValues?.performanceRatings.map(rating => (
-                  <option key={rating} value={rating}>
-                    {rating === 'EXCELLENT' ? 'Excellent' : 
-                     rating === 'GOOD' ? 'Good' : 
-                     rating === 'PLAYABLE' ? 'Playable' : 
-                     rating === 'BARELY_PLAYABLE' ? 'Barely Playable' : 'Unplayable'}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select performance rating" />
+                </SelectTrigger>
+                <SelectContent>
+                  {enumValues?.performanceRatings.map(rating => (
+                    <SelectItem key={rating} value={rating}>
+                      {rating === 'EXCELLENT' ? 'Excellent' : 
+                       rating === 'GOOD' ? 'Good' : 
+                       rating === 'PLAYABLE' ? 'Playable' : 
+                       rating === 'BARELY_PLAYABLE' ? 'Barely Playable' : 'Unplayable'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="space-y-2">
@@ -258,20 +271,23 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             
             <div className="space-y-2">
               <label className="block text-sm font-medium">Graphics Settings</label>
-              <select
-                name="graphicsSettings"
+              <Select
                 value={formData.graphicsSettings}
-                onChange={handleInputChange}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
+                onValueChange={(value) => handleSelectChange("graphicsSettings", value)}
               >
-                {enumValues?.graphicsSettings.map(setting => (
-                  <option key={setting} value={setting}>
-                    {setting === 'ULTRA' ? 'Ultra' : 
-                     setting === 'HIGH' ? 'High' : 
-                     setting === 'MEDIUM' ? 'Medium' : 'Low'}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select graphics settings" />
+                </SelectTrigger>
+                <SelectContent>
+                  {enumValues?.graphicsSettings.map(setting => (
+                    <SelectItem key={setting} value={setting}>
+                      {setting === 'ULTRA' ? 'Ultra' : 
+                       setting === 'HIGH' ? 'High' : 
+                       setting === 'MEDIUM' ? 'Medium' : 'Low'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="space-y-2">
@@ -287,42 +303,52 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             
             <div className="space-y-2">
               <label className="block text-sm font-medium">Mac Chipset</label>
-              <select
-                name="combinedChipset"
+              <Select
                 value={`${formData.chipset}-${formData.chipsetVariant}`}
-                onChange={handleChipsetSelect}
-                className="w-full rounded-md border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
+                onValueChange={(value) => {
+                  const [chipset, chipsetVariant] = value.split('-');
+                  setFormData(prev => ({ 
+                    ...prev, 
+                    chipset: chipset as Chipset, 
+                    chipsetVariant: chipsetVariant as ChipsetVariant 
+                  }));
+                }}
                 required
               >
-                {chipsetCombinations?.map((combo: ChipsetCombination) => (
-                  <option key={combo.value} value={combo.value}>
-                    {combo.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Mac chipset" />
+                </SelectTrigger>
+                <SelectContent>
+                  {chipsetCombinations?.map((combo: ChipsetCombination) => (
+                    <SelectItem key={combo.value} value={combo.value}>
+                      {combo.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
           <div className="space-y-2">
             <label className="block text-sm font-medium">Notes (optional)</label>
-            <textarea
+            <Textarea
               name="notes"
               value={formData.notes}
               onChange={handleInputChange}
-              className="w-full rounded-md border border-gray-300 p-2 h-24 dark:bg-gray-700 dark:border-gray-600"
               placeholder="Share your experience, tips, or any issues you encountered..."
             />
           </div>
           
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" type="button" disabled={isSubmitting}>
+              <Button variant="secondary" type="button" size={"lg"} disabled={isSubmitting}>
                 Cancel
               </Button>
             </DialogClose>
             <Button 
               type="submit"
               disabled={isSubmitting || success}
+              size={"lg"}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Review'}
             </Button>

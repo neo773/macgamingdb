@@ -6,6 +6,7 @@ import AddReviewDialog from './AddReviewDialog';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import * as React from 'react';
 import { SVGProps } from 'react';
+import { ArrowLeft, ChevronLeft } from 'lucide-react';
 
 // Game controller icon component
 const GameIcon = (props: SVGProps<SVGSVGElement>) => (
@@ -99,12 +100,13 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
         </header>
         
         <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
-          <div className="mb-8">
+          <div className="mb-4">
             <Link 
               href="/" 
               className="text-blue-400 hover:text-blue-300 inline-flex items-center"
             >
-              ← Back to search
+              <ChevronLeft className='text-blue-400'/>
+              Home
             </Link>
           </div>
           
@@ -129,7 +131,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Game info and stats section */}
             <div className="md:col-span-2">
-              <Card className="bg-gray-900 border-gray-800 shadow-lg mb-8">
+              <Card className=" shadow-lg mb-8">
                 <CardHeader>
                   <CardTitle className="text-2xl text-white">Game Information</CardTitle>
                 </CardHeader>
@@ -143,7 +145,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
             
             {/* Stats section */}
             <div>
-              <Card className="bg-gray-900 border-gray-800 shadow-lg mb-8">
+              <Card className=" shadow-lg mb-8">
                 <CardHeader>
                   <CardTitle className="text-xl text-white">Mac Performance Stats</CardTitle>
                 </CardHeader>
@@ -199,7 +201,7 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
           </div>
           
           {/* Reviews section */}
-          <Card className="bg-gray-900 border-gray-800 shadow-lg">
+          <Card className=" shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl text-white">Experience Reports</CardTitle>
             </CardHeader>
