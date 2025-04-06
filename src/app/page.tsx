@@ -135,17 +135,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-black">
-      <header className="w-full pt-8 pb-4 px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center mb-6">
+      <header className="w-full pt-8 pb-4 px-8 flex justify-center">
+        <div className="max-w-7xl w-full">
+          <div className="flex items-center justify-center mb-6">
             <GameIcon className="w-10 h-10 mr-2" fill="#fff" />
             <h1 className="text-4xl font-bold text-white">MacGamingDB</h1>
           </div>
-          <p className="text-xl text-gray-300 mb-6 max-w-2xl">
+          <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto text-center">
             Find out how your favorite games perform on Mac across different compatibility layers
           </p>
           
-          <SearchBar onResultsChange={handleSearchResultsChange} />
+          <div className="flex justify-center">
+            <SearchBar onResultsChange={handleSearchResultsChange} />
+          </div>
         </div>
       </header>
 
