@@ -148,9 +148,9 @@ export default async function GamePage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Game info and stats section */}
             <div className="md:col-span-2">
-                  <h1 className="text-2xl text-white font-semibold ">
-                    Game Information
-                  </h1>
+              <h1 className="text-2xl text-white font-semibold ">
+                Game Information
+              </h1>
               <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
                 <CardContent className="text-gray-300">
                   <ExpandableDescription
@@ -162,11 +162,10 @@ export default async function GamePage({
 
             {/* Stats section */}
             <div>
-            <h1 className="text-2xl text-white font-semibold ">
-            Mac Performance Stats
-                  </h1>
+              <h1 className="text-2xl text-white font-semibold ">
+                Mac Performance Stats
+              </h1>
               <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
-      
                 <CardContent>
                   {stats ? (
                     <>
@@ -233,7 +232,7 @@ export default async function GamePage({
                       </div>
                     </>
                   ) : (
-                    <p className="text-gray-400">No experience reports yet</p>
+                    <p>No experience reports yet</p>
                   )}
                 </CardContent>
               </Card>
@@ -336,7 +335,9 @@ export default async function GamePage({
             ) : (
               <Card className="bg-[#1F1F1F]">
                 <CardContent className="flex flex-col items-center justify-center py-8 gap-4">
-                  <h1 className="text-xl font-medium">No experience reports yet</h1>
+                  <h1 className="text-xl font-medium">
+                    No experience reports yet
+                  </h1>
                   <AddReviewDialog gameId={id} gameName={game.name} />
                 </CardContent>
               </Card>
