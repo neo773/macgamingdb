@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
 import { PlusIcon } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 type AddReviewDialogProps = {
   gameId: string;
@@ -44,10 +45,16 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
   
   // Fetching enum values from server
   const { data: enumValues, isLoading: isLoadingEnums } = trpc.review.getEnumValues.useQuery();
   const { data: chipsetCombinations, isLoading: isLoadingChipsets } = trpc.review.getChipsetCombinations.useQuery();
+  
+  const { user, isLoading: isAuthLoading, signIn } = useAuth();
+
   
   // Form state with proper typing
   const [formData, setFormData] = useState({
@@ -109,23 +116,34 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   };
   
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const handleSubmit = async (e?: React.FormEvent) => {
+    // Prevent default form submission if event is provided
+    if (e) e.preventDefault();
     
+    // Validate required fields
+    if (!formData.playMethod || !formData.performance || !formData.chipset || !formData.chipsetVariant) {
+      setError('Please fill in all required fields.');
+      return;
+    }
+
+    setError(null);
+
     try {
-      // Only include translationLayer if method is CROSSOVER
-      const reviewData = {
-        ...formData,
-        gameId,
+      // Create the review
+      await createReviewMutation.mutateAsync({
+        gameId: gameId as string,
+        playMethod: formData.playMethod,
+        translationLayer: formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null,
+        performance: formData.performance,
         fps: formData.fps ? parseInt(formData.fps) : null,
-        translationLayer: formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null
-      };
+        graphicsSettings: formData.graphicsSettings,
+        resolution: formData.resolution,
+        chipset: formData.chipset,
+        chipsetVariant: formData.chipsetVariant,
+        notes: formData.notes,
+      });
       
-      createReviewMutation.mutate(reviewData);
-      toast("Your review has been submitted successfully!")
-      setOpen(false)
-      
+      toast("Your review has been submitted successfully!");
     } catch (error) {
       setError('Error submitting review. Please try again.');
       console.error(error);
@@ -145,6 +163,29 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
       chipset: chipset as Chipset, 
       chipsetVariant: chipsetVariant as ChipsetVariant 
     }));
+  };
+
+  // Handle magic link login
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setError(null);
+    
+    try {
+      await signIn(email, window.location.href);
+      setMagicLinkSent(true);
+      toast("Magic link sent to your email!");
+    } catch (error) {
+      setError('Error sending magic link. Please try again.');
+      console.error(error);
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   // If loading, show a loading state
@@ -172,6 +213,43 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
             {error}
           </div>
         )}
+        
+        {!user && !isAuthLoading ? (
+          <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] flex flex-col items-center justify-center rounded-3xl p-6 z-10">
+            <div className="max-w-md w-full bg-black border border-[#272727] p-6 rounded-xl">
+              <h3 className="text-xl font-bold mb-4">Login Required</h3>
+              <p className="mb-6">Please log in to share your experience with this game.</p>
+              
+              {magicLinkSent ? (
+                <div className="text-center py-4">
+                  <p className="mb-2">✉️ Magic link sent!</p>
+                  <p className="text-sm text-gray-400">Check your email for a login link.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Email Address</label>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isLoggingIn}
+                    size="lg"
+                  >
+                    {isLoggingIn ? 'Sending Magic Link...' : 'Login with Magic Link'}
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>
+        ) : null}
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner"
+import { AuthProvider } from "@/context/AuthContext";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -35,7 +36,11 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
+          <TRPCProvider headers={headersObj}>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </TRPCProvider>
           <Toaster/>
         </ThemeProvider>
       </body>

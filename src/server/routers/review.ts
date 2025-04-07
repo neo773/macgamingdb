@@ -1,19 +1,25 @@
-import { z } from 'zod';
-import { router, procedure } from '../trpc';
-import { getGameBySteamId } from '@/lib/algolia';
+import { z } from "zod";
+import { router, procedure, protectedProcedure } from "../trpc";
+import { getGameBySteamId } from "@/lib/algolia";
+import { TRPCError } from "@trpc/server";
 
 // Define enum schemas using Zod
-const PlayMethodEnum = z.enum(['NATIVE', 'CROSSOVER', 'PARALLELS']);
-const TranslationLayerEnum = z.enum(['DXVK', 'DXMT', 'D3D_METAL', 'NONE']);
-const PerformanceEnum = z.enum(['EXCELLENT', 'GOOD', 'PLAYABLE', 'BARELY_PLAYABLE', 'UNPLAYABLE']);
-const GraphicsSettingsEnum = z.enum(['ULTRA', 'HIGH', 'MEDIUM', 'LOW']);
-const ChipsetEnum = z.enum(['M1', 'M2', 'M3']);
-const ChipsetVariantEnum = z.enum(['BASE', 'PRO', 'MAX', 'ULTRA']);
+const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);
+const TranslationLayerEnum = z.enum(["DXVK", "DXMT", "D3D_METAL", "NONE"]);
+const PerformanceEnum = z.enum([
+  "EXCELLENT",
+  "GOOD",
+  "PLAYABLE",
+  "BARELY_PLAYABLE",
+  "UNPLAYABLE",
+]);
+const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
+const ChipsetEnum = z.enum(["M1", "M2", "M3"]);
+const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
 
 // Define schemas using Zod
 const createReviewSchema = z.object({
   gameId: z.string(),
-  userId: z.string(),
   playMethod: PlayMethodEnum,
   translationLayer: TranslationLayerEnum.nullable(),
   performance: PerformanceEnum,
@@ -27,55 +33,68 @@ const createReviewSchema = z.object({
 
 export const reviewRouter = router({
   // Get all enum values for client-side use
-  getEnumValues: procedure
-    .query(() => {
-      return {
-        playMethods: PlayMethodEnum.options,
-        translationLayers: TranslationLayerEnum.options,
-        performanceRatings: PerformanceEnum.options,
-        graphicsSettings: GraphicsSettingsEnum.options,
-        chipsets: ChipsetEnum.options,
-        chipsetVariants: ChipsetVariantEnum.options,
-      };
-    }),
-    
+  getEnumValues: procedure.query(() => {
+    return {
+      playMethods: PlayMethodEnum.options,
+      translationLayers: TranslationLayerEnum.options,
+      performanceRatings: PerformanceEnum.options,
+      graphicsSettings: GraphicsSettingsEnum.options,
+      chipsets: ChipsetEnum.options,
+      chipsetVariants: ChipsetVariantEnum.options,
+    };
+  }),
+
   // Get chipset combinations
-  getChipsetCombinations: procedure
-    .query(() => {
-      const combinations = [];
-      for (const chipset of ChipsetEnum.options) {
-        for (const variant of ChipsetVariantEnum.options) {
-          combinations.push({
-            value: `${chipset}-${variant}`,
-            label: variant === 'BASE' ? chipset : `${chipset} ${variant}`
-          });
-        }
+  getChipsetCombinations: procedure.query(() => {
+    const combinations = [];
+    for (const chipset of ChipsetEnum.options) {
+      for (const variant of ChipsetVariantEnum.options) {
+        combinations.push({
+          value: `${chipset}-${variant}`,
+          label: variant === "BASE" ? chipset : `${chipset} ${variant}`,
+        });
       }
-      return combinations;
-    }),
-  
-  create: procedure
+    }
+    return combinations;
+  }),
+
+  // Check if user is authenticated
+  getUserAuth: procedure.query(async ({ ctx }) => {
+    return {
+      authenticated: !!ctx.user,
+      user: ctx.user || null,
+    };
+  }),
+
+  create: protectedProcedure
     .input(createReviewSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         // Validate the game exists in Algolia
         const gameExists = await getGameBySteamId(input.gameId);
         if (!gameExists) {
-          throw new Error('Game not found');
+          throw new Error("Game not found");
         }
-        
+
         // Create the game entry if it doesn't exist in our database
         await ctx.prisma.game.upsert({
           where: { id: input.gameId },
           update: {},
-          create: { id: input.gameId }
+          create: { id: input.gameId },
         });
-        
-        // Create the review
+
+        if (!ctx.user?.user.id) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Missing authorization ",
+          });
+        }
+
+        // Create the review with the authenticated user's ID
         const review = await ctx.prisma.gameReview.create({
           data: {
             gameId: input.gameId,
-            userId: input.userId,
+            userId: ctx.user.user.id,
             playMethod: input.playMethod,
             translationLayer: input.translationLayer,
             performance: input.performance,
@@ -85,15 +104,15 @@ export const reviewRouter = router({
             chipset: input.chipset,
             chipsetVariant: input.chipsetVariant,
             notes: input.notes || null,
-          }
+          },
         });
-        
+
         return { review };
       } catch (error) {
-        console.error('Error creating review:', error);
-        throw new Error('Failed to create review');
+        console.error("Error creating review:", error);
+        throw new Error("Failed to create review");
       }
-    })
+    }),
 });
 
 // Export types derived from zod schemas for client usage
@@ -102,4 +121,4 @@ export type TranslationLayer = z.infer<typeof TranslationLayerEnum>;
 export type Performance = z.infer<typeof PerformanceEnum>;
 export type GraphicsSettings = z.infer<typeof GraphicsSettingsEnum>;
 export type Chipset = z.infer<typeof ChipsetEnum>;
-export type ChipsetVariant = z.infer<typeof ChipsetVariantEnum>; 
+export type ChipsetVariant = z.infer<typeof ChipsetVariantEnum>;
