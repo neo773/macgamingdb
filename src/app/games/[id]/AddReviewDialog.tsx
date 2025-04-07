@@ -215,8 +215,8 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
         )}
         
         {!user && !isAuthLoading ? (
-          <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] flex flex-col items-center justify-center rounded-3xl p-6 z-10">
-            <div className="max-w-md w-full bg-black border border-[#272727] p-6 rounded-xl">
+          <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center rounded-3xl p-6 z-10" style={{backdropFilter: 'blur(2px)', WebkitBackdropFilter: 'blur(2px)'}}>
+            <div style={{width: '100%', maxWidth: '24rem', margin: '0 auto'}} className="bg-black border border-[#272727] p-6 rounded-xl">
               <h3 className="text-xl font-bold mb-4">Login Required</h3>
               <p className="mb-6">Please log in to share your experience with this game.</p>
               

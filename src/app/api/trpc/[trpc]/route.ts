@@ -1,17 +1,13 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@/server/routers/_app';
-import { createTRPCContext } from '@/server/trpc';
 import prisma from '@/lib/prisma';
 
 const handler = (req: Request) => {
-  return fetchRequestHandler({
+  return fetchRequestHandler<typeof appRouter>({
     endpoint: '/api/trpc',
     req,
     router: appRouter,
-    createContext: () => 
-      createTRPCContext({
-        prisma: prisma,
-      }),
+    createContext: () => ({ req, prisma }),
     onError: ({ path, error }) => {
       console.error(`Error in tRPC handler at ${path}: ${error.message}`);
     },
