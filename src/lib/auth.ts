@@ -25,7 +25,7 @@ export const auth = betterAuth({
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         await resend.emails.send({
-          from: "MacGamingDB <hello@macgamingdb.com>",
+          from: "MacGamingDB <no-reply@macgamingdb.app>",
           to: email,
           subject: "Log in to MacGamingDB with this magic link",
           react: MacGamingDBMagicLinkEmail({ magicLink: url }),
