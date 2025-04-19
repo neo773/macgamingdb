@@ -6,7 +6,7 @@ import { SteamGame } from '@/lib/algolia';
 import { trpc } from '@/lib/trpc/provider';
 
 type SearchBarProps = {
-  onResultsChange?: (results: SteamGame[] | null) => void;
+  onResultsChange?: (results: SteamGame[] | null, isLoading: boolean) => void;
 };
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
@@ -20,26 +20,13 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
     }
   );
 
-  // Update results when data changes
+  // Pass data and loading state to parent
   useEffect(() => {
     if (onResultsChange) {
-      if (query.trim().length === 0) {
-        onResultsChange(null);
-      } else if (data) {
-        onResultsChange(data);
-      }
+      const results = query.trim() === '' ? null : (data || null);
+      onResultsChange(results, isLoading);
     }
-  }, [data, query, onResultsChange]);
-
-  // Also update loading state when isLoading changes
-  useEffect(() => {
-    if (onResultsChange && query.trim().length > 0) {
-      // This helps trigger the loading skeletons in the parent component
-      if (isLoading) {
-        onResultsChange([]); // Empty array to trigger loading state
-      }
-    }
-  }, [isLoading, onResultsChange, query]);
+  }, [data, query, isLoading, onResultsChange]);
 
   return (
     <div className="relative w-full max-w-4xl">

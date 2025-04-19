@@ -55,15 +55,10 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Handle search results updates
-  const handleSearchResultsChange = (results: SteamGame[] | null) => {
-    // If results is an empty array, it means we're loading
-    if (results && results.length === 0) {
-      setIsLoading(true);
-    } else {
-      setSearchResults(results);
-      setIsLoading(false);
-    }
+  // Simple handler for search results
+  const handleSearchResultsChange = (results: SteamGame[] | null, isLoading: boolean) => {
+    setSearchResults(results);
+    setIsLoading(isLoading);
   };
 
   // Navigate to game page when a game is selected
@@ -122,6 +117,14 @@ export default function Home() {
       ));
     }
 
+    if (searchResults && searchResults.length === 0) {
+      return (
+        <div className="col-span-full text-center py-8">
+          <p className="text-xl text-gray-400">No games found matching your search.</p>
+        </div>
+      );
+    }
+
     if (searchResults && searchResults.length > 0) {
       return searchResults.map((game) => (
         <GameCard key={game.objectID} game={game} />
@@ -152,12 +155,6 @@ export default function Home() {
       </header>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
-        {!isLoading && searchResults !== null && searchResults.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-xl text-gray-400">No games found matching your search.</p>
-          </div>
-        )}
-        
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {renderGameCards()}
         </div>
