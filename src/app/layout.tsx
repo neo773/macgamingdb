@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { headers } from "next/headers";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/context/AuthContext";
 
-// const inter = Inter({ subsets: ["latin"] });
+const GeistMono = Geist({ subsets: ["latin"], weight: ['400', '500'] });
 
 export const metadata: Metadata = {
   title: "Mac Gaming DB",
@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body >
+      <body className={`${GeistMono.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

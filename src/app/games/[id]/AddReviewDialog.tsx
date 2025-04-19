@@ -266,7 +266,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                     }`}
                     onClick={() => handlePlayMethodSelect(method)}
                   >
-                    <div className={`relative p-1 rounded-lg ${
+                    <div className={`relative p-1 rounded-xl ${
                       formData.playMethod === method 
                         ? 'ring-2 ring-blue-500' 
                         : ''
@@ -274,7 +274,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                       <img 
                         src={`/images/${method.toLowerCase()}.png`} 
                         alt={method} 
-                        className="w-14 h-14 object-contain" 
+                        className="w-14 h-14 object-contain p-1" 
                       />
                     </div>
                     <span className="mt-1 text-sm">

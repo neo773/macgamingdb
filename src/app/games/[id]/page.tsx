@@ -151,7 +151,7 @@ export default async function GamePage({
               <h1 className="text-2xl text-white font-semibold ">
                 Game Information
               </h1>
-              <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
+              <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
                 <CardContent className="text-gray-300">
                   <ExpandableDescription
                     description={game.detailed_description}
@@ -165,7 +165,7 @@ export default async function GamePage({
               <h1 className="text-2xl text-white font-semibold ">
                 Mac Performance Stats
               </h1>
-              <Card className=" shadow-lg mb-8 mt-4 bg-[#1F1F1F]">
+              <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
                 <CardContent>
                   {stats ? (
                     <>
@@ -255,35 +255,49 @@ export default async function GamePage({
                 {reviews.map((review) => (
                   <Card
                     key={review.id}
-                    className="bg-[#1F1F1F] overflow-hidden"
+                    className="bg-primary-gradient overflow-hidden"
                   >
                     <CardHeader>
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={`/images/${review.playMethod.toLowerCase()}.png`}
-                            alt={formatMethodName(review.playMethod)}
-                            className="size-10 object-contain"
-                          />
-                          <div>
-                            <p className="font-medium text-white">
-                              {formatMethodName(review.playMethod)}
-                            </p>
-                            {review.translationLayer && (
-                              <Badge variant="secondary" className="mt-1">
-                                {review.translationLayer}
-                              </Badge>
-                            )}
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="flex gap-4">
+                            <img
+                              src={`/images/${review.playMethod.toLowerCase()}.png`}
+                              alt={formatMethodName(review.playMethod)}
+                              className="size-16 object-contain"
+                            />
+                            <div className="flex flex-col justify-between -mt-1">
+                              <p className="font-medium text-white text-lg">
+                                {formatMethodName(review.playMethod)}
+                              </p>
+
+                              <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
+                                v25.0
+                              </span>
+
+                              <div className="flex gap-2">
+                                {review.translationLayer && (
+                                  <Badge variant="secondary">
+                                    {review.translationLayer}
+                                  </Badge>
+                                )}
+                                <Badge
+                                  variant="outline"
+                                  className={`${getPerformanceColor(
+                                    review.performance
+                                  )}`}
+                                >
+                                  {review.performance.replace("_", " ")}
+                                </Badge>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <Badge
-                          variant="outline"
-                          className={`${getPerformanceColor(
-                            review.performance
-                          )}`}
-                        >
-                          {review.performance.replace("_", " ")}
-                        </Badge>
+                        <img
+                          src={`/images/chipsets/${review.chipset.toLowerCase()}/${review.chipsetVariant.toLowerCase()}.png`}
+                          alt="M3 Max Chip"
+                          className="w-[70px] object-contain"
+                        />
                       </div>
                     </CardHeader>
 
@@ -292,26 +306,30 @@ export default async function GamePage({
                         <dl className="space-y-2 text-sm text-gray-300">
                           <div className="flex justify-between">
                             <dt className="font-medium">Graphics:</dt>
-                            <dd>{review.graphicsSettings}</dd>
+                            <dd className="font-semibold text-white font-mono">
+                              {review.graphicsSettings}
+                            </dd>
                           </div>
 
                           {review.fps && (
                             <div className="flex justify-between">
                               <dt className="font-medium">FPS:</dt>
-                              <dd>{review.fps}</dd>
+                              <dd className="font-semibold text-white font-mono">{review.fps}</dd>
                             </div>
                           )}
 
                           {review.resolution && (
                             <div className="flex justify-between">
                               <dt className="font-medium">Resolution:</dt>
-                              <dd>{review.resolution}</dd>
+                              <dd className="font-semibold text-white font-mono">
+                                {review.resolution}
+                              </dd>
                             </div>
                           )}
 
                           <div className="flex justify-between">
                             <dt className="font-medium">Hardware:</dt>
-                            <dd>
+                            <dd className="font-semibold text-white font-mono">
                               {review.chipset} {review.chipsetVariant}
                             </dd>
                           </div>
@@ -323,7 +341,7 @@ export default async function GamePage({
                           <h4 className="text-sm font-medium text-gray-300 mb-2">
                             Review Note:
                           </h4>
-                          <div className="bg-[#363636] p-3 rounded-lg text-sm text-gray-300">
+                          <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
                             <p className="line-clamp-3">{review.notes}</p>
                           </div>
                         </div>
@@ -333,7 +351,7 @@ export default async function GamePage({
                 ))}
               </div>
             ) : (
-              <Card className="bg-[#1F1F1F]">
+              <Card className="bg-primary-gradient">
                 <CardContent className="flex flex-col items-center justify-center py-8 gap-4">
                   <h1 className="text-xl font-medium">
                     No experience reports yet

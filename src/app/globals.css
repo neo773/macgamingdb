@@ -119,3 +119,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bg-primary-gradient {
+  background: linear-gradient(310deg, rgba(0, 0, 0, 1) 0%, rgb(15 15 15) 100%)
+}

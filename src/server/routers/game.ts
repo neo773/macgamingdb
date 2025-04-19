@@ -204,8 +204,10 @@ export const gameRouter = router({
       try {
         // Get game details from Algolia
         const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${input.id}`)
+        console.log(response.status, 'steam status');
         const gameDetails = await response.json() as SteamApp;
-        console.log(gameDetails, 'gameDetails');
+        console.log(gameDetails);
+        
         if (!gameDetails) {
           throw new Error('Game not found');
         }
