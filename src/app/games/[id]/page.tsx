@@ -271,9 +271,11 @@ export default async function GamePage({
                                 {formatMethodName(review.playMethod)}
                               </p>
 
-                              <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
-                                v25.0
-                              </span>
+                              {review.softwareVersion && (
+                                <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
+                                  v{review.softwareVersion}
+                                </span>
+                              )}
 
                               <div className="flex gap-2">
                                 {review.translationLayer && (
@@ -302,7 +304,7 @@ export default async function GamePage({
                     </CardHeader>
 
                     <CardContent>
-                      <div className="border-t border-white/20 pt-3 pb-2">
+                      <div className="border-t border-white/15 pt-3 pb-2">
                         <dl className="space-y-2 text-sm text-gray-300">
                           <div className="flex justify-between">
                             <dt className="font-medium">Graphics:</dt>
@@ -337,7 +339,7 @@ export default async function GamePage({
                       </div>
 
                       {review.notes && (
-                        <div className="border-t border-white/20 pt-3 mt-2">
+                        <div className="border-t border-white/15 pt-3 mt-2">
                           <h4 className="text-sm font-medium text-gray-300 mb-2">
                             Review Note:
                           </h4>

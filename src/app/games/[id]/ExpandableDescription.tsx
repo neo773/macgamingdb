@@ -7,7 +7,9 @@ interface ExpandableDescriptionProps {
   description: string;
 }
 
-export default function ExpandableDescription({ description }: ExpandableDescriptionProps) {
+export default function ExpandableDescription({ 
+  description, 
+}: ExpandableDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTooLong, setIsTooLong] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -35,9 +37,6 @@ export default function ExpandableDescription({ description }: ExpandableDescrip
           dangerouslySetInnerHTML={{ __html: description }} 
         />
         
-        {!isExpanded && isTooLong && (
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#1F1F1F] to-transparent" />
-        )}
       </div>
       
       {isTooLong && (

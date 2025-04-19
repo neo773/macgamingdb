@@ -29,6 +29,7 @@ const createReviewSchema = z.object({
   chipset: ChipsetEnum,
   chipsetVariant: ChipsetVariantEnum,
   notes: z.string().optional(),
+  softwareVersion: z.string().optional(),
 });
 
 export const reviewRouter = router({
@@ -41,6 +42,14 @@ export const reviewRouter = router({
       graphicsSettings: GraphicsSettingsEnum.options,
       chipsets: ChipsetEnum.options,
       chipsetVariants: ChipsetVariantEnum.options,
+    };
+  }),
+
+  // Get version defaults for different software
+  getSoftwareVersions: procedure.query(() => {
+    return {
+      CROSSOVER: ["25.0", "24.0"],
+      PARALLELS: ["20", "19"],
     };
   }),
 
@@ -104,6 +113,7 @@ export const reviewRouter = router({
             chipset: input.chipset,
             chipsetVariant: input.chipsetVariant,
             notes: input.notes || null,
+            softwareVersion: input.softwareVersion || null,
           },
         });
 

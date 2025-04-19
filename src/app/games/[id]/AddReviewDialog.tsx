@@ -48,10 +48,13 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   const [email, setEmail] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [customVersion, setCustomVersion] = useState(false);
+  const [customVersionValue, setCustomVersionValue] = useState('');
   
   // Fetching enum values from server
   const { data: enumValues, isLoading: isLoadingEnums } = trpc.review.getEnumValues.useQuery();
   const { data: chipsetCombinations, isLoading: isLoadingChipsets } = trpc.review.getChipsetCombinations.useQuery();
+  const { data: softwareVersions, isLoading: isLoadingSoftwareVersions } = trpc.review.getSoftwareVersions.useQuery();
   
   const { user, isLoading: isAuthLoading, signIn } = useAuth();
 
@@ -67,6 +70,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
     chipset: '' as Chipset,
     chipsetVariant: '' as ChipsetVariant,
     notes: '',
+    softwareVersion: '',
     userId: 'user-' + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
   });
   
@@ -83,7 +87,36 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
         chipsetVariant: enumValues.chipsetVariants[0], // Default to BASE
       }));
     }
-  }, [enumValues]);
+
+    if (softwareVersions) {
+      setFormData(prev => ({
+        ...prev,
+        softwareVersion: softwareVersions.CROSSOVER[0] // Default to CrossOver version
+      }));
+    }
+  }, [enumValues, softwareVersions]);
+  
+  // Update software version when play method changes
+  useEffect(() => {
+    if (softwareVersions && formData.playMethod) {
+      if (formData.playMethod === 'CROSSOVER' && softwareVersions.CROSSOVER.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          softwareVersion: softwareVersions.CROSSOVER[0]
+        }));
+      } else if (formData.playMethod === 'PARALLELS' && softwareVersions.PARALLELS.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          softwareVersion: softwareVersions.PARALLELS[0]
+        }));
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          softwareVersion: ''
+        }));
+      }
+    }
+  }, [formData.playMethod, softwareVersions]);
   
   // Create review mutation
   const createReviewMutation = trpc.review.create.useMutation({
@@ -102,7 +135,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
   });
   
   const isSubmitting = createReviewMutation.isPending;
-  const isLoading = isLoadingEnums || isLoadingChipsets;
+  const isLoading = isLoadingEnums || isLoadingChipsets || isLoadingSoftwareVersions;
   
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -128,6 +161,9 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
 
     setError(null);
 
+    // Determine which software version to use
+    const finalSoftwareVersion = customVersion ? customVersionValue : formData.softwareVersion;
+
     try {
       // Create the review
       await createReviewMutation.mutateAsync({
@@ -141,6 +177,7 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
         chipset: formData.chipset,
         chipsetVariant: formData.chipsetVariant,
         notes: formData.notes,
+        softwareVersion: finalSoftwareVersion,
       });
       
       toast("Your review has been submitted successfully!");
@@ -287,8 +324,67 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
               </div>
             </div>
             
-            <div>
-            </div>
+            {(formData.playMethod === 'CROSSOVER' || formData.playMethod === 'PARALLELS') && (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium">Software Version</label>
+                {!customVersion ? (
+                  <div>
+                    <Select
+                      value={formData.softwareVersion}
+                      onValueChange={(value) => {
+                        if (value === "custom") {
+                          setCustomVersion(true);
+                        } else {
+                          handleSelectChange("softwareVersion", value);
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select software version" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {formData.playMethod === 'CROSSOVER' && 
+                         softwareVersions?.CROSSOVER.map(version => (
+                          <SelectItem key={version} value={version}>
+                            {version}
+                          </SelectItem>
+                        ))}
+                        {formData.playMethod === 'PARALLELS' && 
+                         softwareVersions?.PARALLELS.map(version => (
+                          <SelectItem key={version} value={version}>
+                            {version}
+                          </SelectItem>
+                        ))}
+                        <SelectItem key="custom" value="custom">
+                          Custom version...
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <div className="flex space-x-2 items-center">
+                    <Input
+                      type="text"
+                      value={customVersionValue}
+                      onChange={(e) => setCustomVersionValue(e.target.value)}
+                      placeholder={formData.playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'}
+                      className="flex-1"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setCustomVersion(false);
+                        setCustomVersionValue('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
             
             {formData.playMethod === 'CROSSOVER' && (
               <div className="space-y-2">
