@@ -323,11 +323,9 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 ))}
               </div>
             </div>
-
-            <div></div>
             
-            {(formData.playMethod === 'CROSSOVER' || formData.playMethod === 'PARALLELS') && (
-              <div className="space-y-2">
+            {(formData.playMethod === 'CROSSOVER' || formData.playMethod === 'PARALLELS') ? (
+              <div className="flex flex-col justify-center space-y-2">
                 <label className="block text-sm font-medium">Software Version</label>
                 {!customVersion ? (
                   <div>
@@ -386,6 +384,8 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                   </div>
                 )}
               </div>
+            ): (
+              <div></div>
             )}
             
             {formData.playMethod === 'CROSSOVER' && (

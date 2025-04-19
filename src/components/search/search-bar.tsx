@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { SteamGame } from '@/lib/algolia';
 import { trpc } from '@/lib/trpc/provider';
@@ -12,7 +11,6 @@ type SearchBarProps = {
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   const [query, setQuery] = useState('');
-  const router = useRouter();
 
   const { data, isLoading } = trpc.game.search.useQuery(
     { query: query },
@@ -53,7 +51,10 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
             setQuery(e.target.value);
           }}
           placeholder="Search for a game..."
-          className="w-full h-14 px-6 pr-12 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800/60 dark:border-gray-700 text-lg backdrop-blur-sm"
+          className="w-full h-14 px-6 pr-12 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 border-blue-400 text-lg backdrop-blur-sm"
+          style={{
+            background: 'linear-gradient(139deg, rgb(47 144 235 / 18%) 0%, rgba(43, 161, 240, 0.1) 100%)'
+          }}
         />
         <div className="absolute right-4 top-4 text-blue-400">
           {isLoading ? (
