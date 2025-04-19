@@ -323,6 +323,8 @@ export default function AddReviewDialog({ gameId, gameName }: AddReviewDialogPro
                 ))}
               </div>
             </div>
+
+            <div></div>
             
             {(formData.playMethod === 'CROSSOVER' || formData.playMethod === 'PARALLELS') && (
               <div className="space-y-2">
