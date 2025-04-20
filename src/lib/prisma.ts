@@ -13,8 +13,3 @@ export function createPrismaClient(adapter?: PrismaLibSQL): PrismaClient {
   }
   return new PrismaClient();
 }
-
-// Prevent multiple instances of Prisma Client in development
-declare global {
-  var prisma: PrismaClient | undefined;
-}

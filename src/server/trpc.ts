@@ -4,12 +4,14 @@ import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
 import { createPrismaClient } from "@/lib/prisma";
 import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { PrismaClient } from '@prisma/client';
+
 // import { getCloudflareContext } from "@opennextjs/cloudflare";
 // import { PrismaD1 } from "adapter-d1-patched";
 
 // Define a proper context type
 export interface TrpcContext {
-  prisma: typeof prisma;
+  prisma: PrismaClient;
   req?: Request;
   user?: any;
 }

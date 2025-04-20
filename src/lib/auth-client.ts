@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { createAuthClient } from "better-auth/react"
+import { createAuthClient } from "better-auth/react";
 
-import { magicLinkClient, passkeyClient } from "better-auth/client/plugins";
+import { magicLinkClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
-  plugins: [
-    magicLinkClient(),
-  ],
+  baseURL:
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    "http://localhost:3000",
+  plugins: [magicLinkClient()],
 });
