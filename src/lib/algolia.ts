@@ -8,10 +8,10 @@ const ALGOLIA_INDEX_NAME = "steamdb";
 
 // List of possible origins/referers for true randomness
 const SOURCES = [
-  ["https://www.protondb.com", "https://www.protondb.com/"],
-  ["https://steamdb.info", "https://steamdb.info/"],
-  ["https://www.steamdb.info", "https://www.steamdb.info/"],
-  ["https://protondb.com", "https://protondb.com/"]
+  ["https://www.protondb.com", "https://www.protondb.com"],
+  ["https://steamdb.info", "https://steamdb.info"],
+  ["https://www.steamdb.info", "https://www.steamdb.info"],
+  ["https://protondb.com", "https://protondb.com"],
 ];
 
 // Get cryptographically secure random index
@@ -21,7 +21,7 @@ const getRandomIndex = () => randomBytes(1)[0] % SOURCES.length;
 const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY, {
   baseHeaders: {
     Origin: SOURCES[getRandomIndex()][0],
-    Referer: SOURCES[getRandomIndex()][1],
+    Referer: SOURCES[getRandomIndex()][0],
   },
 });
 
@@ -42,7 +42,7 @@ export interface SteamGame {
 export async function searchGames(
   query: string,
   page = 0,
-  hitsPerPage = 50,
+  hitsPerPage = 50
 ): Promise<SteamGame[]> {
   try {
     const result = await searchClient.search<SteamGame>({
@@ -65,7 +65,7 @@ export async function searchGames(
 }
 
 export async function getGameBySteamId(
-  steamId: string,
+  steamId: string
 ): Promise<SteamGame | null> {
   try {
     const result = await searchClient.getObject({
