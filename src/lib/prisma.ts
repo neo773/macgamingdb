@@ -11,7 +11,7 @@ declare global {
 let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'production') {
-  const adapter = new PrismaD1(getCloudflareContext().env.DB as unknown as D1Database);
+  const adapter = new PrismaD1(getCloudflareContext().env.DB);
   prisma = new PrismaClient({
     adapter: adapter
   });
