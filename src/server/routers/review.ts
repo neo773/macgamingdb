@@ -14,7 +14,7 @@ const PerformanceEnum = z.enum([
   "UNPLAYABLE",
 ]);
 const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
-const ChipsetEnum = z.enum(["M1", "M2", "M3"]);
+const ChipsetEnum = z.enum(["M1", "M2", "M3", "M4"]);
 const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
 
 // Define schemas using Zod
