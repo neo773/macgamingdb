@@ -1,15 +1,27 @@
 import { algoliasearch } from "algoliasearch";
+import { randomBytes } from "crypto";
 
 // Algolia client configuration
 const ALGOLIA_APP_ID = "94HE6YATEI";
 const ALGOLIA_API_KEY = "9ba0e69fb2974316cdaec8f5f257088f";
 const ALGOLIA_INDEX_NAME = "steamdb";
 
-// Create the Algolia client
+// List of possible origins/referers for true randomness
+const SOURCES = [
+  ["https://www.protondb.com", "https://www.protondb.com/"],
+  ["https://steamdb.info", "https://steamdb.info/"],
+  ["https://www.steamdb.info", "https://www.steamdb.info/"],
+  ["https://protondb.com", "https://protondb.com/"]
+];
+
+// Get cryptographically secure random index
+const getRandomIndex = () => randomBytes(1)[0] % SOURCES.length;
+
+// Create the Algolia client with truly random headers
 const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY, {
   baseHeaders: {
-    Origin: "https://www.protondb.com",
-    Referer: "https://www.protondb.com/",
+    Origin: SOURCES[getRandomIndex()][0],
+    Referer: SOURCES[getRandomIndex()][1],
   },
 });
 
