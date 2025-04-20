@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { PrismaD1 } from '@prisma/adapter-d1';
-import { D1Database } from '@cloudflare/workers-types/experimental';
 
 // Prevent multiple instances of Prisma Client in development
 declare global {
