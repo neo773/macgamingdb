@@ -4,8 +4,8 @@ import { Github, Twitter } from "lucide-react";
 const Footer = () => {
   return (
     <footer className="mt-auto w-full py-6 border-t border-gray-900 text-center text-gray-600">
-      <div className="max-w-7xl mx-auto px-4 flex flex-row items-center justify-between">
-        <p className="text-sm">
+      <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0">
+        <p className="text-xs md:text-sm">
           © {new Date().getFullYear()} MacGamingDB - A community resource for
           Mac gamers
         </p>
