@@ -1,29 +1,29 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
-import { SteamGame } from '@/lib/algolia';
-import { trpc } from '@/lib/trpc/provider';
+import { useState, useEffect } from "react";
+import { Search } from "lucide-react";
+import { SteamGame } from "@/lib/algolia";
+import { trpc } from "@/lib/trpc/provider";
 
 type SearchBarProps = {
   onResultsChange?: (results: SteamGame[] | null, isLoading: boolean) => void;
 };
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
 
   const { data, isLoading } = trpc.game.search.useQuery(
     { query: query },
-    { 
+    {
       enabled: query.trim().length > 0,
       placeholderData: (prev) => prev,
-    }
+    },
   );
 
   // Pass data and loading state to parent
   useEffect(() => {
     if (onResultsChange) {
-      const results = query.trim() === '' ? null : (data || null);
+      const results = query.trim() === "" ? null : data || null;
       onResultsChange(results, isLoading);
     }
   }, [data, query, isLoading, onResultsChange]);
@@ -40,13 +40,26 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
           placeholder="Search for a game..."
           className="w-full h-14 px-6 pr-12 rounded-xl border focus:outline-none focus:ring-2 focus:ring-blue-500 border-blue-400 text-lg backdrop-blur-sm"
           style={{
-            background: 'linear-gradient(139deg, rgb(47 144 235 / 18%) 0%, rgba(43, 161, 240, 0.1) 100%)'
+            background:
+              "linear-gradient(139deg, rgb(47 144 235 / 18%) 0%, rgba(43, 161, 240, 0.1) 100%)",
           }}
         />
         <div className="absolute right-4 top-4 text-blue-400">
           {isLoading ? (
-            <svg className="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <svg
+              className="animate-spin h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
               <path
                 className="opacity-75"
                 fill="currentColor"
@@ -60,4 +73,4 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
       </div>
     </div>
   );
-} 
+}

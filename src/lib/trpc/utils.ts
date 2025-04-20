@@ -3,14 +3,15 @@
  */
 export function getUrl() {
   // In browser environments, get the base URL from the window
-  if (typeof window !== 'undefined') {
-    return '/api/trpc';
+  if (typeof window !== "undefined") {
+    return "/api/trpc";
   }
-  
+
   // In server environments, construct the URL
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                  (process.env.VERCEL_URL 
-                    ? `https://${process.env.VERCEL_URL}` 
-                    : 'http://localhost:3000');
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
   return `${baseUrl}/api/trpc`;
-} 
+}

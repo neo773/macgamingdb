@@ -30,7 +30,7 @@ export interface SteamGame {
 export async function searchGames(
   query: string,
   page = 0,
-  hitsPerPage = 50
+  hitsPerPage = 50,
 ): Promise<SteamGame[]> {
   try {
     const result = await searchClient.search<SteamGame>({
@@ -52,8 +52,9 @@ export async function searchGames(
   }
 }
 
-
-export async function getGameBySteamId(steamId: string): Promise<SteamGame | null> {
+export async function getGameBySteamId(
+  steamId: string,
+): Promise<SteamGame | null> {
   try {
     const result = await searchClient.getObject({
       indexName: ALGOLIA_INDEX_NAME,
@@ -65,4 +66,3 @@ export async function getGameBySteamId(steamId: string): Promise<SteamGame | nul
     throw error;
   }
 }
-

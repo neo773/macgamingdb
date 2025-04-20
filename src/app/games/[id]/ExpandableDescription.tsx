@@ -7,13 +7,13 @@ interface ExpandableDescriptionProps {
   description: string;
 }
 
-export default function ExpandableDescription({ 
-  description, 
+export default function ExpandableDescription({
+  description,
 }: ExpandableDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTooLong, setIsTooLong] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     // Check if content is too long by comparing scrollHeight to clientHeight
     if (contentRef.current) {
@@ -21,27 +21,26 @@ export default function ExpandableDescription({
       setIsTooLong(fullContent.scrollHeight > 150);
     }
   }, [description]);
-  
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
-  
+
   return (
     <div className="mt-2">
-      <div 
-        className={`overflow-hidden relative ${isExpanded ? '' : 'max-h-[200px]'}`}
-        style={{ transition: 'max-height 0.3s ease-in-out' }}
+      <div
+        className={`overflow-hidden relative ${isExpanded ? "" : "max-h-[200px]"}`}
+        style={{ transition: "max-height 0.3s ease-in-out" }}
       >
-        <div 
+        <div
           ref={contentRef}
-          dangerouslySetInnerHTML={{ __html: description }} 
+          dangerouslySetInnerHTML={{ __html: description }}
         />
-        
       </div>
-      
+
       {isTooLong && (
-        <Button 
-          onClick={toggleExpand} 
+        <Button
+          onClick={toggleExpand}
           variant="link"
           className="mt-2 text-blue-400 hover:text-blue-300 p-0 h-auto"
         >

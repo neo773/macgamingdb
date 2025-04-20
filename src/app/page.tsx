@@ -60,7 +60,7 @@ export default function Home() {
   // Simple handler for search results
   const handleSearchResultsChange = (
     results: SteamGame[] | null,
-    isLoading: boolean
+    isLoading: boolean,
   ) => {
     setSearchResults(results);
     setIsLoading(isLoading);

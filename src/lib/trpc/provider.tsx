@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { httpBatchLink } from '@trpc/client';
-import { createTRPCReact } from '@trpc/react-query';
-import { type AppRouter } from '@/server/routers/_app';
-import { getUrl } from '@/lib/trpc/utils';
-import superjson from 'superjson';
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
+import { type AppRouter } from "@/server/routers/_app";
+import { getUrl } from "@/lib/trpc/utils";
+import superjson from "superjson";
 
 export const trpc = createTRPCReact<AppRouter>({
   overrides: {
@@ -19,21 +19,24 @@ export const trpc = createTRPCReact<AppRouter>({
   },
 });
 
-export function TRPCProvider({ 
+export function TRPCProvider({
   children,
   headers = {},
-}: { 
+}: {
   children: React.ReactNode;
   headers?: Record<string, string>;
 }) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 5 * 1000,
-      }
-    }
-  }));
-  
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 1000,
+          },
+        },
+      }),
+  );
+
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
@@ -47,7 +50,7 @@ export function TRPCProvider({
           transformer: superjson,
         }),
       ],
-    })
+    }),
   );
 
   return (
@@ -55,4 +58,4 @@ export function TRPCProvider({
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </trpc.Provider>
   );
-} 
+}

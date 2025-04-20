@@ -22,7 +22,7 @@ import Header from "@/components/header";
 // Generate metadata for SEO
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
-  _parent: ResolvingMetadata
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id } = await params;
 
@@ -87,7 +87,7 @@ export default async function GamePage({
 
     return (
       <div className="min-h-screen flex flex-col bg-black">
-        <Header/>
+        <Header />
         <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
           <div className="mb-4">
             <Link
@@ -261,7 +261,7 @@ export default async function GamePage({
                                 <Badge
                                   variant="outline"
                                   className={`${getPerformanceColor(
-                                    review.performance
+                                    review.performance,
                                   )}`}
                                 >
                                   {review.performance.replace("_", " ")}
@@ -291,7 +291,9 @@ export default async function GamePage({
                           {review.fps && (
                             <div className="flex justify-between">
                               <dt className="font-medium">FPS:</dt>
-                              <dd className="font-semibold text-white font-mono">{review.fps}</dd>
+                              <dd className="font-semibold text-white font-mono">
+                                {review.fps}
+                              </dd>
                             </div>
                           )}
 
@@ -340,7 +342,7 @@ export default async function GamePage({
           </div>
         </main>
 
-        <Footer/>
+        <Footer />
       </div>
     );
   } catch (error) {

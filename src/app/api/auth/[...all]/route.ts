@@ -8,23 +8,27 @@ import { toNextJsHandler } from "better-auth/next-js";
 export const GET = async (req: Request) => {
   // const { env } = getCloudflareContext();
   const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production" ? new PrismaLibSQL({
-      url: `${process.env.LIBSQL_DATABASE_URL}`,
-      authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-    }) : undefined
+    process.env.NODE_ENV === "production"
+      ? new PrismaLibSQL({
+          url: `${process.env.LIBSQL_DATABASE_URL}`,
+          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
+        })
+      : undefined,
   );
-  
+
   return toNextJsHandler(auth(prisma)).GET(req);
 };
 
 export const POST = async (req: Request) => {
   // const { env } = getCloudflareContext();
   const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production" ? new PrismaLibSQL({
-      url: `${process.env.LIBSQL_DATABASE_URL}`,
-      authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-    }) : undefined
+    process.env.NODE_ENV === "production"
+      ? new PrismaLibSQL({
+          url: `${process.env.LIBSQL_DATABASE_URL}`,
+          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
+        })
+      : undefined,
   );
-  
+
   return toNextJsHandler(auth(prisma)).POST(req);
 };

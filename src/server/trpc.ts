@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
 import { createPrismaClient } from "@/lib/prisma";
 import { PrismaLibSQL } from "@prisma/adapter-libsql";
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 // import { getCloudflareContext } from "@opennextjs/cloudflare";
 // import { PrismaD1 } from "adapter-d1-patched";
@@ -18,7 +18,7 @@ export interface TrpcContext {
 
 // Create context for API route handler
 export const createTRPCContext = async (
-  opts: { req?: Request } = {}
+  opts: { req?: Request } = {},
 ): Promise<TrpcContext> => {
   // const DB = getCloudflareContext().env.DB;
 
@@ -32,7 +32,7 @@ export const createTRPCContext = async (
           url: `${process.env.LIBSQL_DATABASE_URL}`,
           authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
         })
-      : undefined
+      : undefined,
   );
   return {
     prisma: prisma,

@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { PrismaLibSQL } from '@prisma/adapter-libsql'
+import { PrismaClient } from "@prisma/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
 // import { PrismaD1 } from 'adapter-d1-patched';
 
 /**
