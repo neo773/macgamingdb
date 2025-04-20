@@ -33,7 +33,7 @@ export const MacGamingDBMagicLinkEmail = ({
         <Section style={buttonContainer}>
           <Button
             style={button}
-            href={magicLink || "https://macgamingdb.com/login"}
+            href={magicLink || "https://macgamingdb.app/login"}
           >
             Log in with this magic link
           </Button>
@@ -50,8 +50,8 @@ export const MacGamingDBMagicLinkEmail = ({
           Mac games.
         </Text>
         <Hr style={hr} />
-        <Link href="https://macgamingdb.com" style={reportLink}>
-          MacGamingDB.com, the community-driven database for gaming experiences
+        <Link href="https://macgamingdb.app" style={reportLink}>
+          MacGamingDB.app, the community-driven database for gaming experiences
           on Mac.
         </Link>
       </Container>
@@ -60,7 +60,7 @@ export const MacGamingDBMagicLinkEmail = ({
 );
 
 MacGamingDBMagicLinkEmail.PreviewProps = {
-  magicLink: "https://macgamingdb.com/login?token=example-token-12345",
+  magicLink: "https://macgamingdb.app/login?token=example-token-12345",
 } as MacGamingDBMagicLinkEmailProps;
 
 export default MacGamingDBMagicLinkEmail;
