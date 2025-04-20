@@ -11,10 +11,12 @@
     "prisma:db-push-local": "bunx prisma db push",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typegen": "wrangler types"
   },
   "dependencies": {
     "@algolia/client-search": "^5.22.0",
+    "@opennextjs/cloudflare": "^1.0.0-beta.3",
     "@prisma/adapter-d1": "^6.6.0",
     "@prisma/client": "^6.6.0",
     "@radix-ui/react-dialog": "^1.1.6",
@@ -40,9 +42,11 @@
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",
+    "wrangler": "^4.12.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250420.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -50,5 +54,6 @@
     "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

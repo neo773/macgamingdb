@@ -1,11 +1,10 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@prisma/client";
 import { magicLink } from "better-auth/plugins/magic-link";
 import { Resend } from "resend";
 import MacGamingDBMagicLinkEmail from "@/react-email-starter/emails/magic-link";
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
