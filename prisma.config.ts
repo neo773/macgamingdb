@@ -1,5 +1,5 @@
 import path from "node:path";
-import { PrismaD1HTTP } from "@prisma/adapter-d1";
+import { PrismaD1HTTP } from "adapter-d1-patched";
 import { config } from "dotenv";
 import type { PrismaConfig } from "prisma";
 

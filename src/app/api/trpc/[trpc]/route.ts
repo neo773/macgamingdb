@@ -2,7 +2,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers/_app";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { createPrismaClient } from "@/lib/prisma";
-import { PrismaD1 } from "@prisma/adapter-d1";
+import { PrismaD1 } from "adapter-d1-patched";
 
 const handler = (req: Request) => {
   const DB = getCloudflareContext().env.DB;

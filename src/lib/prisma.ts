@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { PrismaD1 } from '@prisma/adapter-d1';
+import { PrismaD1 } from 'adapter-d1-patched';
 
 /**
  * Creates a PrismaClient instance with the provided adapter

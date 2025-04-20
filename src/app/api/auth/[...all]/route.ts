@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"; // path to your auth file
 import { createPrismaClient } from "@/lib/prisma";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { PrismaD1 } from "@prisma/adapter-d1";
+import { PrismaD1 } from "adapter-d1-patched";
 import { toNextJsHandler } from "better-auth/next-js";
 
 export const GET = async (req: Request) => {
