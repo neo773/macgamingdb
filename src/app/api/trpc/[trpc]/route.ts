@@ -1,24 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers/_app";
-// import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { createPrismaClient } from "@/lib/prisma";
-// import { PrismaD1 } from "adapter-d1-patched";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
 
-const handler = (req: Request) => {
-  // const DB = getCloudflareContext().env.DB;
-
-  // const prisma = createPrismaClient(
-  //   process.env.NODE_ENV === "production" ? new PrismaD1(DB) : undefined
-  // );
-
-  const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production" ? new PrismaLibSQL({
-      url: `${process.env.TURSO_DATABASE_URL}`,
-      authToken: `${process.env.TURSO_AUTH_TOKEN}`,
-    }) : undefined
-  );
-  
+const handler = (req: Request) => {  
   return fetchRequestHandler<typeof appRouter>({
     endpoint: "/api/trpc",
     req,

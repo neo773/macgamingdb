@@ -2,6 +2,10 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
+import { createPrismaClient } from "@/lib/prisma";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
+// import { getCloudflareContext } from "@opennextjs/cloudflare";
+// import { PrismaD1 } from "adapter-d1-patched";
 
 // Define a proper context type
 export interface TrpcContext {
@@ -11,9 +15,25 @@ export interface TrpcContext {
 }
 
 // Create context for API route handler
-export const createTRPCContext = async (opts: { req?: Request } = {}): Promise<TrpcContext> => {
+export const createTRPCContext = async (
+  opts: { req?: Request } = {}
+): Promise<TrpcContext> => {
+  // const DB = getCloudflareContext().env.DB;
+
+  // const prisma = createPrismaClient(
+  //   process.env.NODE_ENV === "production" ? new PrismaD1(DB) : undefined
+  // );
+
+  const prisma = createPrismaClient(
+    process.env.NODE_ENV === "production"
+      ? new PrismaLibSQL({
+          url: `${process.env.TURSO_DATABASE_URL}`,
+          authToken: `${process.env.TURSO_AUTH_TOKEN}`,
+        })
+      : undefined
+  );
   return {
-    prisma,
+    prisma: prisma,
     req: opts.req,
   };
 };
@@ -36,9 +56,9 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
     }
 
     const authSession = await auth(ctx.prisma!).api.getSession({
-      headers: ctx.req.headers
+      headers: ctx.req.headers,
     });
-    
+
     return next({
       ctx: {
         ...ctx,
