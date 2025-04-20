@@ -27,8 +27,8 @@ export const createTRPCContext = async (
   const prisma = createPrismaClient(
     process.env.NODE_ENV === "production"
       ? new PrismaLibSQL({
-          url: `${process.env.TURSO_DATABASE_URL}`,
-          authToken: `${process.env.TURSO_AUTH_TOKEN}`,
+          url: `${process.env.LIBSQL_DATABASE_URL}`,
+          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
         })
       : undefined
   );
