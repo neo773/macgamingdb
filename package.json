@@ -7,6 +7,8 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack",
+    "prisma:db-push-prod": "bunx --env-file=.env.prod prisma db push",
+    "prisma:db-push-local": "bunx prisma db push",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
