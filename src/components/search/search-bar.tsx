@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { SteamGame } from "@/lib/algolia";
 import { trpc } from "@/lib/trpc/provider";
+import { useDebounce } from 'use-debounce';
 
 type SearchBarProps = {
   onResultsChange?: (results: SteamGame[] | null, isLoading: boolean) => void;
@@ -11,11 +12,12 @@ type SearchBarProps = {
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   const [query, setQuery] = useState("");
+  const [debouncedQuery] = useDebounce(query, 300);
 
   const { data, isLoading } = trpc.game.search.useQuery(
-    { query: query },
+    { query: debouncedQuery },
     {
-      enabled: query.trim().length > 0,
+      enabled: debouncedQuery.trim().length > 0,
       placeholderData: (prev) => prev,
     },
   );
@@ -23,10 +25,10 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   // Pass data and loading state to parent
   useEffect(() => {
     if (onResultsChange) {
-      const results = query.trim() === "" ? null : data || null;
+      const results = debouncedQuery.trim() === "" ? null : data || null;
       onResultsChange(results, isLoading);
     }
-  }, [data, query, isLoading, onResultsChange]);
+  }, [data, debouncedQuery, isLoading, onResultsChange]);
 
   return (
     <div className="relative w-full max-w-4xl">
