@@ -1,10 +1,18 @@
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '@/server/routers/_app';
-import prisma from '@/lib/prisma';
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { appRouter } from "@/server/routers/_app";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { createPrismaClient } from "@/lib/prisma";
+import { PrismaD1 } from "@prisma/adapter-d1";
 
 const handler = (req: Request) => {
+  const DB = getCloudflareContext().env.DB;
+
+  const prisma = createPrismaClient(
+    process.env.NODE_ENV === "production" ? new PrismaD1(DB) : undefined
+  );
+
   return fetchRequestHandler<typeof appRouter>({
-    endpoint: '/api/trpc',
+    endpoint: "/api/trpc",
     req,
     router: appRouter,
     createContext: () => ({ req, prisma }),
@@ -14,4 +22,4 @@ const handler = (req: Request) => {
   });
 };
 
-export { handler as GET, handler as POST }; 
+export { handler as GET, handler as POST };

@@ -1,5 +1,4 @@
 import { initTRPC } from "@trpc/server";
-import prisma  from "@/lib/prisma";
 import superjson from "superjson";
 import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
@@ -36,7 +35,7 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
       });
     }
 
-    const authSession = await auth.api.getSession({
+    const authSession = await auth(ctx.prisma!).api.getSession({
       headers: ctx.req.headers
     });
     

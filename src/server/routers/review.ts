@@ -86,7 +86,7 @@ export const reviewRouter = router({
         }
 
         // Create the game entry if it doesn't exist in our database
-        await ctx.prisma.game.upsert({
+        await ctx.prisma!.game.upsert({
           where: { id: input.gameId },
           update: {},
           create: { id: input.gameId },
@@ -100,7 +100,7 @@ export const reviewRouter = router({
         }
 
         // Create the review with the authenticated user's ID
-        const review = await ctx.prisma.gameReview.create({
+        const review = await ctx.prisma!.gameReview.create({
           data: {
             gameId: input.gameId,
             userId: ctx.user.user.id,
