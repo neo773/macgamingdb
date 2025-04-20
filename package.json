@@ -21,6 +21,7 @@
     "@prisma/adapter-libsql": "^6.6.0",
     "@prisma/client": "^6.6.0",
     "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-scroll-area": "^1.2.5",
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-slot": "^1.1.2",
     "@react-email/components": "^0.0.36",
@@ -45,6 +46,7 @@
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",
+    "vaul": "^1.1.2",
     "wrangler": "^4.12.0",
     "zod": "^3.24.2"
   },
