@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, procedure } from "../trpc";
 import { searchGames } from "@/lib/algolia";
+import { searchSteam } from "@/lib/steam";
 
 interface SteamApp {
   [key: string]: {
@@ -189,7 +190,7 @@ export const gameRouter = router({
     .input(z.object({ query: z.string() }))
     .query(async ({ input }) => {
       try {
-        return await searchGames(input.query);
+        return await searchSteam(input.query);
       } catch (error) {
         console.error("Search error:", error);
         throw new Error("Failed to search games");
