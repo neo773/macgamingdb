@@ -6,8 +6,8 @@ import { magicLinkClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
   baseURL:
-    process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_URL ||
-    "http://localhost:3000",
+    process.env.NODE_ENV === "production"
+      ? "https://macgamingdb.app"
+      : "http://localhost:3000",
   plugins: [magicLinkClient()],
 });
