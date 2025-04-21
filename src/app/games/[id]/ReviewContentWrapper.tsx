@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { useAuth } from "@/context/AuthContext";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 
 // Interface for chipset combinations
@@ -66,8 +65,6 @@ export default function ReviewContentWrapper({
     trpc.review.getChipsetCombinations.useQuery();
   const { data: softwareVersions, isLoading: isLoadingSoftwareVersions } =
     trpc.review.getSoftwareVersions.useQuery();
-
-  const { user, isLoading: isAuthLoading, signIn } = useAuth();
 
   // Form state with proper typing
   const [formData, setFormData] = useState({
@@ -250,9 +247,8 @@ export default function ReviewContentWrapper({
           {error}
         </div>
       )}
-
-      {/* Render AuthPrompt overlay if user is not logged in and auth state is determined */}
-      {!user && !isAuthLoading && <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game."/>}
+      
+      <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game."/>
 
       <form onSubmit={handleSubmit} className="space-y-6 px-4 pb-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

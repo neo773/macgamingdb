@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 interface AuthPromptProps {
   /** Optional message to display above the form */
@@ -18,15 +18,25 @@ interface AuthPromptProps {
 export default function AuthPrompt({
   promptMessage = "To combat spam, please log in to share your experience.",
   className = "absolute inset-0 bg-black/20 flex flex-col items-center justify-center rounded-3xl p-6 z-10",
-  containerClassName = "bg-black border border-[#272727] p-6 rounded-xl"
+  containerClassName = "bg-black border border-[#272727] p-6 rounded-xl",
 }: AuthPromptProps) {
-  const { signIn } = useAuth();
+
+  const { useSession, signIn } = authClient
+
+  const {
+    data: session,
+    isPending, //loading state
+    error: authError, //error object 
+    refetch //refetch the session
+} = useSession()
+
   const [email, setEmail] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  // Handle magic link login
   const handleLogin = async () => {
+    // e.preventDefault();
     if (!email || !email.includes("@")) {
       setError("Please enter a valid email address");
       return;
@@ -34,11 +44,14 @@ export default function AuthPrompt({
 
     setIsLoggingIn(true);
     setError(null);
-    setMagicLinkSent(false); // Reset in case of retry
 
     try {
-      // Use current location as redirect path after login
-      await signIn(email, window.location.href);
+
+       await signIn.magicLink({
+        email: email,
+        callbackURL: window.location.href, //redirect after successful login (optional)
+      });
+      
       setMagicLinkSent(true);
       toast("Magic link sent to your email!");
     } catch (error) {
@@ -48,6 +61,10 @@ export default function AuthPrompt({
       setIsLoggingIn(false);
     }
   };
+
+  if (typeof session?.user?.id !== 'undefined' || isPending) {
+    return <></>
+  }
 
   return (
     <div
@@ -62,9 +79,7 @@ export default function AuthPrompt({
         className={containerClassName}
       >
         <h3 className="text-xl font-bold mb-4">Login Required</h3>
-        <p className="mb-6">
-          {promptMessage}
-        </p>
+        <p className="mb-6">{promptMessage}</p>
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -92,12 +107,6 @@ export default function AuthPrompt({
                 placeholder="your@email.com"
                 required
                 className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleLogin();
-                  }
-                }}
               />
             </div>
             <Button
@@ -106,9 +115,7 @@ export default function AuthPrompt({
               disabled={isLoggingIn}
               size="lg"
             >
-              {isLoggingIn
-                ? "Sending Magic Link..."
-                : "Login with Magic Link"}
+              {isLoggingIn ? "Sending Magic Link..." : "Login with Magic Link"}
             </Button>
           </div>
         )}

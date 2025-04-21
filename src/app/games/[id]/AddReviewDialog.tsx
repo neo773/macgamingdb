@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import ReviewContentWrapper from "./ReviewContentWrapper";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,15 +24,8 @@ export default function AddReviewDialog({
   gameId,
   gameName,
 }: AddReviewDialogProps) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { isLoading: isAuthLoading } = useAuth();
-
-  // If loading auth, show a loading state
-  if (isAuthLoading) {
-    return <Button disabled>Loading...</Button>;
-  }
 
   if (isMobile) {
     return (

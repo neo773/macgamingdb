@@ -1,27 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { UserIcon, LogInIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import AuthPrompt from "@/components/auth/AuthPrompt";
-
+import { authClient } from "@/lib/auth-client";
 
 const Acccount = () => {
-  const { user, isLoading: isAuthLoading, signIn } = useAuth();
+  const { useSession } = authClient;
+  const { data: session } = useSession();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <div>
-      {isAuthLoading ? (
-        // Optional: Show a loading indicator while checking auth status
-        <div className="text-white">Loading...</div>
-      ) : user ? (
+      {session?.user?.id ? (
         <Link
           href="/my-reviews"
           className="flex items-center gap-2 text-white hover:text-gray-300 transition"
