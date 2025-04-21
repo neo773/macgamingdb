@@ -38,6 +38,7 @@ export default function MyReviewsClient({
   const [editMode, setEditMode] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
   const [editableReviews, setEditableReviews] = useState<Record<string, string>>({});
+  const [focusedReview, setFocusedReview] = useState<string | null>(null);
   const router = useRouter();
 
   const deleteReviewMutation = trpc.review.deleteReview.useMutation({
@@ -151,9 +152,9 @@ export default function MyReviewsClient({
             {userReviews.map((review) => (
               <div
                 key={review.id}
-                className={`relative ${editMode ? "animate-wiggle" : ""}`}
+                className={`relative ${editMode && focusedReview !== review.id ? "animate-wiggle" : ""}`}
                 style={{
-                  animation: editMode
+                  animation: editMode && focusedReview !== review.id
                     ? "wiggle 0.5s infinite ease-in-out"
                     : "none",
                 }}
@@ -300,6 +301,8 @@ export default function MyReviewsClient({
                                   [review.id]: e.target.value,
                                 })
                               }
+                              onFocus={() => setFocusedReview(review.id)}
+                              onBlur={() => setFocusedReview(null)}
                               className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
                               placeholder="Add your thoughts about this game..."
                             />
