@@ -19,6 +19,9 @@ import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 
+// Enable ISR with a revalidation time of 1 hour
+export const revalidate = 3600;
+
 // Generate metadata for SEO
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },

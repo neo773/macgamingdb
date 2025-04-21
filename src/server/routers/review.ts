@@ -2,6 +2,7 @@ import { z } from "zod";
 import { router, procedure, protectedProcedure } from "../trpc";
 import { getGameBySteamId } from "@/lib/algolia";
 import { TRPCError } from "@trpc/server";
+import { revalidatePath } from "next/cache";
 
 // Define enum schemas using Zod
 const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);
@@ -116,6 +117,9 @@ export const reviewRouter = router({
             softwareVersion: input.softwareVersion || null,
           },
         });
+
+        // Revalidate the game page to reflect the new review
+        revalidatePath(`/games/${input.gameId}`);
 
         return { review };
       } catch (error) {
