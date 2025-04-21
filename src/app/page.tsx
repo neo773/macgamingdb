@@ -73,9 +73,13 @@ export default function Home() {
 
   // Game card component to display either featured or search result games
   const GameCard = ({ game }: { game: SteamGame }) => (
-    <div
-      className="relative group cursor-pointer transition-transform duration-200 hover:scale-105"
-      onClick={() => handleGameClick(game.objectID)}
+    <a
+      href={`/games/${game.objectID}`}
+      className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
+      onClick={(e) => {
+        e.preventDefault();
+        handleGameClick(game.objectID);
+      }}
     >
       <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
@@ -96,7 +100,7 @@ export default function Home() {
           <div className="text-sm text-gray-300">{game.releaseYear}</div>
         )}
       </div>
-    </div>
+    </a>
   );
 
   // Loading skeleton for game cards
