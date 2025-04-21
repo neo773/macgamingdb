@@ -13,7 +13,7 @@ import {
   CardContent,
   CardHeader,
 } from "@/components/ui/card";
-import { ChevronLeft, Edit2, X } from "lucide-react";
+import { ChevronLeft, Edit2, Save, X } from "lucide-react";
 import { trpc } from "@/lib/trpc/provider";
 import {
   Dialog,
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dialog";
 import { Game, GameReview } from "@prisma/client";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import ExpandableReviewNote from "../games/[id]/ExpandableReviewNote";
 
 export default function MyReviewsClient({ 
   userReviews,
@@ -35,6 +37,7 @@ export default function MyReviewsClient({
 }) {
   const [editMode, setEditMode] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState<string | null>(null);
+  const [editableReviews, setEditableReviews] = useState<Record<string, string>>({});
   const router = useRouter();
 
   const deleteReviewMutation = trpc.review.deleteReview.useMutation({
@@ -43,6 +46,33 @@ export default function MyReviewsClient({
       toast("Review deleted");
     },
   });
+
+  const updateReviewMutation = trpc.review.updateReview.useMutation({
+    onSuccess: () => {
+      router.refresh();
+      toast("Review updated");
+    },
+  });
+
+  // Set up initial editable reviews when edit mode is enabled
+  const handleEditModeToggle = () => {
+    if (!editMode) {
+      // Entering edit mode - initialize editable reviews
+      const initialEdits = userReviews.reduce((acc, review) => {
+        acc[review.id] = review.notes || '';
+        return acc;
+      }, {} as Record<string, string>);
+      setEditableReviews(initialEdits);
+    }
+    setEditMode(!editMode);
+  };
+
+  const handleUpdateReview = (reviewId: string) => {
+    updateReviewMutation.mutate({
+      reviewId,
+      notes: editableReviews[reviewId],
+    });
+  };
 
   // Helper function to get performance color
   const getPerformanceColor = (performance: string) => {
@@ -90,14 +120,14 @@ export default function MyReviewsClient({
             Home
           </Link>
         </div>
-      
+
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Game Reviews</h1>
           {userReviews.length > 0 && (
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              onClick={() => setEditMode(!editMode)}
+              onClick={handleEditModeToggle}
               className="text-blue-400 hover:text-blue-300"
             >
               {editMode ? "Done" : <Edit2 size={18} />}
@@ -108,7 +138,9 @@ export default function MyReviewsClient({
         {userReviews.length === 0 ? (
           <Card className="bg-primary-gradient">
             <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
-              <h2 className="text-xl font-medium text-white">You haven't submitted any game reviews yet</h2>
+              <h2 className="text-xl font-medium text-white">
+                You haven't submitted any game reviews yet
+              </h2>
               <Link href="/">
                 <Button>Browse Games</Button>
               </Link>
@@ -117,11 +149,13 @@ export default function MyReviewsClient({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userReviews.map((review) => (
-              <div 
-                key={review.id} 
+              <div
+                key={review.id}
                 className={`relative ${editMode ? "animate-wiggle" : ""}`}
                 style={{
-                  animation: editMode ? 'wiggle 0.5s infinite ease-in-out' : 'none',
+                  animation: editMode
+                    ? "wiggle 0.5s infinite ease-in-out"
+                    : "none",
                 }}
               >
                 {editMode && (
@@ -133,9 +167,7 @@ export default function MyReviewsClient({
                     <X size={16} className="text-white" />
                   </button>
                 )}
-                <Card
-                  className="bg-primary-gradient overflow-hidden pt-0"
-                >
+                <Card className="bg-primary-gradient overflow-hidden pt-0">
                   <div className="aspect-[460/215] relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
                     <img
@@ -150,11 +182,16 @@ export default function MyReviewsClient({
                         </h2> */}
                       </Link>
                       <div className="text-sm text-gray-300 mt-1">
-                        Reviewed {formatDistance(new Date(review.createdAt), new Date(), { addSuffix: true })}
+                        Reviewed{" "}
+                        {formatDistance(
+                          new Date(review.createdAt),
+                          new Date(),
+                          { addSuffix: true }
+                        )}
                       </div>
                     </div>
                   </div>
-                  
+
                   <CardHeader>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col items-center gap-3">
@@ -238,11 +275,37 @@ export default function MyReviewsClient({
 
                     {review.notes && (
                       <div className="border-t border-white/15 pt-3 mt-2">
-                        <h4 className="text-sm font-medium text-gray-300 mb-2">
-                          Review Note:
-                        </h4>
-                        <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
-                          <p className="line-clamp-3">{review.notes}</p>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-300 mb-2 flex justify-between items-center">
+                            Review Note:
+                            {editMode &&
+                              editableReviews[review.id] !==
+                                (review.notes || "") && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleUpdateReview(review.id)}
+                                  className="text-white hover:text-blue-300 p-1"
+                                >
+                                  <Save size={14} />
+                                </Button>
+                              )}
+                          </h4>
+                          {editMode ? (
+                            <Textarea
+                              value={editableReviews[review.id] || ""}
+                              onChange={(e) =>
+                                setEditableReviews({
+                                  ...editableReviews,
+                                  [review.id]: e.target.value,
+                                })
+                              }
+                              className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
+                              placeholder="Add your thoughts about this game..."
+                            />
+                          ) : (
+                            <ExpandableReviewNote notes={review.notes} />
+                          )}
                         </div>
                       </div>
                     )}
@@ -253,12 +316,16 @@ export default function MyReviewsClient({
           </div>
         )}
 
-        <Dialog open={!!reviewToDelete} onOpenChange={(open) => !open && setReviewToDelete(null)}>
+        <Dialog
+          open={!!reviewToDelete}
+          onOpenChange={(open) => !open && setReviewToDelete(null)}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Delete review?</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. This will permanently delete your game review.
+                This action cannot be undone. This will permanently delete your
+                game review.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -276,10 +343,33 @@ export default function MyReviewsClient({
 
       <style jsx global>{`
         @keyframes wiggle {
-          0% { transform: rotate(0deg); }
-          25% { transform: rotate(-1deg); }
-          75% { transform: rotate(1deg); }
-          100% { transform: rotate(0deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          25% {
+            transform: rotate(-1deg);
+          }
+          75% {
+            transform: rotate(1deg);
+          }
+          100% {
+            transform: rotate(0deg);
+          }
+        }
+
+        @keyframes blink {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0;
+          }
+        }
+
+        textarea {
+          caret-color: #3b82f6;
+          caret-shape: block;
         }
       `}</style>
     </div>
