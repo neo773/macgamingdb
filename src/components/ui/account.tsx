@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { UserIcon, LogInIcon } from "lucide-react";
+import { UserIcon, LogInIcon, Star } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -19,7 +19,7 @@ const Acccount = () => {
           href="/my-reviews"
           className="flex items-center gap-2 text-white hover:text-gray-300 transition"
         >
-          <UserIcon size={18} />
+          <Star size={18} />
           <span>My Reviews</span>
         </Link>
       ) : (
