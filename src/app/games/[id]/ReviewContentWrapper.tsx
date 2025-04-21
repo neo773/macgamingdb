@@ -290,7 +290,7 @@ export default function ReviewContentWrapper({
           >
             <h3 className="text-xl font-bold mb-4">Login Required</h3>
             <p className="mb-6">
-              Please log in to share your experience with this game.
+              To combat spam, please log in to share your experience with this game.
             </p>
 
             {magicLinkSent ? (
