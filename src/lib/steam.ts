@@ -1,5 +1,18 @@
 import { parseHTML } from "linkedom";
 
+// Type definitions for Steam game data
+export interface SteamGame {
+  objectID: string; // Steam Game ID
+  name: string;
+  releaseYear?: number;
+  followers?: number;
+  oslist?: string[];
+  tags?: string[];
+  technologies?: string[];
+  userScore?: number;
+  lastUpdated?: string;
+}
+
 /**
  * Represents a Steam app search result
  */

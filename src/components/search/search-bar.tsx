@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { SteamGame } from "@/lib/algolia";
+import { type SteamGame } from "@/lib/steam";
 import { trpc } from "@/lib/trpc/provider";
 import { useDebounce } from 'use-debounce';
 

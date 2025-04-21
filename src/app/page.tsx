@@ -3,7 +3,7 @@
 import SearchBar from "@/components/search/search-bar";
 import Image from "next/image";
 import { useState } from "react";
-import { SteamGame } from "@/lib/algolia";
+import { type SteamGame } from "@/lib/steam";
 import * as React from "react";
 import { SVGProps } from "react";
 import { useRouter } from "next/navigation";
