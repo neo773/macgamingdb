@@ -5,7 +5,6 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner";
-import { AuthProvider } from "@/context/AuthContext";
 
 const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
 
@@ -37,7 +36,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <TRPCProvider headers={headersObj}>
-            <AuthProvider>{children}</AuthProvider>
+            {children}
           </TRPCProvider>
           <Toaster />
         </ThemeProvider>

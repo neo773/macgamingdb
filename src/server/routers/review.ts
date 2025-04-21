@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { router, procedure, protectedProcedure } from "../trpc";
-import { getGameBySteamId } from "@/lib/algolia";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
+import { getGameBySteamId } from "@/lib/steam";
 
 // Define enum schemas using Zod
 const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);
