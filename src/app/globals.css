@@ -123,3 +123,18 @@
 .bg-primary-gradient {
   background: linear-gradient(310deg, rgba(0, 0, 0, 1) 0%, rgb(15 15 15) 100%);
 }
+
+@theme {
+  --color-destructive: #FF3B2F;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-1deg); }
+  75% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s infinite ease-in-out;
+}
