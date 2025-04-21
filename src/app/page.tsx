@@ -9,6 +9,7 @@ import { SVGProps } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import Link from "next/link";
 
 const GameIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -60,7 +61,7 @@ export default function Home() {
   // Simple handler for search results
   const handleSearchResultsChange = (
     results: SteamGame[] | null,
-    isLoading: boolean,
+    isLoading: boolean
   ) => {
     setSearchResults(results);
     setIsLoading(isLoading);
@@ -73,13 +74,9 @@ export default function Home() {
 
   // Game card component to display either featured or search result games
   const GameCard = ({ game }: { game: SteamGame }) => (
-    <a
+    <Link
       href={`/games/${game.objectID}`}
       className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
-      onClick={(e) => {
-        e.preventDefault();
-        handleGameClick(game.objectID);
-      }}
     >
       <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
@@ -100,7 +97,7 @@ export default function Home() {
           <div className="text-sm text-gray-300">{game.releaseYear}</div>
         )}
       </div>
-    </a>
+    </Link>
   );
 
   // Loading skeleton for game cards
