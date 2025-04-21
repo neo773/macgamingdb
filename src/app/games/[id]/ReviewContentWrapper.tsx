@@ -30,6 +30,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
+import AuthPrompt from "@/components/auth/AuthPrompt";
 
 // Interface for chipset combinations
 interface ChipsetCombination {
@@ -55,9 +56,6 @@ export default function ReviewContentWrapper({
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [email, setEmail] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState("");
 
@@ -225,29 +223,6 @@ export default function ReviewContentWrapper({
     setFormData((prev) => ({ ...prev, playMethod: method }));
   };
 
-  // Handle magic link login
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    setIsLoggingIn(true);
-    setError(null);
-
-    try {
-      await signIn(email, window.location.href);
-      setMagicLinkSent(true);
-      toast("Magic link sent to your email!");
-    } catch (error) {
-      setError("Error sending magic link. Please try again.");
-      console.error(error);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
   // If loading, show a loading state
   if (isLoading) {
     return <div>Loading...</div>;
@@ -276,59 +251,8 @@ export default function ReviewContentWrapper({
         </div>
       )}
 
-      {!user && !isAuthLoading ? (
-        <div
-          className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center rounded-3xl p-6 z-10"
-          style={{
-            backdropFilter: "blur(2px)",
-            WebkitBackdropFilter: "blur(2px)",
-          }}
-        >
-          <div
-            style={{ width: "100%", maxWidth: "24rem", margin: "0 auto" }}
-            className="bg-black border border-[#272727] p-6 rounded-xl"
-          >
-            <h3 className="text-xl font-bold mb-4">Login Required</h3>
-            <p className="mb-6">
-              To combat spam, please log in to share your experience with this game.
-            </p>
-
-            {magicLinkSent ? (
-              <div className="text-center py-4">
-                <p className="mb-2">✉️ Magic link sent!</p>
-                <p className="text-sm text-gray-400">
-                  Check your email for a login link.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email Address
-                  </label>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    required
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoggingIn}
-                  size="lg"
-                >
-                  {isLoggingIn
-                    ? "Sending Magic Link..."
-                    : "Login with Magic Link"}
-                </Button>
-              </form>
-            )}
-          </div>
-        </div>
-      ) : null}
+      {/* Render AuthPrompt overlay if user is not logged in and auth state is determined */}
+      {!user && !isAuthLoading && <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game."/>}
 
       <form onSubmit={handleSubmit} className="space-y-6 px-4 pb-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

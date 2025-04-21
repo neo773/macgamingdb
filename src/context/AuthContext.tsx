@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -53,12 +54,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsLoading(true);
       const result = await authClient.signIn.magicLink({
-        email,
-        callbackURL, //redirect after successful login (optional)
+        email: email,
+        callbackURL: callbackURL, //redirect after successful login (optional)
       });
       // Handle the result data based on the better-auth structure
       if (result && "user" in result) {
         setUser(result.user as User);
+        toast("You're now Signed In!");
       }
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Authentication error"));
