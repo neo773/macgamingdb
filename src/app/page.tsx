@@ -148,8 +148,23 @@ export default function Home() {
       <div className="flex justify-center px-8 md:p-0">
         <SearchBar onResultsChange={handleSearchResultsChange} />
       </div>
+      <div className="w-full max-w-7xl mx-auto px-8 mt-6">
+        <div className="bg-primary-gradient rounded-xl p-4 border border-[#272727]">
+          <div className="flex flex-row items-start sm:items-center gap-4">
+            <div className="flex-shrink-0 inline-flex items-center justify-center size-10 rounded-lg bg-[#272727]">
+              <span className="text-lg">🎉</span>
+            </div>
+            <div>
+              <h2 className="text-lg font-medium text-white">200+ Community Reports</h2>
+              <p className="text-sm text-gray-400">
+                Thank you to everyone who has contributed 
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {renderGameCards()}
         </div>
