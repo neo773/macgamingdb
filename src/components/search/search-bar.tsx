@@ -5,13 +5,17 @@ import { Search } from "lucide-react";
 import { type SteamGame } from "@/lib/steam";
 import { trpc } from "@/lib/trpc/provider";
 import { useDebounce } from 'use-debounce';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 type SearchBarProps = {
   onResultsChange?: (results: SteamGame[] | null, isLoading: boolean) => void;
 };
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
-  const [query, setQuery] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || "");
   const [debouncedQuery] = useDebounce(query, 300);
 
   const { data, isLoading } = trpc.game.search.useQuery(
@@ -21,6 +25,19 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
       placeholderData: (prev) => prev,
     },
   );
+
+  // Update URL when search query changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    
+    if (debouncedQuery) {
+      params.set('q', debouncedQuery);
+    } else {
+      params.delete('q');
+    }
+    
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedQuery, pathname, router, searchParams]);
 
   // Pass data and loading state to parent
   useEffect(() => {
