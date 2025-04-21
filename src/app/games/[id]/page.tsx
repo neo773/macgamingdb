@@ -8,16 +8,13 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
 } from "@/components/ui/card";
 import * as React from "react";
-import { SVGProps } from "react";
-import { ArrowLeft, ChevronLeft, MessageSquare } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import ExpandableReviewNote from "./ExpandableReviewNote";
 
 // Enable ISR with a revalidation time of 1 hour
 export const revalidate = 3600;
@@ -323,9 +320,7 @@ export default async function GamePage({
                           <h4 className="text-sm font-medium text-gray-300 mb-2">
                             Review Note:
                           </h4>
-                          <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
-                            <p className="line-clamp-3">{review.notes}</p>
-                          </div>
+                          <ExpandableReviewNote notes={review.notes} />
                         </div>
                       )}
                     </CardContent>
