@@ -10,6 +10,13 @@ const Footer = () => {
           Mac gamers
         </p>
         <div className="flex items-center gap-4">
+          <a href="https://www.buymeacoffee.com/huzef">
+            <img
+              className="w-32"
+              src="https://raw.githubusercontent.com/appcraftstudio/buymeacoffee/master/Images/snapshot-bmc-button.png"
+              alt="Buy Me A Coffee"
+            />
+          </a>
           <a
             href="https://x.com/n3o773"
             target="_blank"
