@@ -9,12 +9,12 @@ import { authClient } from "@/lib/auth-client";
 
 const Acccount = () => {
   const { useSession } = authClient;
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <div>
-      {session?.user?.id ? (
+      {session?.user?.id && !isPending ? (
         <Link
           href="/my-reviews"
           className="flex items-center gap-2 text-white hover:text-gray-300 transition"

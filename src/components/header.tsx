@@ -18,16 +18,15 @@ const GameIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const Header = () => {
-
   return (
     <header className="w-full pt-8 pb-4 px-8 flex justify-center">
       <div className="max-w-7xl w-full">
         <div className="flex items-center justify-between mb-6">
-          <Link href={'/'} className="flex items-center">
+          <Link href={"/"} className="flex items-center">
             <GameIcon className="w-10 h-10 mr-2" fill="#fff" />
             <h1 className="text-4xl font-bold text-white">MacGamingDB</h1>
           </Link>
-<Acccount/>
+          <Acccount />
         </div>
         <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto text-center">
           Find out how your favorite games perform on Mac across different
