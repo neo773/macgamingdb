@@ -24,6 +24,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Game, GameReview } from "@prisma/client";
+import { toast } from "sonner";
 
 export default function MyReviewsClient({ 
   userReviews,
@@ -39,6 +40,7 @@ export default function MyReviewsClient({
   const deleteReviewMutation = trpc.review.deleteReview.useMutation({
     onSuccess: () => {
       router.refresh();
+      toast("Review deleted");
     },
   });
 
