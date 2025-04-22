@@ -4,10 +4,7 @@ import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import AddReviewDialog from "./AddReviewDialog";
 import ExpandableDescription from "./ExpandableDescription";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
 import Footer from "@/components/footer";
@@ -20,7 +17,7 @@ export const revalidate = 3600;
 // Generate metadata for SEO
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
-  _parent: ResolvingMetadata,
+  _parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { id } = await params;
 
@@ -60,6 +57,19 @@ export default async function GamePage({
     // Fetch the query data
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
 
+    // Only show affiliate if there are reviews, game is playable, and someone used CrossOver
+    const hasReviews = reviews && reviews.length > 0;
+    const isPlayable =
+      stats &&
+      typeof stats.averagePerformance === "number" &&
+      stats.averagePerformance > 1.0;
+    const hasCrossoverReview =
+      stats &&
+      stats.methods &&
+      typeof stats.methods.crossover === "number" &&
+      stats.methods.crossover > 0;
+    const showCrossoverAffiliate =
+      hasReviews && isPlayable && hasCrossoverReview;
 
     return (
       <div className="min-h-screen flex flex-col bg-black">
@@ -218,6 +228,38 @@ export default async function GamePage({
               </Card>
             )}
           </div>
+
+          {/* Affiliate Link Section */}
+          {showCrossoverAffiliate && (
+            <div className="mb-6">
+              <Card className="bg-primary-gradient border border-[#272727]">
+                <CardContent className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-medium text-white mb-2">
+                      Want to play this game on your Mac?
+                    </h3>
+                    <p className="text-gray-300">
+                      CrossOver lets you run Windows games on macOS without
+                      rebooting.
+                    </p>
+                  </div>
+                  <a
+                    href="https://www.codeweavers.com/store?ad=1100"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    Get CrossOver
+                  </a>
+                </CardContent>
+              </Card>
+              <p className="text-sm text-gray-400 my-2 mx-2">
+                <span className="italic">* Affiliate link - purchases support this site and the Mac
+                  gaming ecosystem through CodeWeavers' contributions to Wine.
+                </span>
+              </p>
+            </div>
+          )}
         </main>
 
         <Footer />
