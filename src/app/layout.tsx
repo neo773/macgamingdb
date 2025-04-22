@@ -28,6 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <meta name="google-site-verification" content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc" />
       <body className={`${GeistMono.className}`}>
         <ThemeProvider
           attribute="class"
