@@ -155,7 +155,7 @@ export default function Home() {
               <span className="text-lg">🎉</span>
             </div>
             <div>
-              <h2 className="text-lg font-medium text-white">260+ Community Reports</h2>
+              <h2 className="text-lg font-medium text-white">300+ Community Reports</h2>
               <p className="text-sm text-gray-400">
                 Thank you to everyone who has contributed 
               </p>
