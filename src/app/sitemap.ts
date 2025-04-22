@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   // Base URL for the site
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_URL;
 
   // Add dynamic game routes for games with reviews, using last review update time
   const gameRoutes = gamesWithReviews.map((game) => ({
