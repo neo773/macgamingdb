@@ -129,12 +129,41 @@
 }
 
 @keyframes wiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(-1deg); }
-  75% { transform: rotate(1deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-1deg);
+  }
+  75% {
+    transform: rotate(1deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
-.animate-wiggle {
-  animation: wiggle 0.5s infinite ease-in-out;
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+textarea {
+  caret-color: #3b82f6;
+  caret-shape: block;
+}
+
+footer:before {
+  background: linear-gradient(270deg, #3d354e00 28.87%, #244d85 45.39%, #244d85 53.54%, #3d354e00 70.06%);
+  top: 0;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  width: 100%;
 }

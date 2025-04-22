@@ -143,12 +143,18 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col">
       <Header />
+
+      <p className="text-xl md:text-3xl text-gray-300 mb-8 mx-6 text-center font-medium md:mx-auto">
+        Find out how your favorite games <br />
+        perform on Mac across different compatibility layers
+      </p>
+
       <div className="flex justify-center px-8 md:p-0">
         <SearchBar onResultsChange={handleSearchResultsChange} />
       </div>
-      <div className="w-full max-w-7xl mx-auto px-8 mt-6">
+      {/* <div className="w-full max-w-7xl mx-auto px-8 mt-6">
         <div className="bg-primary-gradient rounded-xl p-4 border border-[#272727]">
           <div className="flex flex-row items-start sm:items-center gap-4">
             <div className="flex-shrink-0 inline-flex items-center justify-center size-10 rounded-lg bg-[#272727]">
@@ -162,7 +168,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

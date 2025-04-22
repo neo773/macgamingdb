@@ -33,5 +33,5 @@ export default async function MyReviewsPage() {
     },
   });
 
-  return <MyReviewsClient userReviews={userReviews} isAuthenticated={true} />;
+  return <MyReviewsClient userReviews={userReviews} />;
 }

@@ -60,7 +60,7 @@ export default function AddReviewDialog({
           Add Experience Report
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] rounded-3xl bg-black border border-[#272727]">
+      <DialogContent className="sm:max-w-[600px] rounded-3xl bg-primary-gradient border border-[#272727]">
         <ReviewContentWrapper
           gameId={gameId}
           gameName={gameName}

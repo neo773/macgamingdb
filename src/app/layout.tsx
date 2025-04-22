@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/theme-provider";
 import { headers } from "next/headers";
 import { Geist } from "next/font/google";
-import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner";
+import "./globals.css";
 
 const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
 
@@ -28,19 +27,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <meta name="google-site-verification" content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc" />
-      <body className={`${GeistMono.className}`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TRPCProvider headers={headersObj}>
-            {children}
-          </TRPCProvider>
-          <Toaster />
-        </ThemeProvider>
+      <meta
+        name="google-site-verification"
+        content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
+      />
+      <body className={`${GeistMono.className} dark`}>
+        <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
+        <Toaster />
       </body>
     </html>
   );

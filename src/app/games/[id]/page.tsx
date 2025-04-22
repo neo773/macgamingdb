@@ -7,14 +7,12 @@ import ExpandableDescription from "./ExpandableDescription";
 import {
   Card,
   CardContent,
-  CardHeader,
 } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import ExpandableReviewNote from "./ExpandableReviewNote";
+import ReviewCard from "@/components/review-card";
 
 // Enable ISR with a revalidation time of 1 hour
 export const revalidate = 3600;
@@ -62,28 +60,6 @@ export default async function GamePage({
     // Fetch the query data
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
 
-    // Helper function to get performance color
-    const getPerformanceColor = (performance: string) => {
-      const colors: Record<string, string> = {
-        EXCELLENT: "bg-green-500 text-green-50",
-        GOOD: "bg-blue-500 text-blue-50",
-        PLAYABLE: "bg-yellow-500 text-yellow-900",
-        BARELY_PLAYABLE: "bg-orange-500 text-orange-50",
-        UNPLAYABLE: "bg-red-500 text-red-50",
-      };
-      return colors[performance] || "bg-gray-500 text-gray-50";
-    };
-
-    // Helper function to format method name
-    const formatMethodName = (method: string) => {
-      const formats: Record<string, string> = {
-        NATIVE: "Native",
-        CROSSOVER: "CrossOver",
-        PARALLELS: "Parallels",
-        OTHER: "Other",
-      };
-      return formats[method] || method;
-    };
 
     return (
       <div className="min-h-screen flex flex-col bg-black">
@@ -228,103 +204,7 @@ export default async function GamePage({
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {reviews.map((review) => (
-                  <Card
-                    key={review.id}
-                    className="bg-primary-gradient overflow-hidden"
-                  >
-                    <CardHeader>
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col items-center gap-3">
-                          <div className="flex gap-4">
-                            <img
-                              src={`/images/${review.playMethod.toLowerCase()}.png`}
-                              alt={formatMethodName(review.playMethod)}
-                              className="size-16 object-contain"
-                            />
-                            <div className="flex flex-col justify-between -mt-1">
-                              <p className="font-medium text-white text-lg">
-                                {formatMethodName(review.playMethod)}
-                              </p>
-
-                              {review.softwareVersion && (
-                                <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
-                                  v{review.softwareVersion}
-                                </span>
-                              )}
-
-                              <div className="flex gap-2">
-                                {review.translationLayer && (
-                                  <Badge variant="secondary">
-                                    {review.translationLayer}
-                                  </Badge>
-                                )}
-                                <Badge
-                                  variant="outline"
-                                  className={`${getPerformanceColor(
-                                    review.performance,
-                                  )}`}
-                                >
-                                  {review.performance.replace("_", " ")}
-                                </Badge>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <img
-                          src={`/images/chipsets/${review.chipset.toLowerCase()}/${review.chipsetVariant.toLowerCase()}.png`}
-                          alt="M3 Max Chip"
-                          className="w-[70px] object-contain"
-                        />
-                      </div>
-                    </CardHeader>
-
-                    <CardContent>
-                      <div className="border-t border-white/15 pt-3 pb-2">
-                        <dl className="space-y-2 text-sm text-gray-300">
-                          <div className="flex justify-between">
-                            <dt className="font-medium">Graphics:</dt>
-                            <dd className="font-semibold text-white font-mono">
-                              {review.graphicsSettings}
-                            </dd>
-                          </div>
-
-                          {review.fps && (
-                            <div className="flex justify-between">
-                              <dt className="font-medium">FPS:</dt>
-                              <dd className="font-semibold text-white font-mono">
-                                {review.fps}
-                              </dd>
-                            </div>
-                          )}
-
-                          {review.resolution && (
-                            <div className="flex justify-between">
-                              <dt className="font-medium">Resolution:</dt>
-                              <dd className="font-semibold text-white font-mono">
-                                {review.resolution}
-                              </dd>
-                            </div>
-                          )}
-
-                          <div className="flex justify-between">
-                            <dt className="font-medium">Hardware:</dt>
-                            <dd className="font-semibold text-white font-mono">
-                              {review.chipset} {review.chipsetVariant}
-                            </dd>
-                          </div>
-                        </dl>
-                      </div>
-
-                      {review.notes && (
-                        <div className="border-t border-white/15 pt-3 mt-2">
-                          <h4 className="text-sm font-medium text-gray-300 mb-2">
-                            Review Note:
-                          </h4>
-                          <ExpandableReviewNote notes={review.notes} />
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                  <ReviewCard review={review} key={review.id} />
                 ))}
               </div>
             ) : (
