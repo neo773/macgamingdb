@@ -89,7 +89,7 @@ export default async function GamePage({
             <div className="aspect-[3/1] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
               <img
-                src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${id}/header.jpg`}
+                src={game.header_image}
                 alt={game.name}
                 className="w-full h-full object-cover"
               />
