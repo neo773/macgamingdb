@@ -1,8 +1,8 @@
-import ExpandableReviewNote from "@/app/games/[id]/ExpandableReviewNote";
+import ExpandableReviewNote from "@/components/GameReviewCard/ExpandableReviewNote";
 import { GameReview } from "@prisma/client";
 import React from "react";
-import { Card, CardHeader, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardHeader, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
 import clsx from "clsx";
 
 const getPerformanceColor = (performance: string) => {
@@ -27,7 +27,7 @@ const formatMethodName = (method: string) => {
   return formats[method] || method;
 };
 
-const ReviewCard = ({
+const GameReviewCard = ({
   review,
   header,
   customReviewNote,
@@ -142,4 +142,4 @@ const ReviewCard = ({
   );
 };
 
-export default ReviewCard;
+export default GameReviewCard;

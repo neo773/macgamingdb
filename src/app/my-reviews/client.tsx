@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Game, GameReview } from "@prisma/client";
 import { toast } from "sonner";
-import ReviewCard from "@/components/review-card";
-import ExpandableReviewNote from "../games/[id]/ExpandableReviewNote";
+import GameReviewCard from "@/components/GameReviewCard";
+import ExpandableReviewNote from "../../components/GameReviewCard/ExpandableReviewNote";
 import { Textarea } from "@/components/ui/textarea";
 import { SteamAppData } from "@/lib/steam";
 
@@ -150,7 +150,7 @@ export default function MyReviewsClient({
                       <X size={16} className="text-white" />
                     </button>
                   )}
-                  <ReviewCard
+                  <GameReviewCard
                     review={review}
                     className="pt-0"
                     header={

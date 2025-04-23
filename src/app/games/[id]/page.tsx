@@ -3,13 +3,13 @@ import { createServerHelpers } from "@/lib/trpc/server";
 import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
 import AddReviewDialog from "./AddReviewDialog";
-import ExpandableDescription from "./ExpandableDescription";
+import ExpandableDescription from "../../../components/GameReviewCard/ExpandableDescription";
 import { Card, CardContent } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import ReviewCard from "@/components/review-card";
+import GameReviewCard from "@/components/GameReviewCard";
 import { SteamAppData } from "@/lib/steam";
 
 // Enable ISR with a revalidation time of 1 hour
@@ -219,7 +219,7 @@ export default async function GamePage({
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {reviews.map((review) => (
-                  <ReviewCard review={review} key={review.id} />
+                  <GameReviewCard review={review} key={review.id} />
                 ))}
               </div>
             ) : (
