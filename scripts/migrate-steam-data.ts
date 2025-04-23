@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createPrismaClient } from "@/lib/prisma";
 import { getGameBySteamId } from "@/lib/steam";
 import { PrismaLibSQL } from "@prisma/adapter-libsql";
