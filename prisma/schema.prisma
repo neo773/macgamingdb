@@ -31,8 +31,11 @@ model User {
 }
 
 model Game {
-  id      String       @id // Steam ID
-  reviews GameReview[]
+  id          String       @id // Steam ID
+  details     String?      // Full JSON from Steam API
+  updatedAt   DateTime     @updatedAt @default(now())
+  createdAt   DateTime     @default(now())
+  reviews     GameReview[]
 }
 
 model GameReview {

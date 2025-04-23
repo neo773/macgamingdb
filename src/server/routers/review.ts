@@ -90,23 +90,32 @@ export const reviewRouter = router({
     .input(createReviewSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Validate the game exists in Algolia
-        const gameExists = await getGameBySteamId(input.gameId);
-        if (!gameExists) {
-          throw new Error("Game not found");
-        }
-
-        // Create the game entry if it doesn't exist in our database
-        await ctx.prisma!.game.upsert({
-          where: { id: input.gameId },
-          update: {},
-          create: { id: input.gameId },
-        });
-
+        // Check if user is authenticated first
         if (!ctx.user?.user.id) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
-            message: "Missing authorization ",
+            message: "Missing authorization",
+          });
+        }
+
+        // Validate the game exists and get its details
+        const gameExists = await ctx.prisma!.game.findUnique({
+          where: { id: input.gameId },
+        });
+
+        // Only fetch game details from Steam if they don't exist in our database
+        if (!gameExists) {
+
+          const gameDetails = await getGameBySteamId(input.gameId);
+
+          if (!gameDetails) {
+            return null;
+          }
+      
+          await ctx.prisma!.game.upsert({
+            where: { id: input.gameId },
+            update: { details: JSON.stringify(gameDetails) },
+            create: { id: input.gameId, details: JSON.stringify(gameDetails) },
           });
         }
 

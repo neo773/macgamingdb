@@ -4,9 +4,12 @@ import { config } from "dotenv";
 import type { PrismaConfig } from "prisma";
 import { PrismaLibSQL } from '@prisma/adapter-libsql'
 
-config({
-  path: ".env.prod",
-});
+// safety check so we dont run it in dev mode
+if (process.env.NODE_ENV === 'production') {
+  config({
+    path: ".env.prod",
+  });
+}
 
 type Env = {
   LIBSQL_DATABASE_TOKEN: string;
@@ -28,12 +31,14 @@ export default {
   //     });
   //   },
   // },
-  migrate: {
-    async adapter(env: Env) {
-      return new PrismaLibSQL({
-        url: env.LIBSQL_DATABASE_URL,
-        authToken: env.LIBSQL_DATABASE_TOKEN,
-      })
+  ...(process.env.NODE_ENV === 'production' ? {
+    migrate: {
+      async adapter(env: Env) {
+        return new PrismaLibSQL({
+          url: env.LIBSQL_DATABASE_URL,
+          authToken: env.LIBSQL_DATABASE_TOKEN,
+        })
+      }
     }
-  }
+  } : {})
 } satisfies PrismaConfig<Env>;

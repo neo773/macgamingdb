@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, procedure } from "../trpc";
-import { getGameBySteamId, searchSteam } from "@/lib/steam";
+import { getGameBySteamId, searchSteam, SteamAppData } from "@/lib/steam";
+import { TRPCError } from "@trpc/server";
 
 export const gameRouter = router({
   search: procedure
@@ -18,17 +19,36 @@ export const gameRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       try {
-        // Get game details from Algolia
-        const gameDetails = await getGameBySteamId(input.id)
-        if (!gameDetails) {
-          throw new Error("Game not found");
-        }
-
         // Get reviews from our database
         const reviews = await ctx.prisma!.gameReview.findMany({
           where: { gameId: input.id },
         });
 
+        const game = await ctx.prisma!.game.findUnique({
+          where: { id: input.id },
+        });
+
+        let gameDetails: string = game?.details as string;
+        // if game doesn't exist fetch from steam API
+        if (!game) {
+          const response = await getGameBySteamId(input.id);
+          if (!response) {
+            console.warn(`Game with ID ${input.id} not found on Steam.`);
+            throw new TRPCError({
+              message: "Something went wrong",
+              code: "INTERNAL_SERVER_ERROR",
+            });
+          }
+
+          gameDetails = JSON.stringify(response);
+          // Store/update in database
+
+          await ctx.prisma!.game.upsert({
+            where: { id: input.id },
+            update: { details: JSON.stringify(gameDetails) },
+            create: { id: input.id, details: JSON.stringify(gameDetails) },
+          });
+        }
         // Calculate average ratings
         const reviewStats =
           reviews.length > 0
@@ -49,7 +69,10 @@ export const gameRouter = router({
             : null;
 
         return {
-          game: gameDetails[input.id].data,
+          game: {
+            ...game,
+            details: gameDetails,
+          },
           reviews,
           stats: reviewStats,
         };

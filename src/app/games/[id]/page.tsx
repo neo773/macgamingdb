@@ -10,6 +10,7 @@ import { ChevronLeft } from "lucide-react";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ReviewCard from "@/components/review-card";
+import { SteamAppData } from "@/lib/steam";
 
 // Enable ISR with a revalidation time of 1 hour
 export const revalidate = 3600;
@@ -25,12 +26,14 @@ export async function generateMetadata(
     const helpers = await createServerHelpers();
     const { game } = await helpers.game.getById.fetch({ id });
 
+    const gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+
     return {
-      title: `${game.name} - Mac Gaming Performance`,
-      description: `Mac performance details and user reviews for ${game.name}. Find out how well it runs on Apple Silicon.`,
+      title: `${gameDetails.name} - Mac Gaming Performance`,
+      description: `Mac performance details and user reviews for ${gameDetails.name}. Find out how well it runs on Apple Silicon.`,
       openGraph: {
-        title: `${game.name} - Mac Gaming Performance`,
-        description: `Mac performance details and user reviews for ${game.name}. Find out how well it runs on Apple Silicon.`,
+        title: `${gameDetails.name} - Mac Gaming Performance`,
+        description: `Mac performance details and user reviews for ${gameDetails.name}. Find out how well it runs on Apple Silicon.`,
         type: "website",
       },
     };
@@ -56,6 +59,8 @@ export default async function GamePage({
   try {
     // Fetch the query data
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
+
+    const gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
 
     // Only show affiliate if there are reviews, game is playable, and someone used CrossOver
     const hasReviews = reviews && reviews.length > 0;
@@ -89,17 +94,17 @@ export default async function GamePage({
             <div className="aspect-[3/1] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
               <img
-                src={game.header_image}
-                alt={game.name}
+                src={gameDetails.header_image}
+                alt={gameDetails.name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {game.name}
+                  {gameDetails.name}
                 </h1>
-                {game.release_date && (
+                {gameDetails.release_date && (
                   <p className="text-gray-300">
-                    Released: {game.release_date.date}
+                    Released: {gameDetails.release_date.date}
                   </p>
                 )}
               </div>
@@ -115,7 +120,7 @@ export default async function GamePage({
               <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
                 <CardContent className="text-gray-300">
                   <ExpandableDescription
-                    description={game.detailed_description}
+                    description={gameDetails.detailed_description}
                   />
                 </CardContent>
               </Card>
@@ -207,7 +212,7 @@ export default async function GamePage({
                 Experience Reports
               </h2>
               {reviews && reviews.length > 0 && (
-                <AddReviewDialog gameId={id} gameName={game.name} />
+                <AddReviewDialog gameId={id} gameName={gameDetails.name} />
               )}
             </div>
 
@@ -223,7 +228,7 @@ export default async function GamePage({
                   <h1 className="text-xl font-medium">
                     No experience reports yet
                   </h1>
-                  <AddReviewDialog gameId={id} gameName={game.name} />
+                  <AddReviewDialog gameId={id} gameName={gameDetails.name} />
                 </CardContent>
               </Card>
             )}
