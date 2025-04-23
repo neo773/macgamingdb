@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import ReviewCard from "@/components/review-card";
 import ExpandableReviewNote from "../games/[id]/ExpandableReviewNote";
 import { Textarea } from "@/components/ui/textarea";
+import { SteamAppData } from "@/lib/steam";
 
 export default function MyReviewsClient({
   userReviews,
@@ -125,97 +126,102 @@ export default function MyReviewsClient({
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {userReviews.map((review) => (
-              <div
-                key={review.id}
-                className={` ${editMode && focusedReview !== review.id ? "animate-wiggle" : ""}`}
-                style={{
-                  animation:
-                    editMode && focusedReview !== review.id
-                      ? "wiggle 0.5s infinite ease-in-out"
-                      : "none",
-                }}
-              >
-                {editMode && (
-                  <button
-                    onClick={() => setReviewToDelete(review.id)}
-                    className="absolute -top-2.5 -right-2.5 z-40 bg-destructive rounded-full p-1.5 shadow-md"
-                    aria-label="Delete review"
-                  >
-                    <X size={16} className="text-white" />
-                  </button>
-                )}
-                <ReviewCard
-                  review={review}
-                  className="pt-0"
-                  header={
-                    <div className="aspect-[460/215] relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
-                      <img
-                        src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${review.gameId}/header.jpg`}
-                        alt={review.game.id}
-                        className="w-full h-full object-none"
-                      />
-                      <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                        <Link href={`/games/${review.gameId}`}></Link>
-                        <div className="text-sm text-gray-300 mt-1">
-                          Reviewed{" "}
-                          {formatDistance(
-                            new Date(review.createdAt),
-                            new Date(),
-                            { addSuffix: true }
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  }
-                  customReviewNote={
-                    <>
-                      {review.notes && (
-                        <div className="border-t border-white/15 pt-3 mt-2">
-                          <div>
-                            <h4 className="text-sm font-medium text-gray-300 mb-2 flex justify-between items-center">
-                              Review Note:
-                              {editMode &&
-                                editableReviews[review.id] !==
-                                  (review.notes || "") && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() =>
-                                      handleUpdateReview(review.id)
-                                    }
-                                    className="text-white hover:text-blue-300 p-1"
-                                  >
-                                    <Save size={14} />
-                                  </Button>
-                                )}
-                            </h4>
-                            {editMode ? (
-                              <Textarea
-                                value={editableReviews[review.id] || ""}
-                                onChange={(e) =>
-                                  setEditableReviews({
-                                    ...editableReviews,
-                                    [review.id]: e.target.value,
-                                  })
-                                }
-                                onFocus={() => setFocusedReview(review.id)}
-                                onBlur={() => setFocusedReview(null)}
-                                className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
-                                placeholder="Add your thoughts about this game..."
-                              />
-                            ) : (
-                              <ExpandableReviewNote notes={review.notes} />
+            {userReviews.map((review) => {
+              const gameDetails = JSON.parse(
+                review.game.details ?? "{}"
+              ) as SteamAppData;
+              return (
+                <div
+                  key={review.id}
+                  className={` ${editMode && focusedReview !== review.id ? "animate-wiggle" : ""}`}
+                  style={{
+                    animation:
+                      editMode && focusedReview !== review.id
+                        ? "wiggle 0.5s infinite ease-in-out"
+                        : "none",
+                  }}
+                >
+                  {editMode && (
+                    <button
+                      onClick={() => setReviewToDelete(review.id)}
+                      className="absolute -top-2.5 -right-2.5 z-40 bg-destructive rounded-full p-1.5 shadow-md"
+                      aria-label="Delete review"
+                    >
+                      <X size={16} className="text-white" />
+                    </button>
+                  )}
+                  <ReviewCard
+                    review={review}
+                    className="pt-0"
+                    header={
+                      <div className="aspect-[460/215] relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+                        <img
+                          src={`${gameDetails.header_image}`}
+                          alt={review.game.id}
+                          className="w-full h-full object-none"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+                          <Link href={`/games/${review.gameId}`}></Link>
+                          <div className="text-sm text-gray-300 mt-1">
+                            Reviewed{" "}
+                            {formatDistance(
+                              new Date(review.createdAt),
+                              new Date(),
+                              { addSuffix: true }
                             )}
                           </div>
                         </div>
-                      )}
-                    </>
-                  }
-                />
-              </div>
-            ))}
+                      </div>
+                    }
+                    customReviewNote={
+                      <>
+                        {review.notes && (
+                          <div className="border-t border-white/15 pt-3 mt-2">
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-300 mb-2 flex justify-between items-center">
+                                Review Note:
+                                {editMode &&
+                                  editableReviews[review.id] !==
+                                    (review.notes || "") && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        handleUpdateReview(review.id)
+                                      }
+                                      className="text-white hover:text-blue-300 p-1"
+                                    >
+                                      <Save size={14} />
+                                    </Button>
+                                  )}
+                              </h4>
+                              {editMode ? (
+                                <Textarea
+                                  value={editableReviews[review.id] || ""}
+                                  onChange={(e) =>
+                                    setEditableReviews({
+                                      ...editableReviews,
+                                      [review.id]: e.target.value,
+                                    })
+                                  }
+                                  onFocus={() => setFocusedReview(review.id)}
+                                  onBlur={() => setFocusedReview(null)}
+                                  className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
+                                  placeholder="Add your thoughts about this game..."
+                                />
+                              ) : (
+                                <ExpandableReviewNote notes={review.notes} />
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    }
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
 

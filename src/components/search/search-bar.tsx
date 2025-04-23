@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { type SteamGame } from "@/lib/steam";
+
 import { trpc } from "@/lib/trpc/provider";
 import { useDebounce } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { SteamGameSearchObject } from "@/lib/steam";
 
 type SearchBarProps = {
-  onResultsChange?: (results: SteamGame[] | null, isLoading: boolean) => void;
+  onResultsChange?: (results: SteamGameSearchObject[] | null, isLoading: boolean) => void;
 };
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {

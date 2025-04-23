@@ -8,7 +8,8 @@ export const gameRouter = router({
     .input(z.object({ query: z.string() }))
     .query(async ({ input }) => {
       try {
-        return await searchSteam(input.query);
+        const results = await searchSteam(input.query);
+        return results.slice(0, 10);
       } catch (error) {
         console.error("Search error:", error);
         throw new Error("Failed to search games");
