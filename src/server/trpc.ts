@@ -4,12 +4,13 @@ import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
 import { createPrismaClient } from "@/lib/prisma";
 import { PrismaClient } from "@prisma/client";
+import { User } from "better-auth";
 
 // Define a proper context type
 export interface TrpcContext {
   prisma: PrismaClient;
   req?: Request;
-  user?: any;
+  user?: User;
 }
 
 // Create context for API route handler
@@ -32,7 +33,7 @@ export const router = t.router;
 export const procedure = t.procedure;
 
 // Middleware to check authentication
-const isAuthed = t.middleware(async ({ ctx, next }) => {
+const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   try {
     if (!ctx.req) {
       throw new TRPCError({
@@ -60,4 +61,4 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
 });
 
 // Use this procedure when authentication is required
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = t.procedure.use(isAuthenticated);

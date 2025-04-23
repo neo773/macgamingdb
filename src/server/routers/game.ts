@@ -2,6 +2,7 @@ import { z } from "zod";
 import { router, procedure } from "../trpc";
 import { getGameBySteamId, searchSteam, SteamAppData } from "@/lib/steam";
 import { TRPCError } from "@trpc/server";
+import { GameReview } from "@prisma/client";
 
 export const gameRouter = router({
   search: procedure
@@ -85,7 +86,7 @@ export const gameRouter = router({
 });
 
 // Helper function to calculate average performance
-function calculateAveragePerformance(reviews: any[]) {
+function calculateAveragePerformance(reviews: GameReview[]) {
   const performanceMap = {
     UNPLAYABLE: 0,
     BARELY_PLAYABLE: 1,
@@ -104,7 +105,7 @@ function calculateAveragePerformance(reviews: any[]) {
 }
 
 // Helper function to calculate translation layer statistics
-function calculateTranslationLayerStats(reviews: any[]) {
+function calculateTranslationLayerStats(reviews: GameReview[]) {
   const layers = ["DXVK", "DXMT", "D3D_METAL", "NONE"];
   const stats: Record<string, { count: number; averagePerformance: number }> =
     {};
