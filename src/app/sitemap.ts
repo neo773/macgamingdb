@@ -1,16 +1,8 @@
 import type { MetadataRoute } from "next";
 import { createPrismaClient } from "@/lib/prisma";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production"
-      ? new PrismaLibSQL({
-          url: `${process.env.LIBSQL_DATABASE_URL}`,
-          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-        })
-      : undefined
-  );
+  const prisma = createPrismaClient();
 
   // Get all games that have at least one review, including their most recent review
   const gamesWithReviews = await prisma.game.findMany({

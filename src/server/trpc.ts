@@ -3,11 +3,7 @@ import superjson from "superjson";
 import { auth } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
 import { createPrismaClient } from "@/lib/prisma";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
 import { PrismaClient } from "@prisma/client";
-
-// import { getCloudflareContext } from "@opennextjs/cloudflare";
-// import { PrismaD1 } from "adapter-d1-patched";
 
 // Define a proper context type
 export interface TrpcContext {
@@ -20,20 +16,8 @@ export interface TrpcContext {
 export const createTRPCContext = async (
   opts: { req?: Request } = {},
 ): Promise<TrpcContext> => {
-  // const DB = getCloudflareContext().env.DB;
 
-  // const prisma = createPrismaClient(
-  //   process.env.NODE_ENV === "production" ? new PrismaD1(DB) : undefined
-  // );
-
-  const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production"
-      ? new PrismaLibSQL({
-          url: `${process.env.LIBSQL_DATABASE_URL}`,
-          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-        })
-      : undefined,
-  );
+  const prisma = createPrismaClient();
   return {
     prisma: prisma,
     req: opts.req,

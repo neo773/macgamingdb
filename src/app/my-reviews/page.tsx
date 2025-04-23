@@ -1,18 +1,10 @@
 import { createPrismaClient } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
 import MyReviewsClient from "./client";
 
 export default async function MyReviewsPage() {
-  const prisma = createPrismaClient(
-    process.env.NODE_ENV === "production"
-      ? new PrismaLibSQL({
-          url: `${process.env.LIBSQL_DATABASE_URL}`,
-          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-        })
-      : undefined
-  );
+  const prisma = createPrismaClient();
 
   const session = await auth(prisma).api.getSession({
     headers: await headers(),
