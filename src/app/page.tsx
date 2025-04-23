@@ -3,10 +3,10 @@
 import SearchBar from "@/components/search/search-bar";
 import { useState } from "react";
 import * as React from "react";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import Link from "next/link";
-import { SteamGameSearchObject } from "@/lib/steam";
+import { SteamGameSearchObject } from "@/server/helpers/steam";
 import { LogoIcon } from "@/components/LogoIcon";
 
 // Featured games data

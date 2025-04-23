@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, procedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
-import { getGameBySteamId } from "@/lib/steam";
+import { getGameBySteamId } from "@/server/helpers/steam";
 
 // Define enum schemas using Zod
 const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);

@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Acccount from "./ui/account";
 import { Map, Menu, X } from "lucide-react";
 import { LogoIcon } from "./LogoIcon";
+
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDistance } from "date-fns";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronLeft, Edit2, Save, X } from "lucide-react";
 import { trpc } from "@/lib/trpc/provider";
@@ -23,7 +23,7 @@ import { toast } from "sonner";
 import GameReviewCard from "@/components/GameReviewCard";
 import ExpandableReviewNote from "../../components/GameReviewCard/ExpandableReviewNote";
 import { Textarea } from "@/components/ui/textarea";
-import { SteamAppData } from "@/lib/steam";
+import { SteamAppData } from "@/server/helpers/steam";
 
 export default function MyReviewsClient({
   userReviews,

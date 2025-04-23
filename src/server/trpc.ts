@@ -1,8 +1,8 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { TRPCError } from "@trpc/server";
-import { createPrismaClient } from "@/lib/prisma";
+import { createPrismaClient } from "@/lib/database/prisma";
 import { PrismaClient } from "@prisma/client";
 import { User } from "better-auth";
 

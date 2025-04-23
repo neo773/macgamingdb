@@ -1,6 +1,6 @@
-import { createPrismaClient } from "@/lib/prisma";
+import { createPrismaClient } from "@/lib/database/prisma";
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import MyReviewsClient from "./client";
 
 export default async function MyReviewsPage() {

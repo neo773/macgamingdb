@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 interface AuthPromptProps {
   /** Optional message to display above the form */

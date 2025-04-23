@@ -1,5 +1,5 @@
-import { auth } from "@/lib/auth";
-import { createPrismaClient } from "@/lib/prisma";
+import { auth } from "@/lib/auth/auth";
+import { createPrismaClient } from "@/lib/database/prisma";
 import { toNextJsHandler } from "better-auth/next-js";
 
 export const GET = async (req: Request) => {

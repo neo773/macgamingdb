@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, procedure } from "../trpc";
-import { getGameBySteamId, searchSteam, SteamAppData } from "@/lib/steam";
+import { getGameBySteamId, searchSteam, SteamAppData } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
 import { GameReview } from "@prisma/client";
 

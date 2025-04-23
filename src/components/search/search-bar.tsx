@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { trpc } from "@/lib/trpc/provider";
 import { useDebounce } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { SteamGameSearchObject } from "@/lib/steam";
+import { SteamGameSearchObject } from "@/server/helpers/steam";
 
 type SearchBarProps = {
   onResultsChange?: (results: SteamGameSearchObject[] | null, isLoading: boolean) => void;

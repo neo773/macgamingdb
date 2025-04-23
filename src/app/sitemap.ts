@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { createPrismaClient } from "@/lib/prisma";
+import { createPrismaClient } from "@/lib/database/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const prisma = createPrismaClient();

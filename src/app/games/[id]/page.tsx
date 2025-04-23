@@ -7,10 +7,10 @@ import ExpandableDescription from "../../../components/GameReviewCard/Expandable
 import { Card, CardContent } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import GameReviewCard from "@/components/GameReviewCard";
-import { SteamAppData } from "@/lib/steam";
+import { SteamAppData } from "@/server/helpers/steam";
 
 // Enable ISR with a revalidation time of 1 hour
 export const revalidate = 3600;
