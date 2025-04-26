@@ -167,3 +167,43 @@ footer:before {
   position: absolute;
   width: 100%;
 }
+/* Game description styling */
+.bb_paragraph {
+  @apply text-base leading-relaxed mb-4 text-gray-200;
+}
+
+.bb_img {
+  @apply w-full max-w-full rounded-md shadow-lg my-4;
+}
+
+/* Headings */
+h1 {
+  @apply text-3xl font-bold mb-6 text-primary tracking-wide;
+}
+
+/* List items with bullets */
+.bb_paragraph:has(+ .bb_paragraph:first-letter:is(•)) {
+  @apply mb-1;
+}
+
+.bb_paragraph:first-letter:is(•) {
+  @apply text-accent font-bold;
+}
+/* Hover effects for images */
+.bb_img:hover {
+  @apply transform transition-transform duration-300 scale-[1.01] shadow-xl;
+}
+/* Animation for key headings */
+h1:first-child {
+  @apply relative overflow-hidden;
+  animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 30px rgba(59, 130, 246, 0.2);
+  }
+}
