@@ -32,7 +32,7 @@ export const gameRouter = router({
 
         let gameDetails: string = game?.details as string;
         // if game doesn't exist fetch from steam API
-        if (!game) {
+        if (!game || !game.details) {
           const response = await getGameBySteamId(input.id);
           if (!response) {
             console.warn(`Game with ID ${input.id} not found on Steam.`);
