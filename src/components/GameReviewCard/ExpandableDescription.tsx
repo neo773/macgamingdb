@@ -35,6 +35,7 @@ export default function ExpandableDescription({
         <div
           ref={contentRef}
           dangerouslySetInnerHTML={{ __html: description }}
+          className="game-description"
         />
       </div>
 
