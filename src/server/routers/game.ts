@@ -42,13 +42,14 @@ export const gameRouter = router({
             });
           }
 
+          // Stringify the response ONCE to store in DB
           gameDetails = JSON.stringify(response);
+          
           // Store/update in database
-
           await ctx.prisma!.game.upsert({
             where: { id: input.id },
-            update: { details: JSON.stringify(gameDetails) },
-            create: { id: input.id, details: JSON.stringify(gameDetails) },
+            update: { details: gameDetails }, // Don't stringify again
+            create: { id: input.id, details: gameDetails }, // Don't stringify again
           });
         }
         // Calculate average ratings

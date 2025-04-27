@@ -26,18 +26,29 @@ export async function generateMetadata(
     const helpers = await createServerHelpers();
     const { game } = await helpers.game.getById.fetch({ id });
 
-    const gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+    // Add robust error handling for JSON parsing
+    let gameDetails: SteamAppData;
+    try {
+      gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+    } catch (parseError) {
+      console.error("Failed to parse game details in metadata:", parseError);
+      return {
+        title: "Game Details - Mac Gaming DB",
+        description: "Details about game performance on Mac",
+      };
+    }
 
     return {
-      title: `${gameDetails.name} - Mac Gaming Performance`,
-      description: `Mac performance details and user reviews for ${gameDetails.name}. Find out how well it runs on Apple Silicon.`,
+      title: `${gameDetails.name || 'Game'} - Mac Gaming Performance`,
+      description: `Mac performance details and user reviews for ${gameDetails.name || 'this game'}. Find out how well it runs on Apple Silicon.`,
       openGraph: {
-        title: `${gameDetails.name} - Mac Gaming Performance`,
-        description: `Mac performance details and user reviews for ${gameDetails.name}. Find out how well it runs on Apple Silicon.`,
+        title: `${gameDetails.name || 'Game'} - Mac Gaming Performance`,
+        description: `Mac performance details and user reviews for ${gameDetails.name || 'this game'}. Find out how well it runs on Apple Silicon.`,
         type: "website",
       },
     };
   } catch (error) {
+    console.error("Error generating metadata:", error);
     return {
       title: "Game Details - Mac Gaming DB",
       description: "Details about game performance on Mac",
@@ -60,7 +71,20 @@ export default async function GamePage({
     // Fetch the query data
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
 
-    const gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+    // Add robust error handling for JSON parsing
+    let gameDetails: SteamAppData;
+    try {
+      gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+    } catch (parseError) {
+      console.error("Failed to parse game details:", parseError, game?.details);
+      // Provide an empty object with fallback properties instead of showing a 404
+      gameDetails = {
+        name: "Game Information Unavailable",
+        detailed_description: "Game details could not be loaded at this time. Please try again later.",
+        header_image: "",
+        release_date: { date: "Unknown", coming_soon: false },
+      } as SteamAppData;
+    }
 
     // Only show affiliate if there are reviews, game is playable, and someone used CrossOver
     const hasReviews = reviews && reviews.length > 0;
@@ -93,14 +117,20 @@ export default async function GamePage({
           <div className="relative mb-8">
             <div className="aspect-[3/1] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
-              <img
-                src={gameDetails.header_image}
-                alt={gameDetails.name}
-                className="w-full h-full object-cover"
-              />
+              {gameDetails.header_image ? (
+                <img
+                  src={gameDetails.header_image}
+                  alt={gameDetails.name || "Game"}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+                  <p className="text-gray-400">Game image unavailable</p>
+                </div>
+              )}
               <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {gameDetails.name}
+                  {gameDetails.name || "Game Information Unavailable"}
                 </h1>
                 {gameDetails.release_date && (
                   <p className="text-gray-300">
@@ -120,7 +150,7 @@ export default async function GamePage({
               <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
                 <CardContent className="text-gray-300">
                   <ExpandableDescription
-                    description={gameDetails.detailed_description}
+                    description={gameDetails.detailed_description || "No description available."}
                   />
                 </CardContent>
               </Card>
@@ -272,6 +302,43 @@ export default async function GamePage({
     );
   } catch (error) {
     console.error("Error in server component:", error);
-    notFound();
+    
+    // Instead of notFound(), provide a graceful error page
+    return (
+      <div className="min-h-screen flex flex-col bg-black">
+        <Header />
+        <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+          <div className="mb-4">
+            <Link
+              href="/"
+              className="text-blue-400 hover:text-blue-300 inline-flex items-center"
+            >
+              <ChevronLeft className="text-blue-400" />
+              Home
+            </Link>
+          </div>
+          
+          <Card className="bg-primary-gradient shadow-lg mt-8">
+            <CardContent className="p-8">
+              <h1 className="text-2xl font-bold text-white mb-4">
+                Game Information Temporarily Unavailable
+              </h1>
+              <p className="text-gray-300 mb-4">
+                We're having trouble loading the information for this game. This could be due to:
+              </p>
+              <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
+                <li>Temporary Steam API unavailability</li>
+                <li>Network connectivity issues</li>
+                <li>Server-side caching problems</li>
+              </ul>
+              <p className="text-gray-300">
+                Please try again later or return to the <Link href="/" className="text-blue-400 hover:underline">home page</Link>.
+              </p>
+            </CardContent>
+          </Card>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 }
