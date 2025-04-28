@@ -21,7 +21,7 @@ const Footer = () => {
           <a href="https://www.buymeacoffee.com/huzef">
             <img
               className="w-26 mt-1"
-              src="https://raw.githubusercontent.com/appcraftstudio/buymeacoffee/master/Images/snapshot-bmc-button.png"
+              src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
               alt="Buy Me A Coffee"
             />
           </a>

@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import clsx from "clsx";
+import { Performance } from "@/server/routers/review";
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
@@ -15,6 +16,16 @@ const getPerformanceColor = (performance: string) => {
   };
   return colors[performance] || "bg-gray-500 text-gray-50";
 };
+// const getPerformanceColor = (performance: Performance) => {
+//   const colors: Record<Performance, string> = {
+//     EXCELLENT: "bg-gradient-to-tr from-[#051a0d] to-[#095025] text-[#0f0] border border-[#00ff001a]",
+//     GOOD: "bg-gradient-to-tr from-[#01070a] to-[#00448b] text-[#0096ff] border border-[#00eaff1a]",
+//     PLAYABLE: "bg-gradient-to-tr from-[#553a08] to-[#bd9f00] text-[#ffee00] border border-[#FFD7001a]",
+//     BARELY_PLAYABLE: "bg-gradient-to-tr from-[#4a2510] to-[#a35c00] text-[#ffa500] border border-[#ff85001a]",
+//     UNPLAYABLE: "bg-gradient-to-tr from-[#520b0b] to-[#761717] text-[#ff3535] border border-[#FF00001a]",
+//   };
+//   return colors[performance] || "bg-gray-500 text-gray-50";
+// };
 
 // Helper function to format method name
 const formatMethodName = (method: string) => {

@@ -231,6 +231,14 @@ export default function ReviewContentWrapper({
   const Description = isDrawer ? 'p' : DialogDescription;
   const Footer = isDrawer ? 'div' : DialogFooter;
 
+  // Helper function to transform performance rating enum values to user-friendly labels
+  const transformPerformanceRating = (rating: string): string => {
+    // Split the rating by underscore and capitalize each word
+    return rating.split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   return (
     <>
       <Header className={isDrawer ? "grid gap-1.5 p-4 text-center sm:text-left" : undefined}>
@@ -411,15 +419,7 @@ export default function ReviewContentWrapper({
               <SelectContent>
                 {enumValues?.performanceRatings.map((rating) => (
                   <SelectItem key={rating} value={rating}>
-                    {rating === "EXCELLENT"
-                      ? "Excellent"
-                      : rating === "GOOD"
-                        ? "Good"
-                        : rating === "PLAYABLE"
-                          ? "Playable"
-                          : rating === "BARELY_PLAYABLE"
-                            ? "Barely Playable"
-                            : "Unplayable"}
+                    {transformPerformanceRating(rating)}
                   </SelectItem>
                 ))}
               </SelectContent>

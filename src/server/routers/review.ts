@@ -3,20 +3,7 @@ import { router, procedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import { getGameBySteamId } from "@/server/helpers/steam";
-
-// Define enum schemas using Zod
-const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);
-const TranslationLayerEnum = z.enum(["DXVK", "DXMT", "D3D_METAL", "NONE"]);
-const PerformanceEnum = z.enum([
-  "EXCELLENT",
-  "GOOD",
-  "PLAYABLE",
-  "BARELY_PLAYABLE",
-  "UNPLAYABLE",
-]);
-const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
-const ChipsetEnum = z.enum(["M1", "M2", "M3", "M4"]);
-const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
+import { ChipsetEnum, ChipsetVariantEnum, GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
 
 // Define schemas using Zod
 const createReviewSchema = z.object({
