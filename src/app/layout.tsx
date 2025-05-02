@@ -31,6 +31,7 @@ export default async function RootLayout({
         name="google-site-verification"
         content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
       />
+      <meta name="google-adsense-account" content="ca-pub-4009451848051361" />
       <body className={`${GeistMono.className} dark`}>
         <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
         <Toaster />
