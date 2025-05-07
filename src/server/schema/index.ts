@@ -12,3 +12,24 @@ export const PerformanceEnum = z.enum([
 export const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
 export const ChipsetEnum = z.enum(["M1", "M2", "M3", "M4"]);
 export const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
+
+// Create constants for software versions to allow direct access in components
+export const SOFTWARE_VERSIONS = {
+  CROSSOVER: ["25.0", "24.0"],
+  PARALLELS: ["20", "19"],
+} as const;
+
+// Schema for validation
+export const SoftwareVersionsSchema = z.object({
+  CROSSOVER: z.array(z.string()),
+  PARALLELS: z.array(z.string()),
+});
+
+export type SoftwareVersions = z.infer<typeof SoftwareVersionsSchema>;
+
+export type PlayMethod = z.infer<typeof PlayMethodEnum>;
+export type TranslationLayer = z.infer<typeof TranslationLayerEnum>;
+export type Performance = z.infer<typeof PerformanceEnum>;
+export type GraphicsSettings = z.infer<typeof GraphicsSettingsEnum>;
+export type Chipset = z.infer<typeof ChipsetEnum>;
+export type ChipsetVariant = z.infer<typeof ChipsetVariantEnum>;
