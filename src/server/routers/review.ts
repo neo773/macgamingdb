@@ -31,40 +31,6 @@ const updateReviewSchema = z.object({
 });
 
 export const reviewRouter = router({
-  // Get all enum values for client-side use
-  getEnumValues: procedure.query(() => {
-    return {
-      playMethods: PlayMethodEnum.options,
-      translationLayers: TranslationLayerEnum.options,
-      performanceRatings: PerformanceEnum.options,
-      graphicsSettings: GraphicsSettingsEnum.options,
-      chipsets: ChipsetEnum.options,
-      chipsetVariants: ChipsetVariantEnum.options,
-    };
-  }),
-
-  // Get version defaults for different software
-  getSoftwareVersions: procedure.query(() => {
-    return {
-      CROSSOVER: ["25.0", "24.0"],
-      PARALLELS: ["20", "19"],
-    };
-  }),
-
-  // Get chipset combinations
-  getChipsetCombinations: procedure.query(() => {
-    const combinations = [];
-    for (const chipset of ChipsetEnum.options) {
-      for (const variant of ChipsetVariantEnum.options) {
-        combinations.push({
-          value: `${chipset}-${variant}`,
-          label: variant === "BASE" ? chipset : `${chipset} ${variant}`,
-        });
-      }
-    }
-    return combinations;
-  }),
-
   // Check if user is authenticated
   getUserAuth: procedure.query(async ({ ctx }) => {
     return {

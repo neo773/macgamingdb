@@ -25,8 +25,8 @@ import {
   GraphicsSettingsEnum,
   ChipsetEnum,
   ChipsetVariantEnum,
-  SoftwareVersionsEnum,
-  SoftwareVersions,
+  SOFTWARE_VERSIONS,
+  type SoftwareVersions,
 } from "@/server/schema";
 import {
   Select,
@@ -86,7 +86,7 @@ export default function ReviewContentWrapper({
     fps: string;
     resolution: string;
     notes: string;
-    softwareVersion: SoftwareVersions[keyof SoftwareVersions][number];
+    softwareVersion: string;
     playMethod: PlayMethod;
     translationLayer: TranslationLayer;
     performance: Performance;
@@ -97,7 +97,7 @@ export default function ReviewContentWrapper({
     fps: "",
     resolution: "",
     notes: "",
-    softwareVersion: SoftwareVersionsEnum._output.CROSSOVER[0],
+    softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
     playMethod: PlayMethodEnum.options[1], // Default to CROSSOVER
     translationLayer: TranslationLayerEnum.options[0], // Default to DXVK
     performance: PerformanceEnum.options[1], // Default to GOOD
@@ -114,14 +114,14 @@ export default function ReviewContentWrapper({
       ) {
         setFormData((prev) => ({
           ...prev,
-          softwareVersion: SoftwareVersionsEnum._output.CROSSOVER[0],
+          softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
         }));
       } else if (
         formData.playMethod === "PARALLELS"
       ) {
         setFormData((prev) => ({
           ...prev,
-          softwareVersion: SoftwareVersionsEnum._output.PARALLELS[0],
+          softwareVersion: SOFTWARE_VERSIONS.PARALLELS[0],
         }));
       } else {
         setFormData((prev) => ({
@@ -330,13 +330,13 @@ export default function ReviewContentWrapper({
                     </SelectTrigger>
                     <SelectContent>
                       {formData.playMethod === "CROSSOVER" &&
-                        SoftwareVersionsEnum?._output.CROSSOVER.map((version) => (
+                        SOFTWARE_VERSIONS.CROSSOVER.map((version: string) => (
                           <SelectItem key={version} value={version}>
                             {version}
                           </SelectItem>
                         ))}
                       {formData.playMethod === "PARALLELS" &&
-                        SoftwareVersionsEnum?._output.PARALLELS.map((version) => (
+                        SOFTWARE_VERSIONS.PARALLELS.map((version: string) => (
                           <SelectItem key={version} value={version}>
                             {version}
                           </SelectItem>
