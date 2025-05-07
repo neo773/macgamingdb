@@ -12,14 +12,22 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type {
-  PlayMethod,
-  TranslationLayer,
-  Performance,
-  GraphicsSettings,
-  Chipset,
-  ChipsetVariant,
-} from "@/server/routers/review";
+import {
+  type PlayMethod,
+  type TranslationLayer,
+  type Performance,
+  type GraphicsSettings,
+  type Chipset,
+  type ChipsetVariant,
+  PlayMethodEnum,
+  TranslationLayerEnum,
+  PerformanceEnum,
+  GraphicsSettingsEnum,
+  ChipsetEnum,
+  ChipsetVariantEnum,
+  SoftwareVersionsEnum,
+  SoftwareVersions,
+} from "@/server/schema";
 import {
   Select,
   SelectContent,
@@ -45,6 +53,19 @@ export type ReviewContentWrapperProps = {
   isDrawer?: boolean;
 };
 
+const getChipsetCombinations = () => {
+  const combinations = [];
+  for (const chipset of ChipsetEnum.options) {
+    for (const variant of ChipsetVariantEnum.options) {
+      combinations.push({
+        value: `${chipset}-${variant}`,
+        label: variant === "BASE" ? chipset : `${chipset} ${variant}`,
+      });
+    }
+  }
+  return combinations;
+}
+
 export default function ReviewContentWrapper({
   gameId,
   gameName,
@@ -58,69 +79,49 @@ export default function ReviewContentWrapper({
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState("");
 
-  // Fetching enum values from server
-  const { data: enumValues, isLoading: isLoadingEnums } =
-    trpc.review.getEnumValues.useQuery();
-  const { data: chipsetCombinations, isLoading: isLoadingChipsets } =
-    trpc.review.getChipsetCombinations.useQuery();
-  const { data: softwareVersions, isLoading: isLoadingSoftwareVersions } =
-    trpc.review.getSoftwareVersions.useQuery();
+  const chipsetCombinations = getChipsetCombinations()
 
   // Form state with proper typing
-  const [formData, setFormData] = useState({
-    playMethod: "" as PlayMethod,
-    translationLayer: "" as TranslationLayer,
-    performance: "" as Performance,
+  const [formData, setFormData] = useState<{
+    fps: string;
+    resolution: string;
+    notes: string;
+    softwareVersion: SoftwareVersions[keyof SoftwareVersions][number];
+    playMethod: PlayMethod;
+    translationLayer: TranslationLayer;
+    performance: Performance;
+    graphicsSettings: GraphicsSettings;
+    chipset: Chipset;
+    chipsetVariant: ChipsetVariant;
+  }>({
     fps: "",
-    graphicsSettings: "" as GraphicsSettings,
     resolution: "",
-    chipset: "" as Chipset,
-    chipsetVariant: "" as ChipsetVariant,
     notes: "",
-    softwareVersion: "",
-    userId: "user-" + Math.floor(Math.random() * 1000000), // Generate a random user ID for now
+    softwareVersion: SoftwareVersionsEnum._output.CROSSOVER[0],
+    playMethod: PlayMethodEnum.options[1], // Default to CROSSOVER
+    translationLayer: TranslationLayerEnum.options[0], // Default to DXVK
+    performance: PerformanceEnum.options[1], // Default to GOOD
+    graphicsSettings: GraphicsSettingsEnum.options[1], // Default to HIGH
+    chipset: ChipsetEnum.options[0], // Default to M1
+    chipsetVariant: ChipsetVariantEnum.options[0], // Default to BASE
   });
-
-  // Initialize form with default values once enum values are loaded
-  useEffect(() => {
-    if (enumValues) {
-      setFormData((prev) => ({
-        ...prev,
-        playMethod: enumValues.playMethods[1], // Default to CROSSOVER
-        translationLayer: enumValues.translationLayers[0], // Default to DXVK
-        performance: enumValues.performanceRatings[1], // Default to GOOD
-        graphicsSettings: enumValues.graphicsSettings[1], // Default to HIGH
-        chipset: enumValues.chipsets[0], // Default to M1
-        chipsetVariant: enumValues.chipsetVariants[0], // Default to BASE
-      }));
-    }
-
-    if (softwareVersions) {
-      setFormData((prev) => ({
-        ...prev,
-        softwareVersion: softwareVersions.CROSSOVER[0], // Default to CrossOver version
-      }));
-    }
-  }, [enumValues, softwareVersions]);
 
   // Update software version when play method changes
   useEffect(() => {
-    if (softwareVersions && formData.playMethod) {
+    if (formData.playMethod) {
       if (
-        formData.playMethod === "CROSSOVER" &&
-        softwareVersions.CROSSOVER.length > 0
+        formData.playMethod === "CROSSOVER"
       ) {
         setFormData((prev) => ({
           ...prev,
-          softwareVersion: softwareVersions.CROSSOVER[0],
+          softwareVersion: SoftwareVersionsEnum._output.CROSSOVER[0],
         }));
       } else if (
-        formData.playMethod === "PARALLELS" &&
-        softwareVersions.PARALLELS.length > 0
+        formData.playMethod === "PARALLELS"
       ) {
         setFormData((prev) => ({
           ...prev,
-          softwareVersion: softwareVersions.PARALLELS[0],
+          softwareVersion: SoftwareVersionsEnum._output.PARALLELS[0],
         }));
       } else {
         setFormData((prev) => ({
@@ -129,7 +130,7 @@ export default function ReviewContentWrapper({
         }));
       }
     }
-  }, [formData.playMethod, softwareVersions]);
+  }, [formData.playMethod]);
 
   // Create review mutation
   const createReviewMutation = trpc.review.create.useMutation({
@@ -148,14 +149,12 @@ export default function ReviewContentWrapper({
   });
 
   const isSubmitting = createReviewMutation.isPending;
-  const isLoading =
-    isLoadingEnums || isLoadingChipsets || isLoadingSoftwareVersions;
 
   // Handle form input changes
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -220,32 +219,40 @@ export default function ReviewContentWrapper({
     setFormData((prev) => ({ ...prev, playMethod: method }));
   };
 
-  // If loading, show a loading state
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   // Helper components specific for Drawer/Dialog
-  const Header = isDrawer ? 'div' : DialogHeader;
-  const Title = isDrawer ? 'h3' : DialogTitle;
-  const Description = isDrawer ? 'p' : DialogDescription;
-  const Footer = isDrawer ? 'div' : DialogFooter;
+  const Header = isDrawer ? "div" : DialogHeader;
+  const Title = isDrawer ? "h3" : DialogTitle;
+  const Description = isDrawer ? "p" : DialogDescription;
+  const Footer = isDrawer ? "div" : DialogFooter;
 
   // Helper function to transform performance rating enum values to user-friendly labels
   const transformPerformanceRating = (rating: string): string => {
     // Split the rating by underscore and capitalize each word
-    return rating.split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+    return rating
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   };
 
   return (
     <>
-      <Header className={isDrawer ? "grid gap-1.5 p-4 text-center sm:text-left" : undefined}>
-        <Title className={isDrawer ? "text-lg font-semibold leading-none tracking-tight" : undefined}>
+      <Header
+        className={
+          isDrawer ? "grid gap-1.5 p-4 text-center sm:text-left" : undefined
+        }
+      >
+        <Title
+          className={
+            isDrawer
+              ? "text-lg font-semibold leading-none tracking-tight"
+              : undefined
+          }
+        >
           Add Experience for {gameName}
         </Title>
-        <Description className={isDrawer ? "text-sm text-muted-foreground" : undefined}>
+        <Description
+          className={isDrawer ? "text-sm text-muted-foreground" : undefined}
+        >
           Share your experience running this game on your Mac.
         </Description>
       </Header>
@@ -255,15 +262,15 @@ export default function ReviewContentWrapper({
           {error}
         </div>
       )}
-      
-      <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game."/>
+
+      <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game." />
 
       <form onSubmit={handleSubmit} className="space-y-6 px-4 pb-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="block text-sm font-medium">Play Method</label>
             <div className="flex gap-4 justify-between">
-              {enumValues?.playMethods.map((method) => (
+              {PlayMethodEnum.options.map((method) => (
                 <div
                   key={method}
                   className={`cursor-pointer flex flex-col items-center ${
@@ -323,13 +330,13 @@ export default function ReviewContentWrapper({
                     </SelectTrigger>
                     <SelectContent>
                       {formData.playMethod === "CROSSOVER" &&
-                        softwareVersions?.CROSSOVER.map((version) => (
+                        SoftwareVersionsEnum?._output.CROSSOVER.map((version) => (
                           <SelectItem key={version} value={version}>
                             {version}
                           </SelectItem>
                         ))}
                       {formData.playMethod === "PARALLELS" &&
-                        softwareVersions?.PARALLELS.map((version) => (
+                        SoftwareVersionsEnum?._output.PARALLELS.map((version) => (
                           <SelectItem key={version} value={version}>
                             {version}
                           </SelectItem>
@@ -386,7 +393,7 @@ export default function ReviewContentWrapper({
                   <SelectValue placeholder="Select translation layer" />
                 </SelectTrigger>
                 <SelectContent>
-                  {enumValues?.translationLayers.map((layer) => (
+                  {TranslationLayerEnum.options.map((layer) => (
                     <SelectItem key={layer} value={layer}>
                       {layer === "DXVK"
                         ? "DXVK"
@@ -417,7 +424,7 @@ export default function ReviewContentWrapper({
                 <SelectValue placeholder="Select performance rating" />
               </SelectTrigger>
               <SelectContent>
-                {enumValues?.performanceRatings.map((rating) => (
+                {PerformanceEnum.options.map((rating) => (
                   <SelectItem key={rating} value={rating}>
                     {transformPerformanceRating(rating)}
                   </SelectItem>
@@ -427,9 +434,7 @@ export default function ReviewContentWrapper({
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium">
-              FPS (optional)
-            </label>
+            <label className="block text-sm font-medium">FPS (optional)</label>
             <Input
               type="number"
               name="fps"
@@ -453,7 +458,7 @@ export default function ReviewContentWrapper({
                 <SelectValue placeholder="Select graphics settings" />
               </SelectTrigger>
               <SelectContent>
-                {enumValues?.graphicsSettings.map((setting) => (
+                {GraphicsSettingsEnum.options.map((setting) => (
                   <SelectItem key={setting} value={setting}>
                     {setting === "ULTRA"
                       ? "Ultra"
@@ -510,9 +515,7 @@ export default function ReviewContentWrapper({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium">
-            Notes (optional)
-          </label>
+          <label className="block text-sm font-medium">Notes (optional)</label>
           <Textarea
             name="notes"
             value={formData.notes}
@@ -521,7 +524,9 @@ export default function ReviewContentWrapper({
           />
         </div>
 
-        <Footer className={isDrawer ? "mt-auto flex flex-col gap-2 p-4" : undefined}>
+        <Footer
+          className={isDrawer ? "mt-auto flex flex-col gap-2 p-4" : undefined}
+        >
           {isDrawer ? (
             // Drawer buttons
             <>
@@ -570,4 +575,4 @@ export default function ReviewContentWrapper({
       </form>
     </>
   );
-} 
+}

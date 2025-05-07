@@ -257,11 +257,3 @@ export const reviewRouter = router({
       }
     }),
 });
-
-// Export types derived from zod schemas for client usage
-export type PlayMethod = z.infer<typeof PlayMethodEnum>;
-export type TranslationLayer = z.infer<typeof TranslationLayerEnum>;
-export type Performance = z.infer<typeof PerformanceEnum>;
-export type GraphicsSettings = z.infer<typeof GraphicsSettingsEnum>;
-export type Chipset = z.infer<typeof ChipsetEnum>;
-export type ChipsetVariant = z.infer<typeof ChipsetVariantEnum>;
