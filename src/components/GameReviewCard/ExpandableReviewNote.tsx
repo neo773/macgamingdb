@@ -1,13 +1,14 @@
 "use client";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import React from "react";
+import { cn } from "../utils";
 
 // Client component for expandable review notes
 const ExpandableReviewNote = ({ notes }: { notes: string }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   return (
     <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
-      <p className={isExpanded ? "" : "line-clamp-3"}>
+      <p className={cn("break-words", isExpanded ? "" : "line-clamp-3")}>
         {notes.split("\n").map((line, i) => (
           <React.Fragment key={i}>
             {line}
