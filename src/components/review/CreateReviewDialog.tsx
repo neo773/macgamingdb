@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
-import ReviewContentWrapper from "./ReviewContentWrapper";
+import CreateReviewForm from "@/components/review/CreateReviewForm";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type AddReviewDialogProps = {
@@ -20,7 +20,7 @@ type AddReviewDialogProps = {
   gameName: string;
 };
 
-export default function AddReviewDialog({
+export default function CreateReviewDialog({
   gameId,
   gameName,
 }: AddReviewDialogProps) {
@@ -38,7 +38,7 @@ export default function AddReviewDialog({
         </DrawerTrigger>
         <DrawerContent className="px-0 pb-0 border border-[#272727]">
           <ScrollArea>
-            <ReviewContentWrapper
+            <CreateReviewForm
               gameId={gameId}
               gameName={gameName}
               onOpenChange={setOpen}
@@ -61,7 +61,7 @@ export default function AddReviewDialog({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] rounded-3xl bg-primary-gradient border border-[#272727]">
-        <ReviewContentWrapper
+        <CreateReviewForm
           gameId={gameId}
           gameName={gameName}
           onOpenChange={setOpen}

@@ -1,4 +1,4 @@
-import ExpandableReviewNote from "@/components/GameReviewCard/ExpandableReviewNote";
+import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
 import { GameReview } from "@prisma/client";
 import React from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";

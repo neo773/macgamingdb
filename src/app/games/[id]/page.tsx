@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { createServerHelpers } from "@/lib/trpc/server";
-import { notFound } from "next/navigation";
 import { Metadata, ResolvingMetadata } from "next";
-import AddReviewDialog from "./AddReviewDialog";
-import ExpandableDescription from "../../../components/GameReviewCard/ExpandableDescription";
+import CreateReviewDialog from "@/components/review/CreateReviewDialog";
+import ExpandableDescription from "@/components/review/ExpandableDescription";
 import { Card, CardContent } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import GameReviewCard from "@/components/GameReviewCard";
+import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
 
 // Enable ISR with a revalidation time of 1 hour
@@ -242,7 +241,7 @@ export default async function GamePage({
                 Experience Reports
               </h2>
               {reviews && reviews.length > 0 && (
-                <AddReviewDialog gameId={id} gameName={gameDetails.name} />
+                <CreateReviewDialog gameId={id} gameName={gameDetails.name} />
               )}
             </div>
 
@@ -258,7 +257,7 @@ export default async function GamePage({
                   <h1 className="text-xl font-medium">
                     No experience reports yet
                   </h1>
-                  <AddReviewDialog gameId={id} gameName={gameDetails.name} />
+                  <CreateReviewDialog gameId={id} gameName={gameDetails.name} />
                 </CardContent>
               </Card>
             )}

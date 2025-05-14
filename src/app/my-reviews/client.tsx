@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Game, GameReview } from "@prisma/client";
 import { toast } from "sonner";
-import GameReviewCard from "@/components/GameReviewCard";
-import ExpandableReviewNote from "../../components/GameReviewCard/ExpandableReviewNote";
+import GameReviewCard from "@/components/review/ReviewCard";
+import ExpandableReviewNote from "../../components/review/ExpandableReviewNote";
 import { Textarea } from "@/components/ui/textarea";
 import { SteamAppData } from "@/server/helpers/steam";
 

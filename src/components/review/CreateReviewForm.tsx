@@ -66,7 +66,7 @@ const getChipsetCombinations = () => {
   return combinations;
 }
 
-export default function ReviewContentWrapper({
+export default function CreateReviewForm({
   gameId,
   gameName,
   onOpenChange,

@@ -54,6 +54,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^16.5.0",
     "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5"
