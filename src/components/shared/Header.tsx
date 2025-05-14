@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-import Acccount from "./ui/account";
+import Acccount from "../ui/account";
 import { Map, Menu, X } from "lucide-react";
 import { LogoIcon } from "./LogoIcon";
 

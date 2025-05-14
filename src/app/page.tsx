@@ -1,7 +1,7 @@
 import { SteamGameSearchObject } from "@/server/helpers/steam";
-import { LogoIcon } from "@/components/LogoIcon";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import { LogoIcon } from "@/components/shared/LogoIcon";
+import Footer from "@/components/shared/Footer";
+import Header from "@/components/shared/Header";
 import { createServerHelpers } from "@/lib/trpc/server";
 import HomeClient from "./home-client";
 

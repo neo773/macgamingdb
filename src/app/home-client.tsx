@@ -4,11 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import * as React from "react";
 import Link from "next/link";
 import { SteamGameSearchObject } from "@/server/helpers/steam";
-import { LogoIcon } from "@/components/LogoIcon";
+import { LogoIcon } from "@/components/shared/LogoIcon";
 import { trpc } from "@/lib/trpc/provider";
 import { PerformanceRating } from "@prisma/client";
 import { cn } from "@/components/utils";
-import SearchBar from "@/components/search/search-bar";
+import SearchBar from "@/components/search/SearchBar";
 import { Button } from "@/components/ui/button";
 import { PerformanceEnum } from "@/server/schema";
 

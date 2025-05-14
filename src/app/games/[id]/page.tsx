@@ -6,8 +6,8 @@ import ExpandableDescription from "@/components/review/ExpandableDescription";
 import { Card, CardContent } from "@/components/ui/card";
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from "@/components/shared/Footer";
+import Header from "@/components/shared/Header";
 import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
 
