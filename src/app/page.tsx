@@ -10,10 +10,10 @@ export const revalidate = 3600; // revalidate every hour
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const performanceParam = searchParams[SearchURLParamsKeys.PERFORMANCE] as string;
-  const chipsetParam = searchParams[SearchURLParamsKeys.CHIPSET] as string;
+  const performanceParam = (await searchParams)[SearchURLParamsKeys.PERFORMANCE] as string;
+  const chipsetParam = (await searchParams)[SearchURLParamsKeys.CHIPSET] as string;
   const filterConfig = createFilterConfig(performanceParam, chipsetParam);
 
   const helpers = await createServerHelpers();
