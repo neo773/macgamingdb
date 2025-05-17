@@ -33,8 +33,8 @@ const Filters = ({
   return (
     <>
       <Select value={selectedChipset} onValueChange={handleChipsetChange}>
-        <SelectTrigger className="flex items-center gap-2 rounded-xl border-2">
-          <SelectValue placeholder="Select Chipset" />
+        <SelectTrigger className="flex items-center gap-2 rounded-xl border-2 min-w-[150px]">
+          <SelectValue placeholder={chipsetOptions.find(opt => opt.value === selectedChipset)?.label || "All Chipsets"} />
         </SelectTrigger>
         <SelectContent className="bg-[#171717e0] backdrop-blur-md">
           {chipsetOptions
