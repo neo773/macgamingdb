@@ -1,19 +1,26 @@
-import { SteamGameSearchObject } from "@/server/helpers/steam";
-import { LogoIcon } from "@/components/shared/LogoIcon";
 import Footer from "@/components/shared/Footer";
 import Header from "@/components/shared/Header";
-import { createServerHelpers } from "@/lib/trpc/server";
 import HomeClient from "./home-client";
+import { createServerHelpers } from "@/lib/trpc/server";
+import { SearchURLParamsKeys, createFilterConfig } from "@/lib/constants";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 3600; // revalidate every hour
 
-export default async function Home() {
-  // Server-side fetch of all initial data
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const performanceParam = searchParams[SearchURLParamsKeys.PERFORMANCE] as string;
+  const chipsetParam = searchParams[SearchURLParamsKeys.CHIPSET] as string;
+  const filterConfig = createFilterConfig(performanceParam, chipsetParam);
+
   const helpers = await createServerHelpers();
-  
-  // Get global stats without any filters to use as initial data
-  const initialData = await helpers.game.getInitialStats.fetch();
+
+  const GamesPage = await helpers.game.getGames.fetch(filterConfig);
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -24,7 +31,11 @@ export default async function Home() {
       </p>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
-        <HomeClient initialData={initialData} />
+        <HomeClient 
+          GamesPage={GamesPage} 
+          PerformanceFilter={filterConfig.filter}
+          ChipsetFilter={chipsetParam || "all"}
+        />
       </main>
       
       <Footer />
