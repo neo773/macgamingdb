@@ -209,7 +209,7 @@ export default function HomeClient({
         ))}
 
         {isFetchingNextPage &&
-          Array(3)
+          Array(6)
             .fill(null)
             .map((_, i) => <GameCardSkeleton key={`loading-more-${i}`} />)}
       </>
