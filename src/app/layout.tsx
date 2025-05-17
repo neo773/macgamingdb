@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { Geist } from "next/font/google";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner";
-import "./globals.css";
+import "./tailwind.css";
 
 const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
 
