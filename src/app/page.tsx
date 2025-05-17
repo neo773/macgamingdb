@@ -9,10 +9,11 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // revalidate every hour
 
 export default async function Home() {
-  // Server-side fetch of the rating counts
+  // Server-side fetch of all initial data
   const helpers = await createServerHelpers();
-  const { ratingCounts } = await helpers.game.getGames.fetch({ limit: 1, filter: 'ALL' });
-
+  
+  // Get global stats without any filters to use as initial data
+  const initialData = await helpers.game.getInitialStats.fetch();
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -23,7 +24,7 @@ export default async function Home() {
       </p>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
-        <HomeClient ratingCounts={ratingCounts} />
+        <HomeClient initialData={initialData} />
       </main>
       
       <Footer />
