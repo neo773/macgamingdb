@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <div className="relative w-full">
-      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none overflow-hidden grayscale-100">
         <div
           className="absolute top-0 left-0"
           style={{
@@ -49,7 +49,7 @@ const Header = () => {
       <div className="relative z-50 mx-auto flex w-full max-w-7xl flex-col items-center justify-between px-4 md:flex-row ">
         <div className="w-full py-8 px-4 sm:px-8 flex justify-center">
           <div className="max-w-7xl w-full">
-            <nav className="backdrop-blur-sm bg-gray-900/50 border border-gray-800/60 rounded-full px-5 py-3 flex items-center justify-between shadow-lg">
+            <nav className="bg-input/30 border-2 border-input/70 backdrop-blur-sm rounded-full px-5 py-3 flex items-center justify-between shadow-lg">
               <Link href={"/"} className="flex items-center">
                 <LogoIcon className="size-6 mr-2" />
                 <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">

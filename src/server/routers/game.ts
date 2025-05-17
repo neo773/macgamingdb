@@ -3,7 +3,7 @@ import { router, procedure } from "../trpc";
 import { getGameBySteamId, searchSteam, SteamAppData } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
 import { GameReview, PerformanceRating } from "@prisma/client";
-import { PerformanceEnum } from "../schema";
+import { ChipsetEnum, ChipsetVariantEnum, PerformanceEnum } from "../schema";
 
 export const gameRouter = router({
   search: procedure
@@ -24,20 +24,29 @@ export const gameRouter = router({
         limit: z.number().min(1).max(50).default(6),
         cursor: z.string().nullish(),
         filter: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
+        chipset: ChipsetEnum.optional(),
+        chipsetVariant: ChipsetVariantEnum.optional(),
       })
     )
     .query(async ({ input, ctx }) => {
       try {
-        const { limit, cursor, filter } = input;
+        const { limit, cursor, filter, chipset, chipsetVariant } = input;
 
         // Use a transaction to ensure data consistency and optimize database calls
         return await ctx.prisma!.$transaction(async (tx) => {
           // Get all reviews with minimal fields for performance calculation
+          // Add chipset and chipsetVariant filters if provided
           const reviews = await tx.gameReview.findMany({
             select: {
               gameId: true,
               performance: true,
-            }
+              chipset: true,
+              chipsetVariant: true,
+            },
+            where: {
+              ...(chipset ? { chipset } : {}),
+              ...(chipsetVariant ? { chipsetVariant } : {}),
+            },
           });
 
           // Pre-define performance mapping for faster lookups
@@ -54,10 +63,21 @@ export const gameRouter = router({
           const gameReviewCounts = new Map<string, number>();
           const gamePerformanceRating = new Map<string, PerformanceRating>();
           
+          // Set to track games that specifically match the chipset filters
+          const filteredGameIds = new Set<string>();
+          
           // Single-pass processing of reviews
           for (const review of reviews) {
-            const { gameId, performance } = review;
+            const { gameId, performance, chipset: reviewChipset, chipsetVariant: reviewChipsetVariant } = review;
             const performanceValue = performanceMap[performance as keyof typeof performanceMap];
+            
+            // Track games that match the chipset filters exactly
+            if (
+              (!chipset || reviewChipset === chipset) && 
+              (!chipsetVariant || reviewChipsetVariant === chipsetVariant)
+            ) {
+              filteredGameIds.add(gameId);
+            }
             
             if (!gamePerformanceSum.has(gameId)) {
               gamePerformanceSum.set(gameId, 0);
@@ -71,7 +91,7 @@ export const gameRouter = router({
           
           // Calculate average and set performance ratings in a single pass
           const ratingCounts: Record<PerformanceRating | 'ALL', number> = {
-            ALL: gamePerformanceSum.size,
+            ALL: filteredGameIds.size,
             EXCELLENT: 0,
             GOOD: 0,
             PLAYABLE: 0,
@@ -83,6 +103,11 @@ export const gameRouter = router({
           let gameIds: string[] = [];
           
           for (const [gameId, sum] of gamePerformanceSum.entries()) {
+            // Skip games that don't match chipset filters
+            if (chipset || chipsetVariant) {
+              if (!filteredGameIds.has(gameId)) continue;
+            }
+            
             const count = gameReviewCounts.get(gameId) || 1;
             const avgPerformance = sum / count;
             
@@ -101,36 +126,60 @@ export const gameRouter = router({
             }
           }
           
-          // Fetch games with optimized query
+          // Create array of game IDs with their review counts for sorting
+          const gameIdsWithCounts = gameIds.map(id => ({
+            id,
+            count: gameReviewCounts.get(id) || 0
+          }));
+          
+          // Sort by review count in descending order
+          gameIdsWithCounts.sort((a, b) => b.count - a.count);
+          
+          // Extract sorted game IDs
+          const sortedGameIds = gameIdsWithCounts.map(item => item.id);
+          
+          // Find the cursor position in our sorted list if cursor exists
+          let cursorIndex = -1;
+          if (cursor) {
+            cursorIndex = sortedGameIds.findIndex(id => id === cursor);
+            if (cursorIndex === -1) {
+              // If cursor not found, start from beginning
+              cursorIndex = 0;
+            } else {
+              // Start from the position after the cursor
+              cursorIndex += 1;
+            }
+          }
+
+          // Get the subset of IDs for this page
+          const paginatedGameIds = cursor 
+            ? sortedGameIds.slice(cursorIndex, cursorIndex + limit + 1)
+            : sortedGameIds.slice(0, limit + 1);
+          
+          // Fetch games based on paginated IDs
           const games = await tx.game.findMany({
-            take: limit + 1,
-            ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
             where: {
-              id: filter === 'ALL' ? { in: [...gamePerformanceSum.keys()] } : { in: gameIds }
-            },
-            orderBy: {
-              createdAt: 'desc',
+              id: { in: paginatedGameIds }
             },
           });
-
+          
+          // Ensure games are in the same order as our sorted IDs
+          const sortedGames = paginatedGameIds
+            .map(id => games.find(game => game.id === id))
+            .filter(Boolean) as typeof games;
+          
           // Process pagination
           let nextCursor: typeof cursor = undefined;
-          if (games.length > limit) {
-            const nextItem = games.pop();
+          if (sortedGames.length > limit) {
+            const nextItem = sortedGames.pop();
             nextCursor = nextItem!.id;
           }
 
-          // Create a Map for fast review count lookups
-          const reviewCountMap = new Map<string, number>();
-          for (const [gameId, count] of gameReviewCounts.entries()) {
-            reviewCountMap.set(gameId, count);
-          }
-
           // Efficiently map games with their performance data
-          const gamesWithPerformance = games.map(game => ({
+          const gamesWithPerformance = sortedGames.map(game => ({
             ...game,
             performanceRating: gamePerformanceRating.get(game.id) || 'PLAYABLE',
-            reviewCount: reviewCountMap.get(game.id) || 0,
+            reviewCount: gameReviewCounts.get(game.id) || 0,
           }));
 
           return {
@@ -214,6 +263,131 @@ export const gameRouter = router({
       } catch (error) {
         console.error(`Error fetching game details for ID ${input.id}:`, error);
         throw new Error("Failed to fetch game details");
+      }
+    }),
+
+  getInitialStats: procedure
+    .query(async ({ ctx }) => {
+      try {
+        // Use a transaction for consistent data
+        return await ctx.prisma!.$transaction(async (tx) => {
+          // Get all reviews with minimal fields needed for statistics
+          const reviews = await tx.gameReview.findMany({
+            select: {
+              gameId: true,
+              performance: true,
+              chipset: true,
+              chipsetVariant: true,
+            },
+          });
+
+          // Get distinct chipset combinations
+          const chipsetCombinations = await tx.gameReview.groupBy({
+            by: ['chipset', 'chipsetVariant'],
+            _count: {
+              id: true
+            },
+            orderBy: {
+              _count: {
+                id: 'desc'
+              }
+            }
+          });
+          
+          // Format chipset options
+          const chipsetOptions = chipsetCombinations.map(combo => ({
+            value: `${combo.chipset}-${combo.chipsetVariant}`,
+            label: combo.chipsetVariant === "BASE" ? combo.chipset : `${combo.chipset} ${combo.chipsetVariant}`,
+            count: combo._count.id
+          }));
+
+          // Pre-define performance mapping for faster lookups
+          const performanceMap: Record<PerformanceRating, number> = {
+            UNPLAYABLE: 0,
+            BARELY_PLAYABLE: 1,
+            PLAYABLE: 2,
+            GOOD: 3,
+            EXCELLENT: 4,
+          };
+
+          // Use Map objects for performance
+          const gamePerformanceSum = new Map<string, number>();
+          const gameReviewCounts = new Map<string, number>();
+          const gamePerformanceRating = new Map<string, PerformanceRating>();
+          
+          // Process reviews in a single pass
+          for (const review of reviews) {
+            const { gameId, performance } = review;
+            const performanceValue = performanceMap[performance as keyof typeof performanceMap];
+            
+            if (!gamePerformanceSum.has(gameId)) {
+              gamePerformanceSum.set(gameId, 0);
+              gameReviewCounts.set(gameId, 0);
+              gamePerformanceRating.set(gameId, 'PLAYABLE'); // Default
+            }
+            
+            gamePerformanceSum.set(gameId, (gamePerformanceSum.get(gameId) || 0) + performanceValue);
+            gameReviewCounts.set(gameId, (gameReviewCounts.get(gameId) || 0) + 1);
+          }
+          
+          // Calculate global stats
+          const globalStats = {
+            ALL: 0,
+            EXCELLENT: 0,
+            GOOD: 0,
+            PLAYABLE: 0,
+            BARELY_PLAYABLE: 0,
+            UNPLAYABLE: 0,
+          };
+          
+          // Calculate performance ratings and count totals
+          for (const [gameId, sum] of gamePerformanceSum.entries()) {
+            const count = gameReviewCounts.get(gameId) || 1;
+            const avgPerformance = sum / count;
+            
+            let rating: PerformanceRating;
+            if (avgPerformance >= 3.5) rating = 'EXCELLENT';
+            else if (avgPerformance >= 2.5) rating = 'GOOD';
+            else if (avgPerformance >= 1.5) rating = 'PLAYABLE';
+            else if (avgPerformance >= 0.5) rating = 'BARELY_PLAYABLE';
+            else rating = 'UNPLAYABLE';
+            
+            gamePerformanceRating.set(gameId, rating);
+            globalStats[rating]++;
+            globalStats.ALL++;
+          }
+          
+          // Get featured games (most reviewed)
+          const featuredGameIds = Array.from(gameReviewCounts.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(entry => entry[0]);
+            
+          const featuredGames = await tx.game.findMany({
+            where: {
+              id: { in: featuredGameIds }
+            },
+          });
+          
+          // Add performance rating to featured games
+          const enhancedFeaturedGames = featuredGames.map(game => ({
+            ...game,
+            performanceRating: gamePerformanceRating.get(game.id) || 'PLAYABLE',
+            reviewCount: gameReviewCounts.get(game.id) || 0,
+          }));
+
+          return {
+            globalStats,
+            chipsetOptions,
+            featuredGames: enhancedFeaturedGames,
+          };
+        });
+      } catch (error) {
+        console.error("Error fetching initial stats:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch initial statistics",
+        });
       }
     }),
 });
