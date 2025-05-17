@@ -32,25 +32,28 @@ export const gameRouter = router({
       try {
         const { limit, cursor, filter, chipset, chipsetVariant } = input;
 
-        // Use a transaction to ensure data consistency and optimize database calls
         return await ctx.prisma!.$transaction(async (tx) => {
-          // Get all reviews with minimal fields for performance calculation
-          // Add chipset and chipsetVariant filters if provided
+          // Fetch raw performance data with proper field selection
           const reviews = await tx.gameReview.findMany({
             select: {
               gameId: true,
               performance: true,
-              chipset: true,
-              chipsetVariant: true,
             },
             where: {
               ...(chipset ? { chipset } : {}),
               ...(chipsetVariant ? { chipsetVariant } : {}),
             },
           });
+          
+          type GamePerformance = {
+            gameId: string;
+            count: number;
+            avgPerformance: number;
+            rating: PerformanceRating;
+          };
 
-          // Pre-define performance mapping for faster lookups
-          const performanceMap: Record<PerformanceRating, number> = {
+          // Define the performance mapping
+          const perfValueMap: Record<PerformanceRating, number> = {
             UNPLAYABLE: 0,
             BARELY_PLAYABLE: 1,
             PLAYABLE: 2,
@@ -58,40 +61,18 @@ export const gameRouter = router({
             EXCELLENT: 4,
           };
 
-          // Use Map objects for better performance with large datasets
-          const gamePerformanceSum = new Map<string, number>();
-          const gameReviewCounts = new Map<string, number>();
-          const gamePerformanceRating = new Map<string, PerformanceRating>();
+          // Performance rating thresholds
+          const ratingThresholds = {
+            EXCELLENT: 3.5,
+            GOOD: 2.5,
+            PLAYABLE: 1.5,
+            BARELY_PLAYABLE: 0.5,
+            UNPLAYABLE: 0,
+          };
           
-          // Set to track games that specifically match the chipset filters
-          const filteredGameIds = new Set<string>();
-          
-          // Single-pass processing of reviews
-          for (const review of reviews) {
-            const { gameId, performance, chipset: reviewChipset, chipsetVariant: reviewChipsetVariant } = review;
-            const performanceValue = performanceMap[performance as keyof typeof performanceMap];
-            
-            // Track games that match the chipset filters exactly
-            if (
-              (!chipset || reviewChipset === chipset) && 
-              (!chipsetVariant || reviewChipsetVariant === chipsetVariant)
-            ) {
-              filteredGameIds.add(gameId);
-            }
-            
-            if (!gamePerformanceSum.has(gameId)) {
-              gamePerformanceSum.set(gameId, 0);
-              gameReviewCounts.set(gameId, 0);
-              gamePerformanceRating.set(gameId, 'PLAYABLE'); // Default
-            }
-            
-            gamePerformanceSum.set(gameId, (gamePerformanceSum.get(gameId) || 0) + performanceValue);
-            gameReviewCounts.set(gameId, (gameReviewCounts.get(gameId) || 0) + 1);
-          }
-          
-          // Calculate average and set performance ratings in a single pass
+          // Calculate performance data in a single pass
           const ratingCounts: Record<PerformanceRating | 'ALL', number> = {
-            ALL: filteredGameIds.size,
+            ALL: 0,
             EXCELLENT: 0,
             GOOD: 0,
             PLAYABLE: 0,
@@ -99,73 +80,77 @@ export const gameRouter = router({
             UNPLAYABLE: 0,
           };
           
-          // Determine game IDs to fetch based on filter
-          let gameIds: string[] = [];
+          // Process all reviews in one pass to generate game stats
+          const gameStats = new Map<string, { sum: number; count: number }>();
           
-          for (const [gameId, sum] of gamePerformanceSum.entries()) {
-            // Skip games that don't match chipset filters
-            if (chipset || chipsetVariant) {
-              if (!filteredGameIds.has(gameId)) continue;
+          // Group reviews by game and calculate performance sums
+          reviews.forEach(review => {
+            const { gameId, performance } = review;
+            const perfValue = perfValueMap[performance as PerformanceRating];
+            
+            if (!gameStats.has(gameId)) {
+              gameStats.set(gameId, { sum: 0, count: 0 });
             }
             
-            const count = gameReviewCounts.get(gameId) || 1;
-            const avgPerformance = sum / count;
-            
-            let rating: PerformanceRating;
-            if (avgPerformance >= 3.5) rating = 'EXCELLENT';
-            else if (avgPerformance >= 2.5) rating = 'GOOD';
-            else if (avgPerformance >= 1.5) rating = 'PLAYABLE';
-            else if (avgPerformance >= 0.5) rating = 'BARELY_PLAYABLE';
-            else rating = 'UNPLAYABLE';
-            
-            gamePerformanceRating.set(gameId, rating);
-            ratingCounts[rating]++;
-            
-            if (filter === 'ALL' || filter === rating) {
-              gameIds.push(gameId);
-            }
-          }
-          
-          // Create array of game IDs with their review counts for sorting
-          const gameIdsWithCounts = gameIds.map(id => ({
-            id,
-            count: gameReviewCounts.get(id) || 0
-          }));
-          
-          // Sort by review count in descending order
-          gameIdsWithCounts.sort((a, b) => b.count - a.count);
-          
-          // Extract sorted game IDs
-          const sortedGameIds = gameIdsWithCounts.map(item => item.id);
-          
-          // Find the cursor position in our sorted list if cursor exists
-          let cursorIndex = -1;
-          if (cursor) {
-            cursorIndex = sortedGameIds.findIndex(id => id === cursor);
-            if (cursorIndex === -1) {
-              // If cursor not found, start from beginning
-              cursorIndex = 0;
-            } else {
-              // Start from the position after the cursor
-              cursorIndex += 1;
-            }
-          }
-
-          // Get the subset of IDs for this page
-          const paginatedGameIds = cursor 
-            ? sortedGameIds.slice(cursorIndex, cursorIndex + limit + 1)
-            : sortedGameIds.slice(0, limit + 1);
-          
-          // Fetch games based on paginated IDs
-          const games = await tx.game.findMany({
-            where: {
-              id: { in: paginatedGameIds }
-            },
+            const stats = gameStats.get(gameId)!;
+            stats.sum += perfValue;
+            stats.count += 1;
           });
           
-          // Ensure games are in the same order as our sorted IDs
+          // Calculate average performance and determine ratings
+          const gamePerformances: GamePerformance[] = Array.from(gameStats.entries())
+            .map(([gameId, { sum, count }]) => {
+              const avgPerformance = sum / count;
+              
+              // Calculate rating
+              let rating: PerformanceRating;
+              if (avgPerformance >= ratingThresholds.EXCELLENT) rating = 'EXCELLENT';
+              else if (avgPerformance >= ratingThresholds.GOOD) rating = 'GOOD';
+              else if (avgPerformance >= ratingThresholds.PLAYABLE) rating = 'PLAYABLE';
+              else if (avgPerformance >= ratingThresholds.BARELY_PLAYABLE) rating = 'BARELY_PLAYABLE';
+              else rating = 'UNPLAYABLE';
+              
+              // Update counts
+              ratingCounts[rating]++;
+              ratingCounts.ALL++;
+              
+              return { gameId, count, avgPerformance, rating };
+            });
+          
+          // Filter games by performance rating
+          const filteredGames = filter === 'ALL' 
+            ? gamePerformances
+            : gamePerformances.filter(game => game.rating === filter);
+          
+          // Sort by review count in descending order
+          filteredGames.sort((a, b) => b.count - a.count);
+          
+          // Efficient pagination
+          const startIndex = cursor 
+            ? filteredGames.findIndex(game => game.gameId === cursor) + 1 
+            : 0;
+          
+          // Get paginated game IDs
+          const paginatedGames = filteredGames.slice(startIndex, startIndex + limit + 1);
+          const paginatedGameIds = paginatedGames.map(g => g.gameId);
+          
+          // Single efficient database query for game details
+          const games = paginatedGameIds.length > 0 
+            ? await tx.game.findMany({
+                where: { id: { in: paginatedGameIds } }
+              })
+            : [];
+            
+          // Create maps for O(1) lookups
+          const gameMap = new Map(games.map(game => [game.id, game]));
+          const perfInfoMap = new Map(paginatedGames.map(g => [g.gameId, { 
+            rating: g.rating, 
+            count: g.count 
+          }]));
+          
+          // Create final result array in correct order
           const sortedGames = paginatedGameIds
-            .map(id => games.find(game => game.id === id))
+            .map(id => gameMap.get(id))
             .filter(Boolean) as typeof games;
           
           // Process pagination
@@ -175,17 +160,20 @@ export const gameRouter = router({
             nextCursor = nextItem!.id;
           }
 
-          // Efficiently map games with their performance data
-          const gamesWithPerformance = sortedGames.map(game => ({
-            ...game,
-            performanceRating: gamePerformanceRating.get(game.id) || 'PLAYABLE',
-            reviewCount: gameReviewCounts.get(game.id) || 0,
-          }));
+          // Efficiently map games with their performance data in a single operation
+          const gamesWithPerformance = sortedGames.map(game => {
+            const perf = perfInfoMap.get(game.id);
+            return {
+              ...game,
+              performanceRating: perf?.rating || 'PLAYABLE',
+              reviewCount: perf?.count || 0,
+            };
+          });
 
           return {
             games: gamesWithPerformance,
             nextCursor,
-            totalCount: gameIds.length,
+            totalCount: filteredGames.length,
             ratingCounts,
           };
         });
