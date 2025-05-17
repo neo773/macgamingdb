@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { router, procedure } from "../trpc";
-import { getGameBySteamId, searchSteam, SteamAppData } from "@/server/helpers/steam";
+import { getGameBySteamId, searchSteam } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
-import { GameReview, PerformanceRating } from "@prisma/client";
+import { PerformanceRating } from "@prisma/client";
 import { ChipsetEnum, ChipsetVariantEnum, PerformanceEnum } from "../schema";
+import { calculateAveragePerformance, calculateTranslationLayerStats } from "../utils";
 
 export const gameRouter = router({
   search: procedure
@@ -255,39 +256,3 @@ export const gameRouter = router({
     }),
     
 });
-
-// Helper function to calculate average performance
-function calculateAveragePerformance(reviews: GameReview[]) {
-  const performanceMap: Record<PerformanceRating, number> = {
-    UNPLAYABLE: 0,
-    BARELY_PLAYABLE: 1,
-    PLAYABLE: 2,
-    GOOD: 3,
-    EXCELLENT: 4,
-  };
-
-  const sum = reviews.reduce((acc, review) => {
-    return (
-      acc + performanceMap[review.performance as keyof typeof performanceMap]
-    );
-  }, 0);
-
-  return reviews.length > 0 ? sum / reviews.length : 0;
-}
-
-// Helper function to calculate translation layer statistics
-function calculateTranslationLayerStats(reviews: GameReview[]) {
-  const layers = ["DXVK", "DXMT", "D3D_METAL", "NONE"];
-  const stats: Record<string, { count: number; averagePerformance: number }> =
-    {};
-
-  layers.forEach((layer) => {
-    const layerReviews = reviews.filter((r) => r.translationLayer === layer);
-    stats[layer] = {
-      count: layerReviews.length,
-      averagePerformance: calculateAveragePerformance(layerReviews),
-    };
-  });
-
-  return stats;
-}
