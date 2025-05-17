@@ -52,7 +52,7 @@ const Header = () => {
             <nav className="bg-input/30 border-2 border-input/70 backdrop-blur-sm rounded-full px-5 py-3 flex items-center justify-between shadow-lg">
               <Link href={"/"} className="flex items-center">
                 <LogoIcon className="size-6 mr-2" />
-                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
+                <h1 className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
                   MacGamingDB
                 </h1>
               </Link>

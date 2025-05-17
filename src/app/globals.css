@@ -111,6 +111,10 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+@theme {
+  --color-destructive: #FF3B2F;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -124,10 +128,7 @@
   background: linear-gradient(310deg, rgba(0, 0, 0, 1) 0%, rgb(15 15 15) 100%);
 }
 
-@theme {
-  --color-destructive: #FF3B2F;
-}
-
+/* Start animations */
 @keyframes wiggle {
   0% {
     transform: rotate(0deg);
@@ -152,6 +153,7 @@
     opacity: 0;
   }
 }
+/* End animations */
 
 textarea {
   caret-color: #3b82f6;
@@ -167,7 +169,8 @@ footer:before {
   position: absolute;
   width: 100%;
 }
-/* Game description styling */
+
+/* Start steam css */
 .game-description .bb_paragraph {
   @apply text-base leading-relaxed mb-4 text-gray-200;
 }
@@ -195,17 +198,4 @@ footer:before {
   @apply transform transition-transform duration-300 scale-[1.01] shadow-xl;
 }
 
-/* Animation for key headings */
-.game-description h1:first-child {
-  @apply relative overflow-hidden;
-  animation: textGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes textGlow {
-  0% {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-  }
-  100% {
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 30px rgba(59, 130, 246, 0.2);
-  }
-}
+/* End steam css */
