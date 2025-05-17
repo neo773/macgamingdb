@@ -85,7 +85,7 @@ const Header = () => {
 
             {/* Mobile menu */}
             {mobileMenuOpen && (
-              <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-8 mt-4 backdrop-blur-md bg-gray-900/90 border border-gray-800/60 rounded-xl p-4 shadow-lg z-50">
+              <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-8 mt-4 bg-[#1B1B1D] border border-input/70 rounded-xl p-4 shadow-lg z-50">
                 <div className="flex flex-col space-y-4">
                   <Acccount />
                   <Link
