@@ -39,7 +39,7 @@ export default function ContributorsClient({
     isLoading,
   } = trpc.contributor.getTopContributors.useInfiniteQuery(
     {
-      limit: 20,
+      limit: 21,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -155,7 +155,7 @@ export default function ContributorsClient({
 
         {/* Loading skeletons */}
         {isFetchingNextPage &&
-          Array(3)
+          Array(6)
             .fill(null)
             .map((_, i) => (
               <Card key={`skeleton-${i}`} className="bg-black/30 border border-white/10">
