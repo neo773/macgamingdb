@@ -159,7 +159,7 @@ export default function ContributorsClient({
             .fill(null)
             .map((_, i) => (
               <Card key={`skeleton-${i}`} className="bg-black/30 border border-white/10">
-                <CardContent className="p-6">
+                <CardContent className="px-6">
                   <div className="flex items-center gap-4">
                     <Skeleton className="h-16 w-16 rounded-full" />
                     <div className="flex-1 space-y-2">
