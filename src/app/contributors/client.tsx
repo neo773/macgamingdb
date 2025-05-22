@@ -176,10 +176,6 @@ export default function ContributorsClient({
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-4 w-8" />
                     </div>
-                    <div className="flex justify-between pt-2">
-                      <Skeleton className="h-4 w-28" />
-                      <Skeleton className="h-4 w-10" />
-                    </div>
                   </div>
                 </CardContent>
               </Card>
