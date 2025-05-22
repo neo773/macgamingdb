@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Acccount from "../ui/account";
-import { Map, Menu, X } from "lucide-react";
+import { Map, Menu, Trophy, X } from "lucide-react";
 import { LogoIcon } from "./LogoIcon";
 
 const Header = () => {
@@ -59,6 +59,13 @@ const Header = () => {
 
               <div className="flex items-center gap-6">
                 <div className="hidden sm:flex items-center space-x-4">
+                  <Link
+                    href="/contributors"
+                    className="text-gray-300 hover:text-white px-3 py-1 transition-colors flex items-center gap-2"
+                  >
+                    <Trophy className="size-4" />
+                    Contributors
+                  </Link>
                   <Acccount />
                   <Link
                     href="https://macgamingdb.userjot.com/"
@@ -87,6 +94,14 @@ const Header = () => {
             {mobileMenuOpen && (
               <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-8 mt-4 bg-[#1B1B1D] border border-input/70 rounded-xl p-4 shadow-lg z-50">
                 <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/contributors"
+                    className="text-gray-300 hover:text-white px-3 py-2 transition-colors flex items-center gap-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Trophy className="size-4" />
+                    Contributors
+                  </Link>
                   <Acccount />
                   <Link
                     href="https://macgamingdb.userjot.com/"
