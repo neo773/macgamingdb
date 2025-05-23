@@ -3,7 +3,7 @@ import { router, procedure } from "../trpc";
 import { getGameBySteamId, searchSteam } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
 import { PerformanceRating } from "@prisma/client";
-import { ChipsetEnum, ChipsetVariantEnum, PerformanceEnum } from "../schema";
+import { ChipsetEnum, ChipsetVariantEnum, PerformanceEnum, PlayMethodEnum } from "../schema";
 import { calculateAveragePerformance, calculateTranslationLayerStats } from "../utils";
 
 export const gameRouter = router({
@@ -27,11 +27,12 @@ export const gameRouter = router({
         filter: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
         chipset: ChipsetEnum.optional(),
         chipsetVariant: ChipsetVariantEnum.optional(),
+        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
       })
     )
     .query(async ({ input, ctx }) => {
       try {
-        const { limit, cursor, filter, chipset, chipsetVariant } = input;
+        const { limit, cursor, filter, chipset, chipsetVariant, playMethod } = input;
 
         return await ctx.prisma!.$transaction(async (tx) => {
           // Fetch raw performance data with proper field selection
@@ -39,10 +40,12 @@ export const gameRouter = router({
             select: {
               gameId: true,
               performance: true,
+              playMethod: true,
             },
             where: {
               ...(chipset ? { chipset } : {}),
               ...(chipsetVariant ? { chipsetVariant } : {}),
+              ...(playMethod !== 'ALL' ? { playMethod } : {}),
             },
           });
           

@@ -2,7 +2,7 @@ import Footer from "@/components/shared/Footer";
 import Header from "@/components/shared/Header";
 import HomeClient from "./home-client";
 import { createServerHelpers } from "@/lib/trpc/server";
-import { SearchURLParamsKeys, createFilterConfig } from "@/lib/constants";
+import { SearchURLParamsKeys, createFilterConfig, PlayMethodFilter } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600; // revalidate every hour
@@ -14,7 +14,9 @@ export default async function Home({
 }) {
   const performanceParam = (await searchParams)[SearchURLParamsKeys.PERFORMANCE] as string;
   const chipsetParam = (await searchParams)[SearchURLParamsKeys.CHIPSET] as string;
-  const filterConfig = createFilterConfig(performanceParam, chipsetParam);
+  const playMethodParam = (await searchParams)[SearchURLParamsKeys.PLAY_METHOD] as PlayMethodFilter;
+  
+  const filterConfig = createFilterConfig(performanceParam, chipsetParam, playMethodParam);
 
   const helpers = await createServerHelpers();
 
@@ -35,6 +37,7 @@ export default async function Home({
           GamesPage={GamesPage} 
           PerformanceFilter={filterConfig.filter}
           ChipsetFilter={chipsetParam || "all"}
+          PlayMethodFilter={playMethodParam || "ALL"}
         />
       </main>
       

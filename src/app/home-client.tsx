@@ -11,11 +11,13 @@ import {
   SearchURLParamsKeys,
   PerformanceFilter,
   createFilterConfig,
+  PlayMethodFilter,
 } from "@/lib/constants";
 import { GameCard } from "@/components/game/Card";
 import { GameCardSkeleton } from "@/components/game/SekeletonCard";
 import Filters from "@/components/search/Filters";
 import { formatRatingLabel, getChipsetCombinations } from "@/server/utils";
+import { PlayMethodEnum } from "@/server/schema";
 
 // Home client props
 interface HomeClientProps {
@@ -34,12 +36,14 @@ interface HomeClientProps {
   };
   PerformanceFilter: PerformanceFilter;
   ChipsetFilter: string;
+  PlayMethodFilter: PlayMethodFilter;
 }
 
 export default function HomeClient({
   GamesPage: GamesPage,
   PerformanceFilter: PerformanceFilter,
   ChipsetFilter: ChipsetFilter,
+  PlayMethodFilter: PlayMethodFilter,
 }: HomeClientProps) {
   // Router and URL params
   const searchParams = useSearchParams();
@@ -57,10 +61,18 @@ export default function HomeClient({
     ...getChipsetCombinations(),
   ];
 
+  const playMethodOptions = [
+    { value: "ALL", label: "All Methods" },
+    ...PlayMethodEnum.options.map((method) => ({
+      value: method,
+      label: method,
+    })),
+  ];
+
   // Get the current filter configuration for queries
   const filterConfig = React.useMemo(() => {
-    return createFilterConfig(PerformanceFilter, ChipsetFilter);
-  }, [PerformanceFilter, ChipsetFilter]);
+    return createFilterConfig(PerformanceFilter, ChipsetFilter, PlayMethodFilter);
+  }, [PerformanceFilter, ChipsetFilter, PlayMethodFilter]);
 
   // Track if we're in search mode
   const isSearchMode = !!searchResults;
@@ -88,7 +100,11 @@ export default function HomeClient({
   );
 
   // Update URL when filters change
-  const updateFilters = (performance: PerformanceFilter, chipset: string) => {
+  const updateFilters = (
+    performance: PerformanceFilter, 
+    chipset: string, 
+    playMethod: PlayMethodFilter
+  ) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (performance !== "ALL") {
@@ -103,17 +119,28 @@ export default function HomeClient({
       params.delete(SearchURLParamsKeys.CHIPSET);
     }
 
+    if (playMethod !== "ALL") {
+      params.set(SearchURLParamsKeys.PLAY_METHOD, playMethod);
+    } else {
+      params.delete(SearchURLParamsKeys.PLAY_METHOD);
+    }
+
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   // Handle performance filter change
   const handleFilterChange = (filter: PerformanceFilter) => {
-    updateFilters(filter, ChipsetFilter);
+    updateFilters(filter, ChipsetFilter, PlayMethodFilter);
   };
 
   // Handle chipset change
   const handleChipsetChange = (value: string) => {
-    updateFilters(PerformanceFilter, value);
+    updateFilters(PerformanceFilter, value, PlayMethodFilter);
+  };
+
+  // Handle play method change
+  const handlePlayMethodChange = (value: string) => {
+    updateFilters(PerformanceFilter, ChipsetFilter, value as PlayMethodFilter);
   };
 
   // Setup intersection observer for infinite scrolling
@@ -150,7 +177,7 @@ export default function HomeClient({
 
     if (results === null && searchResults !== null) {
       // Clear search results, reset URL to default
-      updateFilters("ALL", "all");
+      updateFilters("ALL", "all", "ALL");
     }
   };
 
@@ -230,6 +257,7 @@ export default function HomeClient({
               <Filters
                 selectedChipset={ChipsetFilter}
                 activeFilter={PerformanceFilter}
+                selectedPlayMethod={PlayMethodFilter}
                 displayStats={GamesPage.ratingCounts}
                 chipsetOptions={
                   chipsetOptions as {
@@ -238,9 +266,11 @@ export default function HomeClient({
                     count: number;
                   }[]
                 }
+                playMethodOptions={playMethodOptions}
                 formatRatingLabel={formatRatingLabel}
                 handleFilterChange={handleFilterChange}
                 handleChipsetChange={handleChipsetChange}
+                handlePlayMethodChange={handlePlayMethodChange}
               />
             </div>
           </div>
