@@ -11,8 +11,8 @@ import Header from "@/components/shared/Header";
 import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
 
-// Enable ISR with a revalidation time of 1 hour
-export const revalidate = 3600;
+// Enable ISR with a revalidation time of 1 year
+export const revalidate = 31536000;
 
 // Generate metadata for SEO
 export async function generateMetadata(
