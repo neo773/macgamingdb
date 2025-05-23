@@ -119,7 +119,7 @@ export default async function GamePage({
               {gameDetails.header_image ? (
                 <img
                   src={gameDetails.header_image}
-                  alt={gameDetails.name || "Game"}
+                  alt={`${gameDetails.name} cover art`}
                   className="w-full h-full object-cover"
                 />
               ) : (

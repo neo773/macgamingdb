@@ -21,7 +21,7 @@ export function GameCard({
         {!imageError ? (
           <img
             src={`https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`}
-            alt={game.name}
+            alt={`${game.name} cover art`}
             className="w-full h-full object-cover"
             onError={() => setImageError(true)}
           />

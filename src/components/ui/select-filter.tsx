@@ -36,6 +36,7 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
       <SelectTrigger 
         className={`flex items-center gap-2 rounded-xl border-2 ${className}`}
         style={{ minWidth }}
+        aria-label={placeholder || "Select an option"}
       >
         <SelectValue placeholder={selectedOption?.label || placeholder} />
       </SelectTrigger>

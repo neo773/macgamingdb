@@ -104,7 +104,7 @@ export default async function ContributorPage({
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
                           <img
                             src={`${gameDetails.header_image}`}
-                            alt={gameDetails.name || review.game.id}
+                            alt={`${gameDetails.name} cover art`}
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
