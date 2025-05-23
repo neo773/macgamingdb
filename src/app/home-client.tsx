@@ -15,7 +15,9 @@ import {
 } from "@/lib/constants";
 import { GameCard } from "@/components/game/Card";
 import { GameCardSkeleton } from "@/components/game/SekeletonCard";
-import Filters from "@/components/search/Filters";
+import { ChipsetFilter as ChipsetFilterComponent } from "@/components/search/filters/ChipsetFilter";
+import { PlayMethodFilter as PlayMethodFilterComponent } from "@/components/search/filters/PlayMethodFilter";
+import { PerformanceFilter as PerformanceFilterComponent } from "@/components/search/filters/PerformanceFilter";
 import { formatRatingLabel, getChipsetCombinations } from "@/server/utils";
 import { PlayMethodEnum } from "@/server/schema";
 
@@ -254,11 +256,8 @@ export default function HomeClient({
         <div className="mb-6">
           <div className="overflow-x-auto pb-2">
             <div className="flex space-x-2 min-w-max">
-              <Filters
+              <ChipsetFilterComponent
                 selectedChipset={ChipsetFilter}
-                activeFilter={PerformanceFilter}
-                selectedPlayMethod={PlayMethodFilter}
-                displayStats={GamesPage.ratingCounts}
                 chipsetOptions={
                   chipsetOptions as {
                     value: string;
@@ -266,11 +265,20 @@ export default function HomeClient({
                     count: number;
                   }[]
                 }
+                onChipsetChange={handleChipsetChange}
+              />
+
+              <PlayMethodFilterComponent
+                selectedPlayMethod={PlayMethodFilter}
                 playMethodOptions={playMethodOptions}
+                onPlayMethodChange={handlePlayMethodChange}
+              />
+
+              <PerformanceFilterComponent
+                activeFilter={PerformanceFilter}
+                onFilterChange={handleFilterChange}
+                displayStats={GamesPage.ratingCounts}
                 formatRatingLabel={formatRatingLabel}
-                handleFilterChange={handleFilterChange}
-                handleChipsetChange={handleChipsetChange}
-                handlePlayMethodChange={handlePlayMethodChange}
               />
             </div>
           </div>
