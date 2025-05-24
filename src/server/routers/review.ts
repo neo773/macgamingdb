@@ -161,6 +161,12 @@ export const reviewRouter = router({
         // Update performance stats
         await updateAllPerformanceStats(ctx.prisma!, input.gameId, input.chipset, input.chipsetVariant, input.playMethod);
 
+        // Update review count
+        await ctx.prisma!.game.update({
+          where: { id: input.gameId },
+          data: { reviewCount: { increment: 1 } },
+        });
+
         return { review };
       } catch (error) {
         console.error("Error creating review:", error);
@@ -286,6 +292,12 @@ export const reviewRouter = router({
         // Revalidate paths
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
+
+        // Update review count
+        await ctx.prisma!.game.update({
+          where: { id: review.gameId },
+          data: { reviewCount: { decrement: 1 } },
+        });
 
         // Update performance stats
         await updateAllPerformanceStats(
