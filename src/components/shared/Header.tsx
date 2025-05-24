@@ -3,8 +3,9 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Acccount from "../ui/account";
-import { Map, Menu, Trophy, X } from "lucide-react";
+import { Map, Menu, Trophy, X, Heart } from "lucide-react";
 import { LogoIcon } from "./LogoIcon";
+import { DonationDialog } from "./DonationDialog";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,6 +60,12 @@ const Header = () => {
 
               <div className="flex items-center gap-6">
                 <div className="hidden sm:flex items-center space-x-4">
+                  <DonationDialog>
+                    <button className="text-blue-400 hover:text-white px-3 py-1 transition-colors flex items-center gap-2 cursor-pointer">
+                      <Heart className="size-4 " />
+                      Donate
+                    </button>
+                  </DonationDialog>
                   <Acccount />
                   <Link
                     href="/contributors"
@@ -94,6 +101,12 @@ const Header = () => {
             {mobileMenuOpen && (
               <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-8 mt-4 bg-[#1B1B1D] border border-input/70 rounded-xl p-4 shadow-lg z-50">
                 <div className="flex flex-col space-y-4">
+                  <DonationDialog>
+                    <button className="text-blue-400 hover:text-white px-3 py-2 transition-colors flex items-center gap-2 cursor-pointer w-full text-left">
+                      <Heart className="size-4" />
+                      Donate
+                    </button>
+                  </DonationDialog>
                   <Acccount />
                   <Link
                     href="/contributors"
