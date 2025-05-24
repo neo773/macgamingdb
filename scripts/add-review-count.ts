@@ -1,13 +1,15 @@
 import { createPrismaClient } from "@/lib/database/prisma";
 import { config } from "dotenv";
 
-
-
 console.log(process.env.LIBSQL_DATABASE_URL, "LIBSQL_DATABASE_URL")
 const prisma = createPrismaClient();
 
 async function addReviewCount() {
   console.log("🚀 Adding reviewCount field and populating data...");
+
+  // First, let's check if there are any reviews at all
+  const totalReviews = await prisma.gameReview.count();
+  console.log(`📊 Total reviews in database: ${totalReviews}`);
 
   // Get all games with their review counts
   const games = await prisma.game.findMany({
@@ -22,22 +24,82 @@ async function addReviewCount() {
 
   console.log(`📊 Found ${games.length} games to update`);
 
-  // Prepare bulk update operations
-  const updateOperations = games.map(game => 
-    prisma.game.update({
-      where: { id: game.id },
-      data: { reviewCount: game._count.reviews },
-    })
-  );
+  // Log some sample games with their current counts
+  const gamesWithReviews = games.filter(game => game._count.reviews > 0);
+  console.log(`📊 Games with reviews: ${gamesWithReviews.length}`);
+  
+  if (gamesWithReviews.length > 0) {
+    console.log("Sample games with reviews:");
+    gamesWithReviews.slice(0, 5).forEach(game => {
+      console.log(`  - Game ${game.id}: ${game._count.reviews} reviews (current reviewCount: ${game.reviewCount})`);
+    });
+  } else {
+    console.log("⚠️  No games have any reviews!");
+    // Let's check a few games individually
+    const sampleGames = games.slice(0, 3);
+    for (const game of sampleGames) {
+      const reviewCount = await prisma.gameReview.count({
+        where: { gameId: game.id }
+      });
+      console.log(`  - Game ${game.id}: Direct count = ${reviewCount}, _count = ${game._count.reviews}`);
+    }
+  }
 
-  console.log(`📊 Preparing to update ${updateOperations.length} games in bulk...`);
+  // Prepare bulk update operations in batches
+  const BATCH_SIZE = 50; // Process 50 games at a time
+  const totalGames = games.length;
+  let processedCount = 0;
 
-  // Execute all updates in a transaction for better performance and atomicity
-  const results = await prisma.$transaction(updateOperations);
+  console.log(`📊 Processing ${totalGames} games in batches of ${BATCH_SIZE}...`);
 
-  console.log(
-    `✅ Successfully updated ${results.length} games with review counts`
-  );
+  // Process games in batches
+  for (let i = 0; i < totalGames; i += BATCH_SIZE) {
+    const batch = games.slice(i, i + BATCH_SIZE);
+    const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+    const totalBatches = Math.ceil(totalGames / BATCH_SIZE);
+    
+    console.log(`🔄 Processing batch ${batchNumber}/${totalBatches} (${batch.length} games)...`);
+    
+    const updateOperations = batch.map(game => 
+      prisma.game.update({
+        where: { id: game.id },
+        data: { reviewCount: game._count.reviews },
+      })
+    );
+
+    try {
+      const batchResults = await prisma.$transaction(updateOperations);
+      processedCount += batchResults.length;
+      console.log(`✅ Batch ${batchNumber} completed: ${batchResults.length} games updated`);
+      
+      // Show progress
+      const progress = ((processedCount / totalGames) * 100).toFixed(1);
+      console.log(`📈 Progress: ${processedCount}/${totalGames} (${progress}%)`);
+      
+    } catch (error) {
+      console.error(`❌ Batch ${batchNumber} failed:`, error);
+      throw error;
+    }
+    
+    // Small delay to avoid overwhelming the database
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  console.log(`✅ Successfully updated ${processedCount} games with review counts`);
+
+  // Verify the updates worked by checking a few games
+  console.log("\n🔍 Verifying updates...");
+  const verificationGames = await prisma.game.findMany({
+    where: { 
+      id: { in: games.slice(0, 5).map(g => g.id) }
+    },
+    select: { id: true, reviewCount: true }
+  });
+  
+  verificationGames.forEach(game => {
+    const originalGame = games.find(g => g.id === game.id);
+    console.log(`  - Game ${game.id}: Expected ${originalGame?._count.reviews}, Got ${game.reviewCount}`);
+  });
 
   // Show distribution
   const countDistribution = await prisma.game.groupBy({
