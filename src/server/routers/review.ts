@@ -4,6 +4,71 @@ import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import { getGameBySteamId } from "@/server/helpers/steam";
 import { ChipsetEnum, ChipsetVariantEnum, GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
+import type { PrismaClient } from "@prisma/client";
+import type { Performance, Chipset, ChipsetVariant, PlayMethod } from "../schema";
+import { updateAllPerformanceStatsForGame } from "../helpers/performance-stats";
+
+// Helper function to calculate average performance
+const calculateAveragePerformance = (reviews: any[]) => {
+  const performanceMap = {
+    UNPLAYABLE: 0,
+    BARELY_PLAYABLE: 1,
+    PLAYABLE: 2,
+    GOOD: 3,
+    EXCELLENT: 4,
+  };
+
+  const sum = reviews.reduce((acc, review) => {
+    return acc + (performanceMap[review.performance as keyof typeof performanceMap] || 0);
+  }, 0);
+
+  return reviews.length > 0 ? sum / reviews.length : 0;
+};
+
+// Convert average score to performance rating
+const scoreToRating = (score: number): Performance => {
+  if (score >= 3.5) return "EXCELLENT";
+  if (score >= 2.5) return "GOOD";
+  if (score >= 1.5) return "PLAYABLE";
+  if (score >= 0.5) return "BARELY_PLAYABLE";
+  return "UNPLAYABLE";
+};
+
+// Helper function to update aggregated performance for a game
+const updateGameAggregatedPerformance = async (prisma: PrismaClient, gameId: string) => {
+  const reviews = await prisma.gameReview.findMany({
+    where: { gameId },
+    select: { performance: true },
+  });
+
+  let aggregatedPerformance: Performance | null = null;
+  if (reviews.length > 0) {
+    const avgScore = calculateAveragePerformance(reviews);
+    aggregatedPerformance = scoreToRating(avgScore);
+  }
+
+  await prisma.game.update({
+    where: { id: gameId },
+    data: { aggregatedPerformance },
+  });
+
+  return aggregatedPerformance;
+};
+
+// Main helper function to update all performance stats after a review change
+const updateAllPerformanceStats = async (
+  prisma: PrismaClient,
+  gameId: string,
+  chipset: Chipset,
+  chipsetVariant: ChipsetVariant,
+  playMethod: PlayMethod
+) => {
+  // First, update the game's aggregated performance
+  await updateGameAggregatedPerformance(prisma, gameId);
+
+  // Then update all performance stats using the shared helper
+  await updateAllPerformanceStatsForGame(prisma, gameId, chipset, chipsetVariant, playMethod);
+};
 
 // Define schemas using Zod
 const createReviewSchema = z.object({
@@ -93,6 +158,9 @@ export const reviewRouter = router({
         // Revalidate the game page to reflect the new review
         revalidatePath(`/games/${input.gameId}`);
 
+        // Update performance stats
+        await updateAllPerformanceStats(ctx.prisma!, input.gameId, input.chipset, input.chipsetVariant, input.playMethod);
+
         return { review };
       } catch (error) {
         console.error("Error creating review:", error);
@@ -145,6 +213,15 @@ export const reviewRouter = router({
         // Revalidate paths
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
+
+        // Update performance stats
+        await updateAllPerformanceStats(
+          ctx.prisma!, 
+          review.gameId, 
+          review.chipset as Chipset, 
+          review.chipsetVariant as ChipsetVariant, 
+          review.playMethod as PlayMethod
+        );
 
         return { success: true, message: "Review updated successfully" };
       } catch (error) {
@@ -209,6 +286,15 @@ export const reviewRouter = router({
         // Revalidate paths
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
+
+        // Update performance stats
+        await updateAllPerformanceStats(
+          ctx.prisma!, 
+          review.gameId, 
+          review.chipset as Chipset, 
+          review.chipsetVariant as ChipsetVariant, 
+          review.playMethod as PlayMethod
+        );
 
         return { success: true, message: "Review deleted successfully" };
       } catch (error) {

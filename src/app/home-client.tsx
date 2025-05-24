@@ -20,20 +20,13 @@ import { PlayMethodFilter as PlayMethodFilterComponent } from "@/components/sear
 import { PerformanceFilter as PerformanceFilterComponent } from "@/components/search/filters/PerformanceFilter";
 import { formatRatingLabel, getChipsetCombinations } from "@/server/utils";
 import { PlayMethodEnum } from "@/server/schema";
+import { inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "@/server/routers/_app";
 
-// Home client props
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
 interface HomeClientProps {
-  GamesPage: {
-    games: Array<{
-      id: string;
-      details: string | null;
-      performanceRating: PerformanceRating;
-      reviewCount: number;
-      updatedAt: Date;
-      createdAt: Date;
-    }>;
-    nextCursor: string | undefined;
-    totalCount: number;
+  GamesPage: RouterOutput["game"]["getGames"] & {
     ratingCounts: Record<string, number>;
   };
   PerformanceFilter: PerformanceFilter;
@@ -91,7 +84,7 @@ export default function HomeClient({
       ...filterConfig,
     },
     {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      getNextPageParam: (lastPage) => lastPage.nextOffset,
       enabled: !isSearchMode, // Always fetch when not searching
       staleTime: 30000, // Cache for 30 seconds
       initialData: {

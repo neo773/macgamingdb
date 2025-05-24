@@ -9,5 +9,9 @@ export function createPrismaClient(): PrismaClient {
           authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
         }),
       })
-    : new PrismaClient();
+    : new PrismaClient({
+      log: [
+        { emit: "event", level: "query" },
+      ],
+    });
 }

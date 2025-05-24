@@ -22,6 +22,7 @@ export default async function Home({
 
   const GamesPage = await helpers.game.getGames.fetch(filterConfig);
 
+  const ratingCounts = await helpers.game.getFilterCounts.fetch(filterConfig);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -34,8 +35,8 @@ export default async function Home({
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
         <HomeClient 
-          GamesPage={GamesPage} 
-          PerformanceFilter={filterConfig.filter}
+          GamesPage={{...GamesPage, ratingCounts}} 
+          PerformanceFilter={filterConfig.performance}
           ChipsetFilter={chipsetParam || "all"}
           PlayMethodFilter={playMethodParam || "ALL"}
         />

@@ -14,7 +14,7 @@ export type PlayMethodFilter = "ALL" | z.infer<typeof PlayMethodEnum>;
 // Filter configuration type
 export interface FilterConfig {
   limit: number;
-  filter: PerformanceFilter;
+  performance: PerformanceFilter;
   chipset?: z.infer<typeof ChipsetEnum>;
   chipsetVariant?: z.infer<typeof ChipsetVariantEnum>;
   playMethod?: PlayMethod;
@@ -32,7 +32,7 @@ export function createFilterConfig(
 
   const config: FilterConfig = {
     limit: 6,
-    filter,
+    performance: filter,
   };
 
   if (chipset !== "all") {

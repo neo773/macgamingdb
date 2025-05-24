@@ -3,8 +3,22 @@ import { router, procedure } from "../trpc";
 import { getGameBySteamId, searchSteam } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
 import { PerformanceRating } from "@prisma/client";
-import { ChipsetEnum, ChipsetVariantEnum, PerformanceEnum, PlayMethodEnum } from "../schema";
-import { calculateAveragePerformance, calculateTranslationLayerStats } from "../utils";
+import {
+  ChipsetEnum,
+  ChipsetVariantEnum,
+  PerformanceEnum,
+  PlayMethodEnum,
+  type Chipset,
+  type ChipsetVariant,
+  type PlayMethod,
+} from "../schema";
+import {
+  calculateAveragePerformance,
+  calculateTranslationLayerStats,
+} from "../utils";
+
+import { formatQuery } from "prisma-query-formatter";
+
 
 export const gameRouter = router({
   search: procedure
@@ -19,181 +33,133 @@ export const gameRouter = router({
       }
     }),
 
+  getFilterCounts: procedure
+    .input(
+      z.object({
+        chipset: ChipsetEnum.optional(),
+        chipsetVariant: ChipsetVariantEnum.optional(),
+        playMethod: z.enum(["ALL", ...PlayMethodEnum.options]).default("ALL"),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { chipset, chipsetVariant, playMethod } = input;
+
+      
+      // Determine query parameters based on aggregate logic
+      let queryChipset: string | undefined;
+      let queryChipsetVariant: ChipsetVariant | undefined; 
+      let queryPlayMethod: PlayMethod | undefined;
+
+      // Handle chipset logic
+      if (chipset) {
+        // Specific chipset requested
+        queryChipset = chipset;
+        queryChipsetVariant = chipsetVariant; // Can be specific or undefined for all variants of this chipset
+      } else {
+        // ALL chipsets requested - use aggregate records
+        queryChipset = "ALL";
+        queryChipsetVariant = "BASE" as ChipsetVariant; // Our representative for aggregates
+      }
+
+      // Handle play method logic  
+      if (playMethod === "ALL") {
+        // ALL play methods requested - use "OTHER" which represents ALL in aggregates
+        queryPlayMethod = "OTHER" as PlayMethod;
+      } else {
+        // Specific play method requested
+        queryPlayMethod = playMethod as PlayMethod;
+      }
+
+      const performanceStats = await ctx.prisma!.performanceStats.findMany({
+        where: {
+          chipset: queryChipset,
+          chipsetVariant: queryChipsetVariant,
+          playMethod: queryPlayMethod,
+        },
+      });
+
+      const ratingCounts = performanceStats.reduce(
+        (acc, stat) => {
+          acc.ALL += stat.count;
+          acc[stat.performanceRating] += stat.count;
+          return acc;
+        },
+        {
+          ALL: 0,
+          EXCELLENT: 0,
+          GOOD: 0,
+          PLAYABLE: 0,
+          BARELY_PLAYABLE: 0,
+          UNPLAYABLE: 0,
+        }
+      );
+
+      return ratingCounts;
+    }),
+
   getGames: procedure
     .input(
       z.object({
         limit: z.number().min(1).max(50).default(6),
-        cursor: z.string().nullish(),
-        filter: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
+        cursor: z.number().min(0).default(0),
+        performance: z.enum(["ALL", ...PerformanceEnum.options]).default("ALL"),
         chipset: ChipsetEnum.optional(),
         chipsetVariant: ChipsetVariantEnum.optional(),
-        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+        playMethod: z.enum(["ALL", ...PlayMethodEnum.options]).default("ALL"),
       })
     )
     .query(async ({ input, ctx }) => {
       try {
-        const { limit, cursor, filter, chipset, chipsetVariant, playMethod } = input;
-
-        return await ctx.prisma!.$transaction(async (tx) => {
-          // Step 1: Get aggregated review counts per game (minimal row reads)
-          const gameReviewCounts = await tx.gameReview.groupBy({
-            by: ['gameId'],
-            where: {
-              ...(chipset ? { chipset } : {}),
-              ...(chipsetVariant ? { chipsetVariant } : {}),
-              ...(playMethod !== 'ALL' ? { playMethod } : {}),
-            },
-            _count: {
-              gameId: true,
-            },
-          });
-
-          // Sort by count manually since groupBy orderBy is complex
-          gameReviewCounts.sort((a, b) => b._count.gameId - a._count.gameId);
-
-          if (gameReviewCounts.length === 0) {
-            return {
-              games: [],
-              nextCursor: undefined,
-              totalCount: 0,
-              ratingCounts: {
-                ALL: 0,
-                EXCELLENT: 0,
-                GOOD: 0,
-                PLAYABLE: 0,
-                BARELY_PLAYABLE: 0,
-                UNPLAYABLE: 0,
-              },
-            };
+        const { limit, cursor: offset, performance, chipset, chipsetVariant, playMethod } = input;
+            // @ts-ignore
+      ctx.prisma.$on("query", (e) => {
+        // @ts-ignore
+        console.debug(`DEBUG: ---- ${formatQuery(e.query, e.params)}`);
+      });
+        
+        // Check if we need review-based filtering
+        const needsReviewFiltering = chipset || (playMethod !== "ALL");
+        
+        const games = await ctx.prisma!.game.findMany({
+          where: {
+            ...(performance !== "ALL" && { aggregatedPerformance: performance }),
+            ...(needsReviewFiltering && {
+              reviews: {
+                some: {
+                  ...(chipset && { chipset }),
+                  ...(chipsetVariant && { chipsetVariant }),
+                  ...(playMethod !== "ALL" && { playMethod })
+                }
+              }
+            })
+          },
+          skip: offset,
+          take: limit + 1, // +1 to check for next page
+          orderBy: {
+            reviewCount: "desc"
           }
-
-          // Step 2: Get performance data only for games with reviews (still minimal reads)
-          const gameIds = gameReviewCounts.map(g => g.gameId);
-          const performanceData = await tx.gameReview.findMany({
-            select: {
-              gameId: true,
-              performance: true,
-            },
-            where: {
-              gameId: { in: gameIds },
-              ...(chipset ? { chipset } : {}),
-              ...(chipsetVariant ? { chipsetVariant } : {}),
-              ...(playMethod !== 'ALL' ? { playMethod } : {}),
-            },
-          });
-
-          // Step 3: Calculate performance ratings efficiently
-          const perfValueMap: Record<PerformanceRating, number> = {
-            UNPLAYABLE: 0,
-            BARELY_PLAYABLE: 1,
-            PLAYABLE: 2,
-            GOOD: 3,
-            EXCELLENT: 4,
-          };
-
-          const ratingThresholds = {
-            EXCELLENT: 3.5,
-            GOOD: 2.5,
-            PLAYABLE: 1.5,
-            BARELY_PLAYABLE: 0.5,
-          };
-
-          const ratingCounts: Record<PerformanceRating | 'ALL', number> = {
-            ALL: 0,
-            EXCELLENT: 0,
-            GOOD: 0,
-            PLAYABLE: 0,
-            BARELY_PLAYABLE: 0,
-            UNPLAYABLE: 0,
-          };
-
-          // Group performance by game
-          const gamePerformanceMap = new Map<string, number[]>();
-          performanceData.forEach(({ gameId, performance }) => {
-            if (!gamePerformanceMap.has(gameId)) {
-              gamePerformanceMap.set(gameId, []);
-            }
-            gamePerformanceMap.get(gameId)!.push(perfValueMap[performance]);
-          });
-
-          // Calculate final game performances with review counts
-          const gamePerformances = gameReviewCounts.map(({ gameId, _count }) => {
-            const performanceValues = gamePerformanceMap.get(gameId) || [0];
-            const avgPerformance = performanceValues.reduce((sum, val) => sum + val, 0) / performanceValues.length;
-            
-            let rating: PerformanceRating;
-            if (avgPerformance >= ratingThresholds.EXCELLENT) rating = 'EXCELLENT';
-            else if (avgPerformance >= ratingThresholds.GOOD) rating = 'GOOD';
-            else if (avgPerformance >= ratingThresholds.PLAYABLE) rating = 'PLAYABLE';
-            else if (avgPerformance >= ratingThresholds.BARELY_PLAYABLE) rating = 'BARELY_PLAYABLE';
-            else rating = 'UNPLAYABLE';
-
-            ratingCounts[rating]++;
-            ratingCounts.ALL++;
-
-            return {
-              gameId,
-              count: _count.gameId,
-              avgPerformance,
-              rating,
-            };
-          });
-
-          // Filter by performance rating
-          const filteredGames = filter === 'ALL' 
-            ? gamePerformances
-            : gamePerformances.filter(game => game.rating === filter);
-
-          // Handle pagination
-          const startIndex = cursor 
-            ? filteredGames.findIndex(game => game.gameId === cursor) + 1 
-            : 0;
-          
-          const paginatedGames = filteredGames.slice(startIndex, startIndex + limit + 1);
-          const paginatedGameIds = paginatedGames.map(g => g.gameId);
-
-          // Only fetch game details for the paginated results
-          const games = paginatedGameIds.length > 0 
-            ? await tx.game.findMany({
-                where: { id: { in: paginatedGameIds } }
-              })
-            : [];
-
-          // Create maps for efficient lookups
-          const gameMap = new Map(games.map(game => [game.id, game]));
-          const perfInfoMap = new Map(paginatedGames.map(g => [g.gameId, { 
-            rating: g.rating, 
-            count: g.count 
-          }]));
-
-          // Order games correctly and handle pagination
-          const sortedGames = paginatedGameIds
-            .map(id => gameMap.get(id))
-            .filter(Boolean) as typeof games;
-
-          let nextCursor: typeof cursor = undefined;
-          if (sortedGames.length > limit) {
-            const nextItem = sortedGames.pop();
-            nextCursor = nextItem!.id;
-          }
-
-          // Map games with performance data
-          const gamesWithPerformance = sortedGames.map(game => {
-            const perf = perfInfoMap.get(game.id);
-            return {
-              ...game,
-              performanceRating: perf?.rating || 'PLAYABLE',
-              reviewCount: perf?.count || 0,
-            };
-          });
-
-          return {
-            games: gamesWithPerformance,
-            nextCursor,
-            totalCount: filteredGames.length,
-            ratingCounts,
-          };
         });
+
+        // Process results
+        const gamesWithPerformance = games
+          .filter((game): game is typeof game & { aggregatedPerformance: NonNullable<typeof game.aggregatedPerformance> } => 
+            game.aggregatedPerformance !== null
+          )
+          .map((game) => ({
+            id: game.id,
+            details: game.details,
+            performanceRating: game.aggregatedPerformance,
+          }));
+
+        // Handle pagination
+        const hasNextPage = gamesWithPerformance.length > limit;
+        const gamesToReturn = hasNextPage ? gamesWithPerformance.slice(0, limit) : gamesWithPerformance;
+
+        return {
+          games: gamesToReturn,
+          hasNextPage,
+          nextOffset: hasNextPage ? offset + limit : undefined,
+        };
       } catch (error) {
         console.error("Error fetching games:", error);
         throw new TRPCError({
@@ -230,7 +196,7 @@ export const gameRouter = router({
 
           // Stringify the response ONCE to store in DB
           gameDetails = JSON.stringify(response);
-          
+
           // Store/update in database
           await ctx.prisma!.game.upsert({
             where: { id: input.id },
@@ -270,5 +236,4 @@ export const gameRouter = router({
         throw new Error("Failed to fetch game details");
       }
     }),
-    
 });

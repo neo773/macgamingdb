@@ -26,6 +26,7 @@
         "lucide-react": "^0.483.0",
         "next": "15.2.4",
         "next-themes": "^0.4.6",
+        "prisma-query-formatter": "^1.0.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "resend": "^4.2.0",
@@ -726,6 +727,8 @@
     "prettier": ["prettier@3.5.3", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw=="],
 
     "prisma": ["prisma@6.6.0", "", { "dependencies": { "@prisma/config": "6.6.0", "@prisma/engines": "6.6.0" }, "optionalDependencies": { "fsevents": "2.3.3" }, "peerDependencies": { "typescript": ">=5.1.0" }, "optionalPeers": ["typescript"], "bin": { "prisma": "build/index.js" } }, "sha512-SYCUykz+1cnl6Ugd8VUvtTQq5+j1Q7C0CtzKPjQ8JyA2ALh0EEJkMCS+KgdnvKW1lrxjtjCyJSHOOT236mENYg=="],
+
+    "prisma-query-formatter": ["prisma-query-formatter@1.0.0", "", {}, "sha512-hESCrQMsxHog74DWXNerrv9z23NtvjBRH+9adRWkyKimVyImnhXMhdu3jNUJTs2avrWg/CA9mHncH0mdj9dQ2A=="],
 
     "prismjs": ["prismjs@1.30.0", "", {}, "sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw=="],
 

@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -30,12 +30,31 @@ model User {
   @@map("user")
 }
 
+model PerformanceStats {
+  id                String            @id @default(cuid())
+  chipset           String // e.g., "M1", "M2", "M3"
+  chipsetVariant    ChipsetVariant // BASE, PRO, MAX, ULTRA
+  playMethod        PlayMethod // NATIVE, CROSSOVER, PARALLELS, OTHER
+  performanceRating PerformanceRating // UNPLAYABLE, BARELY_PLAYABLE, PLAYABLE, GOOD, EXCELLENT
+  count             Int               @default(0)
+  updatedAt         DateTime          @default(now()) @updatedAt
+  createdAt         DateTime          @default(now())
+
+  @@unique([chipset, chipsetVariant, playMethod, performanceRating])
+}
+
 model Game {
-  id          String       @id // Steam ID
-  details     String?      // Full JSON from Steam API
-  updatedAt   DateTime     @updatedAt @default(now())
-  createdAt   DateTime     @default(now())
-  reviews     GameReview[]
+  id                    String             @id // Steam ID
+  details               String? // Full JSON from Steam API
+  updatedAt             DateTime           @default(now()) @updatedAt
+  createdAt             DateTime           @default(now())
+  reviews               GameReview[]
+  aggregatedPerformance PerformanceRating?
+  reviewCount           Int                @default(0) // Pre-computed review count
+
+  // Indexes for Turso cost optimization
+  @@index([aggregatedPerformance, id])
+  @@index([reviewCount])
 }
 
 model GameReview {
@@ -55,7 +74,7 @@ model GameReview {
   chipset          String // e.g., "M1", "M2", "M3" 
   chipsetVariant   ChipsetVariant // e.g., "BASE", "PRO", "MAX", "ULTRA"
   notes            String?
-  softwareVersion  String?          // Software version (CrossOver, Parallels, etc.)
+  softwareVersion  String? // Software version (CrossOver, Parallels, etc.)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
