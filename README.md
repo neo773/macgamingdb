@@ -10,6 +10,7 @@ MacGamingDB allows users to search for games and see how well they run on differ
 - **Language**: TypeScript
 - **Authentication**: BetterAuth
 - **Database**: 
+  - Prisma ORM
   - SQLite (Development)
   - Turso (LibSQL) for production
 - **API Layer**: tRPC for type-safe APIs
@@ -17,7 +18,9 @@ MacGamingDB allows users to search for games and see how well they run on differ
   - Steam API for game data
 - **Styling**: Tailwind CSS
 - **Components**: Custom components with Shadcn UI
-- **Email**: Resend for email communications
+- **Email**: 
+  - Resend for email communications
+  - React Email for email templates
 
 ## Project Structure
 
