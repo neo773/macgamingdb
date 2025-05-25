@@ -71,7 +71,6 @@ export default function TrafficSourceWidget() {
     "YouTube",
     "Friend/Word of mouth",
     "Search engine", 
-    "Other website/blog",
     "Other"
   ];
 
