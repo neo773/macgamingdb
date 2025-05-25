@@ -19,6 +19,43 @@ import {
 
 import { formatQuery } from "prisma-query-formatter";
 
+// Helper function to get game IDs from PerformanceStats efficiently
+const getGameIdsFromPerformanceStats = async (
+  prisma: any,
+  filters: {
+    chipset?: string;
+    chipsetVariant?: ChipsetVariant;
+    playMethod?: PlayMethod | "ALL";
+    performance: string;
+    limit: number;
+    offset: number;
+  }
+) => {
+  const { chipset, chipsetVariant, playMethod, performance, limit, offset } = filters;
+
+  // Get games that match the performance criteria using pre-computed stats
+  const games = await prisma.game.findMany({
+    where: {
+      aggregatedPerformance: performance,
+      // Only add review filtering if we need specific chipset/playMethod
+      ...(chipset && {
+        reviews: {
+          some: {
+            chipset,
+            ...(chipsetVariant && { chipsetVariant }),
+            ...(playMethod !== "ALL" && { playMethod })
+          }
+        }
+      })
+    },
+    select: { id: true },
+    orderBy: { reviewCount: "desc" },
+    skip: offset,
+    take: limit
+  });
+
+  return games.map((game: { id: string }) => game.id);
+};
 
 export const gameRouter = router({
   search: procedure
@@ -111,22 +148,77 @@ export const gameRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const { limit, cursor: offset, performance, chipset, chipsetVariant, playMethod } = input;
-            // @ts-ignore
-      ctx.prisma.$on("query", (e) => {
+        
         // @ts-ignore
-        console.debug(`DEBUG: ---- ${formatQuery(e.query, e.params)}`);
-      });
+        ctx.prisma.$on("query", (e) => {
+          // @ts-ignore
+          console.debug(`DEBUG: ---- ${formatQuery(e.query, e.params)}`);
+        });
+
+        // Strategy 1: Use PerformanceStats for filtering when possible to avoid expensive JOINs
+        const canUsePerformanceStats = chipset || (playMethod !== "ALL");
         
-        // Check if we need review-based filtering
-        const needsReviewFiltering = chipset || (playMethod !== "ALL");
-        
+        if (canUsePerformanceStats && performance !== "ALL") {
+          // Use pre-computed PerformanceStats to get game IDs efficiently
+          const gameIds = await getGameIdsFromPerformanceStats(ctx.prisma!, {
+            chipset,
+            chipsetVariant,
+            playMethod,
+            performance,
+            limit: limit * 3, // Get more IDs to account for pagination
+            offset
+          });
+
+          if (gameIds.length === 0) {
+            return {
+              games: [],
+              hasNextPage: false,
+              nextOffset: undefined,
+            };
+          }
+
+          // Fetch games by IDs - much cheaper than JOINs
+          const games = await ctx.prisma!.game.findMany({
+            where: {
+              id: { in: gameIds },
+              aggregatedPerformance: { not: null }
+            },
+            orderBy: {
+              reviewCount: "desc"
+            },
+            take: limit + 1
+          });
+
+          const gamesWithPerformance = games
+            .filter((game): game is typeof game & { aggregatedPerformance: NonNullable<typeof game.aggregatedPerformance> } => 
+              game.aggregatedPerformance !== null
+            )
+            .map((game) => ({
+              id: game.id,
+              details: game.details,
+              performanceRating: game.aggregatedPerformance,
+            }));
+
+          const hasNextPage = gamesWithPerformance.length > limit;
+          const gamesToReturn = hasNextPage ? gamesWithPerformance.slice(0, limit) : gamesWithPerformance;
+
+          return {
+            games: gamesToReturn,
+            hasNextPage,
+            nextOffset: hasNextPage ? offset + limit : undefined,
+          };
+        }
+
+        // Strategy 2: Optimized query for simple cases (no chipset/playMethod filtering)
         const games = await ctx.prisma!.game.findMany({
           where: {
+            // Use indexed aggregatedPerformance field instead of JOINs
             ...(performance !== "ALL" && { aggregatedPerformance: performance }),
-            ...(needsReviewFiltering && {
+            // Only use expensive JOIN filtering when absolutely necessary
+            ...(chipset && {
               reviews: {
                 some: {
-                  ...(chipset && { chipset }),
+                  chipset,
                   ...(chipsetVariant && { chipsetVariant }),
                   ...(playMethod !== "ALL" && { playMethod })
                 }
@@ -134,13 +226,12 @@ export const gameRouter = router({
             })
           },
           skip: offset,
-          take: limit + 1, // +1 to check for next page
+          take: limit + 1,
           orderBy: {
-            reviewCount: "desc"
+            reviewCount: "desc" // This uses the indexed reviewCount field
           }
         });
 
-        // Process results
         const gamesWithPerformance = games
           .filter((game): game is typeof game & { aggregatedPerformance: NonNullable<typeof game.aggregatedPerformance> } => 
             game.aggregatedPerformance !== null
@@ -151,7 +242,6 @@ export const gameRouter = router({
             performanceRating: game.aggregatedPerformance,
           }));
 
-        // Handle pagination
         const hasNextPage = gamesWithPerformance.length > limit;
         const gamesToReturn = hasNextPage ? gamesWithPerformance.slice(0, limit) : gamesWithPerformance;
 
