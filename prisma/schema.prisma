@@ -25,7 +25,6 @@ model User {
   image         String?
   sessions      Session[]
   accounts      Account[]
-  passkeys      Passkey[]
 
   @@map("user")
 }
@@ -167,20 +166,4 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
-}
-
-model Passkey {
-  id           String    @id
-  name         String?
-  publicKey    String
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  credentialID String
-  counter      Int
-  deviceType   String
-  backedUp     Boolean
-  transports   String?
-  createdAt    DateTime?
-
-  @@map("passkey")
 }
