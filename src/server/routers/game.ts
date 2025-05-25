@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, procedure } from "../trpc";
 import { getGameBySteamId, searchSteam } from "@/server/helpers/steam";
 import { TRPCError } from "@trpc/server";
-import { PerformanceRating } from "@prisma/client";
+import { PerformanceRating, PrismaClient } from "@prisma/client";
 import {
   ChipsetEnum,
   ChipsetVariantEnum,
@@ -21,12 +21,12 @@ import { formatQuery } from "prisma-query-formatter";
 
 // Helper function to get game IDs from PerformanceStats efficiently
 const getGameIdsFromPerformanceStats = async (
-  prisma: any,
+  prisma: PrismaClient,
   filters: {
     chipset?: string;
     chipsetVariant?: ChipsetVariant;
     playMethod?: PlayMethod | "ALL";
-    performance: string;
+    performance: PerformanceRating;
     limit: number;
     offset: number;
   }

@@ -1,4 +1,5 @@
 import { createPrismaClient } from "@/lib/database/prisma";
+import { GameReview } from "@prisma/client";
 import { config } from "dotenv";
 
 if (process.env.NODE_ENV === 'production') {
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 const prisma = createPrismaClient();
 
 // Helper function to calculate average performance (copied from utils)
-const calculateAveragePerformance = (reviews: any[]) => {
+const calculateAveragePerformance = (reviews: GameReview[]) => {
   const performanceMap = {
     UNPLAYABLE: 0,
     BARELY_PLAYABLE: 1,

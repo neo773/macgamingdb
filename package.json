@@ -56,13 +56,16 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250420.0",
+    "@eslint/js": "^9.27.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^16.5.0",
+    "eslint": "^9.27.0",
     "prisma": "^6.6.0",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1"
   }
 }

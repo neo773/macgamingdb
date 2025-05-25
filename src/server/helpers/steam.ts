@@ -88,7 +88,7 @@ export interface SteamAppData {
   header_image: string
   capsule_image: string
   capsule_imagev5: string
-  website: any
+  website: string
   pc_requirements: {
     minimum: string
     recommended: string
@@ -173,7 +173,7 @@ export interface SteamAppData {
   background_raw: string
   content_descriptors: {
     ids: Array<number>
-    notes: any
+    notes: string
   }
   ratings: {
     esrb: {

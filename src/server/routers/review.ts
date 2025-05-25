@@ -4,12 +4,12 @@ import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import { getGameBySteamId } from "@/server/helpers/steam";
 import { ChipsetEnum, ChipsetVariantEnum, GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
-import type { PrismaClient } from "@prisma/client";
+import type { PerformanceRating, PrismaClient } from "@prisma/client";
 import type { Performance, Chipset, ChipsetVariant, PlayMethod } from "../schema";
 import { updateAllPerformanceStatsForGame } from "../helpers/performance-stats";
 
 // Helper function to calculate average performance
-const calculateAveragePerformance = (reviews: any[]) => {
+const calculateAveragePerformance = (reviews: { performance: PerformanceRating }[]) => {
   const performanceMap = {
     UNPLAYABLE: 0,
     BARELY_PLAYABLE: 1,
