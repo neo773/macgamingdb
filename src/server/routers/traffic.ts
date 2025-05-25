@@ -80,34 +80,4 @@ export const trafficRouter = router({
         });
       }
     }),
-
-  // Optional: Get aggregated stats (admin only)
-  getStats: procedure
-    .query(async ({ ctx }) => {
-      try {
-        const stats = await ctx.prisma!.trafficSource.groupBy({
-          by: ['source'],
-          _count: { source: true },
-          orderBy: { _count: { source: 'desc' } },
-          take: 20,
-        });
-
-        const total = await ctx.prisma!.trafficSource.count();
-
-        return {
-          total,
-          sources: stats.map((stat: { source: string; _count: { source: number } }) => ({
-            source: stat.source,
-            count: stat._count.source,
-            percentage: ((stat._count.source / total) * 100).toFixed(1),
-          })),
-        };
-      } catch (error) {
-        console.error("Error fetching traffic stats:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch stats",
-        });
-      }
-    }),
 }); 
