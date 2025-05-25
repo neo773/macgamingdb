@@ -53,8 +53,10 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
       },
     });
   } catch (error) {
+    console.error(error);
     throw new TRPCError({
       code: "UNAUTHORIZED",
+      cause: error instanceof Error ? error.message : "Invalid or expired token",
       message: "Invalid or expired token",
     });
   }

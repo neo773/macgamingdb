@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import * as React from "react";
 import { SteamGameSearchObject } from "@/server/helpers/steam";
 import { trpc } from "@/lib/trpc/provider";
-import { PerformanceRating } from "@prisma/client";
 import SearchBar from "@/components/search/SearchBar";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {

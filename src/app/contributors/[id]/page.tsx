@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistance } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import GameReviewCard from "@/components/review/ReviewCard";

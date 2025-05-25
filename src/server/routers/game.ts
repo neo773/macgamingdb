@@ -8,7 +8,6 @@ import {
   ChipsetVariantEnum,
   PerformanceEnum,
   PlayMethodEnum,
-  type Chipset,
   type ChipsetVariant,
   type PlayMethod,
 } from "../schema";
@@ -17,7 +16,6 @@ import {
   calculateTranslationLayerStats,
 } from "../utils";
 
-import { formatQuery } from "prisma-query-formatter";
 
 // Helper function to get game IDs from PerformanceStats efficiently
 const getGameIdsFromPerformanceStats = async (
@@ -148,12 +146,6 @@ export const gameRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const { limit, cursor: offset, performance, chipset, chipsetVariant, playMethod } = input;
-        
-        // @ts-ignore
-        ctx.prisma.$on("query", (e) => {
-          // @ts-ignore
-          console.debug(`DEBUG: ---- ${formatQuery(e.query, e.params)}`);
-        });
 
         // Strategy 1: Use PerformanceStats for filtering when possible to avoid expensive JOINs
         const canUsePerformanceStats = chipset || (playMethod !== "ALL");

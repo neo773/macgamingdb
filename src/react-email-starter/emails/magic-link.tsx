@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -17,9 +16,6 @@ interface MacGamingDBMagicLinkEmailProps {
   magicLink?: string;
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
 
 export const MacGamingDBMagicLinkEmail = ({
   magicLink,

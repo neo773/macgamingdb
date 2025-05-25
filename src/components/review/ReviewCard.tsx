@@ -4,7 +4,6 @@ import React from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import clsx from "clsx";
-import { Performance } from "@/server/schema";
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {

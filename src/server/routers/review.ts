@@ -209,7 +209,7 @@ export const reviewRouter = router({
         }
 
         // Update the review notes
-        const updatedReview = await ctx.prisma!.gameReview.update({
+        await ctx.prisma!.gameReview.update({
           where: { id: input.reviewId },
           data: { 
             notes: input.notes 

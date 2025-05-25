@@ -26,8 +26,6 @@ export default function AuthPrompt({
   const {
     data: session,
     isPending, //loading state
-    error: authError, //error object 
-    refetch //refetch the session
 } = useSession()
 
   const [email, setEmail] = useState("");

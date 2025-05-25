@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServerHelpers } from "@/lib/trpc/server";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import CreateReviewDialog from "@/components/review/CreateReviewDialog";
 import ExpandableDescription from "@/components/review/ExpandableDescription";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,8 +16,7 @@ export const revalidate = 31536000;
 
 // Generate metadata for SEO
 export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> },
-  _parent: ResolvingMetadata
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Metadata> {
   const { id } = await params;
 

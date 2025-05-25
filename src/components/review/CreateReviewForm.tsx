@@ -26,7 +26,6 @@ import {
   ChipsetEnum,
   ChipsetVariantEnum,
   SOFTWARE_VERSIONS,
-  type SoftwareVersions,
 } from "@/server/schema";
 import {
   Select,
