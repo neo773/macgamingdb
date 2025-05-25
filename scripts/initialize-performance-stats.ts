@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import {
   ChipsetEnum,
   ChipsetVariantEnum,
   PlayMethodEnum,
   PerformanceEnum,
-  type Chipset,
   type ChipsetVariant,
   type PlayMethod,
   type Performance,
@@ -274,6 +272,7 @@ async function initializePerformanceStats() {
       .slice(0, 5)
       .forEach(
         (
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           { chipset, chipsetVariant, playMethod, performanceRating, count },
           index
         ) => {

@@ -1,7 +1,12 @@
 import { createPrismaClient } from "@/lib/database/prisma";
 import { config } from "dotenv";
 
-console.log(process.env.LIBSQL_DATABASE_URL, "LIBSQL_DATABASE_URL")
+if (process.env.NODE_ENV === 'production') {
+  config({
+    path: "../.env.prod",
+  });
+}
+
 const prisma = createPrismaClient();
 
 async function addReviewCount() {
