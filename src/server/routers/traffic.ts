@@ -7,7 +7,7 @@ const submitTrafficSourceSchema = z.object({
   userAgent: z.string().optional(),
 });
 
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1376158374869205003/As64ilk7OA--k8ULjDmXZneRdp2x88MHJzUXAIi1xSgl42j0oHR-4Ao5pJBLEap6wg77";
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL!;
 
 export const trafficRouter = router({
   submitSource: procedure
