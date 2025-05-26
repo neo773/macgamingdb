@@ -239,7 +239,7 @@ export default function HomeClient({
 
   return (
     <>
-      <div className="flex justify-center px-8 md:p-0 mb-8">
+      <div className="flex justify-center md:px-8 md:p-0 mb-8">
         <SearchBar onResultsChange={handleSearchResultsChange} />
       </div>
 
