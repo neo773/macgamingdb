@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { Geist } from "next/font/google";
 import { TRPCProvider } from "@/lib/trpc/provider";
 import { Toaster } from "@/components/ui/sonner";
+import Script from "next/script";
 import "./tailwind.css";
 
 const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
@@ -37,7 +38,7 @@ export default async function RootLayout({
         <Toaster />
       </body>
       {/* <!-- Cloudflare Web Analytics --> */}
-      <script
+      <Script
         defer
         src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon='{"token": "063dd3764d5a4005a9d6807bd95fc60b"}'

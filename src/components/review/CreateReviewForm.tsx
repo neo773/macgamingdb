@@ -37,6 +37,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import AuthPrompt from "@/components/auth/AuthPrompt";
+import confetti from "canvas-confetti";
 
 // Interface for chipset combinations
 interface ChipsetCombination {
@@ -64,6 +65,36 @@ const getChipsetCombinations = () => {
   }
   return combinations;
 }
+
+const ConfettiSideCannons = () => {
+  const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+  
+  // Single burst from each side with more particles for better effect
+  confetti({
+    particleCount: 100,
+    angle: 60,
+    spread: 70,
+    startVelocity: 60,
+    decay: 0.9,
+    gravity: 1,
+    ticks: 300,
+    origin: { x: 0, y: 0.5 },
+    colors: colors,
+  });
+  
+  confetti({
+    particleCount: 100,
+    angle: 120,
+    spread: 70,
+    startVelocity: 60,
+    decay: 0.9,
+    gravity: 1,
+    ticks: 300,
+    origin: { x: 1, y: 0.5 },
+    colors: colors,
+  });
+};
+
 
 export default function CreateReviewForm({
   gameId,
@@ -135,6 +166,7 @@ export default function CreateReviewForm({
   const createReviewMutation = trpc.review.create.useMutation({
     onSuccess: () => {
       setSuccess(true);
+      ConfettiSideCannons();
       // Refresh the page after successful submission
       setTimeout(() => {
         onOpenChange(false);
