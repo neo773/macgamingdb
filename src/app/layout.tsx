@@ -41,7 +41,7 @@ export default async function RootLayout({
         defer
         src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon='{"token": "063dd3764d5a4005a9d6807bd95fc60b"}'
-      ></script>
+      />
       {/* <!-- End Cloudflare Web Analytics --> */}
     </html>
   );
