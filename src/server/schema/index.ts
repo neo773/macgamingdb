@@ -15,7 +15,7 @@ export const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
 
 // Create constants for software versions to allow direct access in components
 export const SOFTWARE_VERSIONS = {
-  CROSSOVER: ["25.0", "24.0"],
+  CROSSOVER: ["25.0.1", "25.0", "24.0"],
   PARALLELS: ["20", "19"],
 } as const;
 
