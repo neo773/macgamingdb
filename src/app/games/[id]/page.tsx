@@ -133,7 +133,7 @@ export default async function GamePage({
                 </h1>
                 {gameDetails.release_date && (
                   <p className="text-gray-300">
-                    Released: {gameDetails.release_date.date}
+                    Publisher: {gameDetails.publishers[0]}
                   </p>
                 )}
               </div>
