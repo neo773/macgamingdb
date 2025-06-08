@@ -10,6 +10,7 @@ import { formatDistance } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
+import { Container } from "@/components/ui/container";
 
 
 export default async function ContributorPage({
@@ -56,7 +57,7 @@ export default async function ContributorPage({
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+      <Container>
         <div className="mb-4">
           <Link
             href="/contributors"
@@ -144,7 +145,7 @@ export default async function ContributorPage({
             </div>
           )}
         </div>
-      </main>
+      </Container>
 
       <Footer />
     </div>

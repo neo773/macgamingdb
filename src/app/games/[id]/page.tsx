@@ -10,6 +10,7 @@ import Footer from "@/components/shared/Footer";
 import Header from "@/components/shared/Header";
 import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
+import { Container } from "@/components/ui/container";
 
 // Enable ISR with a revalidation time of 1 year
 export const revalidate = 31536000;
@@ -101,7 +102,7 @@ export default async function GamePage({
     return (
       <div className="min-h-screen flex flex-col bg-black">
         <Header />
-        <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+        <Container>
           <div className="mb-4">
             <Link
               href="/"
@@ -293,7 +294,7 @@ export default async function GamePage({
               </p>
             </div>
           )}
-        </main>
+        </Container>
 
         <Footer />
       </div>
@@ -305,7 +306,7 @@ export default async function GamePage({
     return (
       <div className="min-h-screen flex flex-col bg-black">
         <Header />
-        <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+        <Container>
           <div className="mb-4">
             <Link
               href="/"
@@ -334,7 +335,7 @@ export default async function GamePage({
               </p>
             </CardContent>
           </Card>
-        </main>
+        </Container>
         <Footer />
       </div>
     );

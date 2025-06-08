@@ -24,6 +24,7 @@ import GameReviewCard from "@/components/review/ReviewCard";
 import ExpandableReviewNote from "../../components/review/ExpandableReviewNote";
 import { Textarea } from "@/components/ui/textarea";
 import { SteamAppData } from "@/server/helpers/steam";
+import { Container } from "@/components/ui/container";
 
 export default function MyReviewsClient({
   userReviews,
@@ -88,7 +89,7 @@ export default function MyReviewsClient({
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 w-full max-w-7xl mx-auto px-8 py-8">
+      <Container>
         <div className="mb-4">
           <Link
             href="/"
@@ -247,7 +248,7 @@ export default function MyReviewsClient({
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </main>
+      </Container>
       <Footer />
     </div>
   );

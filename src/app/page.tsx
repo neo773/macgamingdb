@@ -4,6 +4,7 @@ import Header from "@/components/shared/Header";
 import HomeClient from "./home-client";
 import { createServerHelpers } from "@/lib/trpc/server";
 import { SearchURLParamsKeys, createFilterConfig, PlayMethodFilter } from "@/lib/constants";
+import { Container } from "@/components/ui/container";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600; // revalidate every hour
@@ -35,14 +36,14 @@ export default async function Home({
         perform on Mac across different compatibility layers
       </p>
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-8 pb-8 pt-6">
+      <Container>
         <HomeClient 
           GamesPage={{...GamesPage, ratingCounts}} 
           PerformanceFilter={filterConfig.performance}
           ChipsetFilter={chipsetParam || "all"}
           PlayMethodFilter={playMethodParam || "ALL"}
         />
-      </main>
+      </Container>
       
       <Footer />
     </div>

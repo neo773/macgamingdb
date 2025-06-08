@@ -48,7 +48,7 @@ const Header = () => {
         />
       </div>
       <div className="relative z-50 mx-auto flex w-full max-w-7xl flex-col items-center justify-between px-4 md:flex-row ">
-        <div className="w-full py-8 px-4 sm:px-8 flex justify-center">
+        <div className="w-full py-8 md:px-8 flex justify-center">
           <div className="max-w-7xl w-full">
             <nav className="bg-input/30 border-2 border-input/70 backdrop-blur-sm rounded-full px-5 py-3 flex items-center justify-between shadow-lg">
               <Link href={"/"} className="flex items-center">
@@ -99,7 +99,7 @@ const Header = () => {
 
             {/* Mobile menu */}
             {mobileMenuOpen && (
-              <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-8 mt-4 bg-[#1B1B1D] border border-input/70 rounded-xl p-4 shadow-lg z-50">
+              <div className="sm:hidden fixed top-[85px] left-0 right-0 mx-4 mt-4 bg-[#1B1B1D] border border-input/70 rounded-xl p-4 shadow-lg z-50">
                 <div className="flex flex-col space-y-4">
                   <DonationDialog>
                     <button className="text-blue-400 hover:text-white px-3 py-2 transition-colors flex items-center gap-2 cursor-pointer w-full text-left">
