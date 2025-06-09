@@ -68,6 +68,33 @@ export const gameRouter = router({
       }
     }),
 
+  getCoverArt: procedure
+    .input(z.object({ gameId: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const gameData = await getGameBySteamId(input.gameId);
+        
+        if (!gameData || !gameData.header_image) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Cover art not found for this game",
+          });
+        }
+
+        return {
+          headerImage: gameData.header_image,
+          capsuleImage: gameData.capsule_image,
+          capsuleImagev5: gameData.capsule_imagev5,
+        };
+      } catch (error) {
+        console.error("Error fetching cover art:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch cover art from Steam API",
+        });
+      }
+    }),
+
   getFilterCounts: procedure
     .input(
       z.object({
