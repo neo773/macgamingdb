@@ -38,6 +38,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import AuthPrompt from "@/components/auth/AuthPrompt";
 import confetti from "canvas-confetti";
+import ScreenshotUpload from "@/components/review/ScreenshotUpload";
+import { InfoIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 // Interface for chipset combinations
 interface ChipsetCombination {
@@ -116,6 +119,7 @@ export default function CreateReviewForm({
     fps: string;
     resolution: string;
     notes: string;
+    screenshots: string[];
     softwareVersion: string;
     playMethod: PlayMethod;
     translationLayer: TranslationLayer;
@@ -127,6 +131,7 @@ export default function CreateReviewForm({
     fps: "",
     resolution: "",
     notes: "",
+    screenshots: [],
     softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
     playMethod: PlayMethodEnum.options[1], // Default to CROSSOVER
     translationLayer: TranslationLayerEnum.options[0], // Default to DXVK
@@ -235,6 +240,7 @@ export default function CreateReviewForm({
         chipset: formData.chipset,
         chipsetVariant: formData.chipsetVariant,
         notes: formData.notes,
+        screenshots: formData.screenshots,
         softwareVersion: finalSoftwareVersion,
       });
 
@@ -297,7 +303,7 @@ export default function CreateReviewForm({
       <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game." />
 
       <form onSubmit={handleSubmit} className="space-y-6 px-4 pb-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
           <div className="space-y-2">
             <label className="block text-sm font-medium">Play Method</label>
             <div className="flex gap-4 justify-between">
@@ -545,13 +551,43 @@ export default function CreateReviewForm({
           </div>
         </div>
 
+        <div className="grid grid-cols-1 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium">
+              Notes (optional)
+            </label>
+            <Textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleInputChange}
+              placeholder="Share your experience, tips, or any issues you encountered..."
+            />
+          </div>
+        </div>
+
         <div className="space-y-2">
-          <label className="block text-sm font-medium">Notes (optional)</label>
-          <Textarea
-            name="notes"
-            value={formData.notes}
-            onChange={handleInputChange}
-            placeholder="Share your experience, tips, or any issues you encountered..."
+          <div className="flex flex-row items-center gap-2">
+            <label className="block text-sm font-medium">
+              Screenshots (optional)
+            </label>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <InfoIcon className="w-4 h-4" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Upload up to 3 screenshots (max 5MB each, PNG/JPG/JPEG)</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+
+          <ScreenshotUpload
+            gameId={gameId}
+            onScreenshotsChange={(screenshots) =>
+              setFormData((prev) => ({ ...prev, screenshots }))
+            }
+            maxFiles={3}
           />
         </div>
 

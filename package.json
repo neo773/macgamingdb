@@ -20,6 +20,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.826.0",
+    "@aws-sdk/s3-request-presigner": "^3.826.0",
     "@prisma/adapter-libsql": "^6.6.0",
     "@prisma/client": "^6.6.0",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -27,6 +29,7 @@
     "@radix-ui/react-scroll-area": "^1.2.5",
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tooltip": "^1.2.7",
     "@react-email/components": "^0.0.36",
     "@tanstack/react-query": "^5.69.0",
     "@trpc/client": "^11.0.0",

@@ -142,7 +142,7 @@ const GameReviewCard = ({
                 <h4 className="text-sm font-medium text-gray-300 mb-2">
                   Review Note:
                 </h4>
-                <ExpandableReviewNote notes={review.notes} />
+                <ExpandableReviewNote notes={review.notes} screenshots={review.screenshots ? JSON.parse(review.screenshots) : undefined} />
               </div>
             )}
           </>

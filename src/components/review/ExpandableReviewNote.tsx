@@ -1,10 +1,11 @@
 "use client";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import ScreenshotDisplay from "./ScreenshotDisplay";
 import React from "react";
 import { cn } from "../utils";
 
 // Client component for expandable review notes
-const ExpandableReviewNote = ({ notes }: { notes: string }) => {
+const ExpandableReviewNote = ({ notes, screenshots }: { notes: string, screenshots?: string[] }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   return (
     <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
@@ -15,6 +16,7 @@ const ExpandableReviewNote = ({ notes }: { notes: string }) => {
             {i < notes.split("\n").length - 1 && <br />}
           </React.Fragment>
         ))}
+        {screenshots && <ScreenshotDisplay screenshots={screenshots} />}
       </p>
       {notes.length > 100 && (
         <button

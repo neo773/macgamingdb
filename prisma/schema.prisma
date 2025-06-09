@@ -74,6 +74,7 @@ model GameReview {
   chipset          String // e.g., "M1", "M2", "M3" 
   chipsetVariant   ChipsetVariant // e.g., "BASE", "PRO", "MAX", "ULTRA"
   notes            String?
+  screenshots      String? // JSON array of S3 URLs
   softwareVersion  String? // Software version (CrossOver, Parallels, etc.)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt

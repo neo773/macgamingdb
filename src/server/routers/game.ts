@@ -15,6 +15,7 @@ import {
   calculateAveragePerformance,
   calculateTranslationLayerStats,
 } from "../utils";
+import { getViewSignedUrl, extractKeyFromUrl } from "@/lib/s3";
 
 
 // Helper function to get game IDs from PerformanceStats efficiently
@@ -343,6 +344,40 @@ export const gameRouter = router({
       } catch (error) {
         console.error(`Error fetching game details for ID ${input.id}:`, error);
         throw new Error("Failed to fetch game details");
+      }
+    }),
+
+  getScreenshotSignedUrls: procedure
+    .input(z.object({ 
+      screenshots: z.array(z.string()) 
+    }))
+    .query(async ({ input }) => {
+      try {
+        const signedUrls = await Promise.all(
+          input.screenshots.map(async (url) => {
+            const key = extractKeyFromUrl(url);
+            if (!key) {
+              console.warn(`Could not extract key from URL: ${url}`);
+              return { original: url, signed: url }; // Fallback to original URL
+            }
+            
+            try {
+              const signedUrl = await getViewSignedUrl(key, 3600); // 1 hour expiry
+              return { original: url, signed: signedUrl };
+            } catch (error) {
+              console.warn(`Could not generate signed URL for key: ${key}`, error);
+              return { original: url, signed: url }; // Fallback to original URL
+            }
+          })
+        );
+
+        return signedUrls;
+      } catch (error) {
+        console.error("Error generating signed URLs:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate signed URLs for screenshots",
+        });
       }
     }),
 });

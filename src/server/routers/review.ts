@@ -7,6 +7,7 @@ import { ChipsetEnum, ChipsetVariantEnum, GraphicsSettingsEnum, PerformanceEnum,
 import type { PerformanceRating, PrismaClient } from "@prisma/client";
 import type { Performance, Chipset, ChipsetVariant, PlayMethod } from "../schema";
 import { updateAllPerformanceStatsForGame } from "../helpers/performance-stats";
+import { getUploadSignedUrl, generateScreenshotKey, getPublicUrl } from "@/lib/s3";
 
 // Helper function to calculate average performance
 const calculateAveragePerformance = (reviews: { performance: PerformanceRating }[]) => {
@@ -82,6 +83,7 @@ const createReviewSchema = z.object({
   chipset: ChipsetEnum,
   chipsetVariant: ChipsetVariantEnum,
   notes: z.string().optional(),
+  screenshots: z.array(z.string()).optional(),
   softwareVersion: z.string().optional(),
 });
 
@@ -93,6 +95,13 @@ const deleteReviewSchema = z.object({
 const updateReviewSchema = z.object({
   reviewId: z.string(),
   notes: z.string(),
+  screenshots: z.array(z.string()).optional(),
+});
+
+const getUploadUrlSchema = z.object({
+  filename: z.string(),
+  contentType: z.string(),
+  gameId: z.string(),
 });
 
 export const reviewRouter = router({
@@ -103,6 +112,51 @@ export const reviewRouter = router({
       user: ctx.user || null,
     };
   }),
+
+  // Generate presigned URL for screenshot upload
+  getUploadUrl: protectedProcedure
+    .input(getUploadUrlSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        // Check if user is authenticated
+        if (!ctx.user?.user.id) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Missing authorization",
+          });
+        }
+
+        // Validate file type (only images)
+        if (!input.contentType.startsWith("image/")) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Only image files are allowed",
+          });
+        }
+
+                 // Generate S3 key
+        const key = generateScreenshotKey(ctx.user.user.id, input.gameId, input.filename);
+
+        // Get presigned URL
+        const signedUrl = await getUploadSignedUrl(key, input.contentType);
+        const publicUrl = getPublicUrl(key);
+
+        return {
+          signedUrl,
+          publicUrl,
+          key,
+        };
+      } catch (error) {
+        console.error("Error generating presigned URL:", error);
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate upload URL",
+        });
+      }
+    }),
 
   create: protectedProcedure
     .input(createReviewSchema)
@@ -151,6 +205,7 @@ export const reviewRouter = router({
             chipset: input.chipset,
             chipsetVariant: input.chipsetVariant,
             notes: input.notes || null,
+            screenshots: input.screenshots ? JSON.stringify(input.screenshots) : null,
             softwareVersion: input.softwareVersion || null,
           },
         });
@@ -208,11 +263,12 @@ export const reviewRouter = router({
           });
         }
 
-        // Update the review notes
+        // Update the review notes and screenshots
         await ctx.prisma!.gameReview.update({
           where: { id: input.reviewId },
           data: { 
-            notes: input.notes 
+            notes: input.notes,
+            screenshots: input.screenshots ? JSON.stringify(input.screenshots) : undefined,
           },
         });
 
