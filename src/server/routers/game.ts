@@ -37,11 +37,11 @@ const getGameIdsFromPerformanceStats = async (
     where: {
       aggregatedPerformance: performance,
       // Only add review filtering if we need specific chipset/playMethod
-      ...(chipset && {
+      ...((chipset || playMethod !== "ALL") && {
         reviews: {
           some: {
-            chipset,
-            ...(chipsetVariant && { chipsetVariant }),
+            ...(chipset && { chipset }),
+            ...(chipset && chipsetVariant && { chipsetVariant }),
             ...(playMethod !== "ALL" && { playMethod })
           }
         }
@@ -234,13 +234,20 @@ export const gameRouter = router({
           where: {
             // Use indexed aggregatedPerformance field instead of JOINs
             ...(performance !== "ALL" && { aggregatedPerformance: performance }),
-            // Only use expensive JOIN filtering when absolutely necessary
+            // Apply playMethod filter independently of chipset filter
+            ...(playMethod !== "ALL" && {
+              reviews: {
+                some: {
+                  playMethod
+                }
+              }
+            }),
+            // Apply chipset filter separately
             ...(chipset && {
               reviews: {
                 some: {
                   chipset,
-                  ...(chipsetVariant && { chipsetVariant }),
-                  ...(playMethod !== "ALL" && { playMethod })
+                  ...(chipsetVariant && { chipsetVariant })
                 }
               }
             })
