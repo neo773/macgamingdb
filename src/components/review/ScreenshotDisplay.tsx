@@ -59,7 +59,7 @@ export default function ScreenshotDisplay({
   return (
     <div className="pt-2">
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!max-w-6xl w-full p-0 border-none bg-black/90 overflow-hidden">
+        <DialogContent className="!max-w-6xl w-full p-0 border-none bg-transparent overflow-hidden">
           <div className="w-full h-full flex items-center justify-center">
             <img
               src={signedUrls[selectedImageIndex]?.signed}
