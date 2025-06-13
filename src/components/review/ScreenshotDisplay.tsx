@@ -59,23 +59,25 @@ export default function ScreenshotDisplay({
   return (
     <div className="pt-2">
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="!max-w-6xl p-0 border-none bg-black/90">
-          <img
-            src={signedUrls[selectedImageIndex]?.signed}
-            alt={`Screenshot ${selectedImageIndex + 1}`}
-            className="max-w-full max-h-full object-contain rounded-lg border border-[#303030]"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              const urlData = signedUrls[selectedImageIndex];
-              if (
-                urlData &&
-                target.src === urlData.signed &&
-                urlData.original !== urlData.signed
-              ) {
-                target.src = urlData.original;
-              }
-            }}
-          />
+        <DialogContent className="!max-w-6xl w-full p-0 border-none bg-black/90 overflow-hidden">
+          <div className="w-full h-full flex items-center justify-center">
+            <img
+              src={signedUrls[selectedImageIndex]?.signed}
+              alt={`Screenshot ${selectedImageIndex + 1}`}
+              className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg border border-[#303030]"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                const urlData = signedUrls[selectedImageIndex];
+                if (
+                  urlData &&
+                  target.src === urlData.signed &&
+                  urlData.original !== urlData.signed
+                ) {
+                  target.src = urlData.original;
+                }
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

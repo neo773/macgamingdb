@@ -575,8 +575,10 @@ export default function CreateReviewForm({
                 <TooltipTrigger>
                   <InfoIcon className="w-4 h-4" />
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Upload up to 3 screenshots (max 5MB each, PNG/JPG/JPEG)</p>
+                <TooltipContent className="text-center">
+                  <p>Upload up to 3 screenshots (max 10MB each, PNG/JPG/JPEG) <br />
+                  Tip: <a href="https://tinypng.com/" target="_blank" rel="noopener noreferrer">www.tinypng.com</a> can compress your screenshots without visual loss.
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
