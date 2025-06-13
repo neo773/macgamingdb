@@ -1,0 +1,58 @@
+# 🌀 Allow SEO & AI Crawler Access
+
+User-agent: *
+Disallow:
+
+# OpenAI crawlers
+User-agent: GPTBot
+Disallow:
+
+User-agent: ChatGPT-User
+Disallow:
+
+User-agent: ChatGPT-User/2.0
+Disallow:
+
+User-agent: OAI-SearchBot
+Disallow:
+
+# Anthropic crawlers
+User-agent: ClaudeBot
+Disallow:
+
+User-agent: Claude-User
+Disallow:
+
+User-agent: Claude-SearchBot
+Disallow:
+
+# Perplexity crawlers
+User-agent: PerplexityBot
+Disallow:
+
+User-agent: Perplexity-User
+Disallow:
+
+# SEO crawlers
+User-agent: Googlebot
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+User-agent: DuckDuckBot
+Disallow:
+
+User-agent: YandexBot
+Disallow:
+
+User-agent: Baiduspider
+Disallow:
+
+User-agent: Sogou Spider
+Disallow:
+
+User-agent: CCBot
+Disallow:
+
+Sitemap: https://macgamingdb.app/sitemap.xml
