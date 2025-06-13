@@ -11,6 +11,7 @@ import Header from "@/components/shared/Header";
 import GameReviewCard from "@/components/review/ReviewCard";
 import { SteamAppData } from "@/server/helpers/steam";
 import { Container } from "@/components/ui/container";
+import Script from "next/script";
 
 // Enable ISR with a revalidation time of 1 year
 export const revalidate = 31536000;
@@ -99,8 +100,31 @@ export default async function GamePage({
     const showCrossoverAffiliate =
       hasReviews && isPlayable && hasCrossoverReview;
 
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": gameDetails.name || "Game",
+      "operatingSystem": "macOS",
+      "applicationCategory": "Game",
+      "description": gameDetails.detailed_description ? 
+        gameDetails.detailed_description.replace(/<[^>]*>?/gm, '') : "Game details unavailable",
+      "image": gameDetails.header_image || "",
+      "publisher": gameDetails.publishers ? gameDetails.publishers[0] : "",
+      "aggregateRating": stats ? {
+        "@type": "AggregateRating",
+        "ratingValue": stats.averagePerformance?.toFixed(1) || "0",
+        "bestRating": "4",
+        "ratingCount": stats.totalReviews || 0
+      } : undefined
+    };
+
     return (
       <div className="min-h-screen flex flex-col bg-black">
+        <Script
+          id="game-schema-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Header />
         <Container>
           <div className="mb-4">
