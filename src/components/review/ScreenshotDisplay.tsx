@@ -10,7 +10,6 @@ interface ScreenshotDisplayProps {
 
 export default function ScreenshotDisplay({
   screenshots,
-  className = "",
 }: ScreenshotDisplayProps) {
   const [signedUrls, setSignedUrls] = useState<
     { original: string; signed: string }[]
