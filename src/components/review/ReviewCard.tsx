@@ -157,7 +157,7 @@ const GameReviewCard = ({
               review.screenshots &&
               review.screenshots.length > 0 && (
                 <div className="border-t border-white/15 pt-3 mt-2">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-gray-300">
                     Screenshots:
                   </h4>
                   <ScreenshotDisplay
