@@ -42,16 +42,13 @@ export default function ScreenshotDisplay({
 
   if (loading || isLoading) {
     return (
-      <div className={`border-t border-white/15 pt-3 mt-2 ${className}`}>
-        <h4 className="text-sm font-medium text-gray-300 mb-2">Screenshots:</h4>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {screenshots.slice(0, 3).map((_, index) => (
-            <div
-              key={index}
-              className="aspect-video bg-gray-700 rounded-lg animate-pulse"
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        {screenshots.slice(0, 3).map((_, index) => (
+          <div
+            key={index}
+            className="aspect-video bg-gray-700 rounded-lg animate-pulse"
+          />
+        ))}
       </div>
     );
   }
