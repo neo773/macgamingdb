@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import clsx from "clsx";
+import ScreenshotDisplay from "./ScreenshotDisplay";
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
@@ -142,9 +143,32 @@ const GameReviewCard = ({
                 <h4 className="text-sm font-medium text-gray-300 mb-2">
                   Review Note:
                 </h4>
-                <ExpandableReviewNote notes={review.notes} screenshots={review.screenshots ? JSON.parse(review.screenshots) : undefined} />
+                <ExpandableReviewNote
+                  notes={review.notes}
+                  screenshots={
+                    review.screenshots
+                      ? JSON.parse(review.screenshots)
+                      : undefined
+                  }
+                />
               </div>
             )}
+            {review.notes === null &&
+              review.screenshots &&
+              review.screenshots.length > 0 && (
+                <div className="border-t border-white/15 pt-3 mt-2">
+                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                    Screenshots:
+                  </h4>
+                  <ScreenshotDisplay
+                    screenshots={
+                      review.screenshots
+                        ? JSON.parse(review.screenshots)
+                        : undefined
+                    }
+                  />
+                </div>
+              )}
           </>
         )}
       </CardContent>
