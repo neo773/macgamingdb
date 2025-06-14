@@ -41,7 +41,7 @@ export default function ScreenshotDisplay({
 
   if (loading || isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pt-2">
         {screenshots.slice(0, 3).map((_, index) => (
           <div
             key={index}
