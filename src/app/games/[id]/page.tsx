@@ -113,6 +113,7 @@ export default async function GamePage({
       "aggregateRating": stats ? {
         "@type": "AggregateRating",
         "ratingValue": stats.averagePerformance?.toFixed(1) || "0",
+        "worstRating": "0",
         "bestRating": "4",
         "ratingCount": stats.totalReviews || 0
       } : undefined
