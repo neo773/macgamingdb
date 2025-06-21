@@ -41,6 +41,7 @@ import confetti from "canvas-confetti";
 import ScreenshotUpload from "@/components/review/ScreenshotUpload";
 import { InfoIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { useFormPreferences } from "@/lib/hooks/useFormPreferences";
 
 // Interface for chipset combinations
 interface ChipsetCombination {
@@ -113,6 +114,8 @@ export default function CreateReviewForm({
   const [customVersionValue, setCustomVersionValue] = useState("");
 
   const chipsetCombinations = getChipsetCombinations()
+  const { getPreferences, updatePreference } = useFormPreferences();
+  const preferences = getPreferences();
 
   // Form state with proper typing
   const [formData, setFormData] = useState<{
@@ -133,12 +136,12 @@ export default function CreateReviewForm({
     notes: "",
     screenshots: [],
     softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-    playMethod: PlayMethodEnum.options[1], // Default to CROSSOVER
-    translationLayer: TranslationLayerEnum.options[0], // Default to DXVK
+    playMethod: preferences.playMethod ?? PlayMethodEnum.options[1], // Default to CROSSOVER
+    translationLayer: preferences.translationLayer ?? TranslationLayerEnum.options[0], // Default to DXVK
     performance: PerformanceEnum.options[1], // Default to GOOD
     graphicsSettings: GraphicsSettingsEnum.options[1], // Default to HIGH
-    chipset: ChipsetEnum.options[0], // Default to M1
-    chipsetVariant: ChipsetVariantEnum.options[0], // Default to BASE
+    chipset: preferences.chipset ?? ChipsetEnum.options[0], // Default to M1
+    chipsetVariant: preferences.chipsetVariant ?? ChipsetVariantEnum.options[0], // Default to BASE
   });
 
   // Update software version when play method changes
@@ -254,6 +257,7 @@ export default function CreateReviewForm({
   // Handle play method selection with fixed typing
   const handlePlayMethodSelect = (method: PlayMethod) => {
     setFormData((prev) => ({ ...prev, playMethod: method }));
+    updatePreference('playMethod', method);
   };
 
   // Helper components specific for Drawer/Dialog
@@ -422,9 +426,10 @@ export default function CreateReviewForm({
               </label>
               <Select
                 value={formData.translationLayer}
-                onValueChange={(value) =>
-                  handleSelectChange("translationLayer", value)
-                }
+                onValueChange={(value) => {
+                  handleSelectChange("translationLayer", value);
+                  updatePreference('translationLayer', value as TranslationLayer);
+                }}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select translation layer" />
@@ -534,6 +539,8 @@ export default function CreateReviewForm({
                   chipset: chipset as Chipset,
                   chipsetVariant: chipsetVariant as ChipsetVariant,
                 }));
+                updatePreference('chipset', chipset as Chipset);
+                updatePreference('chipsetVariant', chipsetVariant as ChipsetVariant);
               }}
               required
             >
