@@ -13,12 +13,18 @@ interface AuthPromptProps {
   className?: string;
   /** Style adjustments for the inner container */
   containerClassName?: string;
+  /** External magic link sent state */
+  magicLinkSent?: boolean;
+  /** Callback when magic link is sent */
+  onMagicLinkSent?: () => void;
 }
 
 export default function AuthPrompt({
   promptMessage = "To combat spam, please log in to share your experience.",
   className = "absolute inset-0 bg-black/20 flex flex-col items-center justify-center rounded-3xl p-6 z-10",
   containerClassName = "bg-black border border-[#272727] p-6 rounded-xl",
+  magicLinkSent: externalMagicLinkSent,
+  onMagicLinkSent,
 }: AuthPromptProps) {
 
   const { useSession, signIn } = authClient
@@ -30,8 +36,12 @@ export default function AuthPrompt({
 
   const [email, setEmail] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [internalMagicLinkSent, setInternalMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Use external state if provided, otherwise use internal state
+  const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
+
   // Handle magic link login
   const handleLogin = async () => {
     // e.preventDefault();
@@ -44,13 +54,16 @@ export default function AuthPrompt({
     setError(null);
 
     try {
-
        await signIn.magicLink({
         email: email,
         callbackURL: window.location.href, //redirect after successful login (optional)
       });
       
-      setMagicLinkSent(true);
+      if (onMagicLinkSent) {
+        onMagicLinkSent();
+      } else {
+        setInternalMagicLinkSent(true);
+      }
       toast("Magic link sent to your email!");
     } catch (error) {
       setError("Error sending magic link. Please try again.");
@@ -60,7 +73,8 @@ export default function AuthPrompt({
     }
   };
 
-  if (typeof session?.user?.id !== 'undefined' || isPending) {
+  // Don't hide the component if magic link was sent, even if session is loading
+  if ((typeof session?.user?.id !== 'undefined' || isPending) && !magicLinkSent) {
     return <></>
   }
 
