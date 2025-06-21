@@ -22,6 +22,7 @@ import { Game, GameReview } from "@prisma/client";
 import { toast } from "sonner";
 import GameReviewCard from "@/components/review/ReviewCard";
 import ExpandableReviewNote from "../../components/review/ExpandableReviewNote";
+import ScreenshotDisplay from "@/components/review/ScreenshotDisplay";
 import { Textarea } from "@/components/ui/textarea";
 import { SteamAppData } from "@/server/helpers/steam";
 import { Container } from "@/components/ui/container";
@@ -212,11 +213,34 @@ export default function MyReviewsClient({
                                   placeholder="Add your thoughts about this game..."
                                 />
                               ) : (
-                                <ExpandableReviewNote notes={review.notes} />
+                                <ExpandableReviewNote 
+                                  notes={review.notes}
+                                  screenshots={
+                                    review.screenshots
+                                      ? JSON.parse(review.screenshots)
+                                      : undefined
+                                  }
+                                />
                               )}
                             </div>
                           </div>
                         )}
+                        {review.notes === null &&
+                          review.screenshots &&
+                          review.screenshots.length > 0 && (
+                            <div className="border-t border-white/15 pt-3 mt-2">
+                              <h4 className="text-sm font-medium text-gray-300">
+                                Screenshots:
+                              </h4>
+                              <ScreenshotDisplay
+                                screenshots={
+                                  review.screenshots
+                                    ? JSON.parse(review.screenshots)
+                                    : undefined
+                                }
+                              />
+                            </div>
+                          )}
                       </>
                     }
                   />

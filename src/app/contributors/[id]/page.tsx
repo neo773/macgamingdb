@@ -5,6 +5,7 @@ import Footer from "@/components/shared/Footer";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
+import ScreenshotDisplay from "@/components/review/ScreenshotDisplay";
 
 import { formatDistance } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
@@ -132,10 +133,33 @@ export default async function ContributorPage({
                                 <h4 className="text-sm font-medium text-gray-300 mb-2">
                                   Review Note:
                                 </h4>
-                                <ExpandableReviewNote notes={review.notes} />
+                                <ExpandableReviewNote 
+                                  notes={review.notes}
+                                  screenshots={
+                                    review.screenshots
+                                      ? JSON.parse(review.screenshots)
+                                      : undefined
+                                  }
+                                />
                               </div>
                             </div>
                           )}
+                          {review.notes === null &&
+                            review.screenshots &&
+                            review.screenshots.length > 0 && (
+                              <div className="border-t border-white/15 pt-3 mt-2">
+                                <h4 className="text-sm font-medium text-gray-300">
+                                  Screenshots:
+                                </h4>
+                                <ScreenshotDisplay
+                                  screenshots={
+                                    review.screenshots
+                                      ? JSON.parse(review.screenshots)
+                                      : undefined
+                                  }
+                                />
+                              </div>
+                            )}
                         </>
                       }
                     />
