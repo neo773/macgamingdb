@@ -8,26 +8,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Trophy, Medal, Award, Star } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "@/server/routers/_app";
 
-interface ContributorsClientProps {
-  contributorsData: {
-    contributors: Array<{
-      id: string;
-      name: string;
-      image: string | null;
-      joinedAt: Date;
-      reviewCount: number;
-      uniqueGamesCount: number;
-      score: number;
-    }>;
-    nextCursor: string | undefined;
-    totalCount: number;
-  };
-}
+type ContributorsData = inferRouterOutputs<AppRouter>["contributor"]["getTopContributors"];
 
 export default function ContributorsClient({
   contributorsData,
-}: ContributorsClientProps) {
+}: {
+  contributorsData: ContributorsData;
+}) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Setup infinite query with initial data
@@ -113,7 +103,7 @@ export default function ContributorsClient({
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <Avatar className="h-16 w-16 border-white/20 border-2">
-                      <AvatarImage src={contributor.image || undefined} />
+                      <AvatarImage src={undefined} />
                       <AvatarFallback className="text-xl text-white bg-white/8">
                         {getInitials(contributor.name)}
                       </AvatarFallback>

@@ -20,9 +20,7 @@ export const contributorRouter = router({
           const userReviewCounts = await tx.user.findMany({
             select: {
               id: true,
-              name: true,
               email: true,
-              image: true,
               createdAt: true,
               _count: {
                 select: {
@@ -57,7 +55,6 @@ export const contributorRouter = router({
               return {
                 id: user.id,
                 name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
-                image: user.image,
                 joinedAt: user.createdAt,
                 reviewCount: user._count.reviews,
                 uniqueGamesCount: uniqueGames.length,
@@ -69,6 +66,8 @@ export const contributorRouter = router({
 
           // Sort by score in descending order
           return usersWithGameCounts.sort((a, b) => b.score - a.score);
+        },{
+          timeout: 10000,
         });
 
         // Handle pagination
