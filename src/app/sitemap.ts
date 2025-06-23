@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Add dynamic game routes for games with reviews, using last review update time
   const gameRoutes = gamesWithReviews.map((game) => ({
     url: `${baseUrl}/games/${game.id}`,
-    lastModified: game.reviews[0].updatedAt,
+    lastModified: game.reviews[0].updatedAt ?? undefined,
   }));
 
   return [...gameRoutes];
