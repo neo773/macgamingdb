@@ -1,20 +1,16 @@
 import type { MetadataRoute } from "next";
 import { createPrismaClient } from "@/lib/database/prisma";
 
+const CHUNK_SIZE = 200;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const prisma = createPrismaClient();
 
-  // Get all games that have at least one review, including their most recent review
-  const gamesWithReviews = await prisma.game.findMany({
+  // Get the total count of games with at least one review
+  const totalGames = await prisma.game.count({
     where: {
       reviews: {
-        some: {}, // This filters for games that have at least one review
-      },
-    },
-    include: {
-      reviews: {
-        orderBy: { updatedAt: "desc" },
-        take: 1, // Only get the most recent review
+        some: {},
       },
     },
   });
@@ -22,11 +18,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base URL for the site
   const baseUrl = process.env.NEXT_PUBLIC_URL;
 
-  // Add dynamic game routes for games with reviews, using last review update time
-  const gameRoutes = gamesWithReviews.map((game) => ({
-    url: `${baseUrl}/games/${game.id}`,
-    lastModified: game.reviews[0].updatedAt ?? undefined,
-  }));
+  const gameRoutes: MetadataRoute.Sitemap = [];
 
-  return [...gameRoutes];
+  // Fetch in chunks to avoid RESPONSE_TOO_LARGE
+  for (let skip = 0; skip < totalGames; skip += CHUNK_SIZE) {
+    const gamesWithReviews = await prisma.game.findMany({
+      where: {
+        reviews: {
+          some: {},
+        },
+      },
+      include: {
+        reviews: {
+          orderBy: { updatedAt: "desc" },
+          take: 1,
+        },
+      },
+      skip,
+      take: CHUNK_SIZE,
+    });
+
+    gameRoutes.push(
+      ...gamesWithReviews.map((game) => ({
+        url: `${baseUrl}/games/${game.id}`,
+        lastModified: game.reviews[0]?.updatedAt ?? undefined,
+      }))
+    );
+  }
+
+  return gameRoutes;
 }
