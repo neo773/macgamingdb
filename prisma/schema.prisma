@@ -77,7 +77,7 @@ model GameReview {
   screenshots      String? // JSON array of S3 URLs
   softwareVersion  String? // Software version (CrossOver, Parallels, etc.)
   createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  updatedAt        DateTime?         @default(now()) @updatedAt
 
   // Indexes for Turso cost optimization
   @@index([gameId, chipset])
