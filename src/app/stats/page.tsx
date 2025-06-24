@@ -99,7 +99,7 @@ export const metadata: Metadata = {
 export default async function Stats() {
   const stats = await fetch("https://sqld.macgamingdb.app/turso-stats", {
     headers: {
-      "X-Auth-Key":
+      "authorization":
         "4e9ea5fe2ed3f359815e273bb8df9be43993bab76458d9b0c4bd96f03b9eda82",
     },
   }).then((res) => res.json());
