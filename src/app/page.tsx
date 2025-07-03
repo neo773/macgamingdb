@@ -1,6 +1,6 @@
 import Footer from "@/components/shared/Footer";
 import Header from "@/components/shared/Header";
-// import TrafficSourceWidget from "@/components/shared/TrafficSourceBanner";
+import StopKillingGamesBanner from "@/components/shared/StopKillingGamesBanner";
 import HomeClient from "./home-client";
 import { createServerHelpers } from "@/lib/trpc/server";
 import { SearchURLParamsKeys, createFilterConfig, PlayMethodFilter } from "@/lib/constants";
@@ -28,7 +28,7 @@ export default async function Home({
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* <TrafficSourceWidget /> */}
+      <StopKillingGamesBanner />
       <Header />
 
       <p className="text-xl md:text-3xl text-gray-300 mb-8 mx-6 text-center font-medium md:mx-auto">
