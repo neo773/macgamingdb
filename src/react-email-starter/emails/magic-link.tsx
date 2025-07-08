@@ -36,37 +36,36 @@ export const MacGamingDBMagicLinkEmail = ({
           backgroundColor: "#000000",
         }}
       >
-        <Container className="mx-auto py-5 pb-12 max-w-xl px-3">
-          <Heading className="text-2xl tracking-tight leading-tight font-bold text-white pt-4 my-10">
+        <Container className="mx-auto py-12 px-3 max-w-2xl">
+          <Heading className="text-4xl tracking-tight leading-tight font-bold text-white">
             Login to 🎮 MacGamingDB
           </Heading>
-          <Section className="py-7">
+          <Section>
             <Button
-              className="bg-primary rounded font-semibold text-white text-sm no-underline text-center block py-3 px-6"
+              className="bg-primary rounded font-semibold text-white no-underline text-center block py-3 px-6"
               href={magicLink || "https://macgamingdb.app/login"}
             >
               Log in with this magic link
             </Button>
           </Section>
-          <Text className="my-0 mb-4 text-sm leading-relaxed text-white">
+          <Text className="mb-4 leading-relaxed text-white opacity-90">
             Or, copy this link to your browser:
           </Text>
-          <code className="font-mono font-bold p-3 bg-gray-dark tracking-tight text-sm rounded text-white border border-gray-medium block break-all">
+          <Section className="font-mono font-bold p-3.5 bg-[#272727] tracking-tight rounded-[5px] text-white border border-[#333333] block break-all">
             {magicLink}
-          </code>
-          <br />
-          <Text className="my-0 mb-4 text-sm leading-relaxed text-white">
+          </Section>
+          <Text className="mb-4 leading-relaxed text-white opacity-90">
             If you didn&apos;t try to login to share your game experience, you
             can safely ignore this email.
           </Text>
-          <Text className="my-0 mb-4 text-sm leading-relaxed text-white">
+          <Text className="mb-8 leading-relaxed text-white opacity-90">
             After logging in, you'll be able to add your experience reports for
             Mac games.
           </Text>
-          <Hr className="border-gray-medium my-11 mt-7" />
+          <Hr className="border-gray-medium h-[0.5px] opacity-40" />
           <Link
             href="https://macgamingdb.app"
-            className="text-xs text-gray-light"
+            className="text-sm text-gray-light"
           >
             MacGamingDB.app, the community-driven database for gaming
             experiences on Mac.
