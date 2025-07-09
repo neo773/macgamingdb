@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { magicLink } from "better-auth/plugins/magic-link";
 import { Resend } from "resend";
-import MacGamingDBMagicLinkEmail from "@/react-email-starter/emails/magic-link";
+import { MacGamingDBMagicLinkEmail, MacGamingDBMagicLinkEmailText } from "@/react-email-starter/emails/magic-link";
 import { PrismaClient } from "@prisma/client";
 
 export const auth = (prisma: PrismaClient) => {
@@ -26,10 +26,12 @@ export const auth = (prisma: PrismaClient) => {
           const resend = new Resend(process.env.RESEND_API_KEY);
 
           await resend.emails.send({
-            from: "MacGamingDB <no-reply@macgamingdb.app>",
+            from: "MacGamingDB <hello@macgamingdb.app>",
+            replyTo: "support@macgamingdb.app",
             to: email,
             subject: "Log in to MacGamingDB with this magic link",
             react: MacGamingDBMagicLinkEmail({ magicLink: url }),
+            text: MacGamingDBMagicLinkEmailText({ magicLink: url })
           });
         },
       }),

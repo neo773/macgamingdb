@@ -76,8 +76,22 @@ export const MacGamingDBMagicLinkEmail = ({
   </Html>
 );
 
+export const MacGamingDBMagicLinkEmailText = ({
+  magicLink,
+}: MacGamingDBMagicLinkEmailProps): string => {
+  return `Login to 🎮 MacGamingDB
+
+Log in with this magic link: ${magicLink}
+
+If you didn't try to login to share your game experience, you can safely ignore this email.
+
+After logging in, you'll be able to add your experience reports for Mac games.
+
+--
+MacGamingDB.app, the community-driven database for gaming experiences on Mac.
+https://macgamingdb.app`;
+};
+
 MacGamingDBMagicLinkEmail.PreviewProps = {
   magicLink: "https://macgamingdb.app/login?token=example-token-12345",
 } as MacGamingDBMagicLinkEmailProps;
-
-export default MacGamingDBMagicLinkEmail;
