@@ -3,11 +3,12 @@ import { router, procedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import { getGameBySteamId } from "@/server/helpers/steam";
-import { ChipsetEnum, ChipsetVariantEnum, GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
+import { GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
 import type { PerformanceRating, PrismaClient } from "@prisma/client";
 import type { Performance, Chipset, ChipsetVariant, PlayMethod } from "../schema";
 import { updateAllPerformanceStatsForGame } from "../helpers/performance-stats";
 import { getUploadSignedUrl, generateScreenshotKey, getPublicUrl } from "@/lib/s3";
+import { MacSpecification } from "@/lib/scraper/EveryMacScraper";
 
 // Helper function to calculate average performance
 const calculateAveragePerformance = (reviews: { performance: PerformanceRating }[]) => {
@@ -80,8 +81,7 @@ const createReviewSchema = z.object({
   fps: z.number().nullable().optional(),
   graphicsSettings: GraphicsSettingsEnum,
   resolution: z.string().optional(),
-  chipset: ChipsetEnum,
-  chipsetVariant: ChipsetVariantEnum,
+  macConfigIdentifier: z.string(),
   notes: z.string().optional(),
   screenshots: z.array(z.string()).optional(),
   softwareVersion: z.string().optional(),
@@ -111,6 +111,31 @@ export const reviewRouter = router({
       authenticated: !!ctx.user,
       user: ctx.user || null,
     };
+  }),
+
+  // Get all Mac configurations
+  getMacConfigs: procedure.query(async ({ ctx }) => {
+    try {
+      const macConfigs = await ctx.prisma!.macConfig.findMany({
+        orderBy: { identifier: 'asc' },
+      });
+
+      return macConfigs.map(config => {
+        const metadata = JSON.parse(config.metadata) as MacSpecification;
+        return {
+          id: config.id,
+          identifier: config.identifier,
+          label: metadata.model,
+          metadata,
+        };
+      });
+    } catch (error) {
+      console.error("Error fetching Mac configs:", error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to fetch Mac configurations",
+      });
+    }
   }),
 
   // Generate presigned URL for screenshot upload
@@ -191,6 +216,20 @@ export const reviewRouter = router({
           });
         }
 
+        const macConfig = await ctx.prisma!.macConfig.findUnique({
+          where: { identifier: input.macConfigIdentifier },
+        });
+
+        if (!macConfig) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Mac config not found",
+          });
+        }
+
+        const macConfigMetadata = JSON.parse(macConfig.metadata) as MacSpecification;
+        const hasScreenshots = input.screenshots && input.screenshots.length > 0;
+
         // Create the review with the authenticated user's ID
         const review = await ctx.prisma!.gameReview.create({
           data: {
@@ -202,10 +241,11 @@ export const reviewRouter = router({
             fps: input.fps,
             graphicsSettings: input.graphicsSettings,
             resolution: input.resolution || null,
-            chipset: input.chipset,
-            chipsetVariant: input.chipsetVariant,
+            macConfigId: macConfig.id,
+            chipset: macConfigMetadata.chip,
+            chipsetVariant: macConfigMetadata.chipVariant as ChipsetVariant,
             notes: input.notes || null,
-            screenshots: input.screenshots ? JSON.stringify(input.screenshots) : null,
+            screenshots: hasScreenshots ? JSON.stringify(input.screenshots) : null,
             softwareVersion: input.softwareVersion || null,
           },
         });
@@ -214,7 +254,7 @@ export const reviewRouter = router({
         revalidatePath(`/games/${input.gameId}`);
 
         // Update performance stats
-        await updateAllPerformanceStats(ctx.prisma!, input.gameId, input.chipset, input.chipsetVariant, input.playMethod);
+        await updateAllPerformanceStats(ctx.prisma!, input.gameId, macConfigMetadata.chip as Chipset, macConfigMetadata.chipVariant as ChipsetVariant, input.playMethod);
 
         // Update review count
         await ctx.prisma!.game.update({

@@ -293,6 +293,9 @@ export const gameRouter = router({
         // Get reviews from our database
         const reviews = await ctx.prisma!.gameReview.findMany({
           where: { gameId: input.id },
+          include: {
+            macConfig: true,
+          },
         });
 
         const game = await ctx.prisma!.game.findUnique({

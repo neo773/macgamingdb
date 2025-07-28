@@ -59,7 +59,7 @@ export default function CreateReviewDialog({
           Add Experience Report
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] rounded-3xl bg-primary-gradient border border-[#272727]">
+      <DialogContent className="sm:max-w-[600px] max-h-[calc(100vh-20px)] overflow-y-scroll rounded-3xl bg-primary-gradient border border-[#272727]">
         <CreateReviewForm
           gameId={gameId}
           gameName={gameName}

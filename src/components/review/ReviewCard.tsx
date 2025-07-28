@@ -1,10 +1,11 @@
 import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
-import { GameReview } from "@prisma/client";
+import { GameReview, MacConfig } from "@prisma/client";
 import React from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import clsx from "clsx";
 import ScreenshotDisplay from "./ScreenshotDisplay";
+import { MacSpecification } from "@/lib/scraper/EveryMacScraper";
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
@@ -44,11 +45,12 @@ const GameReviewCard = ({
   customReviewNote,
   className,
 }: {
-  review: GameReview;
+  review: GameReview & { macConfig?: MacConfig | null };
   header?: React.ReactNode;
   customReviewNote?: React.ReactNode;
   className?: string;
 }) => {
+  const macConfig = review.macConfig ? JSON.parse(review.macConfig.metadata) as MacSpecification : null;
   return (
     <Card
       key={review.id}
@@ -124,13 +126,36 @@ const GameReviewCard = ({
                 </dd>
               </div>
             )}
-
-            <div className="flex justify-between">
-              <dt className="font-medium">Hardware:</dt>
-              <dd className="font-semibold text-white font-mono">
-                {review.chipset} {review.chipsetVariant}
-              </dd>
-            </div>
+            {macConfig ?(
+              <>
+                <div className="flex justify-between">
+                  <dt className="font-medium">Chip:</dt>
+                  <dd className="font-semibold text-white font-mono">
+                    {macConfig.chip} {macConfig.chipVariant}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="font-medium">Cores:</dt>
+                  <dd className="font-semibold text-white font-mono">
+                    {macConfig.cpuCores} CPU, {macConfig.gpuCores} GPU
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="font-medium">RAM:</dt>
+                  <dd className="font-semibold text-white font-mono">
+                    {macConfig.ram} GB
+                  </dd>
+                </div>
+                <div className="flex justify-between"></div>
+              </>
+            ) : (
+              <div className="flex justify-between">
+                <dt className="font-medium">Hardware:</dt>
+                <dd className="font-semibold text-white font-mono">
+                  {review.chipset} {review.chipsetVariant}
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
 

@@ -19,6 +19,7 @@ export default async function MyReviewsPage() {
     },
     include: {
       game: true,
+      macConfig: true,
     },
     orderBy: {
       createdAt: "desc",

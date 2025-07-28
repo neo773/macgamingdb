@@ -2,15 +2,12 @@ import { useCallback } from "react";
 import type {
   PlayMethod,
   TranslationLayer,
-  Chipset,
-  ChipsetVariant,
 } from "@/server/schema";
 
 interface FormPreferences {
   playMethod?: PlayMethod;
   translationLayer?: TranslationLayer;
-  chipset?: Chipset;
-  chipsetVariant?: ChipsetVariant;
+  macConfigIdentifier?: string;
 }
 
 const STORAGE_KEY = "macgamingdb-form-preferences";
