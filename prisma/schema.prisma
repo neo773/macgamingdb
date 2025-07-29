@@ -98,7 +98,7 @@ model GameReview {
   @@index([gameId, playMethod])
   @@index([gameId, chipset, chipsetVariant])
   @@index([gameId, chipset, playMethod])
-  @@index([gameId, macConfigId])
+  @@index([macConfigId])
 }
 
 enum PlayMethod {
