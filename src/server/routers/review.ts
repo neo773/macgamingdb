@@ -113,30 +113,95 @@ export const reviewRouter = router({
     };
   }),
 
-  // Get all Mac configurations
-  getMacConfigs: procedure.query(async ({ ctx }) => {
-    try {
-      const macConfigs = await ctx.prisma!.macConfig.findMany({
-        orderBy: { identifier: 'asc' },
-      });
+  // Get Mac configurations with server-side filtering
+  getMacConfigs: procedure
+    .input(z.object({
+      search: z.string().optional(),
+      selectedConfigIdentifier: z.string().optional(),
+    }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const macConfigs = await ctx.prisma!.macConfig.findMany({
+          orderBy: { identifier: 'asc' },
+        });
 
-      return macConfigs.map(config => {
-        const metadata = JSON.parse(config.metadata) as MacSpecification;
-        return {
-          id: config.id,
-          identifier: config.identifier,
-          label: metadata.model,
-          metadata,
-        };
-      });
-    } catch (error) {
-      console.error("Error fetching Mac configs:", error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch Mac configurations",
-      });
-    }
-  }),
+        // Parse metadata and create searchable configs
+        let configs = macConfigs.map(config => {
+          const metadata = JSON.parse(config.metadata) as MacSpecification;
+          return {
+            id: config.id,
+            identifier: config.identifier,
+            label: metadata.model,
+            metadata,
+            searchText: [
+              metadata.model,
+              metadata.chip,
+              metadata.chipVariant,
+              metadata.family
+            ].join(' ').toLowerCase(),
+          };
+        });
+
+        // Server-side filtering if search term provided
+        if (input.search?.trim()) {
+          const searchTerms = input.search.toLowerCase().split(/\s+/).filter(Boolean);
+          configs = configs.filter(config =>
+            searchTerms.every(term => config.searchText.includes(term))
+          );
+        }
+
+        // Group and sort for priority ordering
+        const groupedConfigs: Record<string, typeof configs> = {};
+        let selectedGroupKey: string | null = null;
+
+        // Group by family
+        for (const config of configs) {
+          const family = config.metadata.family;
+          if (!groupedConfigs[family]) groupedConfigs[family] = [];
+          groupedConfigs[family].push(config);
+          
+          // Track selected item's group
+          if (config.identifier === input.selectedConfigIdentifier) {
+            selectedGroupKey = family;
+          }
+        }
+
+        // Sort within groups (selected first)
+        for (const family of Object.keys(groupedConfigs)) {
+          groupedConfigs[family].sort((a, b) => {
+            if (a.identifier === input.selectedConfigIdentifier) return -1;
+            if (b.identifier === input.selectedConfigIdentifier) return 1;
+            return 0;
+          });
+        }
+
+        // Create final ordered list (selected group first)
+        const finalConfigs: typeof configs = [];
+        
+        // Add selected group first
+        if (selectedGroupKey && groupedConfigs[selectedGroupKey]) {
+          finalConfigs.push(...groupedConfigs[selectedGroupKey]);
+        }
+        
+        // Add other groups
+        for (const [family, familyConfigs] of Object.entries(groupedConfigs)) {
+          if (family !== selectedGroupKey) {
+            finalConfigs.push(...familyConfigs);
+          }
+        }
+
+        // Remove searchText from response
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return finalConfigs.map(({ searchText, ...config }) => config);
+        
+      } catch (error) {
+        console.error("Error fetching Mac configs:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch Mac configurations",
+        });
+      }
+    }),
 
   // Generate presigned URL for screenshot upload
   getUploadUrl: protectedProcedure

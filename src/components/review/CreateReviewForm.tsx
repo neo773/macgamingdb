@@ -40,6 +40,7 @@ import confetti from "canvas-confetti";
 import ScreenshotUpload from "@/components/review/ScreenshotUpload";
 import SelectMacConfiguration, {
   getDeviceIcon,
+  getHumanReadableFamily,
   MacConfig,
 } from "@/components/review/SelectMacConfiguration";
 import { InfoIcon } from "lucide-react";
@@ -108,10 +109,9 @@ export default function CreateReviewForm({
 
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
+  const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
 
-  // Fetch Mac configurations
-  const { data: macConfigs, isLoading: macConfigsLoading } =
-    trpc.review.getMacConfigs.useQuery();
+  // Mac configurations are now fetched server-side in SelectMacConfiguration
 
   // Form state with proper typing
   const [formData, setFormData] = useState<{
@@ -265,6 +265,7 @@ export default function CreateReviewForm({
   };
 
   const handleMacConfigSelect = (config: MacConfig) => {
+    setSelectedConfig(config);
     setFormData((prev) => ({
       ...prev,
       macConfigIdentifier: config.identifier,
@@ -272,10 +273,6 @@ export default function CreateReviewForm({
     updatePreference("macConfigIdentifier", config.identifier);
     setCurrentScreen("form");
   };
-
-  const selectedConfig = macConfigs?.find(
-    (config) => config.identifier === formData.macConfigIdentifier
-  );
 
   return (
     <div className="relative overflow-hidden">
@@ -567,7 +564,7 @@ export default function CreateReviewForm({
                 >
                   <span className="truncate">
                     {selectedConfig
-                      ? `${selectedConfig.metadata.family} ${selectedConfig.metadata.chip} ${selectedConfig.metadata.chipVariant === "BASE" ? "" : selectedConfig.metadata.chipVariant} ${selectedConfig.metadata.year}`
+                      ? `${getHumanReadableFamily(selectedConfig.metadata.family)} ${selectedConfig.metadata.chip} ${selectedConfig.metadata.chipVariant === "BASE" ? "" : selectedConfig.metadata.chipVariant} ${selectedConfig.metadata.year}`
                       : "Select Mac configuration..."}
                   </span>
                   <div className="flex items-center gap-1">
@@ -693,8 +690,6 @@ export default function CreateReviewForm({
       {/* Mac Configuration Selection Screen */}
       {currentScreen === "mac-selection" && (
         <SelectMacConfiguration
-          macConfigs={macConfigs}
-          macConfigsLoading={macConfigsLoading}
           selectedConfigIdentifier={formData.macConfigIdentifier}
           onSelect={handleMacConfigSelect}
           onBack={() => setCurrentScreen("form")}
