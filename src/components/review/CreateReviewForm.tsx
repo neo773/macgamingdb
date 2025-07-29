@@ -111,6 +111,23 @@ export default function CreateReviewForm({
   const preferences = getPreferences();
   const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
 
+  // Fetch saved Mac configuration if we have one
+  const { data: savedMacConfig } = trpc.review.getMacConfigById.useQuery(
+    { identifier: preferences.macConfigIdentifier! },
+    {
+      enabled: !!preferences.macConfigIdentifier,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5,
+    }
+  );
+
+  // Set selectedConfig when saved config loads
+  useEffect(() => {
+    if (savedMacConfig) {
+      setSelectedConfig(savedMacConfig);
+    }
+  }, [savedMacConfig]);
+
   // Mac configurations are now fetched server-side in SelectMacConfiguration
 
   // Form state with proper typing

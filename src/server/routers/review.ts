@@ -203,6 +203,37 @@ export const reviewRouter = router({
       }
     }),
 
+  // Get single Mac configuration by identifier
+  getMacConfigById: procedure
+    .input(z.object({
+      identifier: z.string(),
+    }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const macConfig = await ctx.prisma!.macConfig.findUnique({
+          where: { identifier: input.identifier },
+        });
+
+        if (!macConfig) {
+          return null;
+        }
+
+        const metadata = JSON.parse(macConfig.metadata) as MacSpecification;
+        return {
+          id: macConfig.id,
+          identifier: macConfig.identifier,
+          label: metadata.model,
+          metadata,
+        };
+      } catch (error) {
+        console.error("Error fetching Mac config:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch Mac configuration",
+        });
+      }
+    }),
+
   // Generate presigned URL for screenshot upload
   getUploadUrl: protectedProcedure
     .input(getUploadUrlSchema)
