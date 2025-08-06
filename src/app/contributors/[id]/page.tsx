@@ -41,6 +41,7 @@ export default async function ContributorPage({
     },
     include: {
       game: true,
+      macConfig: true,
     },
     orderBy: {
       createdAt: "desc",
