@@ -1,5 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { convertMacConfigIdentifierToNewFormat } from "../migration-utils/convert-mac-config-identifier-new-format";
+import { convertMacConfigIdentifierToNewFormat } from "../convert-mac-config-identifier-new-format";
+
 
 interface OldMacConfig {
   id: string;
