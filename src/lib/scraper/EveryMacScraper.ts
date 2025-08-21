@@ -70,7 +70,7 @@ export class EveryMacScraper {
       }
     }
 
-    return allSpecifications;
+    return allSpecifications.filter((spec) => !spec.identifier.includes("(Rack)"));
   }
 
   private async scrapeUrl(
