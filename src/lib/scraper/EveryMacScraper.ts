@@ -1,6 +1,8 @@
 import { DOMParser } from "linkedom";
 import { WebScraper } from "./WebScraper";
 import { ChipsetVariant } from "@prisma/client";
+import { RAM_LIMITS } from "./constant/mac-ram-limits";
+import { Family } from "@/server/schema";
 
 export interface MacSpecification {
   family: string;
@@ -28,7 +30,7 @@ export class EveryMacScraper {
   private readonly dom = new DOMParser();
   private readonly delayBetweenRequests = 1000;
 
-  private readonly Macs = {
+  private readonly Macs: Record<Family, string> = {
     MacBookPro:
       "https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html",
     iMac: "https://everymac.com/systems/apple/imac/all-apple-silicon-imac-models.html",
@@ -70,7 +72,9 @@ export class EveryMacScraper {
       }
     }
 
-    return allSpecifications.filter((spec) => !spec.identifier.includes("(Rack)"));
+    return allSpecifications.filter(
+      (spec) => !spec.identifier.includes("(Rack)")
+    );
   }
 
   private async scrapeUrl(
@@ -259,7 +263,7 @@ export class EveryMacScraper {
     }
 
     const baseSpec = {
-      identifier: data.id?.replace(/[^A-Za-z0-9,]/g, '') || '',
+      identifier: data.id?.replace(/[^A-Za-z0-9,]/g, "") || "",
       cpuCores: this.extractNumber(data.cpu, /(\d+)\s+Cores/),
       gpuCores: this.extractNumber(data.gpu, /(\d+)-Core/),
       year: this.extractNumber(data["intro."], /(\d{4})/),
@@ -301,7 +305,22 @@ export class EveryMacScraper {
   }
 
   private isValidSpecification(spec: MacSpecification): boolean {
-    return Boolean(spec.model && spec.chip);
+    return (
+      Boolean(spec.model && spec.chip) && this.isValidRAMConfiguration(spec)
+    );
+  }
+
+  private isValidRAMConfiguration(spec: MacSpecification): boolean {
+    const familyLimits = RAM_LIMITS[spec.family as Family];
+    if (!familyLimits) return true;
+
+    const chipsetLimits = familyLimits[spec.chip as keyof typeof familyLimits];
+    if (!chipsetLimits) return true;
+
+    const variantLimit = chipsetLimits[spec.chipVariant as keyof typeof chipsetLimits];
+    if (!variantLimit) return true;
+
+    return spec.ram <= variantLimit;
   }
 
   private delay(ms: number): Promise<void> {

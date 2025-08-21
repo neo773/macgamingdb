@@ -9,9 +9,17 @@ export const PerformanceEnum = z.enum([
   "BARELY_PLAYABLE",
   "UNPLAYABLE",
 ]);
+
+export const FamilyEnum = z.enum(["MacBookAir", "MacBookPro", "iMac", "MacMini", "MacStudio", "MacPro"]);
 export const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
 export const ChipsetEnum = z.enum(["M1", "M2", "M3", "M4"]);
 export const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
+
+
+export const Family = FamilyEnum.Enum
+export const GraphicsSettings = GraphicsSettingsEnum.Enum
+export const Chipset = ChipsetEnum.Enum
+export const ChipsetVariant = ChipsetVariantEnum.Enum
 
 // Create constants for software versions to allow direct access in components
 export const SOFTWARE_VERSIONS = {
@@ -25,8 +33,10 @@ export const SoftwareVersionsSchema = z.object({
   PARALLELS: z.array(z.string()),
 });
 
+
 export type SoftwareVersions = z.infer<typeof SoftwareVersionsSchema>;
 
+export type Family = z.infer<typeof FamilyEnum>;
 export type PlayMethod = z.infer<typeof PlayMethodEnum>;
 export type TranslationLayer = z.infer<typeof TranslationLayerEnum>;
 export type Performance = z.infer<typeof PerformanceEnum>;
