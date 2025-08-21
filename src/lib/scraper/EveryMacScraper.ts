@@ -1,7 +1,6 @@
 import { DOMParser } from "linkedom";
 import { WebScraper } from "./WebScraper";
 import { ChipsetVariant } from "@prisma/client";
-import fs from "fs";
 
 export interface MacSpecification {
   family: string;

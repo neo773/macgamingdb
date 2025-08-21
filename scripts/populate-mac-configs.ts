@@ -1,8 +1,8 @@
 import { createPrismaClient } from "@/lib/database/prisma";
 import { EveryMacScraper } from "@/lib/scraper/EveryMacScraper";
 import { WebScraper } from "@/lib/scraper/WebScraper";
-import specifications from "../specifications.json";
 import { config } from "dotenv";
+import { convertMacConfigIdentifierToNewFormat } from "./migration-utils/convert-mac-config-identifier-new-format";
 
 
 if (process.env.NODE_ENV === "production") {
@@ -12,27 +12,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const prisma = createPrismaClient();
-
-function generateConfigId(mac: {
-  identifier: string;
-  chip: string;
-  chipVariant: string;
-  cpuCores: number;
-  gpuCores: number;
-  ram: number;
-  year: number;
-}): string {
-  // Mac16,11*-M4-PRO-12-16-24-2024
-  return [
-    mac.identifier,
-    mac.chip,
-    mac.chipVariant,
-    mac.cpuCores,
-    mac.gpuCores,
-    mac.ram,
-    mac.year
-  ].join('-');
-}
 
 async function populateMacConfigs() {
   const apiCredentials = process.env.OXYLABS_SCRAPER;
@@ -44,12 +23,15 @@ async function populateMacConfigs() {
   const webScraper = new WebScraper(apiCredentials);
   const scraper = new EveryMacScraper(webScraper);
 
-  // const specifications = await scraper.scrapeAllSpecifications();
+  const specifications = await scraper.scrapeAllSpecifications();
 
   console.log(`🎉 Scraping completed! Found ${specifications.length} total specifications`);
 
   for (const spec of specifications) {
-    const identifier = generateConfigId(spec);
+    const identifier = convertMacConfigIdentifierToNewFormat({
+      identifier: spec.identifier,
+      metadata: JSON.stringify(spec),
+    });
     await prisma.macConfig.upsert({
       where: {
         identifier,
