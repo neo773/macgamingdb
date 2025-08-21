@@ -16,7 +16,6 @@ async function migrateToNewMacConfigIdentifier() {
     where: {},
     take: 10000000,
   });
-  console.log(macConfigs.length, "macConfigs");
 
   await prisma.$transaction(async (tx) => {
     for (const macConfig of macConfigs) {
@@ -41,7 +40,7 @@ async function migrateToNewMacConfigIdentifier() {
         );
       }
     }
-  });
+  }, { timeout: 3600000 });
 }
 
 async function main() {

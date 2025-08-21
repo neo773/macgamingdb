@@ -27,24 +27,24 @@ async function populateMacConfigs() {
 
   console.log(`🎉 Scraping completed! Found ${specifications.length} total specifications`);
 
-  for (const spec of specifications) {
-    const identifier = convertMacConfigIdentifierToNewFormat({
-      identifier: spec.identifier,
-      metadata: JSON.stringify(spec),
-    });
-    await prisma.macConfig.upsert({
-      where: {
-        identifier,
-      },
-      update: {
+  await prisma.$transaction(async (tx) => {
+    for (const spec of specifications) {
+      const identifier = convertMacConfigIdentifierToNewFormat({
+        identifier: spec.identifier,
         metadata: JSON.stringify(spec),
-      },
-      create: {
-        identifier,
-        metadata: JSON.stringify(spec),
-      },
-    });
-  }
+      });
+      await tx.macConfig.upsert({
+        where: {
+          identifier,
+        },
+        update: {},
+        create: {
+          identifier,
+          metadata: JSON.stringify(spec),
+        },
+      });
+    }
+  }, { timeout: 36000000 });
 }
 
 async function main() {
