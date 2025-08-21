@@ -1,0 +1,87 @@
+---
+alwaysApply: true
+---
+
+
+## Mac Gaming DB
+MacGamingDB is a website for Mac gamers, it's a database of game performance reviews across different Mac configurations and Translation layers like CrossOver, Parallels, etc.
+
+## Tech Stack
+- Next.js
+- Shadcn/ui
+- Tailwind CSS
+- Prisma
+- BetterAuth
+- Vercel
+- Bun
+- TypeScript
+- React Email
+
+## Project Structure
+```
+├── prisma
+│   └── schema.prisma
+├── prisma.config.ts
+├── public
+├── scripts (Database migrations)
+├── src
+    ├── app
+    │   ├── api
+    │   ├── contributors
+    │   │   ├── [id]
+    │   │   │   └── page.tsx
+    │   │   ├── client.tsx
+    │   │   └── page.tsx
+    │   ├── games
+    │   ├── page.tsx
+    ├── components
+    │   ├── ui (shadcn/ui)
+    │   └── utils.ts
+    ├── lib
+    │   ├── auth
+    │   │   ├── auth-client.ts
+    │   │   └── auth.ts
+    │   ├── constants.ts
+    │   ├── database
+    │   │   └── prisma.ts
+    │   ├── hooks
+    │   ├── s3.ts
+    │   ├── scraper
+    │   │   ├── EveryMacScraper.ts
+    │   │   └── WebScraper.ts
+    │   ├── trpc
+    │   │   ├── provider.tsx
+    │   │   ├── server.ts
+    │   │   └── utils.ts
+    │   └── utils
+    │       └── index.ts
+    ├── react-email-starter
+    └── server
+        ├── helpers
+        │   ├── performance-stats.ts
+        │   └── steam.ts
+        ├── routers
+        │   ├── _app.ts
+        │   ├── contributor.ts
+        │   ├── game.ts
+        │   ├── review.ts
+        │   └── traffic.ts
+        ├── schema
+        │   └── index.ts
+        ├── trpc.ts
+        └── utils.ts
+```
+
+
+## Code Rules
+- No `any` type
+- No deeply nested if else, extract generic logic to utility function, only one function per file and one export.
+- Respect existing code style and patterns.
+- No hacky code low quality code.
+
+
+Always use Bun for package manager and for running scripts.
+```
+bun add <package>
+bun run <script>
+```

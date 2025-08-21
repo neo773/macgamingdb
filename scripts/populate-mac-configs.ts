@@ -1,8 +1,8 @@
 import { createPrismaClient } from "@/lib/database/prisma";
 import { EveryMacScraper } from "@/lib/scraper/EveryMacScraper";
 import { WebScraper } from "@/lib/scraper/WebScraper";
-
 import { config } from "dotenv";
+import { convertMacConfigIdentifierToNewFormat } from "./migration-utils/convert-mac-config-identifier-new-format";
 
 
 if (process.env.NODE_ENV === "production") {
@@ -27,12 +27,24 @@ async function populateMacConfigs() {
 
   console.log(`🎉 Scraping completed! Found ${specifications.length} total specifications`);
 
-  await prisma.macConfig.createMany({
-    data: specifications.map((spec) => ({
-      identifier: spec.model,
-      metadata: JSON.stringify(spec),
-    })),
-  });
+  await prisma.$transaction(async (tx) => {
+    for (const spec of specifications) {
+      const identifier = convertMacConfigIdentifierToNewFormat({
+        identifier: spec.identifier,
+        metadata: JSON.stringify(spec),
+      });
+      await tx.macConfig.upsert({
+        where: {
+          identifier,
+        },
+        update: {},
+        create: {
+          identifier,
+          metadata: JSON.stringify(spec),
+        },
+      });
+    }
+  }, { timeout: 36000000 });
 }
 
 async function main() {

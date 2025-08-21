@@ -1,6 +1,8 @@
 import { DOMParser } from "linkedom";
 import { WebScraper } from "./WebScraper";
 import { ChipsetVariant } from "@prisma/client";
+import { RAM_LIMITS } from "./constant/mac-ram-limits";
+import { Family } from "@/server/schema";
 
 export interface MacSpecification {
   family: string;
@@ -28,7 +30,7 @@ export class EveryMacScraper {
   private readonly dom = new DOMParser();
   private readonly delayBetweenRequests = 1000;
 
-  private readonly Macs = {
+  private readonly Macs: Record<Family, string> = {
     MacBookPro:
       "https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html",
     iMac: "https://everymac.com/systems/apple/imac/all-apple-silicon-imac-models.html",
@@ -70,7 +72,9 @@ export class EveryMacScraper {
       }
     }
 
-    return allSpecifications;
+    return allSpecifications.filter(
+      (spec) => !spec.identifier.includes("(Rack)")
+    );
   }
 
   private async scrapeUrl(
@@ -90,10 +94,10 @@ export class EveryMacScraper {
     }
   }
 
-  private extractSpecifications(
+  private async extractSpecifications(
     document: Document,
     family: string
-  ): MacSpecification[] {
+  ): Promise<MacSpecification[]> {
     const specifications: MacSpecification[] = [];
     const wrappers = document.querySelectorAll(
       'span[id*="contentcenter_specs_externalnav_wrapper"]'
@@ -101,14 +105,14 @@ export class EveryMacScraper {
 
     for (const wrapper of wrappers) {
       try {
-        const specification = this.extractSingleSpecification(
+        const specs = await this.extractSpecificationsFromWrapper(
           wrapper,
           document,
           family
         );
-        if (specification && this.isValidSpecification(specification)) {
-          specifications.push(specification);
-        }
+        specifications.push(
+          ...specs.filter((spec) => this.isValidSpecification(spec))
+        );
       } catch (error) {
         console.warn("Failed to extract specification from wrapper:", error);
         continue;
@@ -118,21 +122,21 @@ export class EveryMacScraper {
     return specifications;
   }
 
-  private extractSingleSpecification(
+  private async extractSpecificationsFromWrapper(
     wrapper: Element,
     document: Document,
     family: string
-  ): MacSpecification | null {
+  ): Promise<MacSpecification[]> {
     const titleText = this.extractTitleText(wrapper);
-    if (!titleText) return null;
+    if (!titleText) return [];
 
     const specTable = this.findSpecificationTable(wrapper, document);
-    if (!specTable) return null;
+    if (!specTable) return [];
 
-    const tableData = this.parseSpecificationTable(specTable);
+    const tableData = await this.parseSpecificationTable(specTable);
     const chipInfo = this.parseChipInfo(titleText);
 
-    return {
+    const baseSpec = {
       family,
       model: this.cleanModelName(titleText),
       identifier: tableData.identifier || "",
@@ -140,9 +144,24 @@ export class EveryMacScraper {
       chipVariant: chipInfo.variant,
       cpuCores: tableData.cpuCores || 0,
       gpuCores: tableData.gpuCores || 0,
-      ram: tableData.ram || 0,
       year: tableData.year || 0,
     };
+
+    // If we have multiple RAM configurations, create a spec for each
+    if (tableData.ramConfigurations && tableData.ramConfigurations.length > 0) {
+      return tableData.ramConfigurations.map((ram) => ({
+        ...baseSpec,
+        ram,
+      }));
+    }
+
+    // Fallback to single RAM configuration
+    return [
+      {
+        ...baseSpec,
+        ram: tableData.ram || 0,
+      },
+    ];
   }
 
   private extractTitleText(wrapper: Element): string | null {
@@ -170,14 +189,68 @@ export class EveryMacScraper {
     return specDiv?.querySelector("table") || null;
   }
 
-  private parseSpecificationTable(
+  private async getRamCombinations(
+    completeSpecsUrl: string
+  ): Promise<number[]> {
+    const ramConfigurations: number[] = [];
+
+    try {
+      const htmlContent =
+        await this.webScraper.fetchPageContent(completeSpecsUrl);
+      const doc = this.parseDocument(htmlContent);
+
+      const detailsTables = doc.querySelectorAll(
+        "#contentcenter_specs_table_details"
+      );
+      detailsTables.forEach((detailsTable) => {
+        const allText = detailsTable.textContent || "";
+        const ramMatches = allText.match(/\b(\d+\s*GB)\b(?=[^.!?]*\bRAM\b)/gi);
+        if (ramMatches) {
+          ramMatches.forEach((match) => {
+            const value = parseInt(match.replace(/[^\d]/g, ""));
+            if (value && !ramConfigurations.includes(value)) {
+              ramConfigurations.push(value);
+            }
+          });
+        }
+      });
+
+      ramConfigurations.sort((a, b) => a - b);
+
+      return ramConfigurations;
+    } catch (error) {
+      console.error("Failed to fetch complete specs:", error);
+      return [];
+    }
+  }
+
+  private async parseSpecificationTable(
     table: Element
-  ): Partial<MacSpecification & { identifier: string }> {
+  ): Promise<
+    Partial<
+      MacSpecification & { identifier: string; ramConfigurations?: number[] }
+    >
+  > {
     const rows = table.querySelectorAll("tr");
     const data: Record<string, string> = {};
+    let ramConfigurations: number[] = [];
 
-    rows.forEach((row) => {
+    for (const row of rows) {
       const cells = row.querySelectorAll("td");
+      const completeSpecsLink = row.querySelector('a[href*="specs"]');
+      if (
+        completeSpecsLink &&
+        completeSpecsLink.textContent?.includes("Complete")
+      ) {
+        const href = completeSpecsLink.getAttribute("href");
+        if (href) {
+          const completeSpecsUrl = href.startsWith("http")
+            ? href
+            : `https://everymac.com${href}`;
+          ramConfigurations = await this.getRamCombinations(completeSpecsUrl);
+        }
+      }
+
       if (cells.length >= 2 && cells.length % 2 === 0) {
         for (let i = 0; i < cells.length; i += 2) {
           const key = cells[i].textContent?.trim().toLowerCase();
@@ -187,23 +260,37 @@ export class EveryMacScraper {
           }
         }
       }
-    });
+    }
 
-    return {
-      identifier: data.id,
+    const baseSpec = {
+      identifier: data.id?.replace(/[^A-Za-z0-9,]/g, "") || "",
       cpuCores: this.extractNumber(data.cpu, /(\d+)\s+Cores/),
       gpuCores: this.extractNumber(data.gpu, /(\d+)-Core/),
-      ram: parseInt(data.ram || "0"),
       year: this.extractNumber(data["intro."], /(\d{4})/),
+    };
+
+    if (ramConfigurations.length > 0) {
+      return {
+        ...baseSpec,
+        ramConfigurations,
+      };
+    }
+
+    return {
+      ...baseSpec,
+      ram: parseInt(data.ram || "0"),
     };
   }
 
-  private parseChipInfo(titleText: string): { chip: string; variant: ChipsetVariant } {
+  private parseChipInfo(titleText: string): {
+    chip: string;
+    variant: ChipsetVariant;
+  } {
     const chipMatch = titleText.match(/"(M\d+)(\s+(Pro|Max|Ultra))?"/i);
 
     return {
       chip: chipMatch?.[1] || "",
-      variant: chipMatch?.[3]?.toUpperCase() as ChipsetVariant || "BASE",
+      variant: (chipMatch?.[3]?.toUpperCase() as ChipsetVariant) || "BASE",
     };
   }
 
@@ -218,10 +305,30 @@ export class EveryMacScraper {
   }
 
   private isValidSpecification(spec: MacSpecification): boolean {
-    return Boolean(spec.model && spec.chip);
+    return (
+      Boolean(spec.model && spec.chip) && this.isValidRAMConfiguration(spec)
+    );
+  }
+
+  private isValidRAMConfiguration(spec: MacSpecification): boolean {
+    const familyLimits = RAM_LIMITS[spec.family as Family];
+    if (!familyLimits) return true;
+
+    const chipsetLimits = familyLimits[spec.chip as keyof typeof familyLimits];
+    if (!chipsetLimits) return true;
+
+    const variantLimit = chipsetLimits[spec.chipVariant as keyof typeof chipsetLimits];
+    if (!variantLimit) return true;
+
+    return spec.ram <= variantLimit;
   }
 
   private delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
+
+// usage
+// const scraper = new EveryMacScraper(new WebScraper(process.env.OXYLABS_SCRAPER!));
+// const specifications = await scraper.scrapeAllSpecifications();
+// fs.writeFileSync("specifications.json", JSON.stringify(specifications, null, 2));
