@@ -1,7 +1,8 @@
 import { createPrismaClient } from "@/lib/database/prisma";
 
 import { config } from "dotenv";
-import { convertMacConfigIdentifierToNewFormat } from "./convert-mac-config-identifier-new-format";
+import { convertMacConfigIdentifierToNewFormat } from "./migration-utils/convert-mac-config-identifier-new-format";
+
 
 if (process.env.NODE_ENV === "production") {
   config({
