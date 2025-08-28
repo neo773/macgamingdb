@@ -37,13 +37,14 @@ export async function generateMetadata(
         description: "Details about game performance on Mac",
       };
     }
+    const gameName = gameDetails.name || "This Game";
 
     return {
-      title: `${gameDetails.name || 'Game'} - Mac Gaming Performance`,
-      description: `Mac performance details and user reviews for ${gameDetails.name || 'this game'}. Find out how well it runs on Apple Silicon.`,
+      title: `${gameName} – Mac Compatibility & Apple Silicon Performance | MacGamingDB`,
+      description: `Can you play ${gameName} on Mac? Check Apple Silicon (M1–M4) compatibility, FPS benchmarks, and user reports for Native, Rosetta 2, CrossOver, Parallels & Game Porting Toolkit.`,
       openGraph: {
-        title: `${gameDetails.name || 'Game'} - Mac Gaming Performance`,
-        description: `Mac performance details and user reviews for ${gameDetails.name || 'this game'}. Find out how well it runs on Apple Silicon.`,
+        title: `${gameName} – Mac Compatibility & Apple Silicon Performance`,
+        description: `Discover how ${gameName} runs on macOS. Includes benchmarks, compatibility layers (Rosetta, CrossOver, Parallels, GPTK), and community reviews.`,
         type: "website",
       },
     };
@@ -104,12 +105,20 @@ export default async function GamePage({
       "@context": "https://schema.org",
       "@type": "VideoGame",
       "name": gameDetails.name || "Game",
-      "operatingSystem": "macOS",
+      "url": `https://macgamingdb.app/games/${id}`,
+      "gamePlatform": "macOS",
+      "operatingSystem": "macOS (Apple Silicon M1–M4)",
       "applicationCategory": "Game",
       "description": gameDetails.detailed_description ? 
         gameDetails.detailed_description.replace(/<[^>]*>?/gm, '') : "Game details unavailable",
       "image": gameDetails.header_image || "",
       "publisher": gameDetails.publishers ? gameDetails.publishers[0] : "",
+        "sameAs": [
+          gameDetails.website || "",
+          gameDetails.steam_appid
+            ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
+            : "",
+        ].filter(Boolean),
       "aggregateRating": stats ? {
         "@type": "AggregateRating",
         "ratingValue": stats.averagePerformance?.toFixed(1) || "0",
