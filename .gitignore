@@ -44,3 +44,5 @@ next-env.d.ts
 *.db
 .open-next
 admin.ts
+dev.db-shm
+dev.db-wal

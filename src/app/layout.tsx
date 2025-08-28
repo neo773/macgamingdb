@@ -10,8 +10,8 @@ import "./tailwind.css";
 const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
-  title: "MacGamingDB | Apple Silicon Mac Games: Compatibility & Benchmarks (M1–M4)",
-  description: "Discover which games run on Mac. Community-driven Apple Silicon compatibility and real-world FPS for Native, Rosetta, CrossOver, Parallels, and Game Porting Toolkit.",
+  title: "MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks",
+  description: "Mac compatible games list with Apple Silicon benchmarks for M1–M4. Check FPS via Rosetta, CrossOver, Parallels & GPTK.",
 };
 
 export default async function RootLayout({
