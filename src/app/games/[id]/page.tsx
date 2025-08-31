@@ -17,9 +17,11 @@ import Script from "next/script";
 export const revalidate = 31536000;
 
 // Generate metadata for SEO
-export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> }
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
   const { id } = await params;
 
   try {
@@ -81,7 +83,8 @@ export default async function GamePage({
       // Provide an empty object with fallback properties instead of showing a 404
       gameDetails = {
         name: "Game Information Unavailable",
-        detailed_description: "Game details could not be loaded at this time. Please try again later.",
+        detailed_description:
+          "Game details could not be loaded at this time. Please try again later.",
         header_image: "",
         release_date: { date: "Unknown", coming_soon: false },
       } as SteamAppData;
@@ -104,28 +107,31 @@ export default async function GamePage({
     const jsonLd = {
       "@context": "https://schema.org",
       "@type": "VideoGame",
-      "name": gameDetails.name || "Game",
-      "url": `https://macgamingdb.app/games/${id}`,
-      "gamePlatform": "macOS",
-      "operatingSystem": "macOS (Apple Silicon M1–M4)",
-      "applicationCategory": "Game",
-      "description": gameDetails.detailed_description ? 
-        gameDetails.detailed_description.replace(/<[^>]*>?/gm, '') : "Game details unavailable",
-      "image": gameDetails.header_image || "",
-      "publisher": gameDetails.publishers ? gameDetails.publishers[0] : "",
-        "sameAs": [
-          gameDetails.website || "",
-          gameDetails.steam_appid
-            ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
-            : "",
-        ].filter(Boolean),
-      "aggregateRating": stats ? {
-        "@type": "AggregateRating",
-        "ratingValue": stats.averagePerformance?.toFixed(1) || "0",
-        "worstRating": "0",
-        "bestRating": "4",
-        "ratingCount": stats.totalReviews || 0
-      } : undefined
+      name: gameDetails.name || "Game",
+      url: `https://macgamingdb.app/games/${id}`,
+      gamePlatform: "macOS",
+      operatingSystem: "macOS (Apple Silicon M1–M4)",
+      applicationCategory: "Game",
+      description: gameDetails.detailed_description
+        ? gameDetails.detailed_description.replace(/<[^>]*>?/gm, "")
+        : "Game details unavailable",
+      image: gameDetails.header_image || "",
+      publisher: gameDetails.publishers ? gameDetails.publishers[0] : "",
+      sameAs: [
+        gameDetails.website || "",
+        gameDetails.steam_appid
+          ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
+          : "",
+      ].filter(Boolean),
+      aggregateRating: stats
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: stats.averagePerformance?.toFixed(1) || "0",
+            worstRating: "0",
+            bestRating: "4",
+            ratingCount: stats.totalReviews || 0,
+          }
+        : undefined,
     };
 
     return (
@@ -183,7 +189,10 @@ export default async function GamePage({
               <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
                 <CardContent className="text-gray-300">
                   <ExpandableDescription
-                    description={gameDetails.detailed_description || "No description available."}
+                    description={
+                      gameDetails.detailed_description ||
+                      "No description available."
+                    }
                   />
                 </CardContent>
               </Card>
@@ -281,6 +290,23 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <script
+                  async
+                  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4009451848051361"
+                  crossOrigin="anonymous"
+                ></script>
+                {/* <!-- Games review page --> */}
+                <ins
+                  className="adsbygoogle"
+                  style={{ display: "block" }}
+                  data-ad-client="ca-pub-4009451848051361"
+                  data-ad-slot="7054599480"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                ></ins>
+                <script>
+                  (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
@@ -322,7 +348,8 @@ export default async function GamePage({
                 </CardContent>
               </Card>
               <p className="text-sm text-gray-400 my-2 mx-2">
-                <span className="italic">* Affiliate link - purchases support this site and the Mac
+                <span className="italic">
+                  * Affiliate link - purchases support this site and the Mac
                   gaming ecosystem through CodeWeavers' contributions to Wine.
                 </span>
               </p>
@@ -335,7 +362,7 @@ export default async function GamePage({
     );
   } catch (error) {
     console.error("Error in server component:", error);
-    
+
     // Instead of notFound(), provide a graceful error page
     return (
       <div className="min-h-screen flex flex-col bg-black">
@@ -350,14 +377,15 @@ export default async function GamePage({
               Home
             </Link>
           </div>
-          
+
           <Card className="bg-primary-gradient shadow-lg mt-8">
             <CardContent className="p-8">
               <h1 className="text-2xl font-bold text-white mb-4">
                 Game Information Temporarily Unavailable
               </h1>
               <p className="text-gray-300 mb-4">
-                We're having trouble loading the information for this game. This could be due to:
+                We're having trouble loading the information for this game. This
+                could be due to:
               </p>
               <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
                 <li>Temporary Steam API unavailability</li>
@@ -365,7 +393,11 @@ export default async function GamePage({
                 <li>Server-side caching problems</li>
               </ul>
               <p className="text-gray-300">
-                Please try again later or return to the <Link href="/" className="text-blue-400 hover:underline">home page</Link>.
+                Please try again later or return to the{" "}
+                <Link href="/" className="text-blue-400 hover:underline">
+                  home page
+                </Link>
+                .
               </p>
             </CardContent>
           </Card>
