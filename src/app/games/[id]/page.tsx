@@ -290,23 +290,6 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <script
-                  async
-                  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4009451848051361"
-                  crossOrigin="anonymous"
-                ></script>
-                {/* <!-- Games review page --> */}
-                <ins
-                  className="adsbygoogle"
-                  style={{ display: "block" }}
-                  data-ad-client="ca-pub-4009451848051361"
-                  data-ad-slot="7054599480"
-                  data-ad-format="auto"
-                  data-full-width-responsive="true"
-                ></ins>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
