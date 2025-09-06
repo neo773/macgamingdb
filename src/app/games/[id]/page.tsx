@@ -290,6 +290,37 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="relative">
+                  <div className="absolute top-2 right-2 z-10">
+                    <span className="bg-gray-800/90 text-gray-300 text-xs px-2 py-1 rounded-full font-medium">
+                      Ad
+                    </span>
+                  </div>
+                  <a
+                    rel="sponsored"
+                    href="https://setapp.sjv.io/c/6516695/344510/5114"
+                    target="_top"
+                    id="344510"
+                    className="block"
+                  >
+                    <img
+                      src="//a.impactradius-go.com/display-ad/5114-344510"
+                      alt=""
+                      className="w-full h-auto max-w-full mx-auto rounded-3xl border-0"
+                    />
+                  </a>
+                  <img
+                    height="0"
+                    width="0"
+                    src="https://setapp.sjv.io/i/6516695/344510/5114"
+                    style={{
+                      position: "absolute",
+                      visibility: "hidden",
+                      border: 0,
+                    }}
+                    alt=""
+                  />
+                </div>
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
