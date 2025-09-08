@@ -304,7 +304,7 @@ export default async function GamePage({
                     className="block"
                   >
                     <img
-                      src="//a.impactradius-go.com/display-ad/5114-344510"
+                      src="/setapp.png"
                       alt=""
                       className="w-full h-auto max-w-full mx-auto rounded-3xl border-0"
                     />
