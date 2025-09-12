@@ -1,7 +1,7 @@
-import { Chipset, ChipsetVariant, Family } from "@/server/schema";
+import { Chipset, ChipsetVariant, MacFamily } from "@/server/schema";
 
 type RAMLimitsStructure = Record<
-  Family,
+  MacFamily,
   Partial<Record<Chipset, Partial<Record<ChipsetVariant, number>>>>
 >;
 

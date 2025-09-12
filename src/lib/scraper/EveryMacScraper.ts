@@ -2,7 +2,7 @@ import { DOMParser } from "linkedom";
 import { WebScraper } from "./WebScraper";
 import { ChipsetVariant } from "@prisma/client";
 import { RAM_LIMITS } from "./constant/mac-ram-limits";
-import { Family } from "@/server/schema";
+import { MacFamily } from "@/server/schema";
 
 export interface MacSpecification {
   family: string;
@@ -30,7 +30,7 @@ export class EveryMacScraper {
   private readonly dom = new DOMParser();
   private readonly delayBetweenRequests = 1000;
 
-  private readonly Macs: Record<Family, string> = {
+  private readonly Macs: Record<MacFamily, string> = {
     MacBookPro:
       "https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html",
     iMac: "https://everymac.com/systems/apple/imac/all-apple-silicon-imac-models.html",
@@ -311,7 +311,7 @@ export class EveryMacScraper {
   }
 
   private isValidRAMConfiguration(spec: MacSpecification): boolean {
-    const familyLimits = RAM_LIMITS[spec.family as Family];
+    const familyLimits = RAM_LIMITS[spec.family as MacFamily];
     if (!familyLimits) return true;
 
     const chipsetLimits = familyLimits[spec.chip as keyof typeof familyLimits];
