@@ -1,10 +1,10 @@
-import { createPrismaClient } from "@/lib/database/prisma";
-import { GameReview } from "@prisma/client";
-import { config } from "dotenv";
+import { createPrismaClient } from '@/lib/database/prisma';
+import { GameReview } from '@prisma/client';
+import { config } from 'dotenv';
 
 if (process.env.NODE_ENV === 'production') {
   config({
-    path: "../.env.prod",
+    path: '../.env.prod',
   });
 }
 
@@ -32,15 +32,15 @@ const calculateAveragePerformance = (reviews: GameReview[]) => {
 
 // Convert average score to performance rating
 const scoreToRating = (score: number) => {
-  if (score >= 3.5) return "EXCELLENT";
-  if (score >= 2.5) return "GOOD";
-  if (score >= 1.5) return "PLAYABLE";
-  if (score >= 0.5) return "BARELY_PLAYABLE";
-  return "UNPLAYABLE";
+  if (score >= 3.5) return 'EXCELLENT';
+  if (score >= 2.5) return 'GOOD';
+  if (score >= 1.5) return 'PLAYABLE';
+  if (score >= 0.5) return 'BARELY_PLAYABLE';
+  return 'UNPLAYABLE';
 };
 
 async function populateAggregatedPerformance() {
-  console.log("🚀 Populating aggregatedPerformance for all games...");
+  console.log('🚀 Populating aggregatedPerformance for all games...');
 
   // Get all games with their reviews
   const games = await prisma.game.findMany({
@@ -83,13 +83,13 @@ async function populateAggregatedPerformance() {
 
   // Show some statistics
   const perfCounts = await prisma.game.groupBy({
-    by: ["aggregatedPerformance"],
+    by: ['aggregatedPerformance'],
     _count: { id: true },
   });
 
   console.log(`\n📈 Performance distribution:`);
   perfCounts.forEach(({ aggregatedPerformance, _count }) => {
-    console.log(`${aggregatedPerformance || "NULL"}: ${_count.id} games`);
+    console.log(`${aggregatedPerformance || 'NULL'}: ${_count.id} games`);
   });
 }
 
@@ -97,7 +97,7 @@ async function main() {
   try {
     await populateAggregatedPerformance();
   } catch (error) {
-    console.error("💥 Script failed:", error);
+    console.error('💥 Script failed:', error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();

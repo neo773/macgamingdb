@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { formatDistance } from "date-fns";
-import Header from "@/components/shared/Header";
-import Footer from "@/components/shared/Footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, Edit2, Save, X } from "lucide-react";
-import { trpc } from "@/lib/trpc/provider";
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { formatDistance } from 'date-fns';
+import Header from '@/components/shared/Header';
+import Footer from '@/components/shared/Footer';
+import { Card, CardContent } from '@/components/ui/card';
+import { ChevronLeft, Edit2, Save, X } from 'lucide-react';
+import { trpc } from '@/lib/trpc/provider';
 import {
   Dialog,
   DialogContent,
@@ -17,15 +17,15 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Game, GameReview } from "@prisma/client";
-import { toast } from "sonner";
-import GameReviewCard from "@/components/review/ReviewCard";
-import ExpandableReviewNote from "../../components/review/ExpandableReviewNote";
-import ScreenshotDisplay from "@/components/review/ScreenshotDisplay";
-import { Textarea } from "@/components/ui/textarea";
-import { SteamAppData } from "@/server/helpers/steam";
-import { Container } from "@/components/ui/container";
+} from '@/components/ui/dialog';
+import { Game, GameReview } from '@prisma/client';
+import { toast } from 'sonner';
+import GameReviewCard from '@/components/review/ReviewCard';
+import ExpandableReviewNote from '../../components/review/ExpandableReviewNote';
+import ScreenshotDisplay from '@/components/review/ScreenshotDisplay';
+import { Textarea } from '@/components/ui/textarea';
+import { SteamAppData } from '@/server/helpers/steam';
+import { Container } from '@/components/ui/container';
 
 export default function MyReviewsClient({
   userReviews,
@@ -43,14 +43,14 @@ export default function MyReviewsClient({
   const deleteReviewMutation = trpc.review.deleteReview.useMutation({
     onSuccess: () => {
       router.refresh();
-      toast("Review deleted");
+      toast('Review deleted');
     },
   });
 
   const updateReviewMutation = trpc.review.updateReview.useMutation({
     onSuccess: () => {
       router.refresh();
-      toast("Review updated");
+      toast('Review updated');
     },
   });
 
@@ -60,10 +60,10 @@ export default function MyReviewsClient({
       // Entering edit mode - initialize editable reviews
       const initialEdits = userReviews.reduce(
         (acc, review) => {
-          acc[review.id] = review.notes || "";
+          acc[review.id] = review.notes || '';
           return acc;
         },
-        {} as Record<string, string>
+        {} as Record<string, string>,
       );
       setEditableReviews(initialEdits);
     }
@@ -110,7 +110,7 @@ export default function MyReviewsClient({
               onClick={handleEditModeToggle}
               className="text-blue-400 hover:text-blue-300"
             >
-              {editMode ? "Done" : <Edit2 size={18} />}
+              {editMode ? 'Done' : <Edit2 size={18} />}
             </Button>
           )}
         </div>
@@ -130,17 +130,17 @@ export default function MyReviewsClient({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userReviews.map((review) => {
               const gameDetails = JSON.parse(
-                review.game.details ?? "{}"
+                review.game.details ?? '{}',
               ) as SteamAppData;
               return (
                 <div
                   key={review.id}
-                  className={` ${editMode && focusedReview !== review.id ? "animate-wiggle" : ""}`}
+                  className={` ${editMode && focusedReview !== review.id ? 'animate-wiggle' : ''}`}
                   style={{
                     animation:
                       editMode && focusedReview !== review.id
-                        ? "wiggle 0.5s infinite ease-in-out"
-                        : "none",
+                        ? 'wiggle 0.5s infinite ease-in-out'
+                        : 'none',
                   }}
                 >
                   {editMode && (
@@ -166,11 +166,11 @@ export default function MyReviewsClient({
                         <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
                           <Link href={`/games/${review.gameId}`}></Link>
                           <div className="text-sm text-gray-300 mt-1">
-                            Reviewed{" "}
+                            Reviewed{' '}
                             {formatDistance(
                               new Date(review.createdAt),
                               new Date(),
-                              { addSuffix: true }
+                              { addSuffix: true },
                             )}
                           </div>
                         </div>
@@ -185,7 +185,7 @@ export default function MyReviewsClient({
                                 Review Note:
                                 {editMode &&
                                   editableReviews[review.id] !==
-                                    (review.notes || "") && (
+                                    (review.notes || '') && (
                                     <Button
                                       variant="ghost"
                                       size="sm"
@@ -200,7 +200,7 @@ export default function MyReviewsClient({
                               </h4>
                               {editMode ? (
                                 <Textarea
-                                  value={editableReviews[review.id] || ""}
+                                  value={editableReviews[review.id] || ''}
                                   onChange={(e) =>
                                     setEditableReviews({
                                       ...editableReviews,
@@ -213,7 +213,7 @@ export default function MyReviewsClient({
                                   placeholder="Add your thoughts about this game..."
                                 />
                               ) : (
-                                <ExpandableReviewNote 
+                                <ExpandableReviewNote
                                   notes={review.notes}
                                   screenshots={
                                     review.screenshots
@@ -267,7 +267,7 @@ export default function MyReviewsClient({
                 Cancel
               </Button>
               <Button variant="destructive" onClick={handleDeleteConfirm}>
-                {deleteReviewMutation.isPending ? "Deleting..." : "Delete"}
+                {deleteReviewMutation.isPending ? 'Deleting...' : 'Delete'}
               </Button>
             </DialogFooter>
           </DialogContent>

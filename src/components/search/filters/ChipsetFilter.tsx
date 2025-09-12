@@ -1,5 +1,5 @@
-import React from "react";
-import { SelectFilter } from "../../ui/select-filter";
+import React from 'react';
+import { SelectFilter } from '../../ui/select-filter';
 
 interface ChipsetOption {
   value: string;
@@ -18,7 +18,7 @@ export const ChipsetFilter: React.FC<ChipsetFilterProps> = ({
   selectedChipset,
   chipsetOptions,
   onChipsetChange,
-  className = "",
+  className = '',
 }) => {
   return (
     <SelectFilter
@@ -30,4 +30,4 @@ export const ChipsetFilter: React.FC<ChipsetFilterProps> = ({
       minWidth="150px"
     />
   );
-}; 
+};

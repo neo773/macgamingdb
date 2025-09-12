@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -112,7 +112,7 @@
 }
 
 @theme {
-  --color-destructive: #FF3B2F;
+  --color-destructive: #ff3b2f;
 }
 
 @layer base {
@@ -161,9 +161,15 @@ textarea {
 }
 
 footer:before {
-  background: linear-gradient(270deg, #3d354e00 28.87%, #244d85 45.39%, #244d85 53.54%, #3d354e00 70.06%);
+  background: linear-gradient(
+    270deg,
+    #3d354e00 28.87%,
+    #244d85 45.39%,
+    #244d85 53.54%,
+    #3d354e00 70.06%
+  );
   top: 0;
-  content: "";
+  content: '';
   height: 1px;
   left: 0;
   position: absolute;

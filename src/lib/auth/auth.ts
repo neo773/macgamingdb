@@ -1,14 +1,17 @@
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { magicLink } from "better-auth/plugins/magic-link";
-import { Resend } from "resend";
-import { MacGamingDBMagicLinkEmail, MacGamingDBMagicLinkEmailText } from "@/react-email-starter/emails/magic-link";
-import { PrismaClient } from "@prisma/client";
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { magicLink } from 'better-auth/plugins/magic-link';
+import { Resend } from 'resend';
+import {
+  MacGamingDBMagicLinkEmail,
+  MacGamingDBMagicLinkEmailText,
+} from '@/react-email-starter/emails/magic-link';
+import { PrismaClient } from '@prisma/client';
 
 export const auth = (prisma: PrismaClient) => {
   return betterAuth({
     database: prismaAdapter(prisma, {
-      provider: "sqlite",
+      provider: 'sqlite',
     }),
     emailAndPassword: {
       enabled: true,
@@ -20,18 +23,18 @@ export const auth = (prisma: PrismaClient) => {
             `Sending magic link to ${email} with token ${token} and url ${url}`,
           );
 
-          if (process.env.NODE_ENV !== "production") {
+          if (process.env.NODE_ENV !== 'production') {
             return;
           }
           const resend = new Resend(process.env.RESEND_API_KEY);
 
           await resend.emails.send({
-            from: "MacGamingDB <hello@macgamingdb.app>",
-            replyTo: "support@macgamingdb.app",
+            from: 'MacGamingDB <hello@macgamingdb.app>',
+            replyTo: 'support@macgamingdb.app',
             to: email,
-            subject: "Log in to MacGamingDB with this magic link",
+            subject: 'Log in to MacGamingDB with this magic link',
             react: MacGamingDBMagicLinkEmail({ magicLink: url }),
-            text: MacGamingDBMagicLinkEmailText({ magicLink: url })
+            text: MacGamingDBMagicLinkEmailText({ magicLink: url }),
           });
         },
       }),

@@ -1,17 +1,18 @@
-import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { Geist } from "next/font/google";
-import { TRPCProvider } from "@/lib/trpc/provider";
-import { Toaster } from "@/components/ui/sonner";
-import Script from "next/script";
-import { isSVGFaviconSupported } from "@/lib/utils";
-import "./tailwind.css";
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { Geist } from 'next/font/google';
+import { TRPCProvider } from '@/lib/trpc/provider';
+import { Toaster } from '@/components/ui/sonner';
+import Script from 'next/script';
+import { isSVGFaviconSupported } from '@/lib/utils';
+import './tailwind.css';
 
-const GeistMono = Geist({ subsets: ["latin"], weight: ["400", "500"] });
+const GeistMono = Geist({ subsets: ['latin'], weight: ['400', '500'] });
 
 export const metadata: Metadata = {
-  title: "MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks",
-  description: "Mac compatible games list with Apple Silicon benchmarks for M1–M4. Check FPS via Rosetta, CrossOver, Parallels & GPTK.",
+  title: 'MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks',
+  description:
+    'Mac compatible games list with Apple Silicon benchmarks for M1–M4. Check FPS via Rosetta, CrossOver, Parallels & GPTK.',
 };
 
 export default async function RootLayout({
@@ -26,7 +27,9 @@ export default async function RootLayout({
     headersObj[key] = value;
   });
 
-  const hasSVGFaviconSupport = isSVGFaviconSupported(headersObj['user-agent'] || undefined);
+  const hasSVGFaviconSupport = isSVGFaviconSupported(
+    headersObj['user-agent'] || undefined,
+  );
 
   return (
     <html lang="en">
@@ -35,7 +38,11 @@ export default async function RootLayout({
         content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
       />
       <meta name="google-adsense-account" content="ca-pub-4009451848051361" />
-      <link rel="icon" href={hasSVGFaviconSupport ? "/favicon.svg" : "/favicon.ico"} sizes="any" />
+      <link
+        rel="icon"
+        href={hasSVGFaviconSupport ? '/favicon.svg' : '/favicon.ico'}
+        sizes="any"
+      />
       <body className={`${GeistMono.className} dark`}>
         <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
         <Toaster />

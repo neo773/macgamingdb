@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { X, Upload } from "lucide-react";
-import { toast } from "sonner";
-import { trpc } from "@/lib/trpc/provider";
+import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { X, Upload } from 'lucide-react';
+import { toast } from 'sonner';
+import { trpc } from '@/lib/trpc/provider';
 
 interface ScreenshotData {
   file: File;
@@ -22,7 +22,7 @@ export default function ScreenshotUpload({
   gameId,
   onScreenshotsChange,
   maxFiles = 3,
-  className = "",
+  className = '',
 }: ScreenshotUploadProps) {
   const [screenshots, setScreenshots] = useState<ScreenshotData[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -40,7 +40,7 @@ export default function ScreenshotUpload({
   }, [screenshots]);
 
   const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -55,7 +55,7 @@ export default function ScreenshotUpload({
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
         // Validate file type
-        if (!file.type.startsWith("image/")) {
+        if (!file.type.startsWith('image/')) {
           throw new Error(`${file.name} is not an image file`);
         }
 
@@ -73,15 +73,15 @@ export default function ScreenshotUpload({
             filename: file.name,
             contentType: file.type,
             gameId,
-          }
+          },
         );
 
         // Upload file to S3
         const uploadResponse = await fetch(signedUrl, {
-          method: "PUT",
+          method: 'PUT',
           body: file,
           headers: {
-            "Content-Type": file.type,
+            'Content-Type': file.type,
           },
         });
 
@@ -104,16 +104,16 @@ export default function ScreenshotUpload({
       // Pass S3 URLs to parent component for form submission
       onScreenshotsChange(newScreenshots.map((s) => s.s3Url));
       toast.success(
-        `${uploadedScreenshots.length} screenshot(s) uploaded successfully!`
+        `${uploadedScreenshots.length} screenshot(s) uploaded successfully!`,
       );
     } catch (error) {
-      console.error("Upload error:", error);
-      toast.error(error instanceof Error ? error.message : "Upload failed");
+      console.error('Upload error:', error);
+      toast.error(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setUploading(false);
       // Reset file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        fileInputRef.current.value = '';
       }
     }
   };
@@ -178,12 +178,12 @@ export default function ScreenshotUpload({
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
+                    target.style.display = 'none';
                     const parent = target.parentElement;
                     if (parent) {
-                      const fallback = document.createElement("div");
+                      const fallback = document.createElement('div');
                       fallback.className =
-                        "w-full h-full flex items-center justify-center text-gray-400";
+                        'w-full h-full flex items-center justify-center text-gray-400';
                       fallback.innerHTML =
                         '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>';
                       parent.appendChild(fallback);

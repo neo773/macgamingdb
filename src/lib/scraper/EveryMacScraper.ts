@@ -1,8 +1,8 @@
-import { DOMParser } from "linkedom";
-import { WebScraper } from "./WebScraper";
-import { ChipsetVariant } from "@prisma/client";
-import { RAM_LIMITS } from "./constant/mac-ram-limits";
-import { MacFamily } from "@/server/schema";
+import { DOMParser } from 'linkedom';
+import { WebScraper } from './WebScraper';
+import { ChipsetVariant } from '@prisma/client';
+import { RAM_LIMITS } from './constant/mac-ram-limits';
+import { MacFamily } from '@/server/schema';
 
 export interface MacSpecification {
   family: string;
@@ -19,10 +19,10 @@ export interface MacSpecification {
 class ParseError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown
+    public readonly cause?: unknown,
   ) {
     super(message);
-    this.name = "ParseError";
+    this.name = 'ParseError';
   }
 }
 
@@ -32,16 +32,16 @@ export class EveryMacScraper {
 
   private readonly Macs: Record<MacFamily, string> = {
     MacBookPro:
-      "https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html",
-    iMac: "https://everymac.com/systems/apple/imac/all-apple-silicon-imac-models.html",
+      'https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html',
+    iMac: 'https://everymac.com/systems/apple/imac/all-apple-silicon-imac-models.html',
     MacMini:
-      "https://everymac.com/systems/apple/mac_mini/all-apple-silicon-mac-mini-models.html",
+      'https://everymac.com/systems/apple/mac_mini/all-apple-silicon-mac-mini-models.html',
     MacPro:
-      "https://everymac.com/systems/apple/mac_pro/all-apple-silicon-mac-pro-models.html",
+      'https://everymac.com/systems/apple/mac_pro/all-apple-silicon-mac-pro-models.html',
     MacStudio:
-      "https://everymac.com/systems/apple/mac-studio/index-macstudio.html",
+      'https://everymac.com/systems/apple/mac-studio/index-macstudio.html',
     MacBookAir:
-      "https://everymac.com/systems/apple/macbook-air/all-apple-silicon-macbook-air-models.html",
+      'https://everymac.com/systems/apple/macbook-air/all-apple-silicon-macbook-air-models.html',
   };
 
   constructor(private readonly webScraper: WebScraper) {}
@@ -55,7 +55,7 @@ export class EveryMacScraper {
     for (const [index, [familyKey, url]] of macEntries.entries()) {
       try {
         console.log(
-          `📄 Scraping ${index + 1}/${macEntries.length}: ${familyKey}`
+          `📄 Scraping ${index + 1}/${macEntries.length}: ${familyKey}`,
         );
 
         const specifications = await this.scrapeUrl(url, familyKey);
@@ -73,13 +73,13 @@ export class EveryMacScraper {
     }
 
     return allSpecifications.filter(
-      (spec) => !spec.identifier.includes("(Rack)")
+      (spec) => !spec.identifier.includes('(Rack)'),
     );
   }
 
   private async scrapeUrl(
     url: string,
-    familyKey: string
+    familyKey: string,
   ): Promise<MacSpecification[]> {
     const htmlContent = await this.webScraper.fetchPageContent(url);
     const document = this.parseDocument(htmlContent);
@@ -88,19 +88,19 @@ export class EveryMacScraper {
 
   private parseDocument(html: string): Document {
     try {
-      return this.dom.parseFromString(html, "text/html") as unknown as Document;
+      return this.dom.parseFromString(html, 'text/html') as unknown as Document;
     } catch (error) {
-      throw new ParseError("Failed to parse HTML document", error);
+      throw new ParseError('Failed to parse HTML document', error);
     }
   }
 
   private async extractSpecifications(
     document: Document,
-    family: string
+    family: string,
   ): Promise<MacSpecification[]> {
     const specifications: MacSpecification[] = [];
     const wrappers = document.querySelectorAll(
-      'span[id*="contentcenter_specs_externalnav_wrapper"]'
+      'span[id*="contentcenter_specs_externalnav_wrapper"]',
     );
 
     for (const wrapper of wrappers) {
@@ -108,13 +108,13 @@ export class EveryMacScraper {
         const specs = await this.extractSpecificationsFromWrapper(
           wrapper,
           document,
-          family
+          family,
         );
         specifications.push(
-          ...specs.filter((spec) => this.isValidSpecification(spec))
+          ...specs.filter((spec) => this.isValidSpecification(spec)),
         );
       } catch (error) {
-        console.warn("Failed to extract specification from wrapper:", error);
+        console.warn('Failed to extract specification from wrapper:', error);
         continue;
       }
     }
@@ -125,7 +125,7 @@ export class EveryMacScraper {
   private async extractSpecificationsFromWrapper(
     wrapper: Element,
     document: Document,
-    family: string
+    family: string,
   ): Promise<MacSpecification[]> {
     const titleText = this.extractTitleText(wrapper);
     if (!titleText) return [];
@@ -139,7 +139,7 @@ export class EveryMacScraper {
     const baseSpec = {
       family,
       model: this.cleanModelName(titleText),
-      identifier: tableData.identifier || "",
+      identifier: tableData.identifier || '',
       chip: chipInfo.chip,
       chipVariant: chipInfo.variant,
       cpuCores: tableData.cpuCores || 0,
@@ -166,31 +166,31 @@ export class EveryMacScraper {
 
   private extractTitleText(wrapper: Element): string | null {
     const titleNav = wrapper.querySelector(
-      'span[id*="contentcenter_specs_externalnav_2"]'
+      'span[id*="contentcenter_specs_externalnav_2"]',
     );
-    const titleLink = titleNav?.querySelector("a");
+    const titleLink = titleNav?.querySelector('a');
     return titleLink?.textContent?.trim() || null;
   }
 
   private findSpecificationTable(
     wrapper: Element,
-    document: Document
+    document: Document,
   ): Element | null {
     const titleSpan = wrapper.querySelector(
-      'span[id*="contentcenter_specs_externalnav_1"] span[id$="-title"]'
+      'span[id*="contentcenter_specs_externalnav_1"] span[id$="-title"]',
     );
     const titleId = titleSpan?.id;
 
     if (!titleId) return null;
 
-    const specId = titleId.replace("-title", "");
+    const specId = titleId.replace('-title', '');
     const specDiv = document.getElementById(specId);
 
-    return specDiv?.querySelector("table") || null;
+    return specDiv?.querySelector('table') || null;
   }
 
   private async getRamCombinations(
-    completeSpecsUrl: string
+    completeSpecsUrl: string,
   ): Promise<number[]> {
     const ramConfigurations: number[] = [];
 
@@ -200,14 +200,14 @@ export class EveryMacScraper {
       const doc = this.parseDocument(htmlContent);
 
       const detailsTables = doc.querySelectorAll(
-        "#contentcenter_specs_table_details"
+        '#contentcenter_specs_table_details',
       );
       detailsTables.forEach((detailsTable) => {
-        const allText = detailsTable.textContent || "";
+        const allText = detailsTable.textContent || '';
         const ramMatches = allText.match(/\b(\d+\s*GB)\b(?=[^.!?]*\bRAM\b)/gi);
         if (ramMatches) {
           ramMatches.forEach((match) => {
-            const value = parseInt(match.replace(/[^\d]/g, ""));
+            const value = parseInt(match.replace(/[^\d]/g, ''));
             if (value && !ramConfigurations.includes(value)) {
               ramConfigurations.push(value);
             }
@@ -219,32 +219,32 @@ export class EveryMacScraper {
 
       return ramConfigurations;
     } catch (error) {
-      console.error("Failed to fetch complete specs:", error);
+      console.error('Failed to fetch complete specs:', error);
       return [];
     }
   }
 
   private async parseSpecificationTable(
-    table: Element
+    table: Element,
   ): Promise<
     Partial<
       MacSpecification & { identifier: string; ramConfigurations?: number[] }
     >
   > {
-    const rows = table.querySelectorAll("tr");
+    const rows = table.querySelectorAll('tr');
     const data: Record<string, string> = {};
     let ramConfigurations: number[] = [];
 
     for (const row of rows) {
-      const cells = row.querySelectorAll("td");
+      const cells = row.querySelectorAll('td');
       const completeSpecsLink = row.querySelector('a[href*="specs"]');
       if (
         completeSpecsLink &&
-        completeSpecsLink.textContent?.includes("Complete")
+        completeSpecsLink.textContent?.includes('Complete')
       ) {
-        const href = completeSpecsLink.getAttribute("href");
+        const href = completeSpecsLink.getAttribute('href');
         if (href) {
-          const completeSpecsUrl = href.startsWith("http")
+          const completeSpecsUrl = href.startsWith('http')
             ? href
             : `https://everymac.com${href}`;
           ramConfigurations = await this.getRamCombinations(completeSpecsUrl);
@@ -263,10 +263,10 @@ export class EveryMacScraper {
     }
 
     const baseSpec = {
-      identifier: data.id?.replace(/[^A-Za-z0-9,]/g, "") || "",
+      identifier: data.id?.replace(/[^A-Za-z0-9,]/g, '') || '',
       cpuCores: this.extractNumber(data.cpu, /(\d+)\s+Cores/),
       gpuCores: this.extractNumber(data.gpu, /(\d+)-Core/),
-      year: this.extractNumber(data["intro."], /(\d{4})/),
+      year: this.extractNumber(data['intro.'], /(\d{4})/),
     };
 
     if (ramConfigurations.length > 0) {
@@ -278,7 +278,7 @@ export class EveryMacScraper {
 
     return {
       ...baseSpec,
-      ram: parseInt(data.ram || "0"),
+      ram: parseInt(data.ram || '0'),
     };
   }
 
@@ -289,8 +289,8 @@ export class EveryMacScraper {
     const chipMatch = titleText.match(/"(M\d+)(\s+(Pro|Max|Ultra))?"/i);
 
     return {
-      chip: chipMatch?.[1] || "",
-      variant: (chipMatch?.[3]?.toUpperCase() as ChipsetVariant) || "BASE",
+      chip: chipMatch?.[1] || '',
+      variant: (chipMatch?.[3]?.toUpperCase() as ChipsetVariant) || 'BASE',
     };
   }
 
@@ -301,7 +301,7 @@ export class EveryMacScraper {
   }
 
   private cleanModelName(titleText: string): string {
-    return titleText.replace(/"/g, "").trim();
+    return titleText.replace(/"/g, '').trim();
   }
 
   private isValidSpecification(spec: MacSpecification): boolean {
@@ -317,7 +317,8 @@ export class EveryMacScraper {
     const chipsetLimits = familyLimits[spec.chip as keyof typeof familyLimits];
     if (!chipsetLimits) return true;
 
-    const variantLimit = chipsetLimits[spec.chipVariant as keyof typeof chipsetLimits];
+    const variantLimit =
+      chipsetLimits[spec.chipVariant as keyof typeof chipsetLimits];
     if (!variantLimit) return true;
 
     return spec.ram <= variantLimit;

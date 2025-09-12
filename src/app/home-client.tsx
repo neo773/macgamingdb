@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import * as React from "react";
-import { SteamGameSearchObject } from "@/server/helpers/steam";
-import { trpc } from "@/lib/trpc/provider";
-import SearchBar from "@/components/search/SearchBar";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from 'react';
+import * as React from 'react';
+import { SteamGameSearchObject } from '@/server/helpers/steam';
+import { trpc } from '@/lib/trpc/provider';
+import SearchBar from '@/components/search/SearchBar';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
   SearchURLParamsKeys,
   PerformanceFilter,
   createFilterConfig,
   PlayMethodFilter,
-} from "@/lib/constants";
-import { GameCard } from "@/components/game/Card";
-import { GameCardSkeleton } from "@/components/game/SekeletonCard";
-import { ChipsetFilter as ChipsetFilterComponent } from "@/components/search/filters/ChipsetFilter";
-import { PlayMethodFilter as PlayMethodFilterComponent } from "@/components/search/filters/PlayMethodFilter";
-import { PerformanceFilter as PerformanceFilterComponent } from "@/components/search/filters/PerformanceFilter";
-import { formatRatingLabel, getChipsetCombinations } from "@/server/utils";
-import { PlayMethodEnum } from "@/server/schema";
-import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "@/server/routers/_app";
-import Script from "next/script";
+} from '@/lib/constants';
+import { GameCard } from '@/components/game/Card';
+import { GameCardSkeleton } from '@/components/game/SekeletonCard';
+import { ChipsetFilter as ChipsetFilterComponent } from '@/components/search/filters/ChipsetFilter';
+import { PlayMethodFilter as PlayMethodFilterComponent } from '@/components/search/filters/PlayMethodFilter';
+import { PerformanceFilter as PerformanceFilterComponent } from '@/components/search/filters/PerformanceFilter';
+import { formatRatingLabel, getChipsetCombinations } from '@/server/utils';
+import { PlayMethodEnum } from '@/server/schema';
+import { inferRouterOutputs } from '@trpc/server';
+import { AppRouter } from '@/server/routers/_app';
+import Script from 'next/script';
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 interface HomeClientProps {
-  GamesPage: RouterOutput["game"]["getGames"] & {
+  GamesPage: RouterOutput['game']['getGames'] & {
     ratingCounts: Record<string, number>;
   };
   PerformanceFilter: PerformanceFilter;
@@ -52,12 +52,12 @@ export default function HomeClient({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const chipsetOptions = [
-    { value: "all", label: "All Chipsets" },
+    { value: 'all', label: 'All Chipsets' },
     ...getChipsetCombinations(),
   ];
 
   const playMethodOptions = [
-    { value: "ALL", label: "All Methods" },
+    { value: 'ALL', label: 'All Methods' },
     ...PlayMethodEnum.options.map((method) => ({
       value: method,
       label: method,
@@ -66,7 +66,11 @@ export default function HomeClient({
 
   // Get the current filter configuration for queries
   const filterConfig = React.useMemo(() => {
-    return createFilterConfig(PerformanceFilter, ChipsetFilter, PlayMethodFilter);
+    return createFilterConfig(
+      PerformanceFilter,
+      ChipsetFilter,
+      PlayMethodFilter,
+    );
   }, [PerformanceFilter, ChipsetFilter, PlayMethodFilter]);
 
   // Track if we're in search mode
@@ -91,30 +95,30 @@ export default function HomeClient({
         pages: [GamesPage],
         pageParams: [undefined],
       },
-    }
+    },
   );
 
   // Update URL when filters change
   const updateFilters = (
-    performance: PerformanceFilter, 
-    chipset: string, 
-    playMethod: PlayMethodFilter
+    performance: PerformanceFilter,
+    chipset: string,
+    playMethod: PlayMethodFilter,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (performance !== "ALL") {
+    if (performance !== 'ALL') {
       params.set(SearchURLParamsKeys.PERFORMANCE, performance);
     } else {
       params.delete(SearchURLParamsKeys.PERFORMANCE);
     }
 
-    if (chipset !== "all") {
+    if (chipset !== 'all') {
       params.set(SearchURLParamsKeys.CHIPSET, chipset);
     } else {
       params.delete(SearchURLParamsKeys.CHIPSET);
     }
 
-    if (playMethod !== "ALL") {
+    if (playMethod !== 'ALL') {
       params.set(SearchURLParamsKeys.PLAY_METHOD, playMethod);
     } else {
       params.delete(SearchURLParamsKeys.PLAY_METHOD);
@@ -154,7 +158,7 @@ export default function HomeClient({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(loadMoreRef.current);
@@ -165,14 +169,14 @@ export default function HomeClient({
   // Handle search results
   const handleSearchResultsChange = (
     results: SteamGameSearchObject[] | null,
-    isLoading: boolean
+    isLoading: boolean,
   ) => {
     setSearchResults(results);
     setIsSearchLoading(isLoading);
 
     if (results === null && searchResults !== null) {
       // Clear search results, reset URL to default
-      updateFilters("ALL", "all", "ALL");
+      updateFilters('ALL', 'all', 'ALL');
     }
   };
 
@@ -223,8 +227,8 @@ export default function HomeClient({
             key={game.id}
             game={{
               objectID: game.id,
-              name: game.details ? JSON.parse(game.details).name : "Unknown",
-              url: "",
+              name: game.details ? JSON.parse(game.details).name : 'Unknown',
+              url: '',
               performanceRating: game.performanceRating,
             }}
           />
@@ -239,43 +243,43 @@ export default function HomeClient({
   };
 
   const jsonLdHome = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "MacGamingDB",
-    url: "https://macgamingdb.app",
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'MacGamingDB',
+    url: 'https://macgamingdb.app',
     potentialAction: {
-      "@type": "SearchAction",
-      target: "https://macgamingdb.app/?q={search_term_string}",
-      "query-input": "required name=search_term_string",
+      '@type': 'SearchAction',
+      target: 'https://macgamingdb.app/?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
     },
   };
 
   const jsonLdFaq = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
     mainEntity: [
       {
-        "@type": "Question",
-        name: "Can I run Windows games on Mac?",
+        '@type': 'Question',
+        name: 'Can I run Windows games on Mac?',
         acceptedAnswer: {
-          "@type": "Answer",
+          '@type': 'Answer',
           text: "Yes. Many Windows games run on macOS using compatibility layers such as Rosetta 2, CrossOver, Parallels, or Apple's Game Porting Toolkit. MacGamingDB tracks performance for each method.",
         },
       },
       {
-        "@type": "Question",
-        name: "Do M1, M2, M3 and M4 Macs run games better?",
+        '@type': 'Question',
+        name: 'Do M1, M2, M3 and M4 Macs run games better?',
         acceptedAnswer: {
-          "@type": "Answer",
-          text: "Apple Silicon Macs (M1–M4) deliver strong performance in many games. Compatibility varies, so MacGamingDB provides FPS benchmarks and user reports by chip generation.",
+          '@type': 'Answer',
+          text: 'Apple Silicon Macs (M1–M4) deliver strong performance in many games. Compatibility varies, so MacGamingDB provides FPS benchmarks and user reports by chip generation.',
         },
       },
       {
-        "@type": "Question",
-        name: "Where can I find a list of Mac compatible games?",
+        '@type': 'Question',
+        name: 'Where can I find a list of Mac compatible games?',
         acceptedAnswer: {
-          "@type": "Answer",
-          text: "MacGamingDB is a searchable, community-driven database of Mac compatible games. It includes benchmarks, compatibility methods, and user reviews.",
+          '@type': 'Answer',
+          text: 'MacGamingDB is a searchable, community-driven database of Mac compatible games. It includes benchmarks, compatibility methods, and user reviews.',
         },
       },
     ],

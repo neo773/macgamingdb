@@ -11,8 +11,8 @@ import {
   Section,
   Text,
   Tailwind,
-} from "@react-email/components";
-import { tailwindConfig } from "../tailwind.config";
+} from '@react-email/components';
+import { tailwindConfig } from '../tailwind.config';
 
 interface MacGamingDBMagicLinkEmailProps {
   magicLink?: string;
@@ -32,8 +32,8 @@ export const MacGamingDBMagicLinkEmail = ({
          * https://litmus.com/community/snippets/267-override-dark-mode-background-colors-annett-forcier
          */
         style={{
-          background: "linear-gradient(#000000, #000000)",
-          backgroundColor: "#000000",
+          background: 'linear-gradient(#000000, #000000)',
+          backgroundColor: '#000000',
         }}
       >
         <Container className="mx-auto py-12 px-3 max-w-2xl">
@@ -43,7 +43,7 @@ export const MacGamingDBMagicLinkEmail = ({
           <Section>
             <Button
               className="bg-primary rounded font-semibold text-white no-underline text-center block py-3 px-6"
-              href={magicLink || "https://macgamingdb.app/login"}
+              href={magicLink || 'https://macgamingdb.app/login'}
             >
               Log in with this magic link
             </Button>
@@ -93,5 +93,5 @@ https://macgamingdb.app`;
 };
 
 MacGamingDBMagicLinkEmail.PreviewProps = {
-  magicLink: "https://macgamingdb.app/login?token=example-token-12345",
+  magicLink: 'https://macgamingdb.app/login?token=example-token-12345',
 } as MacGamingDBMagicLinkEmailProps;

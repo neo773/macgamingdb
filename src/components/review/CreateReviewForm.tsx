@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { trpc } from "@/lib/trpc/provider";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc/provider';
+import { useRouter } from 'next/navigation';
 import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   type PlayMethod,
   type TranslationLayer,
@@ -22,35 +22,35 @@ import {
   PerformanceEnum,
   GraphicsSettingsEnum,
   SOFTWARE_VERSIONS,
-} from "@/server/schema";
+} from '@/server/schema';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ChevronLeft } from "lucide-react";
-import { motion } from "motion/react";
+} from '@/components/ui/select';
+import { ChevronLeft } from 'lucide-react';
+import { motion } from 'motion/react';
 
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import AuthPrompt from "@/components/auth/AuthPrompt";
-import confetti from "canvas-confetti";
-import ScreenshotUpload from "@/components/review/ScreenshotUpload";
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
+import AuthPrompt from '@/components/auth/AuthPrompt';
+import confetti from 'canvas-confetti';
+import ScreenshotUpload from '@/components/review/ScreenshotUpload';
 import SelectMacConfiguration, {
   getDeviceIcon,
   getHumanReadableFamily,
   MacConfig,
-} from "@/components/review/SelectMacConfiguration";
-import { InfoIcon } from "lucide-react";
+} from '@/components/review/SelectMacConfiguration';
+import { InfoIcon } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import { useFormPreferences } from "@/lib/hooks/useFormPreferences";
+} from '../ui/tooltip';
+import { useFormPreferences } from '@/lib/hooks/useFormPreferences';
 
 export type ReviewContentWrapperProps = {
   gameId: string;
@@ -61,7 +61,7 @@ export type ReviewContentWrapperProps = {
 };
 
 const ConfettiSideCannons = () => {
-  const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+  const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
 
   // Single burst from each side with more particles for better effect
   confetti({
@@ -100,11 +100,11 @@ export default function CreateReviewForm({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [customVersion, setCustomVersion] = useState(false);
-  const [customVersionValue, setCustomVersionValue] = useState("");
+  const [customVersionValue, setCustomVersionValue] = useState('');
 
   // Screen state for Mac configuration selection
-  const [currentScreen, setCurrentScreen] = useState<"form" | "mac-selection">(
-    "form"
+  const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>(
+    'form',
   );
 
   const { getPreferences, updatePreference } = useFormPreferences();
@@ -118,7 +118,7 @@ export default function CreateReviewForm({
       enabled: !!preferences.macConfigIdentifier,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
   // Set selectedConfig when saved config loads
@@ -143,9 +143,9 @@ export default function CreateReviewForm({
     graphicsSettings: GraphicsSettings;
     macConfigIdentifier: string;
   }>({
-    fps: "",
-    resolution: "",
-    notes: "",
+    fps: '',
+    resolution: '',
+    notes: '',
     screenshots: [],
     softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
     playMethod: preferences.playMethod ?? PlayMethodEnum.options[1], // Default to CROSSOVER
@@ -153,18 +153,18 @@ export default function CreateReviewForm({
       preferences.translationLayer ?? TranslationLayerEnum.options[0], // Default to DXVK
     performance: PerformanceEnum.options[1], // Default to GOOD
     graphicsSettings: GraphicsSettingsEnum.options[1], // Default to HIGH
-    macConfigIdentifier: preferences.macConfigIdentifier || "", // Default to empty
+    macConfigIdentifier: preferences.macConfigIdentifier || '', // Default to empty
   });
 
   // Update software version when play method changes
   useEffect(() => {
     if (formData.playMethod) {
-      if (formData.playMethod === "CROSSOVER") {
+      if (formData.playMethod === 'CROSSOVER') {
         setFormData((prev) => ({
           ...prev,
           softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
         }));
-      } else if (formData.playMethod === "PARALLELS") {
+      } else if (formData.playMethod === 'PARALLELS') {
         setFormData((prev) => ({
           ...prev,
           softwareVersion: SOFTWARE_VERSIONS.PARALLELS[0],
@@ -172,7 +172,7 @@ export default function CreateReviewForm({
       } else {
         setFormData((prev) => ({
           ...prev,
-          softwareVersion: "",
+          softwareVersion: '',
         }));
       }
     }
@@ -190,7 +190,7 @@ export default function CreateReviewForm({
       }, 2000);
     },
     onError: (error) => {
-      setError("Error submitting review. Please try again.");
+      setError('Error submitting review. Please try again.');
       console.error(error);
     },
   });
@@ -201,7 +201,7 @@ export default function CreateReviewForm({
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -223,7 +223,7 @@ export default function CreateReviewForm({
       !formData.performance ||
       !formData.macConfigIdentifier
     ) {
-      setError("Please fill in all required fields.");
+      setError('Please fill in all required fields.');
       return;
     }
 
@@ -240,7 +240,7 @@ export default function CreateReviewForm({
         gameId: gameId as string,
         playMethod: formData.playMethod,
         translationLayer:
-          formData.playMethod === "CROSSOVER"
+          formData.playMethod === 'CROSSOVER'
             ? formData.translationLayer
             : null,
         performance: formData.performance,
@@ -253,9 +253,9 @@ export default function CreateReviewForm({
         softwareVersion: finalSoftwareVersion,
       });
 
-      toast("Your review has been submitted successfully!");
+      toast('Your review has been submitted successfully!');
     } catch (error) {
-      setError("Error submitting review. Please try again.");
+      setError('Error submitting review. Please try again.');
       console.error(error);
     }
   };
@@ -263,22 +263,22 @@ export default function CreateReviewForm({
   // Handle play method selection with fixed typing
   const handlePlayMethodSelect = (method: PlayMethod) => {
     setFormData((prev) => ({ ...prev, playMethod: method }));
-    updatePreference("playMethod", method);
+    updatePreference('playMethod', method);
   };
 
   // Helper components specific for Drawer/Dialog
-  const Header = isDrawer ? "div" : DialogHeader;
-  const Title = isDrawer ? "h3" : DialogTitle;
-  const Description = isDrawer ? "p" : DialogDescription;
-  const Footer = isDrawer ? "div" : DialogFooter;
+  const Header = isDrawer ? 'div' : DialogHeader;
+  const Title = isDrawer ? 'h3' : DialogTitle;
+  const Description = isDrawer ? 'p' : DialogDescription;
+  const Footer = isDrawer ? 'div' : DialogFooter;
 
   // Helper function to transform performance rating enum values to user-friendly labels
   const transformPerformanceRating = (rating: string): string => {
     // Split the rating by underscore and capitalize each word
     return rating
-      .split("_")
+      .split('_')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" ");
+      .join(' ');
   };
 
   const handleMacConfigSelect = (config: MacConfig) => {
@@ -287,8 +287,8 @@ export default function CreateReviewForm({
       ...prev,
       macConfigIdentifier: config.identifier,
     }));
-    updatePreference("macConfigIdentifier", config.identifier);
-    setCurrentScreen("form");
+    updatePreference('macConfigIdentifier', config.identifier);
+    setCurrentScreen('form');
   };
 
   return (
@@ -296,10 +296,10 @@ export default function CreateReviewForm({
       <motion.div
         initial={false}
         animate={{
-          x: currentScreen === "form" ? 0 : "-100%",
+          x: currentScreen === 'form' ? 0 : '-100%',
         }}
         transition={{
-          type: "spring",
+          type: 'spring',
           stiffness: 300,
           damping: 30,
         }}
@@ -309,20 +309,20 @@ export default function CreateReviewForm({
         <>
           <Header
             className={
-              isDrawer ? "grid gap-1.5 p-4 text-center sm:text-left" : undefined
+              isDrawer ? 'grid gap-1.5 p-4 text-center sm:text-left' : undefined
             }
           >
             <Title
               className={
                 isDrawer
-                  ? "text-lg font-semibold leading-none tracking-tight"
+                  ? 'text-lg font-semibold leading-none tracking-tight'
                   : undefined
               }
             >
               Add Experience for {gameName}
             </Title>
             <Description
-              className={isDrawer ? "text-sm text-muted-foreground" : undefined}
+              className={isDrawer ? 'text-sm text-muted-foreground' : undefined}
             >
               Share your experience running this game on your Mac.
             </Description>
@@ -346,16 +346,16 @@ export default function CreateReviewForm({
                       key={method}
                       className={`cursor-pointer flex flex-col items-center ${
                         formData.playMethod === method
-                          ? "text-blue-500 font-medium"
-                          : "text-gray-600 dark:text-gray-400"
+                          ? 'text-blue-500 font-medium'
+                          : 'text-gray-600 dark:text-gray-400'
                       }`}
                       onClick={() => handlePlayMethodSelect(method)}
                     >
                       <div
                         className={`relative p-1 rounded-xl ${
                           formData.playMethod === method
-                            ? "ring-2 ring-blue-500"
-                            : ""
+                            ? 'ring-2 ring-blue-500'
+                            : ''
                         }`}
                       >
                         <img
@@ -365,21 +365,21 @@ export default function CreateReviewForm({
                         />
                       </div>
                       <span className="mt-1 text-sm">
-                        {method === "NATIVE"
-                          ? "Native"
-                          : method === "CROSSOVER"
-                            ? "CrossOver"
-                            : method === "PARALLELS"
-                              ? "Parallels"
-                              : "Other"}
+                        {method === 'NATIVE'
+                          ? 'Native'
+                          : method === 'CROSSOVER'
+                            ? 'CrossOver'
+                            : method === 'PARALLELS'
+                              ? 'Parallels'
+                              : 'Other'}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {formData.playMethod === "CROSSOVER" ||
-              formData.playMethod === "PARALLELS" ? (
+              {formData.playMethod === 'CROSSOVER' ||
+              formData.playMethod === 'PARALLELS' ? (
                 <div className="flex flex-col justify-center space-y-2">
                   <label className="block text-sm font-medium">
                     Software Version
@@ -389,10 +389,10 @@ export default function CreateReviewForm({
                       <Select
                         value={formData.softwareVersion}
                         onValueChange={(value) => {
-                          if (value === "custom") {
+                          if (value === 'custom') {
                             setCustomVersion(true);
                           } else {
-                            handleSelectChange("softwareVersion", value);
+                            handleSelectChange('softwareVersion', value);
                           }
                         }}
                       >
@@ -400,21 +400,21 @@ export default function CreateReviewForm({
                           <SelectValue placeholder="Select software version" />
                         </SelectTrigger>
                         <SelectContent>
-                          {formData.playMethod === "CROSSOVER" &&
+                          {formData.playMethod === 'CROSSOVER' &&
                             SOFTWARE_VERSIONS.CROSSOVER.map(
                               (version: string) => (
                                 <SelectItem key={version} value={version}>
                                   {version}
                                 </SelectItem>
-                              )
+                              ),
                             )}
-                          {formData.playMethod === "PARALLELS" &&
+                          {formData.playMethod === 'PARALLELS' &&
                             SOFTWARE_VERSIONS.PARALLELS.map(
                               (version: string) => (
                                 <SelectItem key={version} value={version}>
                                   {version}
                                 </SelectItem>
-                              )
+                              ),
                             )}
                           <SelectItem key="custom" value="custom">
                             Custom version...
@@ -429,9 +429,9 @@ export default function CreateReviewForm({
                         value={customVersionValue}
                         onChange={(e) => setCustomVersionValue(e.target.value)}
                         placeholder={
-                          formData.playMethod === "CROSSOVER"
-                            ? "e.g., 25.1"
-                            : "e.g., 19.1"
+                          formData.playMethod === 'CROSSOVER'
+                            ? 'e.g., 25.1'
+                            : 'e.g., 19.1'
                         }
                         className="flex-1"
                       />
@@ -441,7 +441,7 @@ export default function CreateReviewForm({
                         size="sm"
                         onClick={() => {
                           setCustomVersion(false);
-                          setCustomVersionValue("");
+                          setCustomVersionValue('');
                         }}
                       >
                         Cancel
@@ -453,7 +453,7 @@ export default function CreateReviewForm({
                 <div></div>
               )}
 
-              {formData.playMethod === "CROSSOVER" && (
+              {formData.playMethod === 'CROSSOVER' && (
                 <div className="space-y-2">
                   <label className="block text-sm font-medium">
                     Translation Layer
@@ -461,10 +461,10 @@ export default function CreateReviewForm({
                   <Select
                     value={formData.translationLayer}
                     onValueChange={(value) => {
-                      handleSelectChange("translationLayer", value);
+                      handleSelectChange('translationLayer', value);
                       updatePreference(
-                        "translationLayer",
-                        value as TranslationLayer
+                        'translationLayer',
+                        value as TranslationLayer,
                       );
                     }}
                   >
@@ -474,13 +474,13 @@ export default function CreateReviewForm({
                     <SelectContent>
                       {TranslationLayerEnum.options.map((layer) => (
                         <SelectItem key={layer} value={layer}>
-                          {layer === "DXVK"
-                            ? "DXVK"
-                            : layer === "DXMT"
-                              ? "DXMT"
-                              : layer === "D3D_METAL"
-                                ? "D3D Metal"
-                                : "None / Default"}
+                          {layer === 'DXVK'
+                            ? 'DXVK'
+                            : layer === 'DXMT'
+                              ? 'DXMT'
+                              : layer === 'D3D_METAL'
+                                ? 'D3D Metal'
+                                : 'None / Default'}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -495,7 +495,7 @@ export default function CreateReviewForm({
                 <Select
                   value={formData.performance}
                   onValueChange={(value) =>
-                    handleSelectChange("performance", value)
+                    handleSelectChange('performance', value)
                   }
                   required
                 >
@@ -532,7 +532,7 @@ export default function CreateReviewForm({
                 <Select
                   value={formData.graphicsSettings}
                   onValueChange={(value) =>
-                    handleSelectChange("graphicsSettings", value)
+                    handleSelectChange('graphicsSettings', value)
                   }
                 >
                   <SelectTrigger className="w-full">
@@ -541,13 +541,13 @@ export default function CreateReviewForm({
                   <SelectContent>
                     {GraphicsSettingsEnum.options.map((setting) => (
                       <SelectItem key={setting} value={setting}>
-                        {setting === "ULTRA"
-                          ? "Ultra"
-                          : setting === "HIGH"
-                            ? "High"
-                            : setting === "MEDIUM"
-                              ? "Medium"
-                              : "Low"}
+                        {setting === 'ULTRA'
+                          ? 'Ultra'
+                          : setting === 'HIGH'
+                            ? 'High'
+                            : setting === 'MEDIUM'
+                              ? 'Medium'
+                              : 'Low'}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -577,12 +577,12 @@ export default function CreateReviewForm({
                   type="button"
                   variant="outline"
                   className="w-full justify-between rounded-md"
-                  onClick={() => setCurrentScreen("mac-selection")}
+                  onClick={() => setCurrentScreen('mac-selection')}
                 >
                   <span className="truncate">
                     {selectedConfig
-                      ? `${getHumanReadableFamily(selectedConfig.metadata.family)} ${selectedConfig.metadata.chip} ${selectedConfig.metadata.chipVariant === "BASE" ? "" : selectedConfig.metadata.chipVariant} ${selectedConfig.metadata.year}`
-                      : "Select Mac configuration..."}
+                      ? `${getHumanReadableFamily(selectedConfig.metadata.family)} ${selectedConfig.metadata.chip} ${selectedConfig.metadata.chipVariant === 'BASE' ? '' : selectedConfig.metadata.chipVariant} ${selectedConfig.metadata.year}`
+                      : 'Select Mac configuration...'}
                   </span>
                   <div className="flex items-center gap-1">
                     {selectedConfig && (
@@ -624,16 +624,16 @@ export default function CreateReviewForm({
                     </TooltipTrigger>
                     <TooltipContent className="text-center">
                       <p>
-                        Upload up to 3 screenshots (max 10MB each, PNG/JPG/JPEG){" "}
+                        Upload up to 3 screenshots (max 10MB each, PNG/JPG/JPEG){' '}
                         <br />
-                        Tip:{" "}
+                        Tip:{' '}
                         <a
                           href="https://tinypng.com/"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           www.tinypng.com
-                        </a>{" "}
+                        </a>{' '}
                         can compress your screenshots without visual loss.
                       </p>
                     </TooltipContent>
@@ -652,7 +652,7 @@ export default function CreateReviewForm({
 
             <Footer
               className={
-                isDrawer ? "mt-auto flex flex-col gap-2 p-4" : undefined
+                isDrawer ? 'mt-auto flex flex-col gap-2 p-4' : undefined
               }
             >
               {isDrawer ? (
@@ -661,15 +661,15 @@ export default function CreateReviewForm({
                   <Button
                     type="submit"
                     disabled={isSubmitting || success}
-                    size={"lg"}
+                    size={'lg'}
                     className="w-full"
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Review"}
+                    {isSubmitting ? 'Submitting...' : 'Submit Review'}
                   </Button>
                   <Button
                     variant="secondary"
                     type="button"
-                    size={"lg"}
+                    size={'lg'}
                     disabled={isSubmitting}
                     onClick={onClose}
                     className="w-full"
@@ -684,7 +684,7 @@ export default function CreateReviewForm({
                     <Button
                       variant="secondary"
                       type="button"
-                      size={"lg"}
+                      size={'lg'}
                       disabled={isSubmitting}
                     >
                       Cancel
@@ -693,9 +693,9 @@ export default function CreateReviewForm({
                   <Button
                     type="submit"
                     disabled={isSubmitting || success}
-                    size={"lg"}
+                    size={'lg'}
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Review"}
+                    {isSubmitting ? 'Submitting...' : 'Submit Review'}
                   </Button>
                 </>
               )}
@@ -705,11 +705,11 @@ export default function CreateReviewForm({
       </motion.div>
 
       {/* Mac Configuration Selection Screen */}
-      {currentScreen === "mac-selection" && (
+      {currentScreen === 'mac-selection' && (
         <SelectMacConfiguration
           selectedConfigIdentifier={formData.macConfigIdentifier}
           onSelect={handleMacConfigSelect}
-          onBack={() => setCurrentScreen("form")}
+          onBack={() => setCurrentScreen('form')}
         />
       )}
     </div>

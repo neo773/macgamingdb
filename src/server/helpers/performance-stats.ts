@@ -1,20 +1,25 @@
-import type { PrismaClient } from "@prisma/client";
-import type { Chipset, ChipsetVariant, PlayMethod, Performance } from "../schema";
+import type { PrismaClient } from '@prisma/client';
+import type {
+  Chipset,
+  ChipsetVariant,
+  PlayMethod,
+  Performance,
+} from '../schema';
 
 // Helper function to count games matching specific performance criteria
 export const countGamesForPerformanceStats = async (
   prisma: PrismaClient,
   criteria: {
-    chipset?: Chipset | "ALL";
+    chipset?: Chipset | 'ALL';
     chipsetVariant?: ChipsetVariant;
-    playMethod?: PlayMethod | "OTHER";
+    playMethod?: PlayMethod | 'OTHER';
     performanceRating: Performance;
-  }
+  },
 ) => {
   const { chipset, chipsetVariant, playMethod, performanceRating } = criteria;
 
   // If chipset is "ALL" and playMethod is "OTHER", count all games with this performance
-  if (chipset === "ALL" && playMethod === "OTHER") {
+  if (chipset === 'ALL' && playMethod === 'OTHER') {
     return await prisma.game.count({
       where: {
         aggregatedPerformance: performanceRating,
@@ -23,7 +28,7 @@ export const countGamesForPerformanceStats = async (
   }
 
   // If chipset is "ALL" but playMethod is specific, count games with reviews from that play method
-  if (chipset === "ALL" && playMethod !== "OTHER") {
+  if (chipset === 'ALL' && playMethod !== 'OTHER') {
     return await prisma.game.count({
       where: {
         aggregatedPerformance: performanceRating,
@@ -37,7 +42,7 @@ export const countGamesForPerformanceStats = async (
   }
 
   // If playMethod is "OTHER", count games with reviews from this chipset (any method)
-  if (playMethod === "OTHER") {
+  if (playMethod === 'OTHER') {
     return await prisma.game.count({
       where: {
         aggregatedPerformance: performanceRating,
@@ -70,12 +75,12 @@ export const countGamesForPerformanceStats = async (
 export const upsertPerformanceStats = async (
   prisma: PrismaClient,
   stats: {
-    chipset: Chipset | "ALL";
+    chipset: Chipset | 'ALL';
     chipsetVariant: ChipsetVariant;
-    playMethod: PlayMethod | "OTHER";
+    playMethod: PlayMethod | 'OTHER';
     performanceRating: Performance;
     count: number;
-  }
+  },
 ) => {
   return await prisma.performanceStats.upsert({
     where: {
@@ -103,7 +108,7 @@ export const updateSpecificPerformanceStats = async (
   chipset: Chipset,
   chipsetVariant: ChipsetVariant,
   playMethod: PlayMethod,
-  performanceRating: Performance
+  performanceRating: Performance,
 ) => {
   const count = await countGamesForPerformanceStats(prisma, {
     chipset,
@@ -126,36 +131,39 @@ export const updateAggregatePerformanceStats = async (
   prisma: PrismaClient,
   chipset: Chipset,
   chipsetVariant: ChipsetVariant,
-  performanceRating: Performance
+  performanceRating: Performance,
 ) => {
   // Update specific chipset + "OTHER" (all methods) combination
   const chipsetAllMethodsCount = await countGamesForPerformanceStats(prisma, {
     chipset,
     chipsetVariant,
-    playMethod: "OTHER",
+    playMethod: 'OTHER',
     performanceRating,
   });
 
   await upsertPerformanceStats(prisma, {
     chipset,
     chipsetVariant,
-    playMethod: "OTHER",
+    playMethod: 'OTHER',
     performanceRating,
     count: chipsetAllMethodsCount,
   });
 
   // Update "ALL" chipset + "OTHER" (all methods) combination
-  const allChipsetsAllMethodsCount = await countGamesForPerformanceStats(prisma, {
-    chipset: "ALL",
-    chipsetVariant: "BASE" as ChipsetVariant,
-    playMethod: "OTHER",
-    performanceRating,
-  });
+  const allChipsetsAllMethodsCount = await countGamesForPerformanceStats(
+    prisma,
+    {
+      chipset: 'ALL',
+      chipsetVariant: 'BASE' as ChipsetVariant,
+      playMethod: 'OTHER',
+      performanceRating,
+    },
+  );
 
   await upsertPerformanceStats(prisma, {
-    chipset: "ALL",
-    chipsetVariant: "BASE" as ChipsetVariant,
-    playMethod: "OTHER",
+    chipset: 'ALL',
+    chipsetVariant: 'BASE' as ChipsetVariant,
+    playMethod: 'OTHER',
     performanceRating,
     count: allChipsetsAllMethodsCount,
   });
@@ -165,18 +173,18 @@ export const updateAggregatePerformanceStats = async (
 export const updateAllChipsetSpecificMethodStats = async (
   prisma: PrismaClient,
   playMethod: PlayMethod,
-  performanceRating: Performance
+  performanceRating: Performance,
 ) => {
   const count = await countGamesForPerformanceStats(prisma, {
-    chipset: "ALL",
-    chipsetVariant: "BASE" as ChipsetVariant,
+    chipset: 'ALL',
+    chipsetVariant: 'BASE' as ChipsetVariant,
     playMethod,
     performanceRating,
   });
 
   await upsertPerformanceStats(prisma, {
-    chipset: "ALL",
-    chipsetVariant: "BASE" as ChipsetVariant,
+    chipset: 'ALL',
+    chipsetVariant: 'BASE' as ChipsetVariant,
     playMethod,
     performanceRating,
     count,
@@ -189,19 +197,40 @@ export const updateAllPerformanceStatsForGame = async (
   gameId: string,
   chipset: Chipset,
   chipsetVariant: ChipsetVariant,
-  playMethod: PlayMethod
+  playMethod: PlayMethod,
 ) => {
   // Update performance stats for all performance ratings that might be affected
-  const allPerformanceRatings: Performance[] = ["UNPLAYABLE", "BARELY_PLAYABLE", "PLAYABLE", "GOOD", "EXCELLENT"];
-  
+  const allPerformanceRatings: Performance[] = [
+    'UNPLAYABLE',
+    'BARELY_PLAYABLE',
+    'PLAYABLE',
+    'GOOD',
+    'EXCELLENT',
+  ];
+
   for (const performanceRating of allPerformanceRatings) {
     // Update specific combination
-    await updateSpecificPerformanceStats(prisma, chipset, chipsetVariant, playMethod, performanceRating);
-    
+    await updateSpecificPerformanceStats(
+      prisma,
+      chipset,
+      chipsetVariant,
+      playMethod,
+      performanceRating,
+    );
+
     // Update aggregate combinations
-    await updateAggregatePerformanceStats(prisma, chipset, chipsetVariant, performanceRating);
-    
+    await updateAggregatePerformanceStats(
+      prisma,
+      chipset,
+      chipsetVariant,
+      performanceRating,
+    );
+
     // Update "ALL" chipset + specific playMethod combination
-    await updateAllChipsetSpecificMethodStats(prisma, playMethod, performanceRating);
+    await updateAllChipsetSpecificMethodStats(
+      prisma,
+      playMethod,
+      performanceRating,
+    );
   }
-}; 
+};

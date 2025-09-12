@@ -1,8 +1,8 @@
-import { z } from "zod";
-import { router, procedure } from "../trpc";
-import { getGameBySteamId, searchSteam } from "@/server/helpers/steam";
-import { TRPCError } from "@trpc/server";
-import { PerformanceRating, PrismaClient } from "@prisma/client";
+import { z } from 'zod';
+import { router, procedure } from '../trpc';
+import { getGameBySteamId, searchSteam } from '@/server/helpers/steam';
+import { TRPCError } from '@trpc/server';
+import { PerformanceRating, PrismaClient } from '@prisma/client';
 import {
   ChipsetEnum,
   ChipsetVariantEnum,
@@ -10,13 +10,12 @@ import {
   PlayMethodEnum,
   type ChipsetVariant,
   type PlayMethod,
-} from "../schema";
+} from '../schema';
 import {
   calculateAveragePerformance,
   calculateTranslationLayerStats,
-} from "../utils";
-import { getViewSignedUrl, extractKeyFromUrl } from "@/lib/s3";
-
+} from '../utils';
+import { getViewSignedUrl, extractKeyFromUrl } from '@/lib/s3';
 
 // Helper function to get game IDs from PerformanceStats efficiently
 const getGameIdsFromPerformanceStats = async (
@@ -24,33 +23,34 @@ const getGameIdsFromPerformanceStats = async (
   filters: {
     chipset?: string;
     chipsetVariant?: ChipsetVariant;
-    playMethod?: PlayMethod | "ALL";
+    playMethod?: PlayMethod | 'ALL';
     performance: PerformanceRating;
     limit: number;
     offset: number;
-  }
+  },
 ) => {
-  const { chipset, chipsetVariant, playMethod, performance, limit, offset } = filters;
+  const { chipset, chipsetVariant, playMethod, performance, limit, offset } =
+    filters;
 
   // Get games that match the performance criteria using pre-computed stats
   const games = await prisma.game.findMany({
     where: {
       aggregatedPerformance: performance,
       // Only add review filtering if we need specific chipset/playMethod
-      ...((chipset || playMethod !== "ALL") && {
+      ...((chipset || playMethod !== 'ALL') && {
         reviews: {
           some: {
             ...(chipset && { chipset }),
             ...(chipset && chipsetVariant && { chipsetVariant }),
-            ...(playMethod !== "ALL" && { playMethod })
-          }
-        }
-      })
+            ...(playMethod !== 'ALL' && { playMethod }),
+          },
+        },
+      }),
     },
     select: { id: true },
-    orderBy: { reviewCount: "desc" },
+    orderBy: { reviewCount: 'desc' },
     skip: offset,
-    take: limit
+    take: limit,
   });
 
   return games.map((game: { id: string }) => game.id);
@@ -64,8 +64,8 @@ export const gameRouter = router({
         const results = await searchSteam(input.query);
         return results.slice(0, 10);
       } catch (error) {
-        console.error("Search error:", error);
-        throw new Error("Failed to search games");
+        console.error('Search error:', error);
+        throw new Error('Failed to search games');
       }
     }),
 
@@ -74,11 +74,11 @@ export const gameRouter = router({
     .query(async ({ input }) => {
       try {
         const gameData = await getGameBySteamId(input.gameId);
-        
+
         if (!gameData || !gameData.header_image) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Cover art not found for this game",
+            code: 'NOT_FOUND',
+            message: 'Cover art not found for this game',
           });
         }
 
@@ -88,10 +88,10 @@ export const gameRouter = router({
           capsuleImagev5: gameData.capsule_imagev5,
         };
       } catch (error) {
-        console.error("Error fetching cover art:", error);
+        console.error('Error fetching cover art:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch cover art from Steam API",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch cover art from Steam API',
         });
       }
     }),
@@ -101,16 +101,15 @@ export const gameRouter = router({
       z.object({
         chipset: ChipsetEnum.optional(),
         chipsetVariant: ChipsetVariantEnum.optional(),
-        playMethod: z.enum(["ALL", ...PlayMethodEnum.options]).default("ALL"),
-      })
+        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { chipset, chipsetVariant, playMethod } = input;
 
-      
       // Determine query parameters based on aggregate logic
       let queryChipset: string | undefined;
-      let queryChipsetVariant: ChipsetVariant | undefined; 
+      let queryChipsetVariant: ChipsetVariant | undefined;
       let queryPlayMethod: PlayMethod | undefined;
 
       // Handle chipset logic
@@ -120,14 +119,14 @@ export const gameRouter = router({
         queryChipsetVariant = chipsetVariant; // Can be specific or undefined for all variants of this chipset
       } else {
         // ALL chipsets requested - use aggregate records
-        queryChipset = "ALL";
-        queryChipsetVariant = "BASE" as ChipsetVariant; // Our representative for aggregates
+        queryChipset = 'ALL';
+        queryChipsetVariant = 'BASE' as ChipsetVariant; // Our representative for aggregates
       }
 
-      // Handle play method logic  
-      if (playMethod === "ALL") {
+      // Handle play method logic
+      if (playMethod === 'ALL') {
         // ALL play methods requested - use "OTHER" which represents ALL in aggregates
-        queryPlayMethod = "OTHER" as PlayMethod;
+        queryPlayMethod = 'OTHER' as PlayMethod;
       } else {
         // Specific play method requested
         queryPlayMethod = playMethod as PlayMethod;
@@ -154,7 +153,7 @@ export const gameRouter = router({
           PLAYABLE: 0,
           BARELY_PLAYABLE: 0,
           UNPLAYABLE: 0,
-        }
+        },
       );
 
       return ratingCounts;
@@ -165,20 +164,27 @@ export const gameRouter = router({
       z.object({
         limit: z.number().min(1).max(50).default(6),
         cursor: z.number().min(0).default(0),
-        performance: z.enum(["ALL", ...PerformanceEnum.options]).default("ALL"),
+        performance: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
         chipset: ChipsetEnum.optional(),
         chipsetVariant: ChipsetVariantEnum.optional(),
-        playMethod: z.enum(["ALL", ...PlayMethodEnum.options]).default("ALL"),
-      })
+        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      }),
     )
     .query(async ({ input, ctx }) => {
       try {
-        const { limit, cursor: offset, performance, chipset, chipsetVariant, playMethod } = input;
+        const {
+          limit,
+          cursor: offset,
+          performance,
+          chipset,
+          chipsetVariant,
+          playMethod,
+        } = input;
 
         // Strategy 1: Use PerformanceStats for filtering when possible to avoid expensive JOINs
-        const canUsePerformanceStats = chipset || (playMethod !== "ALL");
-        
-        if (canUsePerformanceStats && performance !== "ALL") {
+        const canUsePerformanceStats = chipset || playMethod !== 'ALL';
+
+        if (canUsePerformanceStats && performance !== 'ALL') {
           // Use pre-computed PerformanceStats to get game IDs efficiently
           const gameIds = await getGameIdsFromPerformanceStats(ctx.prisma!, {
             chipset,
@@ -186,7 +192,7 @@ export const gameRouter = router({
             playMethod,
             performance,
             limit: limit * 3, // Get more IDs to account for pagination
-            offset
+            offset,
           });
 
           if (gameIds.length === 0) {
@@ -201,17 +207,23 @@ export const gameRouter = router({
           const games = await ctx.prisma!.game.findMany({
             where: {
               id: { in: gameIds },
-              aggregatedPerformance: { not: null }
+              aggregatedPerformance: { not: null },
             },
             orderBy: {
-              reviewCount: "desc"
+              reviewCount: 'desc',
             },
-            take: limit + 1
+            take: limit + 1,
           });
 
           const gamesWithPerformance = games
-            .filter((game): game is typeof game & { aggregatedPerformance: NonNullable<typeof game.aggregatedPerformance> } => 
-              game.aggregatedPerformance !== null
+            .filter(
+              (
+                game,
+              ): game is typeof game & {
+                aggregatedPerformance: NonNullable<
+                  typeof game.aggregatedPerformance
+                >;
+              } => game.aggregatedPerformance !== null,
             )
             .map((game) => ({
               id: game.id,
@@ -220,7 +232,9 @@ export const gameRouter = router({
             }));
 
           const hasNextPage = gamesWithPerformance.length > limit;
-          const gamesToReturn = hasNextPage ? gamesWithPerformance.slice(0, limit) : gamesWithPerformance;
+          const gamesToReturn = hasNextPage
+            ? gamesWithPerformance.slice(0, limit)
+            : gamesWithPerformance;
 
           return {
             games: gamesToReturn,
@@ -233,35 +247,43 @@ export const gameRouter = router({
         const games = await ctx.prisma!.game.findMany({
           where: {
             // Use indexed aggregatedPerformance field instead of JOINs
-            ...(performance !== "ALL" && { aggregatedPerformance: performance }),
+            ...(performance !== 'ALL' && {
+              aggregatedPerformance: performance,
+            }),
             // Apply playMethod filter independently of chipset filter
-            ...(playMethod !== "ALL" && {
+            ...(playMethod !== 'ALL' && {
               reviews: {
                 some: {
-                  playMethod
-                }
-              }
+                  playMethod,
+                },
+              },
             }),
             // Apply chipset filter separately
             ...(chipset && {
               reviews: {
                 some: {
                   chipset,
-                  ...(chipsetVariant && { chipsetVariant })
-                }
-              }
-            })
+                  ...(chipsetVariant && { chipsetVariant }),
+                },
+              },
+            }),
           },
           skip: offset,
           take: limit + 1,
           orderBy: {
-            reviewCount: "desc" // This uses the indexed reviewCount field
-          }
+            reviewCount: 'desc', // This uses the indexed reviewCount field
+          },
         });
 
         const gamesWithPerformance = games
-          .filter((game): game is typeof game & { aggregatedPerformance: NonNullable<typeof game.aggregatedPerformance> } => 
-            game.aggregatedPerformance !== null
+          .filter(
+            (
+              game,
+            ): game is typeof game & {
+              aggregatedPerformance: NonNullable<
+                typeof game.aggregatedPerformance
+              >;
+            } => game.aggregatedPerformance !== null,
           )
           .map((game) => ({
             id: game.id,
@@ -270,7 +292,9 @@ export const gameRouter = router({
           }));
 
         const hasNextPage = gamesWithPerformance.length > limit;
-        const gamesToReturn = hasNextPage ? gamesWithPerformance.slice(0, limit) : gamesWithPerformance;
+        const gamesToReturn = hasNextPage
+          ? gamesWithPerformance.slice(0, limit)
+          : gamesWithPerformance;
 
         return {
           games: gamesToReturn,
@@ -278,10 +302,10 @@ export const gameRouter = router({
           nextOffset: hasNextPage ? offset + limit : undefined,
         };
       } catch (error) {
-        console.error("Error fetching games:", error);
+        console.error('Error fetching games:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch games",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch games',
         });
       }
     }),
@@ -309,8 +333,8 @@ export const gameRouter = router({
           if (!response) {
             console.warn(`Game with ID ${input.id} not found on Steam.`);
             throw new TRPCError({
-              message: "Something went wrong",
-              code: "INTERNAL_SERVER_ERROR",
+              message: 'Something went wrong',
+              code: 'INTERNAL_SERVER_ERROR',
             });
           }
 
@@ -330,13 +354,13 @@ export const gameRouter = router({
             ? {
                 totalReviews: reviews.length,
                 methods: {
-                  native: reviews.filter((r) => r.playMethod === "NATIVE")
+                  native: reviews.filter((r) => r.playMethod === 'NATIVE')
                     .length,
-                  crossover: reviews.filter((r) => r.playMethod === "CROSSOVER")
+                  crossover: reviews.filter((r) => r.playMethod === 'CROSSOVER')
                     .length,
-                  parallels: reviews.filter((r) => r.playMethod === "PARALLELS")
+                  parallels: reviews.filter((r) => r.playMethod === 'PARALLELS')
                     .length,
-                  other: reviews.filter((r) => r.playMethod === "OTHER").length,
+                  other: reviews.filter((r) => r.playMethod === 'OTHER').length,
                 },
                 averagePerformance: calculateAveragePerformance(reviews),
                 translationLayers: calculateTranslationLayerStats(reviews),
@@ -353,14 +377,16 @@ export const gameRouter = router({
         };
       } catch (error) {
         console.error(`Error fetching game details for ID ${input.id}:`, error);
-        throw new Error("Failed to fetch game details");
+        throw new Error('Failed to fetch game details');
       }
     }),
 
   getScreenshotSignedUrls: procedure
-    .input(z.object({ 
-      screenshots: z.array(z.string()) 
-    }))
+    .input(
+      z.object({
+        screenshots: z.array(z.string()),
+      }),
+    )
     .query(async ({ input }) => {
       try {
         const signedUrls = await Promise.all(
@@ -370,23 +396,26 @@ export const gameRouter = router({
               console.warn(`Could not extract key from URL: ${url}`);
               return { original: url, signed: url }; // Fallback to original URL
             }
-            
+
             try {
               const signedUrl = await getViewSignedUrl(key, 3600); // 1 hour expiry
               return { original: url, signed: signedUrl };
             } catch (error) {
-              console.warn(`Could not generate signed URL for key: ${key}`, error);
+              console.warn(
+                `Could not generate signed URL for key: ${key}`,
+                error,
+              );
               return { original: url, signed: url }; // Fallback to original URL
             }
-          })
+          }),
         );
 
         return signedUrls;
       } catch (error) {
-        console.error("Error generating signed URLs:", error);
+        console.error('Error generating signed URLs:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to generate signed URLs for screenshots",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to generate signed URLs for screenshots',
         });
       }
     }),

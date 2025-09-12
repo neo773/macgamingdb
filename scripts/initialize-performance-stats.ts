@@ -6,31 +6,30 @@ import {
   type ChipsetVariant,
   type PlayMethod,
   type Performance,
-} from "../src/server/schema/index.js";
+} from '../src/server/schema/index.js';
 import {
   countGamesForPerformanceStats,
   upsertPerformanceStats,
-} from "../src/server/helpers/performance-stats.js";
-import { createPrismaClient } from "@/lib/database/prisma";
-import { config } from "dotenv";
+} from '../src/server/helpers/performance-stats.js';
+import { createPrismaClient } from '@/lib/database/prisma';
+import { config } from 'dotenv';
 
 if (process.env.NODE_ENV === 'production') {
   config({
-    path: "../.env.prod",
+    path: '../.env.prod',
   });
 }
 
 const prisma = createPrismaClient();
 
-
 async function initializePerformanceStats() {
-  console.log("🚀 Initializing PerformanceStats table...");
-  console.log("📊 Counting unique games for each combination...");
+  console.log('🚀 Initializing PerformanceStats table...');
+  console.log('📊 Counting unique games for each combination...');
 
   // Get all possible combinations from enums
   const chipsets = ChipsetEnum.options;
   const chipsetVariants = ChipsetVariantEnum.options;
-  const playMethods = [...PlayMethodEnum.options, "OTHER"] as const;
+  const playMethods = [...PlayMethodEnum.options, 'OTHER'] as const;
   const performanceRatings = PerformanceEnum.options;
 
   let totalCombinations = 0;
@@ -85,7 +84,7 @@ async function initializePerformanceStats() {
           } catch (error) {
             console.error(
               `❌ Error processing combination: ${chipset}-${chipsetVariant}-${playMethod}-${performanceRating}`,
-              error
+              error,
             );
           }
         }
@@ -100,27 +99,27 @@ async function initializePerformanceStats() {
   for (const performanceRating of performanceRatings) {
     try {
       const gameCount = await countGamesForPerformanceStats(prisma, {
-        chipset: "ALL",
-        chipsetVariant: "BASE" as ChipsetVariant,
-        playMethod: "OTHER",
+        chipset: 'ALL',
+        chipsetVariant: 'BASE' as ChipsetVariant,
+        playMethod: 'OTHER',
         performanceRating: performanceRating as Performance,
       });
 
       const existingRecord = await prisma.performanceStats.findUnique({
         where: {
           chipset_chipsetVariant_playMethod_performanceRating: {
-            chipset: "ALL",
-            chipsetVariant: "BASE" as ChipsetVariant,
-            playMethod: "OTHER" as PlayMethod,
+            chipset: 'ALL',
+            chipsetVariant: 'BASE' as ChipsetVariant,
+            playMethod: 'OTHER' as PlayMethod,
             performanceRating: performanceRating as Performance,
           },
         },
       });
 
       await upsertPerformanceStats(prisma, {
-        chipset: "ALL",
-        chipsetVariant: "BASE" as ChipsetVariant,
-        playMethod: "OTHER",
+        chipset: 'ALL',
+        chipsetVariant: 'BASE' as ChipsetVariant,
+        playMethod: 'OTHER',
         performanceRating: performanceRating as Performance,
         count: gameCount,
       });
@@ -134,7 +133,7 @@ async function initializePerformanceStats() {
     } catch (error) {
       console.error(
         `❌ Error creating ALL-OTHER aggregate for ${performanceRating}:`,
-        error
+        error,
       );
     }
   }
@@ -142,13 +141,13 @@ async function initializePerformanceStats() {
   // 2. chipset "ALL", specific playMethods - count games with performance rating that have at least one review from that play method
   for (const playMethod of playMethods) {
     // Skip OTHER since we already used it for the ALL playMethods case above
-    if (playMethod === "OTHER") continue;
+    if (playMethod === 'OTHER') continue;
 
     for (const performanceRating of performanceRatings) {
       try {
         const gameCount = await countGamesForPerformanceStats(prisma, {
-          chipset: "ALL",
-          chipsetVariant: "BASE" as ChipsetVariant,
+          chipset: 'ALL',
+          chipsetVariant: 'BASE' as ChipsetVariant,
           playMethod: playMethod as PlayMethod,
           performanceRating: performanceRating as Performance,
         });
@@ -156,8 +155,8 @@ async function initializePerformanceStats() {
         const existingRecord = await prisma.performanceStats.findUnique({
           where: {
             chipset_chipsetVariant_playMethod_performanceRating: {
-              chipset: "ALL",
-              chipsetVariant: "BASE" as ChipsetVariant,
+              chipset: 'ALL',
+              chipsetVariant: 'BASE' as ChipsetVariant,
               playMethod: playMethod as PlayMethod,
               performanceRating: performanceRating as Performance,
             },
@@ -165,8 +164,8 @@ async function initializePerformanceStats() {
         });
 
         await upsertPerformanceStats(prisma, {
-          chipset: "ALL",
-          chipsetVariant: "BASE" as ChipsetVariant,
+          chipset: 'ALL',
+          chipsetVariant: 'BASE' as ChipsetVariant,
           playMethod: playMethod as PlayMethod,
           performanceRating: performanceRating as Performance,
           count: gameCount,
@@ -181,7 +180,7 @@ async function initializePerformanceStats() {
       } catch (error) {
         console.error(
           `❌ Error creating chipset ALL aggregate for ${playMethod}-${performanceRating}:`,
-          error
+          error,
         );
       }
     }
@@ -189,7 +188,7 @@ async function initializePerformanceStats() {
 
   // 3. specific chipset combinations with playMethod "OTHER" (represents ALL playMethods for that chipset)
   console.log(
-    "📊 Creating specific chipset + 'OTHER' play method combinations..."
+    "📊 Creating specific chipset + 'OTHER' play method combinations...",
   );
   for (const chipset of chipsets) {
     for (const chipsetVariant of chipsetVariants) {
@@ -199,7 +198,7 @@ async function initializePerformanceStats() {
           const gameCount = await countGamesForPerformanceStats(prisma, {
             chipset,
             chipsetVariant: chipsetVariant as ChipsetVariant,
-            playMethod: "OTHER",
+            playMethod: 'OTHER',
             performanceRating: performanceRating as Performance,
           });
 
@@ -208,7 +207,7 @@ async function initializePerformanceStats() {
               chipset_chipsetVariant_playMethod_performanceRating: {
                 chipset,
                 chipsetVariant: chipsetVariant as ChipsetVariant,
-                playMethod: "OTHER" as PlayMethod,
+                playMethod: 'OTHER' as PlayMethod,
                 performanceRating: performanceRating as Performance,
               },
             },
@@ -217,7 +216,7 @@ async function initializePerformanceStats() {
           await upsertPerformanceStats(prisma, {
             chipset,
             chipsetVariant: chipsetVariant as ChipsetVariant,
-            playMethod: "OTHER",
+            playMethod: 'OTHER',
             performanceRating: performanceRating as Performance,
             count: gameCount,
           });
@@ -231,13 +230,13 @@ async function initializePerformanceStats() {
 
           if (totalCombinations % 25 === 0) {
             console.log(
-              `📊 Processed ${totalCombinations} total combinations...`
+              `📊 Processed ${totalCombinations} total combinations...`,
             );
           }
         } catch (error) {
           console.error(
             `❌ Error creating ${chipset}-${chipsetVariant}-OTHER-${performanceRating}:`,
-            error
+            error,
           );
         }
       }
@@ -261,8 +260,8 @@ async function initializePerformanceStats() {
 
   // Show aggregate statistics
   const allChipsetRecords = await prisma.performanceStats.findMany({
-    where: { chipset: "ALL" },
-    orderBy: { count: "desc" },
+    where: { chipset: 'ALL' },
+    orderBy: { count: 'desc' },
   });
 
   if (allChipsetRecords.length > 0) {
@@ -274,14 +273,14 @@ async function initializePerformanceStats() {
         (
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           { chipset, chipsetVariant, playMethod, performanceRating, count },
-          index
+          index,
         ) => {
           // Display "ALL" for playMethod "OTHER" when chipset is "ALL" to show user-friendly output
-          const displayPlayMethod = playMethod === "OTHER" ? "ALL" : playMethod;
+          const displayPlayMethod = playMethod === 'OTHER' ? 'ALL' : playMethod;
           console.log(
-            `${index + 1}. ALL ${chipsetVariant} + ${displayPlayMethod} + ${performanceRating}: ${count} games`
+            `${index + 1}. ALL ${chipsetVariant} + ${displayPlayMethod} + ${performanceRating}: ${count} games`,
           );
-        }
+        },
       );
   }
 
@@ -289,9 +288,9 @@ async function initializePerformanceStats() {
   const topCombinations = await prisma.performanceStats.findMany({
     where: {
       count: { gt: 0 },
-      chipset: { not: "ALL" },
+      chipset: { not: 'ALL' },
     },
-    orderBy: { count: "desc" },
+    orderBy: { count: 'desc' },
     take: 5,
   });
 
@@ -300,12 +299,12 @@ async function initializePerformanceStats() {
     topCombinations.forEach(
       (
         { chipset, chipsetVariant, playMethod, performanceRating, count },
-        index
+        index,
       ) => {
         console.log(
-          `${index + 1}. ${chipset} ${chipsetVariant} + ${playMethod} + ${performanceRating}: ${count} games`
+          `${index + 1}. ${chipset} ${chipsetVariant} + ${playMethod} + ${performanceRating}: ${count} games`,
         );
-      }
+      },
     );
   }
 }
@@ -314,7 +313,7 @@ async function main() {
   try {
     await initializePerformanceStats();
   } catch (error) {
-    console.error("💥 Script failed:", error);
+    console.error('💥 Script failed:', error);
     process.exit(1);
   } finally {
     await prisma.$disconnect();

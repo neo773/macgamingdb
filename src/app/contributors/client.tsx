@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
-import { useRef, useEffect } from "react";
-import { trpc } from "@/lib/trpc/provider";
-import { formatDistance } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { Trophy, Medal, Award, Star } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
-import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "@/server/routers/_app";
+import { useRef, useEffect } from 'react';
+import { trpc } from '@/lib/trpc/provider';
+import { formatDistance } from 'date-fns';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Trophy, Medal, Award, Star } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
+import { inferRouterOutputs } from '@trpc/server';
+import { AppRouter } from '@/server/routers/_app';
 
-type ContributorsData = inferRouterOutputs<AppRouter>["contributor"]["getTopContributors"];
+type ContributorsData =
+  inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];
 
 export default function ContributorsClient({
   contributorsData,
@@ -21,24 +22,19 @@ export default function ContributorsClient({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Setup infinite query with initial data
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = trpc.contributor.getTopContributors.useInfiniteQuery(
-    {
-      limit: 21,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-      initialData: {
-        pages: [contributorsData],
-        pageParams: [undefined],
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    trpc.contributor.getTopContributors.useInfiniteQuery(
+      {
+        limit: 21,
       },
-    }
-  );
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        initialData: {
+          pages: [contributorsData],
+          pageParams: [undefined],
+        },
+      },
+    );
 
   // Setup intersection observer for infinite scrolling
   useEffect(() => {
@@ -50,7 +46,7 @@ export default function ContributorsClient({
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(loadMoreRef.current);
@@ -58,7 +54,8 @@ export default function ContributorsClient({
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   // Get all contributors from all pages
-  const allContributors = data?.pages.flatMap((page) => page.contributors) || [];
+  const allContributors =
+    data?.pages.flatMap((page) => page.contributors) || [];
 
   // Get rank badge component based on position
   const getRankBadge = (position: number) => {
@@ -77,9 +74,9 @@ export default function ContributorsClient({
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("")
+      .join('')
       .toUpperCase()
       .substring(0, 2);
   };
@@ -88,12 +85,12 @@ export default function ContributorsClient({
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {allContributors.map((contributor, index) => (
-          <Link 
+          <Link
             href={`/contributors/${contributor.id}`}
             key={contributor.id}
             className="group"
           >
-            <Card 
+            <Card
               className={`
                 overflow-hidden transition-transform duration-300 bg-primary-gradient
                 hover:scale-[1.05]  hover:outline hover:outline-blue-400
@@ -112,7 +109,7 @@ export default function ContributorsClient({
                       {getRankBadge(index)}
                     </div>
                   </div>
-                  
+
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h2 className="text-xl font-semibold text-white truncate max-w-[180px] transition-colors">
@@ -123,7 +120,12 @@ export default function ContributorsClient({
                       </div>
                     </div>
                     <p className="text-sm text-gray-400">
-                      Joined {formatDistance(new Date(contributor.joinedAt), new Date(), { addSuffix: true })}
+                      Joined{' '}
+                      {formatDistance(
+                        new Date(contributor.joinedAt),
+                        new Date(),
+                        { addSuffix: true },
+                      )}
                     </p>
                   </div>
                 </div>
@@ -131,11 +133,15 @@ export default function ContributorsClient({
                 <div className="mt-6 space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Reviews submitted</span>
-                    <span className="font-semibold text-white font-mono">{contributor.reviewCount}</span>
+                    <span className="font-semibold text-white font-mono">
+                      {contributor.reviewCount}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Games reviewed</span>
-                    <span className="font-semibold text-white font-mono">{contributor.uniqueGamesCount}</span>
+                    <span className="font-semibold text-white font-mono">
+                      {contributor.uniqueGamesCount}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -148,7 +154,10 @@ export default function ContributorsClient({
           Array(6)
             .fill(null)
             .map((_, i) => (
-              <Card key={`skeleton-${i}`} className="bg-black/30 border border-white/10">
+              <Card
+                key={`skeleton-${i}`}
+                className="bg-black/30 border border-white/10"
+              >
                 <CardContent className="px-6">
                   <div className="flex items-center gap-4">
                     <Skeleton className="h-16 w-16 rounded-full" />
@@ -174,7 +183,7 @@ export default function ContributorsClient({
 
       {/* Load more trigger */}
       {hasNextPage && <div ref={loadMoreRef} className="h-10" />}
-      
+
       {/* No contributors message */}
       {allContributors.length === 0 && !isLoading && (
         <Card className="bg-primary-gradient">
@@ -183,11 +192,12 @@ export default function ContributorsClient({
               No contributors found
             </h2>
             <p className="text-gray-300">
-              Be the first to submit game reviews and appear on this leaderboard!
+              Be the first to submit game reviews and appear on this
+              leaderboard!
             </p>
           </CardContent>
         </Card>
       )}
     </div>
   );
-} 
+}

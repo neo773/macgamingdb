@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Heart } from "lucide-react";
+import React from 'react';
+import { Heart } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from '../ui/dialog';
 import {
   Drawer,
   DrawerContent,
@@ -17,15 +17,15 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "../ui/drawer";
-import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
+} from '../ui/drawer';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
 
 interface DonationDialogProps {
   children: React.ReactNode;
 }
 
 export const DonationDialog: React.FC<DonationDialogProps> = ({ children }) => {
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const content = (
     <div className="flex flex-col gap-4">

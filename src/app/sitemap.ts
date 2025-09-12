@@ -1,5 +1,5 @@
-import type { MetadataRoute } from "next";
-import { createPrismaClient } from "@/lib/database/prisma";
+import type { MetadataRoute } from 'next';
+import { createPrismaClient } from '@/lib/database/prisma';
 
 const CHUNK_SIZE = 200;
 
@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       include: {
         reviews: {
-          orderBy: { updatedAt: "desc" },
+          orderBy: { updatedAt: 'desc' },
           take: 1,
         },
       },
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...gamesWithReviews.map((game) => ({
         url: `${baseUrl}/games/${game.id}`,
         lastModified: game.reviews[0]?.updatedAt ?? undefined,
-      }))
+      })),
     );
   }
 

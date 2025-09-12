@@ -1,21 +1,21 @@
-import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
-import { GameReview, MacConfig } from "@prisma/client";
-import React from "react";
-import { Card, CardHeader, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import clsx from "clsx";
-import ScreenshotDisplay from "./ScreenshotDisplay";
-import { MacSpecification } from "@/lib/scraper/EveryMacScraper";
+import ExpandableReviewNote from '@/components/review/ExpandableReviewNote';
+import { GameReview, MacConfig } from '@prisma/client';
+import React from 'react';
+import { Card, CardHeader, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
+import clsx from 'clsx';
+import ScreenshotDisplay from './ScreenshotDisplay';
+import { MacSpecification } from '@/lib/scraper/EveryMacScraper';
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
-    EXCELLENT: "bg-green-500 text-green-50",
-    GOOD: "bg-blue-500 text-blue-50",
-    PLAYABLE: "bg-yellow-500 text-yellow-900",
-    BARELY_PLAYABLE: "bg-orange-500 text-orange-50",
-    UNPLAYABLE: "bg-red-500 text-red-50",
+    EXCELLENT: 'bg-green-500 text-green-50',
+    GOOD: 'bg-blue-500 text-blue-50',
+    PLAYABLE: 'bg-yellow-500 text-yellow-900',
+    BARELY_PLAYABLE: 'bg-orange-500 text-orange-50',
+    UNPLAYABLE: 'bg-red-500 text-red-50',
   };
-  return colors[performance] || "bg-gray-500 text-gray-50";
+  return colors[performance] || 'bg-gray-500 text-gray-50';
 };
 // const getPerformanceColor = (performance: Performance) => {
 //   const colors: Record<Performance, string> = {
@@ -31,10 +31,10 @@ const getPerformanceColor = (performance: string) => {
 // Helper function to format method name
 const formatMethodName = (method: string) => {
   const formats: Record<string, string> = {
-    NATIVE: "Native",
-    CROSSOVER: "CrossOver",
-    PARALLELS: "Parallels",
-    OTHER: "Other",
+    NATIVE: 'Native',
+    CROSSOVER: 'CrossOver',
+    PARALLELS: 'Parallels',
+    OTHER: 'Other',
   };
   return formats[method] || method;
 };
@@ -50,11 +50,13 @@ const GameReviewCard = ({
   customReviewNote?: React.ReactNode;
   className?: string;
 }) => {
-  const macConfig = review.macConfig ? JSON.parse(review.macConfig.metadata) as MacSpecification : null;
+  const macConfig = review.macConfig
+    ? (JSON.parse(review.macConfig.metadata) as MacSpecification)
+    : null;
   return (
     <Card
       key={review.id}
-      className={clsx("bg-primary-gradient overflow-hidden", className)}
+      className={clsx('bg-primary-gradient overflow-hidden', className)}
     >
       {header && header}
       <CardHeader>
@@ -85,7 +87,7 @@ const GameReviewCard = ({
                     variant="outline"
                     className={`${getPerformanceColor(review.performance)}`}
                   >
-                    {review.performance.replace("_", " ")}
+                    {review.performance.replace('_', ' ')}
                   </Badge>
                 </div>
               </div>
@@ -126,7 +128,7 @@ const GameReviewCard = ({
                 </dd>
               </div>
             )}
-            {macConfig ?(
+            {macConfig ? (
               <>
                 <div className="flex justify-between">
                   <dt className="font-medium">Chip:</dt>

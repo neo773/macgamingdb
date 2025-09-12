@@ -1,13 +1,13 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "MacGamingDB - Game Compatibility Database for Mac",
+  title: 'MacGamingDB - Game Compatibility Database for Mac',
   description:
-    "Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.",
+    'Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.',
   openGraph: {
-    title: "MacGamingDB - Game Compatibility Database for Mac",
+    title: 'MacGamingDB - Game Compatibility Database for Mac',
     description:
-      "Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.",
-    type: "website",
+      'Discover how Windows games perform on Mac with different compatibility methods like CrossOver and Parallels.',
+    type: 'website',
   },
 };

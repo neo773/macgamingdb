@@ -1,16 +1,16 @@
-"use client";
-import React, { useState } from "react";
-import { LogInIcon, Star } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+'use client';
+import React, { useState } from 'react';
+import { LogInIcon, Star } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
   DialogTitle,
-} from "@/components/ui/dialog";
-import AuthPrompt from "@/components/auth/AuthPrompt";
-import { authClient } from "@/lib/auth/auth-client";
+} from '@/components/ui/dialog';
+import AuthPrompt from '@/components/auth/AuthPrompt';
+import { authClient } from '@/lib/auth/auth-client';
 
 const Acccount = () => {
   const { useSession } = authClient;

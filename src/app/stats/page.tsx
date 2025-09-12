@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -15,8 +15,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Metadata } from "next";
+} from '@/components/ui/table';
+import { Metadata } from 'next';
 
 export interface Stats {
   id: string;
@@ -49,44 +49,44 @@ interface SlowestQueriesItem {
 
 function formatNumber(num: number): string {
   if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1) + "M";
+    return (num / 1_000_000).toFixed(1) + 'M';
   }
   if (num >= 1_000) {
-    return (num / 1_000).toFixed(1) + "K";
+    return (num / 1_000).toFixed(1) + 'K';
   }
   return num.toLocaleString();
 }
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
+  if (bytes === 0) return '0 Bytes';
   const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 function formatLatency(microseconds: number): string {
   if (microseconds >= 1_000_000) {
-    return (microseconds / 1_000_000).toFixed(2) + "s";
+    return (microseconds / 1_000_000).toFixed(2) + 's';
   }
   if (microseconds >= 1_000) {
-    return (microseconds / 1_000).toFixed(2) + "ms";
+    return (microseconds / 1_000).toFixed(2) + 'ms';
   }
-  return microseconds.toFixed(2) + "μs";
+  return microseconds.toFixed(2) + 'μs';
 }
 
 function getQueryIntent(query: string): string {
   const upperQuery = query.toUpperCase();
-  if (upperQuery.includes("SELECT COUNT")) return "COUNT";
-  if (upperQuery.includes("SELECT") && upperQuery.includes("FROM")) {
-    if (upperQuery.includes("JOIN")) return "JOIN QUERY";
-    if (upperQuery.includes("WHERE")) return "FILTERED SELECT";
-    return "SELECT";
+  if (upperQuery.includes('SELECT COUNT')) return 'COUNT';
+  if (upperQuery.includes('SELECT') && upperQuery.includes('FROM')) {
+    if (upperQuery.includes('JOIN')) return 'JOIN QUERY';
+    if (upperQuery.includes('WHERE')) return 'FILTERED SELECT';
+    return 'SELECT';
   }
-  if (upperQuery.includes("INSERT")) return "INSERT";
-  if (upperQuery.includes("UPDATE")) return "UPDATE";
-  if (upperQuery.includes("DELETE")) return "DELETE";
-  return "QUERY";
+  if (upperQuery.includes('INSERT')) return 'INSERT';
+  if (upperQuery.includes('UPDATE')) return 'UPDATE';
+  if (upperQuery.includes('DELETE')) return 'DELETE';
+  return 'QUERY';
 }
 
 export const metadata: Metadata = {
@@ -97,10 +97,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Stats() {
-  const stats = await fetch("https://sqld.macgamingdb.app/turso-stats", {
+  const stats = await fetch('https://sqld.macgamingdb.app/turso-stats', {
     headers: {
-      "authorization":
-        "4e9ea5fe2ed3f359815e273bb8df9be43993bab76458d9b0c4bd96f03b9eda82",
+      authorization:
+        '4e9ea5fe2ed3f359815e273bb8df9be43993bab76458d9b0c4bd96f03b9eda82',
     },
   }).then((res) => res.json());
 
@@ -121,7 +121,7 @@ export default async function Stats() {
       acc[intent].totalRows += query.rows_read;
       return acc;
     },
-    {} as Record<string, { count: number; totalRows: number }>
+    {} as Record<string, { count: number; totalRows: number }>,
   );
 
   // Calculate metrics for cards
@@ -154,14 +154,14 @@ export default async function Stats() {
               {formatNumber(typedStats.query_count)}
             </CardTitle>
             <CardAction>
-              <Badge variant={hasHighActivity ? "default" : "outline"}>
+              <Badge variant={hasHighActivity ? 'default' : 'outline'}>
                 {queriesPerFrame}/frame
               </Badge>
             </CardAction>
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
-              {hasHighActivity ? "High activity" : "Moderate activity"}
+              {hasHighActivity ? 'High activity' : 'Moderate activity'}
             </div>
             <div className="text-muted-foreground">
               Current frame #{typedStats.current_frame_no.toLocaleString()}
@@ -176,14 +176,14 @@ export default async function Stats() {
               {formatLatency(avgLatency)}
             </CardTitle>
             <CardAction>
-              <Badge variant={isLatencyGood ? "default" : "destructive"}>
-                {isLatencyGood ? "Good" : "Slow"}
+              <Badge variant={isLatencyGood ? 'default' : 'destructive'}>
+                {isLatencyGood ? 'Good' : 'Slow'}
               </Badge>
             </CardAction>
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
-              {isLatencyGood ? "Performing well" : "Needs attention"}
+              {isLatencyGood ? 'Performing well' : 'Needs attention'}
             </div>
             <div className="text-muted-foreground">
               Total latency: {formatLatency(typedStats.query_latency)}
@@ -206,7 +206,7 @@ export default async function Stats() {
               Read-heavy workload
             </div>
             <div className="text-muted-foreground">
-              {formatNumber(typedStats.rows_read)} read,{" "}
+              {formatNumber(typedStats.rows_read)} read,{' '}
               {formatNumber(typedStats.rows_written)} written
             </div>
           </CardFooter>
@@ -222,26 +222,26 @@ export default async function Stats() {
               <Badge
                 variant={
                   typedStats.write_requests_delegated > 0
-                    ? "outline"
-                    : "secondary"
+                    ? 'outline'
+                    : 'secondary'
                 }
               >
                 {typedStats.write_requests_delegated > 0
-                  ? "Delegated"
-                  : "Direct"}
+                  ? 'Delegated'
+                  : 'Direct'}
               </Badge>
             </CardAction>
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
               {typedStats.write_requests_delegated > 0
-                ? "Using delegation"
-                : "Direct writes"}
+                ? 'Using delegation'
+                : 'Direct writes'}
             </div>
             <div className="text-muted-foreground">
               {typedStats.write_requests_delegated > 0
                 ? `${typedStats.write_requests_delegated} delegated requests`
-                : "All writes handled directly"}
+                : 'All writes handled directly'}
             </div>
           </CardFooter>
         </Card>
@@ -286,8 +286,8 @@ export default async function Stats() {
               <Badge
                 variant={
                   typedStats.slowest_queries.length > 5
-                    ? "destructive"
-                    : "secondary"
+                    ? 'destructive'
+                    : 'secondary'
                 }
               >
                 {typedStats.slowest_queries.length}
@@ -304,7 +304,7 @@ export default async function Stats() {
               <span className="text-sm">Worst latency</span>
               <Badge variant="destructive">
                 {Math.max(
-                  ...typedStats.slowest_queries.map((q) => q.elapsed_ms)
+                  ...typedStats.slowest_queries.map((q) => q.elapsed_ms),
                 )}
                 ms
               </Badge>
@@ -339,8 +339,8 @@ export default async function Stats() {
               <span className="font-medium">
                 {Math.round(
                   (typedStats.rows_read + typedStats.rows_written) /
-                    typedStats.query_count
-                )}{" "}
+                    typedStats.query_count,
+                )}{' '}
                 rows
               </span>
             </div>
@@ -355,7 +355,7 @@ export default async function Stats() {
           <CardHeader>
             <CardTitle>Resource Intensive Queries</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Processing more than{" "}
+              Processing more than{' '}
               {formatNumber(typedStats.top_query_threshold)} rows each
             </p>
           </CardHeader>
@@ -391,12 +391,12 @@ export default async function Stats() {
                       <TableCell className="text-right font-mono text-sm">
                         {query.rows_written > 0
                           ? formatNumber(query.rows_written)
-                          : "—"}
+                          : '—'}
                       </TableCell>
                       <TableCell className="text-right">
                         <Badge
                           variant={
-                            totalImpact > 400000 ? "destructive" : "secondary"
+                            totalImpact > 400000 ? 'destructive' : 'secondary'
                           }
                         >
                           {formatNumber(totalImpact)}
@@ -448,7 +448,7 @@ export default async function Stats() {
                       <TableCell className="text-right">
                         <Badge
                           variant={
-                            query.elapsed_ms > 35 ? "destructive" : "secondary"
+                            query.elapsed_ms > 35 ? 'destructive' : 'secondary'
                           }
                         >
                           {query.elapsed_ms}ms

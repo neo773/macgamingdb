@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   Drawer,
   DrawerContent,
   DrawerTrigger,
   DrawerClose,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
-import CreateReviewForm from "@/components/review/CreateReviewForm";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
+import CreateReviewForm from '@/components/review/CreateReviewForm';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type AddReviewDialogProps = {
   gameId: string;
@@ -24,13 +24,13 @@ export default function CreateReviewDialog({
   gameName,
 }: AddReviewDialogProps) {
   const [open, setOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button size={"lg"}>
+          <Button size={'lg'}>
             <PlusIcon />
             Add Experience Report
           </Button>
@@ -54,7 +54,7 @@ export default function CreateReviewDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size={"lg"}>
+        <Button size={'lg'}>
           <PlusIcon />
           Add Experience Report
         </Button>

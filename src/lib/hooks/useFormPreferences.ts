@@ -1,8 +1,5 @@
-import { useCallback } from "react";
-import type {
-  PlayMethod,
-  TranslationLayer,
-} from "@/server/schema";
+import { useCallback } from 'react';
+import type { PlayMethod, TranslationLayer } from '@/server/schema';
 
 interface FormPreferences {
   playMethod?: PlayMethod;
@@ -10,11 +7,11 @@ interface FormPreferences {
   macConfigIdentifier?: string;
 }
 
-const STORAGE_KEY = "macgamingdb-form-preferences";
+const STORAGE_KEY = 'macgamingdb-form-preferences';
 
 export function useFormPreferences() {
   const getPreferences = useCallback((): FormPreferences => {
-    if (typeof window === "undefined") return {};
+    if (typeof window === 'undefined') return {};
 
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -26,7 +23,7 @@ export function useFormPreferences() {
 
   const updatePreference = useCallback(
     <K extends keyof FormPreferences>(key: K, value: FormPreferences[K]) => {
-      if (typeof window === "undefined") return;
+      if (typeof window === 'undefined') return;
 
       try {
         const current = getPreferences();
@@ -36,7 +33,7 @@ export function useFormPreferences() {
         // Silently fail if localStorage is not available
       }
     },
-    [getPreferences]
+    [getPreferences],
   );
 
   return {

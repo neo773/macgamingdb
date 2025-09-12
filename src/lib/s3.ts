@@ -2,11 +2,11 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({
-  region: "auto",
+  region: 'auto',
   endpoint: process.env.S3_ENDPOINT,
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY_ID!,
@@ -19,7 +19,7 @@ const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 export async function getUploadSignedUrl(
   key: string,
   contentType: string,
-  expiresIn: number = 3600
+  expiresIn: number = 3600,
 ): Promise<string> {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
@@ -32,7 +32,7 @@ export async function getUploadSignedUrl(
 
 export async function getViewSignedUrl(
   key: string,
-  expiresIn: number = 3600
+  expiresIn: number = 3600,
 ): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: BUCKET_NAME,
@@ -45,10 +45,10 @@ export async function getViewSignedUrl(
 export function generateScreenshotKey(
   userId: string,
   gameId: string,
-  filename: string
+  filename: string,
 ): string {
   const timestamp = Date.now();
-  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
   return `screenshots/${userId}/${gameId}/${timestamp}_${sanitizedFilename}`;
 }
 

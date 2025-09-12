@@ -1,10 +1,10 @@
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
-import { auth } from "@/lib/auth/auth";
-import { TRPCError } from "@trpc/server";
-import { createPrismaClient } from "@/lib/database/prisma";
-import { PrismaClient } from "@prisma/client";
-import { User } from "better-auth";
+import { initTRPC } from '@trpc/server';
+import superjson from 'superjson';
+import { auth } from '@/lib/auth/auth';
+import { TRPCError } from '@trpc/server';
+import { createPrismaClient } from '@/lib/database/prisma';
+import { PrismaClient } from '@prisma/client';
+import { User } from 'better-auth';
 
 // Define a proper context type
 export interface TrpcContext {
@@ -17,7 +17,6 @@ export interface TrpcContext {
 export const createTRPCContext = async (
   opts: { req?: Request } = {},
 ): Promise<TrpcContext> => {
-
   const prisma = createPrismaClient();
   return {
     prisma: prisma,
@@ -37,8 +36,8 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   try {
     if (!ctx.req) {
       throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Request object not available",
+        code: 'UNAUTHORIZED',
+        message: 'Request object not available',
       });
     }
 
@@ -55,9 +54,10 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   } catch (error) {
     console.error(error);
     throw new TRPCError({
-      code: "UNAUTHORIZED",
-      cause: error instanceof Error ? error.message : "Invalid or expired token",
-      message: "Invalid or expired token",
+      code: 'UNAUTHORIZED',
+      cause:
+        error instanceof Error ? error.message : 'Invalid or expired token',
+      message: 'Invalid or expired token',
     });
   }
 });

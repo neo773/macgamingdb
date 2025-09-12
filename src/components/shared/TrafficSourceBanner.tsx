@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { trpc } from "@/lib/trpc/provider";
-import { toast } from "sonner";
-import { X, TrendingUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc/provider';
+import { toast } from 'sonner';
+import { X, TrendingUp } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 export default function TrafficSourceWidget() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedSource, setSelectedSource] = useState("");
-  const [customSource, setCustomSource] = useState("");
+  const [selectedSource, setSelectedSource] = useState('');
+  const [customSource, setCustomSource] = useState('');
 
   const submitSource = trpc.traffic.submitSource.useMutation({
     onSuccess: (data) => {
       toast.success(data.message);
       setIsVisible(false);
-      localStorage.setItem("traffic_source_submitted", "true");
+      localStorage.setItem('traffic_source_submitted', 'true');
     },
     onError: (error) => {
-      toast.error("Failed to submit feedback. Please try again.");
-      console.error("Error submitting traffic source:", error);
+      toast.error('Failed to submit feedback. Please try again.');
+      console.error('Error submitting traffic source:', error);
     },
     onSettled: () => {
       setIsSubmitting(false);
@@ -32,9 +32,9 @@ export default function TrafficSourceWidget() {
 
   useEffect(() => {
     // Check if user has already submitted or dismissed the widget
-    const hasSubmitted = localStorage.getItem("traffic_source_submitted");
-    const hasDismissed = localStorage.getItem("traffic_source_dismissed");
-    
+    const hasSubmitted = localStorage.getItem('traffic_source_submitted');
+    const hasDismissed = localStorage.getItem('traffic_source_dismissed');
+
     if (!hasSubmitted && !hasDismissed) {
       // Show widget after a short delay
       const timer = setTimeout(() => setIsVisible(true), 2000);
@@ -43,10 +43,10 @@ export default function TrafficSourceWidget() {
   }, []);
 
   const handleSubmit = () => {
-    const source = selectedSource === "Other" ? customSource : selectedSource;
-    
+    const source = selectedSource === 'Other' ? customSource : selectedSource;
+
     if (!source.trim()) {
-      toast.error("Please select or enter how you heard about us.");
+      toast.error('Please select or enter how you heard about us.');
       return;
     }
 
@@ -59,19 +59,19 @@ export default function TrafficSourceWidget() {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem("traffic_source_dismissed", "true");
+    localStorage.setItem('traffic_source_dismissed', 'true');
   };
 
   if (!isVisible) return null;
 
   const sources = [
-    "Reddit",
-    "Twitter", 
-    "Hacker News",
-    "YouTube",
-    "Friend/Word of mouth",
-    "Search engine", 
-    "Other"
+    'Reddit',
+    'Twitter',
+    'Hacker News',
+    'YouTube',
+    'Friend/Word of mouth',
+    'Search engine',
+    'Other',
   ];
 
   return (
@@ -97,13 +97,13 @@ export default function TrafficSourceWidget() {
             We're seeing huge traffic! Where did you hear about us?
           </p>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-1.5">
             {sources.map((source) => (
               <Badge
                 key={source}
-                variant={selectedSource === source ? "default" : "outline"}
+                variant={selectedSource === source ? 'default' : 'outline'}
                 className="cursor-pointer hover:bg-accent transition-colors text-xs px-2 py-1"
                 onClick={() => setSelectedSource(source)}
               >
@@ -112,7 +112,7 @@ export default function TrafficSourceWidget() {
             ))}
           </div>
 
-          {selectedSource === "Other" && (
+          {selectedSource === 'Other' && (
             <Input
               placeholder="Please specify..."
               value={customSource}
@@ -125,11 +125,15 @@ export default function TrafficSourceWidget() {
           <div className="flex gap-2">
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting || (!selectedSource || (selectedSource === "Other" && !customSource.trim()))}
+              disabled={
+                isSubmitting ||
+                !selectedSource ||
+                (selectedSource === 'Other' && !customSource.trim())
+              }
               size="sm"
               className="flex-1"
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting ? 'Submitting...' : 'Submit'}
             </Button>
             <Button
               onClick={handleDismiss}
@@ -144,4 +148,4 @@ export default function TrafficSourceWidget() {
       </Card>
     </div>
   );
-} 
+}

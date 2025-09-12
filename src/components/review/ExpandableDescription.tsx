@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface ExpandableDescriptionProps {
   description: string;
@@ -29,8 +29,8 @@ export default function ExpandableDescription({
   return (
     <div className="mt-2">
       <div
-        className={`overflow-hidden relative ${isExpanded ? "" : "max-h-[200px]"}`}
-        style={{ transition: "max-height 0.3s ease-in-out" }}
+        className={`overflow-hidden relative ${isExpanded ? '' : 'max-h-[200px]'}`}
+        style={{ transition: 'max-height 0.3s ease-in-out' }}
       >
         <div
           ref={contentRef}
@@ -45,7 +45,7 @@ export default function ExpandableDescription({
           variant="link"
           className="mt-2 text-blue-400 hover:text-blue-300 p-0 h-auto"
         >
-          {isExpanded ? "Show Less" : "Read More"}
+          {isExpanded ? 'Show Less' : 'Read More'}
         </Button>
       )}
     </div>

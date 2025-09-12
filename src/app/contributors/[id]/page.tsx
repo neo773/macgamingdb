@@ -1,18 +1,17 @@
-import { createPrismaClient } from "@/lib/database/prisma";
-import { notFound } from "next/navigation";
-import Header from "@/components/shared/Header";
-import Footer from "@/components/shared/Footer";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-import ExpandableReviewNote from "@/components/review/ExpandableReviewNote";
-import ScreenshotDisplay from "@/components/review/ScreenshotDisplay";
+import { createPrismaClient } from '@/lib/database/prisma';
+import { notFound } from 'next/navigation';
+import Header from '@/components/shared/Header';
+import Footer from '@/components/shared/Footer';
+import Link from 'next/link';
+import { ChevronLeft } from 'lucide-react';
+import ExpandableReviewNote from '@/components/review/ExpandableReviewNote';
+import ScreenshotDisplay from '@/components/review/ScreenshotDisplay';
 
-import { formatDistance } from "date-fns";
-import { Card, CardContent } from "@/components/ui/card";
-import GameReviewCard from "@/components/review/ReviewCard";
-import { SteamAppData } from "@/server/helpers/steam";
-import { Container } from "@/components/ui/container";
-
+import { formatDistance } from 'date-fns';
+import { Card, CardContent } from '@/components/ui/card';
+import GameReviewCard from '@/components/review/ReviewCard';
+import { SteamAppData } from '@/server/helpers/steam';
+import { Container } from '@/components/ui/container';
 
 export default async function ContributorPage({
   params,
@@ -27,7 +26,7 @@ export default async function ContributorPage({
   const contributor = await prisma.user.findUnique({
     where: {
       id: contributorId,
-    }
+    },
   });
 
   if (!contributor) {
@@ -44,16 +43,17 @@ export default async function ContributorPage({
       macConfig: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 
-  const contributorName = contributor.email!.split('@')[0].replace(/[0-9._]/g, '');
-
+  const contributorName = contributor
+    .email!.split('@')[0]
+    .replace(/[0-9._]/g, '');
 
   // Get unique games count
   const uniqueGamesCount = new Set(
-    contributorReviews.map((review) => review.gameId)
+    contributorReviews.map((review) => review.gameId),
   ).size;
 
   return (
@@ -76,7 +76,7 @@ export default async function ContributorPage({
               {contributorName} Reviews
             </h1>
             <p className="text-gray-400">
-              {contributorReviews.length} reviews across {uniqueGamesCount}{" "}
+              {contributorReviews.length} reviews across {uniqueGamesCount}{' '}
               games
             </p>
           </div>
@@ -94,7 +94,7 @@ export default async function ContributorPage({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {contributorReviews.map((review) => {
                 const gameDetails = JSON.parse(
-                  review.game.details ?? "{}"
+                  review.game.details ?? '{}',
                 ) as SteamAppData;
                 return (
                   <div key={review.id}>
@@ -112,15 +112,15 @@ export default async function ContributorPage({
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
                             <Link href={`/games/${review.gameId}`}>
                               <h3 className="text-lg font-semibold text-white hover:text-blue-300 transition-colors">
-                                {gameDetails.name || "Unknown Game"}
+                                {gameDetails.name || 'Unknown Game'}
                               </h3>
                             </Link>
                             <div className="text-sm text-gray-300 mt-1">
-                              Reviewed{" "}
+                              Reviewed{' '}
                               {formatDistance(
                                 new Date(review.createdAt),
                                 new Date(),
-                                { addSuffix: true }
+                                { addSuffix: true },
                               )}
                             </div>
                           </div>
@@ -134,7 +134,7 @@ export default async function ContributorPage({
                                 <h4 className="text-sm font-medium text-gray-300 mb-2">
                                   Review Note:
                                 </h4>
-                                <ExpandableReviewNote 
+                                <ExpandableReviewNote
                                   notes={review.notes}
                                   screenshots={
                                     review.screenshots

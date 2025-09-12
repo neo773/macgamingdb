@@ -1,30 +1,41 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-export const PlayMethodEnum = z.enum(["NATIVE", "CROSSOVER", "PARALLELS"]);
-export const TranslationLayerEnum = z.enum(["DXVK", "DXMT", "D3D_METAL", "NONE"]);
+export const PlayMethodEnum = z.enum(['NATIVE', 'CROSSOVER', 'PARALLELS']);
+export const TranslationLayerEnum = z.enum([
+  'DXVK',
+  'DXMT',
+  'D3D_METAL',
+  'NONE',
+]);
 export const PerformanceEnum = z.enum([
-  "EXCELLENT",
-  "GOOD",
-  "PLAYABLE",
-  "BARELY_PLAYABLE",
-  "UNPLAYABLE",
+  'EXCELLENT',
+  'GOOD',
+  'PLAYABLE',
+  'BARELY_PLAYABLE',
+  'UNPLAYABLE',
 ]);
 
-export const MacFamilyEnum = z.enum(["MacBookAir", "MacBookPro", "iMac", "MacMini", "MacStudio", "MacPro"]);
-export const GraphicsSettingsEnum = z.enum(["ULTRA", "HIGH", "MEDIUM", "LOW"]);
-export const ChipsetEnum = z.enum(["M1", "M2", "M3", "M4"]);
-export const ChipsetVariantEnum = z.enum(["BASE", "PRO", "MAX", "ULTRA"]);
+export const MacFamilyEnum = z.enum([
+  'MacBookAir',
+  'MacBookPro',
+  'iMac',
+  'MacMini',
+  'MacStudio',
+  'MacPro',
+]);
+export const GraphicsSettingsEnum = z.enum(['ULTRA', 'HIGH', 'MEDIUM', 'LOW']);
+export const ChipsetEnum = z.enum(['M1', 'M2', 'M3', 'M4']);
+export const ChipsetVariantEnum = z.enum(['BASE', 'PRO', 'MAX', 'ULTRA']);
 
-
-export const MacFamily = MacFamilyEnum.Enum
-export const GraphicsSettings = GraphicsSettingsEnum.Enum
-export const Chipset = ChipsetEnum.Enum
-export const ChipsetVariant = ChipsetVariantEnum.Enum
+export const MacFamily = MacFamilyEnum.Enum;
+export const GraphicsSettings = GraphicsSettingsEnum.Enum;
+export const Chipset = ChipsetEnum.Enum;
+export const ChipsetVariant = ChipsetVariantEnum.Enum;
 
 // Create constants for software versions to allow direct access in components
 export const SOFTWARE_VERSIONS = {
-  CROSSOVER: ["25.0.1", "25.0", "24.0"],
-  PARALLELS: ["20", "19"],
+  CROSSOVER: ['25.0.1', '25.0', '24.0'],
+  PARALLELS: ['20', '19'],
 } as const;
 
 // Schema for validation
@@ -32,7 +43,6 @@ export const SoftwareVersionsSchema = z.object({
   CROSSOVER: z.array(z.string()),
   PARALLELS: z.array(z.string()),
 });
-
 
 export type SoftwareVersions = z.infer<typeof SoftwareVersionsSchema>;
 

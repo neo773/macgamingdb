@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { trpc } from "@/lib/trpc/provider";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc/provider';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface ScreenshotDisplayProps {
   screenshots: string[];
@@ -22,7 +22,7 @@ export default function ScreenshotDisplay({
     {
       enabled: screenshots.length > 0,
       staleTime: 30 * 60 * 1000, // 30 minutes
-    }
+    },
   );
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function ScreenshotDisplay({
                 ) {
                   target.src = urlData.original;
                 } else {
-                  target.style.display = "none";
+                  target.style.display = 'none';
                 }
               }}
             />
@@ -106,7 +106,7 @@ export default function ScreenshotDisplay({
       {screenshots.length > 3 && (
         <p className="text-xs text-gray-400 mt-2">
           +{screenshots.length - 3} more screenshot
-          {screenshots.length > 4 ? "s" : ""}
+          {screenshots.length > 4 ? 's' : ''}
         </p>
       )}
     </div>

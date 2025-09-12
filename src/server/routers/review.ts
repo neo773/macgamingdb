@@ -1,17 +1,33 @@
-import { z } from "zod";
-import { router, procedure, protectedProcedure } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import { revalidatePath } from "next/cache";
-import { getGameBySteamId } from "@/server/helpers/steam";
-import { GraphicsSettingsEnum, PerformanceEnum, PlayMethodEnum, TranslationLayerEnum } from "../schema";
-import type { PerformanceRating, PrismaClient } from "@prisma/client";
-import type { Performance, Chipset, ChipsetVariant, PlayMethod } from "../schema";
-import { updateAllPerformanceStatsForGame } from "../helpers/performance-stats";
-import { getUploadSignedUrl, generateScreenshotKey, getPublicUrl } from "@/lib/s3";
-import { MacSpecification } from "@/lib/scraper/EveryMacScraper";
+import { z } from 'zod';
+import { router, procedure, protectedProcedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
+import { revalidatePath } from 'next/cache';
+import { getGameBySteamId } from '@/server/helpers/steam';
+import {
+  GraphicsSettingsEnum,
+  PerformanceEnum,
+  PlayMethodEnum,
+  TranslationLayerEnum,
+} from '../schema';
+import type { PerformanceRating, PrismaClient } from '@prisma/client';
+import type {
+  Performance,
+  Chipset,
+  ChipsetVariant,
+  PlayMethod,
+} from '../schema';
+import { updateAllPerformanceStatsForGame } from '../helpers/performance-stats';
+import {
+  getUploadSignedUrl,
+  generateScreenshotKey,
+  getPublicUrl,
+} from '@/lib/s3';
+import { MacSpecification } from '@/lib/scraper/EveryMacScraper';
 
 // Helper function to calculate average performance
-const calculateAveragePerformance = (reviews: { performance: PerformanceRating }[]) => {
+const calculateAveragePerformance = (
+  reviews: { performance: PerformanceRating }[],
+) => {
   const performanceMap = {
     UNPLAYABLE: 0,
     BARELY_PLAYABLE: 1,
@@ -21,7 +37,10 @@ const calculateAveragePerformance = (reviews: { performance: PerformanceRating }
   };
 
   const sum = reviews.reduce((acc, review) => {
-    return acc + (performanceMap[review.performance as keyof typeof performanceMap] || 0);
+    return (
+      acc +
+      (performanceMap[review.performance as keyof typeof performanceMap] || 0)
+    );
   }, 0);
 
   return reviews.length > 0 ? sum / reviews.length : 0;
@@ -29,15 +48,18 @@ const calculateAveragePerformance = (reviews: { performance: PerformanceRating }
 
 // Convert average score to performance rating
 const scoreToRating = (score: number): Performance => {
-  if (score >= 3.5) return "EXCELLENT";
-  if (score >= 2.5) return "GOOD";
-  if (score >= 1.5) return "PLAYABLE";
-  if (score >= 0.5) return "BARELY_PLAYABLE";
-  return "UNPLAYABLE";
+  if (score >= 3.5) return 'EXCELLENT';
+  if (score >= 2.5) return 'GOOD';
+  if (score >= 1.5) return 'PLAYABLE';
+  if (score >= 0.5) return 'BARELY_PLAYABLE';
+  return 'UNPLAYABLE';
 };
 
 // Helper function to update aggregated performance for a game
-const updateGameAggregatedPerformance = async (prisma: PrismaClient, gameId: string) => {
+const updateGameAggregatedPerformance = async (
+  prisma: PrismaClient,
+  gameId: string,
+) => {
   const reviews = await prisma.gameReview.findMany({
     where: { gameId },
     select: { performance: true },
@@ -63,13 +85,19 @@ const updateAllPerformanceStats = async (
   gameId: string,
   chipset: Chipset,
   chipsetVariant: ChipsetVariant,
-  playMethod: PlayMethod
+  playMethod: PlayMethod,
 ) => {
   // First, update the game's aggregated performance
   await updateGameAggregatedPerformance(prisma, gameId);
 
   // Then update all performance stats using the shared helper
-  await updateAllPerformanceStatsForGame(prisma, gameId, chipset, chipsetVariant, playMethod);
+  await updateAllPerformanceStatsForGame(
+    prisma,
+    gameId,
+    chipset,
+    chipsetVariant,
+    playMethod,
+  );
 };
 
 // Define schemas using Zod
@@ -115,10 +143,12 @@ export const reviewRouter = router({
 
   // Get Mac configurations with server-side filtering
   getMacConfigs: procedure
-    .input(z.object({
-      search: z.string().optional(),
-      selectedConfigIdentifier: z.string().optional(),
-    }))
+    .input(
+      z.object({
+        search: z.string().optional(),
+        selectedConfigIdentifier: z.string().optional(),
+      }),
+    )
     .query(async ({ input, ctx }) => {
       try {
         const macConfigs = await ctx.prisma!.macConfig.findMany({
@@ -126,7 +156,7 @@ export const reviewRouter = router({
         });
 
         // Parse metadata and create searchable configs
-        let configs = macConfigs.map(config => {
+        let configs = macConfigs.map((config) => {
           const metadata = JSON.parse(config.metadata) as MacSpecification;
           return {
             id: config.id,
@@ -137,16 +167,21 @@ export const reviewRouter = router({
               metadata.model,
               metadata.chip,
               metadata.chipVariant,
-              metadata.family
-            ].join(' ').toLowerCase(),
+              metadata.family,
+            ]
+              .join(' ')
+              .toLowerCase(),
           };
         });
 
         // Server-side filtering if search term provided
         if (input.search?.trim()) {
-          const searchTerms = input.search.toLowerCase().split(/\s+/).filter(Boolean);
-          configs = configs.filter(config =>
-            searchTerms.every(term => config.searchText.includes(term))
+          const searchTerms = input.search
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(Boolean);
+          configs = configs.filter((config) =>
+            searchTerms.every((term) => config.searchText.includes(term)),
           );
         }
 
@@ -159,7 +194,7 @@ export const reviewRouter = router({
           const family = config.metadata.family;
           if (!groupedConfigs[family]) groupedConfigs[family] = [];
           groupedConfigs[family].push(config);
-          
+
           // Track selected item's group
           if (config.identifier === input.selectedConfigIdentifier) {
             selectedGroupKey = family;
@@ -177,12 +212,12 @@ export const reviewRouter = router({
 
         // Create final ordered list (selected group first)
         const finalConfigs: typeof configs = [];
-        
+
         // Add selected group first
         if (selectedGroupKey && groupedConfigs[selectedGroupKey]) {
           finalConfigs.push(...groupedConfigs[selectedGroupKey]);
         }
-        
+
         // Add other groups
         for (const [family, familyConfigs] of Object.entries(groupedConfigs)) {
           if (family !== selectedGroupKey) {
@@ -193,21 +228,22 @@ export const reviewRouter = router({
         // Remove searchText from response
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return finalConfigs.map(({ searchText, ...config }) => config);
-        
       } catch (error) {
-        console.error("Error fetching Mac configs:", error);
+        console.error('Error fetching Mac configs:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch Mac configurations",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch Mac configurations',
         });
       }
     }),
 
   // Get single Mac configuration by identifier
   getMacConfigById: procedure
-    .input(z.object({
-      identifier: z.string(),
-    }))
+    .input(
+      z.object({
+        identifier: z.string(),
+      }),
+    )
     .query(async ({ input, ctx }) => {
       try {
         const macConfig = await ctx.prisma!.macConfig.findUnique({
@@ -226,10 +262,10 @@ export const reviewRouter = router({
           metadata,
         };
       } catch (error) {
-        console.error("Error fetching Mac config:", error);
+        console.error('Error fetching Mac config:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch Mac configuration",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch Mac configuration',
         });
       }
     }),
@@ -242,21 +278,25 @@ export const reviewRouter = router({
         // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
-            code: "UNAUTHORIZED",
-            message: "Missing authorization",
+            code: 'UNAUTHORIZED',
+            message: 'Missing authorization',
           });
         }
 
         // Validate file type (only images)
-        if (!input.contentType.startsWith("image/")) {
+        if (!input.contentType.startsWith('image/')) {
           throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Only image files are allowed",
+            code: 'BAD_REQUEST',
+            message: 'Only image files are allowed',
           });
         }
 
-                 // Generate S3 key
-        const key = generateScreenshotKey(ctx.user.user.id, input.gameId, input.filename);
+        // Generate S3 key
+        const key = generateScreenshotKey(
+          ctx.user.user.id,
+          input.gameId,
+          input.filename,
+        );
 
         // Get presigned URL
         const signedUrl = await getUploadSignedUrl(key, input.contentType);
@@ -268,13 +308,13 @@ export const reviewRouter = router({
           key,
         };
       } catch (error) {
-        console.error("Error generating presigned URL:", error);
+        console.error('Error generating presigned URL:', error);
         if (error instanceof TRPCError) {
           throw error;
         }
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to generate upload URL",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to generate upload URL',
         });
       }
     }),
@@ -286,8 +326,8 @@ export const reviewRouter = router({
         // Check if user is authenticated first
         if (!ctx.user?.user.id) {
           throw new TRPCError({
-            code: "UNAUTHORIZED",
-            message: "Missing authorization",
+            code: 'UNAUTHORIZED',
+            message: 'Missing authorization',
           });
         }
 
@@ -298,13 +338,12 @@ export const reviewRouter = router({
 
         // Only fetch game details from Steam if they don't exist in our database
         if (!gameExists) {
-
           const gameDetails = await getGameBySteamId(input.gameId);
 
           if (!gameDetails) {
             return null;
           }
-      
+
           await ctx.prisma!.game.upsert({
             where: { id: input.gameId },
             update: { details: JSON.stringify(gameDetails) },
@@ -318,13 +357,16 @@ export const reviewRouter = router({
 
         if (!macConfig) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Mac config not found",
+            code: 'NOT_FOUND',
+            message: 'Mac config not found',
           });
         }
 
-        const macConfigMetadata = JSON.parse(macConfig.metadata) as MacSpecification;
-        const hasScreenshots = input.screenshots && input.screenshots.length > 0;
+        const macConfigMetadata = JSON.parse(
+          macConfig.metadata,
+        ) as MacSpecification;
+        const hasScreenshots =
+          input.screenshots && input.screenshots.length > 0;
 
         // Create the review with the authenticated user's ID
         const review = await ctx.prisma!.gameReview.create({
@@ -341,7 +383,9 @@ export const reviewRouter = router({
             chipset: macConfigMetadata.chip,
             chipsetVariant: macConfigMetadata.chipVariant as ChipsetVariant,
             notes: input.notes || null,
-            screenshots: hasScreenshots ? JSON.stringify(input.screenshots) : null,
+            screenshots: hasScreenshots
+              ? JSON.stringify(input.screenshots)
+              : null,
             softwareVersion: input.softwareVersion || null,
           },
         });
@@ -350,7 +394,13 @@ export const reviewRouter = router({
         revalidatePath(`/games/${input.gameId}`);
 
         // Update performance stats
-        await updateAllPerformanceStats(ctx.prisma!, input.gameId, macConfigMetadata.chip as Chipset, macConfigMetadata.chipVariant as ChipsetVariant, input.playMethod);
+        await updateAllPerformanceStats(
+          ctx.prisma!,
+          input.gameId,
+          macConfigMetadata.chip as Chipset,
+          macConfigMetadata.chipVariant as ChipsetVariant,
+          input.playMethod,
+        );
 
         // Update review count
         await ctx.prisma!.game.update({
@@ -360,8 +410,8 @@ export const reviewRouter = router({
 
         return { review };
       } catch (error) {
-        console.error("Error creating review:", error);
-        throw new Error("Failed to create review");
+        console.error('Error creating review:', error);
+        throw new Error('Failed to create review');
       }
     }),
 
@@ -372,8 +422,8 @@ export const reviewRouter = router({
         // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
-            code: "UNAUTHORIZED",
-            message: "Missing authorization",
+            code: 'UNAUTHORIZED',
+            message: 'Missing authorization',
           });
         }
 
@@ -386,25 +436,27 @@ export const reviewRouter = router({
         // Check if review exists
         if (!review) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Review not found",
+            code: 'NOT_FOUND',
+            message: 'Review not found',
           });
         }
 
         // Check if the review belongs to the authenticated user
         if (review.userId !== ctx.user.user.id) {
           throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "You can only update your own reviews",
+            code: 'FORBIDDEN',
+            message: 'You can only update your own reviews',
           });
         }
 
         // Update the review notes and screenshots
         await ctx.prisma!.gameReview.update({
           where: { id: input.reviewId },
-          data: { 
+          data: {
             notes: input.notes,
-            screenshots: input.screenshots ? JSON.stringify(input.screenshots) : undefined,
+            screenshots: input.screenshots
+              ? JSON.stringify(input.screenshots)
+              : undefined,
           },
         });
 
@@ -414,22 +466,22 @@ export const reviewRouter = router({
 
         // Update performance stats
         await updateAllPerformanceStats(
-          ctx.prisma!, 
-          review.gameId, 
-          review.chipset as Chipset, 
-          review.chipsetVariant as ChipsetVariant, 
-          review.playMethod as PlayMethod
+          ctx.prisma!,
+          review.gameId,
+          review.chipset as Chipset,
+          review.chipsetVariant as ChipsetVariant,
+          review.playMethod as PlayMethod,
         );
 
-        return { success: true, message: "Review updated successfully" };
+        return { success: true, message: 'Review updated successfully' };
       } catch (error) {
-        console.error("Error updating review:", error);
+        console.error('Error updating review:', error);
         if (error instanceof TRPCError) {
           throw error;
         }
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update review",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update review',
         });
       }
     }),
@@ -441,8 +493,8 @@ export const reviewRouter = router({
         // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
-            code: "UNAUTHORIZED",
-            message: "Missing authorization",
+            code: 'UNAUTHORIZED',
+            message: 'Missing authorization',
           });
         }
 
@@ -455,24 +507,24 @@ export const reviewRouter = router({
         // Check if review exists
         if (!review) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Review not found",
+            code: 'NOT_FOUND',
+            message: 'Review not found',
           });
         }
 
         // Check if the review belongs to the authenticated user
         if (review.userId !== ctx.user.user.id) {
           throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "You can only delete your own reviews",
+            code: 'FORBIDDEN',
+            message: 'You can only delete your own reviews',
           });
         }
 
         // Check if the user has confirmed deletion
         if (!input.confirmation) {
           throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Please confirm deletion",
+            code: 'BAD_REQUEST',
+            message: 'Please confirm deletion',
           });
         }
 
@@ -493,22 +545,22 @@ export const reviewRouter = router({
 
         // Update performance stats
         await updateAllPerformanceStats(
-          ctx.prisma!, 
-          review.gameId, 
-          review.chipset as Chipset, 
-          review.chipsetVariant as ChipsetVariant, 
-          review.playMethod as PlayMethod
+          ctx.prisma!,
+          review.gameId,
+          review.chipset as Chipset,
+          review.chipsetVariant as ChipsetVariant,
+          review.playMethod as PlayMethod,
         );
 
-        return { success: true, message: "Review deleted successfully" };
+        return { success: true, message: 'Review deleted successfully' };
       } catch (error) {
-        console.error("Error deleting review:", error);
+        console.error('Error deleting review:', error);
         if (error instanceof TRPCError) {
           throw error;
         }
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to delete review",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to delete review',
         });
       }
     }),

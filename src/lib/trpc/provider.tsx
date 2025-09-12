@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
-import { createTRPCReact } from "@trpc/react-query";
-import { type AppRouter } from "@/server/routers/_app";
-import { getUrl } from "@/lib/trpc/utils";
-import superjson from "superjson";
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { httpBatchLink } from '@trpc/client';
+import { createTRPCReact } from '@trpc/react-query';
+import { type AppRouter } from '@/server/routers/_app';
+import { getUrl } from '@/lib/trpc/utils';
+import superjson from 'superjson';
 
 export const trpc = createTRPCReact<AppRouter>({
   overrides: {

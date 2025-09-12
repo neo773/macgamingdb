@@ -1,7 +1,7 @@
-import React from "react";
-import { ButtonFilter } from "../../ui/button-filter";
-import { PerformanceEnum } from "@/server/schema";
-import { PerformanceFilter as PerformanceFilterType } from "@/lib/constants";
+import React from 'react';
+import { ButtonFilter } from '../../ui/button-filter';
+import { PerformanceEnum } from '@/server/schema';
+import { PerformanceFilter as PerformanceFilterType } from '@/lib/constants';
 
 interface PerformanceFilterProps {
   activeFilter: PerformanceFilterType;
@@ -16,12 +16,14 @@ export const PerformanceFilter: React.FC<PerformanceFilterProps> = ({
   onFilterChange,
   displayStats,
   formatRatingLabel,
-  className = "",
+  className = '',
 }) => {
-  const performanceOptions = (["ALL", ...PerformanceEnum.options] as const).map((rating) => ({
-    value: rating,
-    label: formatRatingLabel(rating),
-  }));
+  const performanceOptions = (['ALL', ...PerformanceEnum.options] as const).map(
+    (rating) => ({
+      value: rating,
+      label: formatRatingLabel(rating),
+    }),
+  );
 
   const handleValueChange = (value: string) => {
     onFilterChange(value as PerformanceFilterType);
@@ -36,4 +38,4 @@ export const PerformanceFilter: React.FC<PerformanceFilterProps> = ({
       className={className}
     />
   );
-}; 
+};

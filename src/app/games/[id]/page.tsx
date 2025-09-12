@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { createServerHelpers } from "@/lib/trpc/server";
-import { Metadata } from "next";
-import CreateReviewDialog from "@/components/review/CreateReviewDialog";
-import ExpandableDescription from "@/components/review/ExpandableDescription";
-import { Card, CardContent } from "@/components/ui/card";
-import * as React from "react";
-import { ChevronLeft } from "lucide-react";
-import Footer from "@/components/shared/Footer";
-import Header from "@/components/shared/Header";
-import GameReviewCard from "@/components/review/ReviewCard";
-import { SteamAppData } from "@/server/helpers/steam";
-import { Container } from "@/components/ui/container";
-import Script from "next/script";
+import Link from 'next/link';
+import { createServerHelpers } from '@/lib/trpc/server';
+import { Metadata } from 'next';
+import CreateReviewDialog from '@/components/review/CreateReviewDialog';
+import ExpandableDescription from '@/components/review/ExpandableDescription';
+import { Card, CardContent } from '@/components/ui/card';
+import * as React from 'react';
+import { ChevronLeft } from 'lucide-react';
+import Footer from '@/components/shared/Footer';
+import Header from '@/components/shared/Header';
+import GameReviewCard from '@/components/review/ReviewCard';
+import { SteamAppData } from '@/server/helpers/steam';
+import { Container } from '@/components/ui/container';
+import Script from 'next/script';
 
 // Enable ISR with a revalidation time of 1 year
 export const revalidate = 31536000;
@@ -31,15 +31,15 @@ export async function generateMetadata({
     // Add robust error handling for JSON parsing
     let gameDetails: SteamAppData;
     try {
-      gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+      gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
     } catch (parseError) {
-      console.error("Failed to parse game details in metadata:", parseError);
+      console.error('Failed to parse game details in metadata:', parseError);
       return {
-        title: "Game Details - Mac Gaming DB",
-        description: "Details about game performance on Mac",
+        title: 'Game Details - Mac Gaming DB',
+        description: 'Details about game performance on Mac',
       };
     }
-    const gameName = gameDetails.name || "This Game";
+    const gameName = gameDetails.name || 'This Game';
 
     return {
       title: `${gameName} – Mac Compatibility & Apple Silicon Performance | MacGamingDB`,
@@ -47,14 +47,14 @@ export async function generateMetadata({
       openGraph: {
         title: `${gameName} – Mac Compatibility & Apple Silicon Performance`,
         description: `Discover how ${gameName} runs on macOS. Includes benchmarks, compatibility layers (Rosetta, CrossOver, Parallels, GPTK), and community reviews.`,
-        type: "website",
+        type: 'website',
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    console.error('Error generating metadata:', error);
     return {
-      title: "Game Details - Mac Gaming DB",
-      description: "Details about game performance on Mac",
+      title: 'Game Details - Mac Gaming DB',
+      description: 'Details about game performance on Mac',
     };
   }
 }
@@ -77,16 +77,16 @@ export default async function GamePage({
     // Add robust error handling for JSON parsing
     let gameDetails: SteamAppData;
     try {
-      gameDetails = JSON.parse(game?.details || "{}") as SteamAppData;
+      gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
     } catch (parseError) {
-      console.error("Failed to parse game details:", parseError, game?.details);
+      console.error('Failed to parse game details:', parseError, game?.details);
       // Provide an empty object with fallback properties instead of showing a 404
       gameDetails = {
-        name: "Game Information Unavailable",
+        name: 'Game Information Unavailable',
         detailed_description:
-          "Game details could not be loaded at this time. Please try again later.",
-        header_image: "",
-        release_date: { date: "Unknown", coming_soon: false },
+          'Game details could not be loaded at this time. Please try again later.',
+        header_image: '',
+        release_date: { date: 'Unknown', coming_soon: false },
       } as SteamAppData;
     }
 
@@ -94,41 +94,41 @@ export default async function GamePage({
     const hasReviews = reviews && reviews.length > 0;
     const isPlayable =
       stats &&
-      typeof stats.averagePerformance === "number" &&
+      typeof stats.averagePerformance === 'number' &&
       stats.averagePerformance > 1.0;
     const hasCrossoverReview =
       stats &&
       stats.methods &&
-      typeof stats.methods.crossover === "number" &&
+      typeof stats.methods.crossover === 'number' &&
       stats.methods.crossover > 0;
     const showCrossoverAffiliate =
       hasReviews && isPlayable && hasCrossoverReview;
 
     const jsonLd = {
-      "@context": "https://schema.org",
-      "@type": "VideoGame",
-      name: gameDetails.name || "Game",
+      '@context': 'https://schema.org',
+      '@type': 'VideoGame',
+      name: gameDetails.name || 'Game',
       url: `https://macgamingdb.app/games/${id}`,
-      gamePlatform: "macOS",
-      operatingSystem: "macOS (Apple Silicon M1–M4)",
-      applicationCategory: "Game",
+      gamePlatform: 'macOS',
+      operatingSystem: 'macOS (Apple Silicon M1–M4)',
+      applicationCategory: 'Game',
       description: gameDetails.detailed_description
-        ? gameDetails.detailed_description.replace(/<[^>]*>?/gm, "")
-        : "Game details unavailable",
-      image: gameDetails.header_image || "",
-      publisher: gameDetails.publishers ? gameDetails.publishers[0] : "",
+        ? gameDetails.detailed_description.replace(/<[^>]*>?/gm, '')
+        : 'Game details unavailable',
+      image: gameDetails.header_image || '',
+      publisher: gameDetails.publishers ? gameDetails.publishers[0] : '',
       sameAs: [
-        gameDetails.website || "",
+        gameDetails.website || '',
         gameDetails.steam_appid
           ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
-          : "",
+          : '',
       ].filter(Boolean),
       aggregateRating: stats
         ? {
-            "@type": "AggregateRating",
-            ratingValue: stats.averagePerformance?.toFixed(1) || "0",
-            worstRating: "0",
-            bestRating: "4",
+            '@type': 'AggregateRating',
+            ratingValue: stats.averagePerformance?.toFixed(1) || '0',
+            worstRating: '0',
+            bestRating: '4',
             ratingCount: stats.totalReviews || 0,
           }
         : undefined,
@@ -169,7 +169,7 @@ export default async function GamePage({
               )}
               <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {gameDetails.name || "Game Information Unavailable"}
+                  {gameDetails.name || 'Game Information Unavailable'}
                 </h1>
                 {gameDetails.release_date && (
                   <p className="text-gray-300">
@@ -191,7 +191,7 @@ export default async function GamePage({
                   <ExpandableDescription
                     description={
                       gameDetails.detailed_description ||
-                      "No description available."
+                      'No description available.'
                     }
                   />
                 </CardContent>
@@ -314,8 +314,8 @@ export default async function GamePage({
                     width="0"
                     src="https://setapp.sjv.io/i/6516695/344510/5114"
                     style={{
-                      position: "absolute",
-                      visibility: "hidden",
+                      position: 'absolute',
+                      visibility: 'hidden',
                       border: 0,
                     }}
                     alt=""
@@ -375,7 +375,7 @@ export default async function GamePage({
       </div>
     );
   } catch (error) {
-    console.error("Error in server component:", error);
+    console.error('Error in server component:', error);
 
     // Instead of notFound(), provide a graceful error page
     return (
@@ -407,7 +407,7 @@ export default async function GamePage({
                 <li>Server-side caching problems</li>
               </ul>
               <p className="text-gray-300">
-                Please try again later or return to the{" "}
+                Please try again later or return to the{' '}
                 <Link href="/" className="text-blue-400 hover:underline">
                   home page
                 </Link>

@@ -1,22 +1,25 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Search } from 'lucide-react';
 
-import { trpc } from "@/lib/trpc/provider";
+import { trpc } from '@/lib/trpc/provider';
 import { useDebounce } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { SteamGameSearchObject } from "@/server/helpers/steam";
+import { SteamGameSearchObject } from '@/server/helpers/steam';
 
 type SearchBarProps = {
-  onResultsChange?: (results: SteamGameSearchObject[] | null, isLoading: boolean) => void;
+  onResultsChange?: (
+    results: SteamGameSearchObject[] | null,
+    isLoading: boolean,
+  ) => void;
 };
 
 export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('q') || "");
+  const [query, setQuery] = useState(searchParams.get('q') || '');
   const [debouncedQuery] = useDebounce(query, 300);
 
   const { data, isLoading } = trpc.game.search.useQuery(
@@ -30,13 +33,13 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   // Update URL when search query changes
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
-    
+
     if (debouncedQuery) {
       params.set('q', debouncedQuery);
     } else {
       params.delete('q');
     }
-    
+
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [debouncedQuery, pathname, router, searchParams]);
 
@@ -44,7 +47,7 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   useEffect(() => {
     if (onResultsChange) {
       // Always call onResultsChange, even when query is empty
-      const results = debouncedQuery.trim() === "" ? null : data || null;
+      const results = debouncedQuery.trim() === '' ? null : data || null;
       onResultsChange(results, isLoading);
     }
   }, [data, debouncedQuery, isLoading, onResultsChange]);

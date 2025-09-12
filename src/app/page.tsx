@@ -1,11 +1,15 @@
-import Footer from "@/components/shared/Footer";
-import Header from "@/components/shared/Header";
-import HomeClient from "./home-client";
-import { createServerHelpers } from "@/lib/trpc/server";
-import { SearchURLParamsKeys, createFilterConfig, PlayMethodFilter } from "@/lib/constants";
-import { Container } from "@/components/ui/container";
+import Footer from '@/components/shared/Footer';
+import Header from '@/components/shared/Header';
+import HomeClient from './home-client';
+import { createServerHelpers } from '@/lib/trpc/server';
+import {
+  SearchURLParamsKeys,
+  createFilterConfig,
+  PlayMethodFilter,
+} from '@/lib/constants';
+import { Container } from '@/components/ui/container';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // revalidate every hour
 
 export default async function Home({
@@ -13,11 +17,21 @@ export default async function Home({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const performanceParam = (await searchParams)[SearchURLParamsKeys.PERFORMANCE] as string;
-  const chipsetParam = (await searchParams)[SearchURLParamsKeys.CHIPSET] as string;
-  const playMethodParam = (await searchParams)[SearchURLParamsKeys.PLAY_METHOD] as PlayMethodFilter;
-  
-  const filterConfig = createFilterConfig(performanceParam, chipsetParam, playMethodParam);
+  const performanceParam = (await searchParams)[
+    SearchURLParamsKeys.PERFORMANCE
+  ] as string;
+  const chipsetParam = (await searchParams)[
+    SearchURLParamsKeys.CHIPSET
+  ] as string;
+  const playMethodParam = (await searchParams)[
+    SearchURLParamsKeys.PLAY_METHOD
+  ] as PlayMethodFilter;
+
+  const filterConfig = createFilterConfig(
+    performanceParam,
+    chipsetParam,
+    playMethodParam,
+  );
 
   const helpers = await createServerHelpers();
 
@@ -34,14 +48,14 @@ export default async function Home({
             The Modern Mac Gaming Compatibility Database
           </h1>
           <p className="text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto px-2">
-            Discover which games run on macOS and Apple Silicon 
+            Discover which games run on macOS and Apple Silicon
             <br className="hidden md:block" />
-            with real-world benchmarks, FPS reports, and support for 
+            with real-world benchmarks, FPS reports, and support for
             <br className="hidden md:block" />
             CrossOver, Parallels, and GPTK
           </p>
         </div>
-        
+
         {/* Decorative gradient background */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
@@ -51,14 +65,14 @@ export default async function Home({
       </div>
 
       <Container>
-        <HomeClient 
-          GamesPage={{...GamesPage, ratingCounts}} 
+        <HomeClient
+          GamesPage={{ ...GamesPage, ratingCounts }}
           PerformanceFilter={filterConfig.performance}
-          ChipsetFilter={chipsetParam || "all"}
-          PlayMethodFilter={playMethodParam || "ALL"}
+          ChipsetFilter={chipsetParam || 'all'}
+          PlayMethodFilter={playMethodParam || 'ALL'}
         />
       </Container>
-      
+
       <Footer />
     </div>
   );

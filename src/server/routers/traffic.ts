@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { router, procedure } from "../trpc";
-import { TRPCError } from "@trpc/server";
+import { z } from 'zod';
+import { router, procedure } from '../trpc';
+import { TRPCError } from '@trpc/server';
 
 const submitTrafficSourceSchema = z.object({
   source: z.string().min(1).max(200),
@@ -15,15 +15,16 @@ export const trafficRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         // Get IP info for context (optional) - account for Cloudflare proxy
-        let ipInfo = "Unknown";
+        let ipInfo = 'Unknown';
         if (ctx.req) {
           // Cloudflare sets CF-Connecting-IP header with the real client IP
           const cfConnectingIp = ctx.req.headers.get('cf-connecting-ip');
           const forwarded = ctx.req.headers.get('x-forwarded-for');
           const realIp = ctx.req.headers.get('x-real-ip');
-          
+
           // Priority: CF-Connecting-IP > X-Forwarded-For > X-Real-IP
-          const ip = cfConnectingIp || forwarded?.split(',')[0] || realIp || 'unknown';
+          const ip =
+            cfConnectingIp || forwarded?.split(',')[0] || realIp || 'unknown';
           ipInfo = ip;
         }
 
@@ -31,32 +32,32 @@ export const trafficRouter = router({
         const discordPayload = {
           embeds: [
             {
-              title: "🚀 New Traffic Source Response",
+              title: '🚀 New Traffic Source Response',
               color: 0x00ff00, // Green color
               fields: [
                 {
-                  name: "Source",
+                  name: 'Source',
                   value: input.source,
                   inline: false,
                 },
                 {
-                  name: "Timestamp",
+                  name: 'Timestamp',
                   value: new Date().toISOString(),
                   inline: false,
                 },
                 {
-                  name: "IP",
+                  name: 'IP',
                   value: ipInfo,
                   inline: false,
                 },
                 {
-                  name: "User Agent",
-                  value: input.userAgent || "Unknown",
+                  name: 'User Agent',
+                  value: input.userAgent || 'Unknown',
                   inline: false,
                 },
               ],
               footer: {
-                text: "MacGamingDB Traffic Analytics",
+                text: 'MacGamingDB Traffic Analytics',
               },
             },
           ],
@@ -64,9 +65,9 @@ export const trafficRouter = router({
 
         // Send to Discord webhook
         const response = await fetch(DISCORD_WEBHOOK_URL, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(discordPayload),
         });
@@ -75,13 +76,13 @@ export const trafficRouter = router({
           throw new Error(`Discord webhook failed: ${response.status}`);
         }
 
-        return { success: true, message: "Thank you for your feedback!" };
+        return { success: true, message: 'Thank you for your feedback!' };
       } catch (error) {
-        console.error("Error submitting traffic source:", error);
+        console.error('Error submitting traffic source:', error);
         throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to submit feedback",
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to submit feedback',
         });
       }
     }),
-}); 
+});

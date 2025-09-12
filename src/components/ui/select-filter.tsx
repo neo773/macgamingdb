@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "./select";
+} from './select';
 
 interface SelectOption {
   value: string;
@@ -26,17 +26,17 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
   onValueChange,
   options,
   placeholder,
-  className = "",
-  minWidth = "150px",
+  className = '',
+  minWidth = '150px',
 }) => {
-  const selectedOption = options.find(opt => opt.value === value);
-  
+  const selectedOption = options.find((opt) => opt.value === value);
+
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger 
+      <SelectTrigger
         className={`flex items-center gap-2 rounded-xl border-2 ${className}`}
         style={{ minWidth }}
-        aria-label={placeholder || "Select an option"}
+        aria-label={placeholder || 'Select an option'}
       >
         <SelectValue placeholder={selectedOption?.label || placeholder} />
       </SelectTrigger>
@@ -53,4 +53,4 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
       </SelectContent>
     </Select>
   );
-}; 
+};

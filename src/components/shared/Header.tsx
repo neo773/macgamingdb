@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import React, { useState } from "react";
-import Acccount from "../ui/account";
-import { Map, Menu, Trophy, X, Heart } from "lucide-react";
-import { LogoIcon } from "./LogoIcon";
-import { DonationDialog } from "./DonationDialog";
+import Link from 'next/link';
+import React, { useState } from 'react';
+import Acccount from '../ui/account';
+import { Map, Menu, Trophy, X, Heart } from 'lucide-react';
+import { LogoIcon } from './LogoIcon';
+import { DonationDialog } from './DonationDialog';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -16,34 +16,34 @@ const Header = () => {
         <div
           className="absolute top-0 left-0"
           style={{
-            transform: "translateY(-350px) rotate(-45deg)",
+            transform: 'translateY(-350px) rotate(-45deg)',
             width: 560,
-            height: "200vh",
+            height: '200vh',
             background:
-              "radial-gradient(68.54% 68.72% at 55.02% 31.46%, rgba(179, 217, 255, 0.08) 0px, rgba(26, 140, 255, 0.02) 50%, rgba(0, 115, 230, 0) 80%)",
+              'radial-gradient(68.54% 68.72% at 55.02% 31.46%, rgba(179, 217, 255, 0.08) 0px, rgba(26, 140, 255, 0.02) 50%, rgba(0, 115, 230, 0) 80%)',
           }}
         />
         <div
           className="absolute top-0 left-0"
           style={{
-            transform: "rotate(-45deg) translate(5%, -50%)",
-            transformOrigin: "left top",
+            transform: 'rotate(-45deg) translate(5%, -50%)',
+            transformOrigin: 'left top',
             width: 240,
-            height: "200vh",
+            height: '200vh',
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(179, 217, 255, 0.06) 0px, rgba(26, 140, 255, 0.02) 80%, transparent 100%)",
+              'radial-gradient(50% 50% at 50% 50%, rgba(179, 217, 255, 0.06) 0px, rgba(26, 140, 255, 0.02) 80%, transparent 100%)',
           }}
         />
         <div
           className="absolute top-0 left-0"
           style={{
             borderRadius: 20,
-            transform: "rotate(-45deg) translate(-180%, -70%)",
-            transformOrigin: "left top",
+            transform: 'rotate(-45deg) translate(-180%, -70%)',
+            transformOrigin: 'left top',
             width: 240,
-            height: "200vh",
+            height: '200vh',
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(179, 217, 255, 0.04) 0px, rgba(0, 115, 230, 0.02) 80%, transparent 100%)",
+              'radial-gradient(50% 50% at 50% 50%, rgba(179, 217, 255, 0.04) 0px, rgba(0, 115, 230, 0.02) 80%, transparent 100%)',
           }}
         />
       </div>
@@ -51,7 +51,7 @@ const Header = () => {
         <div className="w-full py-8 md:px-8 flex justify-center">
           <div className="max-w-7xl w-full">
             <nav className="bg-input/30 border-2 border-input/70 backdrop-blur-sm rounded-full px-5 py-3 flex items-center justify-between shadow-lg">
-              <Link href={"/"} className="flex items-center">
+              <Link href={'/'} className="flex items-center">
                 <LogoIcon className="size-6 mr-2" />
                 <h1 className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
                   MacGamingDB

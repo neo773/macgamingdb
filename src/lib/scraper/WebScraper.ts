@@ -10,27 +10,27 @@ class ScrapingError extends Error {
   constructor(
     message: string,
     public readonly url?: string,
-    public readonly cause?: unknown
+    public readonly cause?: unknown,
   ) {
     super(message);
-    this.name = "ScrapingError";
+    this.name = 'ScrapingError';
   }
 }
 
 export class WebScraper {
   constructor(private readonly apiCredentials: string) {}
-  public static readonly apiEndpoint = "https://realtime.oxylabs.io/v1/queries";
+  public static readonly apiEndpoint = 'https://realtime.oxylabs.io/v1/queries';
 
   async fetchPageContent(url: string): Promise<string> {
     try {
       const response = await fetch(WebScraper.apiEndpoint, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Basic ${btoa(this.apiCredentials)}`,
         },
         body: JSON.stringify({
-          source: "universal",
+          source: 'universal',
           url: url,
         }),
       });
@@ -42,7 +42,7 @@ export class WebScraper {
       const data: ScrapingResponse = await response.json();
 
       if (!data.results?.[0]?.content) {
-        throw new Error("No content received from scraping service");
+        throw new Error('No content received from scraping service');
       }
 
       return data.results[0].content;

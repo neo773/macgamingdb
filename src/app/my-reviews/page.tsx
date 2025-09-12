@@ -1,7 +1,7 @@
-import { createPrismaClient } from "@/lib/database/prisma";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth/auth";
-import MyReviewsClient from "./client";
+import { createPrismaClient } from '@/lib/database/prisma';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth/auth';
+import MyReviewsClient from './client';
 
 export default async function MyReviewsPage() {
   const prisma = createPrismaClient();
@@ -22,7 +22,7 @@ export default async function MyReviewsPage() {
       macConfig: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 

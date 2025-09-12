@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, memo } from "react";
-import { motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React, { useState, useMemo, memo } from 'react';
+import { motion } from 'motion/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Check,
   ChevronDown,
@@ -13,17 +13,17 @@ import {
   InfoIcon,
   MemoryStick,
   Search,
-} from "lucide-react";
-import { cn } from "../utils";
-import { ScrollArea } from "../ui/scroll-area";
-import { Skeleton } from "../ui/skeleton";
-import type { inferRouterOutputs } from "@trpc/server";
+} from 'lucide-react';
+import { cn } from '../utils';
+import { ScrollArea } from '../ui/scroll-area';
+import { Skeleton } from '../ui/skeleton';
+import type { inferRouterOutputs } from '@trpc/server';
 
-import { AppRouter } from "@/server/routers/_app";
-import { trpc } from "@/lib/trpc/provider";
+import { AppRouter } from '@/server/routers/_app';
+import { trpc } from '@/lib/trpc/provider';
 
 export type MacConfig =
-  inferRouterOutputs<AppRouter>["review"]["getMacConfigs"][number];
+  inferRouterOutputs<AppRouter>['review']['getMacConfigs'][number];
 
 interface SelectMacConfigurationProps {
   selectedConfigIdentifier: string;
@@ -37,20 +37,20 @@ export const getDeviceIcon = (family: string) => {
 
 export const getHumanReadableFamily = (family: string) => {
   switch (family) {
-    case "MacBookPro":
-      return "MacBook Pro";
-    case "MacBookAir":
-      return "MacBook Air";
-    case "MacBook":
-      return "MacBook";
-    case "iMac":
-      return "iMac";
-    case "MacMini":
-      return "Mac mini";
-    case "MacPro":
-      return "Mac Pro";
-    case "MacStudio":
-      return "Mac Studio";
+    case 'MacBookPro':
+      return 'MacBook Pro';
+    case 'MacBookAir':
+      return 'MacBook Air';
+    case 'MacBook':
+      return 'MacBook';
+    case 'iMac':
+      return 'iMac';
+    case 'MacMini':
+      return 'Mac mini';
+    case 'MacPro':
+      return 'Mac Pro';
+    case 'MacStudio':
+      return 'Mac Studio';
     default:
       return family;
   }
@@ -118,8 +118,8 @@ const MacConfigGuide = memo(() => {
             Follow these steps
             <ChevronDown
               className={cn(
-                "h-3 w-3 transition-transform group-hover:scale-110",
-                isExpanded && "rotate-180"
+                'h-3 w-3 transition-transform group-hover:scale-110',
+                isExpanded && 'rotate-180',
               )}
             />
           </button>
@@ -134,7 +134,7 @@ const MacConfigGuide = memo(() => {
                 1
               </span>
               <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-                Click the Apple{"\u2122"} icon in the top-left corner
+                Click the Apple{'\u2122'} icon in the top-left corner
               </span>
             </div>
             <div className="ml-9">
@@ -181,8 +181,8 @@ const MacConfigCard = memo(
       type="button"
       onClick={() => onSelect(config)}
       className={cn(
-        "w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500",
-        isSelected ? "border-blue-500 bg-blue-500/10" : "border-border"
+        'w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500',
+        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border',
       )}
     >
       <div className="flex items-center gap-4">
@@ -193,7 +193,7 @@ const MacConfigCard = memo(
             alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
             className="w-12 h-12 object-contain opacity-80"
             onError={(e) => {
-              e.currentTarget.style.display = "none";
+              e.currentTarget.style.display = 'none';
             }}
           />
         </div>
@@ -201,10 +201,10 @@ const MacConfigCard = memo(
         {/* Mac Info */}
         <div className="flex-1 min-w-0">
           <h4 className="font-medium text-sm truncate">
-            {config.metadata.family} {config.metadata.chip}{" "}
-            {config.metadata.chipVariant === "BASE"
-              ? ""
-              : config.metadata.chipVariant}{" "}
+            {config.metadata.family} {config.metadata.chip}{' '}
+            {config.metadata.chipVariant === 'BASE'
+              ? ''
+              : config.metadata.chipVariant}{' '}
             {config.metadata.year}
           </h4>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
@@ -227,7 +227,7 @@ const MacConfigCard = memo(
         {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
       </div>
     </button>
-  )
+  ),
 );
 
 interface MacConfigGroupProps {
@@ -259,7 +259,7 @@ const MacConfigGroup = memo(
         ))}
       </div>
     </div>
-  )
+  ),
 );
 
 interface HeaderProps {
@@ -305,7 +305,7 @@ const SearchBar = memo(
         </div>
       )}
     </div>
-  )
+  ),
 );
 
 export default function SelectMacConfiguration({
@@ -313,7 +313,7 @@ export default function SelectMacConfiguration({
   onSelect,
   onBack,
 }: SelectMacConfigurationProps) {
-  const [macConfigSearch, setMacConfigSearch] = useState("");
+  const [macConfigSearch, setMacConfigSearch] = useState('');
 
   const {
     data: macConfigs = [],
@@ -327,7 +327,7 @@ export default function SelectMacConfiguration({
     {
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
   const groupedConfigs = useMemo(() => {
@@ -344,7 +344,7 @@ export default function SelectMacConfiguration({
 
   const handleMacConfigSelect = (config: MacConfig) => {
     onSelect(config);
-    setMacConfigSearch("");
+    setMacConfigSearch('');
   };
 
   const renderContent = () => {
@@ -373,11 +373,11 @@ export default function SelectMacConfiguration({
 
   return (
     <motion.div
-      initial={{ x: "100%" }}
+      initial={{ x: '100%' }}
       animate={{ x: 0 }}
-      exit={{ x: "100%" }}
+      exit={{ x: '100%' }}
       transition={{
-        type: "spring",
+        type: 'spring',
         stiffness: 300,
         damping: 30,
       }}

@@ -1,15 +1,15 @@
-import { MacSpecification } from "@/lib/scraper/EveryMacScraper";
+import { MacSpecification } from '@/lib/scraper/EveryMacScraper';
 
 export type OldMacConfig = {
   identifier: string;
   metadata: string;
-}
+};
 // Identifier, Chip, Chip Variant, CPU Cores, GPU Cores, RAM, Year
 export type MacConfigIdentifier =
   `${string}-${string}-${string}-${number}-${number}-${number}-${number}`;
 
 export const convertMacConfigIdentifierToNewFormat = (
-  oldConfig: OldMacConfig
+  oldConfig: OldMacConfig,
 ): MacConfigIdentifier => {
   const metadata = JSON.parse(oldConfig.metadata) as MacSpecification;
 

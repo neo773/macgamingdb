@@ -1,6 +1,6 @@
-import React from "react";
-import { SelectFilter } from "../../ui/select-filter";
-import { PlayMethodFilter as PlayMethodFilterType } from "@/lib/constants";
+import React from 'react';
+import { SelectFilter } from '../../ui/select-filter';
+import { PlayMethodFilter as PlayMethodFilterType } from '@/lib/constants';
 
 interface PlayMethodOption {
   value: string;
@@ -18,7 +18,7 @@ export const PlayMethodFilter: React.FC<PlayMethodFilterProps> = ({
   selectedPlayMethod,
   playMethodOptions,
   onPlayMethodChange,
-  className = "",
+  className = '',
 }) => {
   return (
     <SelectFilter
@@ -30,4 +30,4 @@ export const PlayMethodFilter: React.FC<PlayMethodFilterProps> = ({
       minWidth="150px"
     />
   );
-}; 
+};
