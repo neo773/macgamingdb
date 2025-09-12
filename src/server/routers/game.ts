@@ -10,11 +10,9 @@ import {
   PlayMethodEnum,
   type ChipsetVariant,
   type PlayMethod,
-} from '../schema';
-import {
-  calculateAveragePerformance,
-  calculateTranslationLayerStats,
-} from '../utils';
+} from '@/server/schema';
+import { calculateTranslationLayerStats } from '@/server/utils/calculateTranslationLayerStats';
+import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '@/lib/s3';
 
 // Helper function to get game IDs from PerformanceStats efficiently
