@@ -8,8 +8,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, Medal, Award, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
-import { inferRouterOutputs } from '@trpc/server';
-import { AppRouter } from '@/server/routers/_app';
+import { type inferRouterOutputs } from '@trpc/server';
+import { type AppRouter } from '@/server/routers/_app';
 
 type ContributorsData =
   inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];

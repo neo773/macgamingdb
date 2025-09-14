@@ -1,4 +1,4 @@
-import { GameReview } from '@prisma/client';
+import { type GameReview } from '@prisma/client';
 import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
 
 // Helper function to calculate translation layer statistics

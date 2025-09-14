@@ -6,9 +6,9 @@ import {
   MacGamingDBMagicLinkEmail,
   MacGamingDBMagicLinkEmailText,
 } from '@/react-email-starter/emails/magic-link';
-import { PrismaClient } from '@prisma/client';
+import { type PrismaClient } from '@prisma/client';
 
-export const auth = (prisma: PrismaClient) => {
+export const BetterAuthClient = (prisma: PrismaClient) => {
   return betterAuth({
     database: prismaAdapter(prisma, {
       provider: 'sqlite',
@@ -42,4 +42,4 @@ export const auth = (prisma: PrismaClient) => {
   });
 };
 
-export type auth = ReturnType<typeof auth>;
+export type BetterAuthClientType = ReturnType<typeof BetterAuthClient>;

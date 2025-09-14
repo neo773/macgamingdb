@@ -1,7 +1,7 @@
 import React from 'react';
 import { ButtonFilter } from '../../ui/button-filter';
 import { PerformanceEnum } from '@/server/schema';
-import { PerformanceFilter as PerformanceFilterType } from '@/lib/constants';
+import { type PerformanceFilter as PerformanceFilterType } from '@/lib/constants';
 
 interface PerformanceFilterProps {
   activeFilter: PerformanceFilterType;

@@ -2,15 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react';
 import * as React from 'react';
-import { SteamGameSearchObject } from '@/server/helpers/steam';
+import { type SteamGameSearchObject } from '@/server/helpers/steam';
 import { trpc } from '@/lib/trpc/provider';
 import SearchBar from '@/components/search/SearchBar';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
   SearchURLParamsKeys,
-  PerformanceFilter,
+  type PerformanceFilter,
   createFilterConfig,
-  PlayMethodFilter,
+  type PlayMethodFilter,
 } from '@/lib/constants';
 import { GameCard } from '@/components/game/Card';
 import { GameCardSkeleton } from '@/components/game/SekeletonCard';
@@ -20,8 +20,8 @@ import { PerformanceFilter as PerformanceFilterComponent } from '@/components/se
 import { formatRatingLabel } from '@/server/utils/formatRatingLabel';
 import { getChipsetCombinations } from '@/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@/server/schema';
-import { inferRouterOutputs } from '@trpc/server';
-import { AppRouter } from '@/server/routers/_app';
+import { type inferRouterOutputs } from '@trpc/server';
+import { type AppRouter } from '@/server/routers/_app';
 import Script from 'next/script';
 
 type RouterOutput = inferRouterOutputs<AppRouter>;

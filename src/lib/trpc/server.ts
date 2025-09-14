@@ -8,7 +8,7 @@ import superjson from 'superjson';
  * Creates server-side helpers to use tRPC procedures inside server components
  * or inside getServerSideProps/getStaticProps
  */
-export async function createServerHelpers() {
+export const createServerHelpers = async () => {
   const headersList = headers();
 
   return createServerSideHelpers({

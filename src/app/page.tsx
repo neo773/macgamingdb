@@ -5,7 +5,7 @@ import { createServerHelpers } from '@/lib/trpc/server';
 import {
   SearchURLParamsKeys,
   createFilterConfig,
-  PlayMethodFilter,
+  type PlayMethodFilter,
 } from '@/lib/constants';
 import { Container } from '@/components/ui/container';
 

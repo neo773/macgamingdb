@@ -19,7 +19,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Skeleton } from '../ui/skeleton';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import { AppRouter } from '@/server/routers/_app';
+import { type AppRouter } from '@/server/routers/_app';
 import { trpc } from '@/lib/trpc/provider';
 
 export type MacConfig =

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SelectFilter } from '../../ui/select-filter';
-import { PlayMethodFilter as PlayMethodFilterType } from '@/lib/constants';
+import { type PlayMethodFilter as PlayMethodFilterType } from '@/lib/constants';
 
 interface PlayMethodOption {
   value: string;

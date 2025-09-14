@@ -1,10 +1,9 @@
-import { initTRPC } from '@trpc/server';
+import { initTRPC , TRPCError } from '@trpc/server';
 import superjson from 'superjson';
-import { auth } from '@/lib/auth/auth';
-import { TRPCError } from '@trpc/server';
+import { BetterAuthClient } from '@/lib/auth/auth';
 import { createPrismaClient } from '@/lib/database/prisma';
-import { PrismaClient } from '@prisma/client';
-import { User } from 'better-auth';
+import { type PrismaClient } from '@prisma/client';
+import { type User } from 'better-auth';
 
 // Define a proper context type
 export interface TrpcContext {
@@ -41,7 +40,7 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
       });
     }
 
-    const authSession = await auth(ctx.prisma!).api.getSession({
+    const authSession = await BetterAuthClient(ctx.prisma!).api.getSession({
       headers: ctx.req.headers,
     });
 

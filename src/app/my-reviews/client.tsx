@@ -18,13 +18,13 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Game, GameReview } from '@prisma/client';
+import { type Game, type GameReview } from '@prisma/client';
 import { toast } from 'sonner';
 import GameReviewCard from '@/components/review/ReviewCard';
 import ExpandableReviewNote from '../../components/review/ExpandableReviewNote';
 import ScreenshotDisplay from '@/components/review/ScreenshotDisplay';
 import { Textarea } from '@/components/ui/textarea';
-import { SteamAppData } from '@/server/helpers/steam';
+import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 
 export default function MyReviewsClient({

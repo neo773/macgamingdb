@@ -1,8 +1,8 @@
 import { DOMParser } from 'linkedom';
-import { WebScraper } from './WebScraper';
-import { ChipsetVariant } from '@prisma/client';
+import { type WebScraper } from './WebScraper';
+import { type ChipsetVariant } from '@prisma/client';
 import { RAM_LIMITS } from './constant/mac-ram-limits';
-import { MacFamily } from '@/server/schema';
+import { type MacFamily } from '@/server/schema';
 
 export interface MacSpecification {
   family: string;

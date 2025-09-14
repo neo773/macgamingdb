@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft , InfoIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { Textarea } from '@/components/ui/textarea';
@@ -41,9 +41,8 @@ import ScreenshotUpload from '@/components/review/ScreenshotUpload';
 import SelectMacConfiguration, {
   getDeviceIcon,
   getHumanReadableFamily,
-  MacConfig,
+  type MacConfig,
 } from '@/components/review/SelectMacConfiguration';
-import { InfoIcon } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,

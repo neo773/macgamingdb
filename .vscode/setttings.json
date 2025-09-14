@@ -1,0 +1,29 @@
+{
+    "[typescript]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.addMissingImports": "always",
+            "source.organizeImports": "always"
+        }
+    },
+    "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.addMissingImports": "always",
+            "source.organizeImports": "always"
+        }
+    },
+    "[typescriptreact]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.addMissingImports": "always",
+            "source.organizeImports": "always"
+        }
+    },
+    "[json]": {
+        "editor.formatOnSave": true
+    }
+}

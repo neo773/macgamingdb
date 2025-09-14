@@ -10,7 +10,7 @@ import ScreenshotDisplay from '@/components/review/ScreenshotDisplay';
 import { formatDistance } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/components/review/ReviewCard';
-import { SteamAppData } from '@/server/helpers/steam';
+import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 
 export default async function ContributorPage({

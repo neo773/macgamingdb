@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 
 export interface Stats {
   id: string;
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Stats() {
+export default async function StatsPage() {
   const stats = await fetch('https://sqld.macgamingdb.app/turso-stats', {
     headers: {
       authorization:

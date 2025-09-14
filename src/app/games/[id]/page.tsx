@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { createServerHelpers } from '@/lib/trpc/server';
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 import CreateReviewDialog from '@/components/review/CreateReviewDialog';
 import ExpandableDescription from '@/components/review/ExpandableDescription';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { ChevronLeft } from 'lucide-react';
 import Footer from '@/components/shared/Footer';
 import Header from '@/components/shared/Header';
 import GameReviewCard from '@/components/review/ReviewCard';
-import { SteamAppData } from '@/server/helpers/steam';
+import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 import Script from 'next/script';
 

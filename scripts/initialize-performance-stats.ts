@@ -271,8 +271,8 @@ async function initializePerformanceStats() {
       .slice(0, 5)
       .forEach(
         (
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          { chipset, chipsetVariant, playMethod, performanceRating, count },
+           
+          { chipsetVariant, playMethod, performanceRating, count },
           index,
         ) => {
           // Display "ALL" for playMethod "OTHER" when chipset is "ALL" to show user-friendly output

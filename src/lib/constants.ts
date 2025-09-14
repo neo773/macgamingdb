@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import {
-  PerformanceEnum,
-  ChipsetEnum,
-  ChipsetVariantEnum,
-  PlayMethod,
-  PlayMethodEnum,
+  type PerformanceEnum,
+  type ChipsetEnum,
+  type ChipsetVariantEnum,
+  type PlayMethod,
+  type PlayMethodEnum,
 } from '@/server/schema';
 
 // URL parameter keys

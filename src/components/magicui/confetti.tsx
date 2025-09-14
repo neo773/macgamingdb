@@ -1,13 +1,13 @@
 'use client';
 
-import type {
-  GlobalOptions as ConfettiGlobalOptions,
-  CreateTypes as ConfettiInstance,
-  Options as ConfettiOptions,
+import confetti, {
+  type GlobalOptions as ConfettiGlobalOptions,
+  type CreateTypes as ConfettiInstance,
+  type Options as ConfettiOptions,
 } from 'canvas-confetti';
-import confetti from 'canvas-confetti';
-import type { ReactNode } from 'react';
+
 import React, {
+  type ReactNode,
   createContext,
   forwardRef,
   useCallback,

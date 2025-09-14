@@ -1,5 +1,5 @@
 import { createPrismaClient } from '@/lib/database/prisma';
-import { GameReview } from '@prisma/client';
+import { type GameReview } from '@prisma/client';
 import { config } from 'dotenv';
 
 if (process.env.NODE_ENV === 'production') {

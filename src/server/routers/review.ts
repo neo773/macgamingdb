@@ -8,21 +8,19 @@ import {
   PerformanceEnum,
   PlayMethodEnum,
   TranslationLayerEnum,
+  type Performance,
+  type Chipset,
+  type ChipsetVariant,
+  type PlayMethod,
 } from '../schema';
 import type { PerformanceRating, PrismaClient } from '@prisma/client';
-import type {
-  Performance,
-  Chipset,
-  ChipsetVariant,
-  PlayMethod,
-} from '../schema';
 import { updateAllPerformanceStatsForGame } from '../helpers/performance-stats';
 import {
   getUploadSignedUrl,
   generateScreenshotKey,
   getPublicUrl,
 } from '@/lib/s3';
-import { MacSpecification } from '@/lib/scraper/EveryMacScraper';
+import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
 
 // Helper function to calculate average performance
 const calculateAveragePerformance = (
@@ -226,7 +224,8 @@ export const reviewRouter = router({
         }
 
         // Remove searchText from response
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
+        // eslint-disable-next-line unused-imports/no-unused-vars
         return finalConfigs.map(({ searchText, ...config }) => config);
       } catch (error) {
         console.error('Error fetching Mac configs:', error);

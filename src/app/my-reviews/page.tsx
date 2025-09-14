@@ -1,12 +1,12 @@
 import { createPrismaClient } from '@/lib/database/prisma';
 import { headers } from 'next/headers';
-import { auth } from '@/lib/auth/auth';
+import { BetterAuthClient } from '@/lib/auth/auth';
 import MyReviewsClient from './client';
 
 export default async function MyReviewsPage() {
   const prisma = createPrismaClient();
 
-  const session = await auth(prisma).api.getSession({
+  const session = await BetterAuthClient(prisma).api.getSession({
     headers: await headers(),
   });
   if (!session) {

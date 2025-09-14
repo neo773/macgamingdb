@@ -1,11 +1,11 @@
 import ExpandableReviewNote from '@/components/review/ExpandableReviewNote';
-import { GameReview, MacConfig } from '@prisma/client';
+import { type GameReview, type MacConfig } from '@prisma/client';
 import React from 'react';
 import { Card, CardHeader, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
-import { MacSpecification } from '@/lib/scraper/EveryMacScraper';
+import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
 
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
