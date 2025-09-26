@@ -12,6 +12,7 @@ import GameReviewCard from '@/components/review/ReviewCard';
 import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 import Script from 'next/script';
+import { PromotionalBannerCrossOver } from './PromotionalBannerCrossOver';
 
 // Enable ISR with a revalidation time of 1 year
 export const revalidate = 31536000;
@@ -290,37 +291,7 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="relative">
-                  <div className="absolute top-2 right-2 z-10">
-                    <span className="bg-gray-800/90 text-gray-300 text-xs px-2 py-1 rounded-full font-medium">
-                      Ad
-                    </span>
-                  </div>
-                  <a
-                    rel="sponsored"
-                    href="https://setapp.sjv.io/c/6516695/344510/5114"
-                    target="_top"
-                    id="344510"
-                    className="block"
-                  >
-                    <img
-                      src="/setapp.png"
-                      alt=""
-                      className="w-full h-auto max-w-full mx-auto rounded-3xl border-0"
-                    />
-                  </a>
-                  <img
-                    height="0"
-                    width="0"
-                    src="https://setapp.sjv.io/i/6516695/344510/5114"
-                    style={{
-                      position: 'absolute',
-                      visibility: 'hidden',
-                      border: 0,
-                    }}
-                    alt=""
-                  />
-                </div>
+                <PromotionalBannerCrossOver />
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
@@ -336,39 +307,6 @@ export default async function GamePage({
               </Card>
             )}
           </div>
-
-          {/* Affiliate Link Section */}
-          {showCrossoverAffiliate && (
-            <div className="mb-6">
-              <Card className="bg-primary-gradient border border-[#272727]">
-                <CardContent className="flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-xl font-medium text-white mb-2">
-                      Want to play this game on your Mac?
-                    </h3>
-                    <p className="text-gray-300">
-                      CrossOver lets you run Windows games on macOS without
-                      rebooting.
-                    </p>
-                  </div>
-                  <a
-                    href="https://www.codeweavers.com/store?ad=1100"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-                  >
-                    Get CrossOver
-                  </a>
-                </CardContent>
-              </Card>
-              <p className="text-sm text-gray-400 my-2 mx-2">
-                <span className="italic">
-                  * Affiliate link - purchases support this site and the Mac
-                  gaming ecosystem through CodeWeavers' contributions to Wine.
-                </span>
-              </p>
-            </div>
-          )}
         </Container>
 
         <Footer />
