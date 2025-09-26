@@ -93,17 +93,18 @@ export default async function GamePage({
 
     // Only show affiliate if there are reviews, game is playable, and someone used CrossOver
     const hasReviews = reviews && reviews.length > 0;
-    const isPlayable =
-      stats &&
-      typeof stats.averagePerformance === 'number' &&
-      stats.averagePerformance > 1.0;
-    const hasCrossoverReview =
-      stats &&
-      stats.methods &&
-      typeof stats.methods.crossover === 'number' &&
-      stats.methods.crossover > 0;
-    const showCrossoverAffiliate =
-      hasReviews && isPlayable && hasCrossoverReview;
+    // const isPlayable =
+    //   stats &&
+    //   typeof stats.averagePerformance === 'number' &&
+    //   stats.averagePerformance > 1.0;
+    // const hasCrossoverReview =
+    //   stats &&
+    //   stats.methods &&
+    //   typeof stats.methods.crossover === 'number' &&
+    //   stats.methods.crossover > 0;
+    // const showCrossoverAffiliate =
+    //   hasReviews && isPlayable && hasCrossoverReview;
+    const showCrossoverAffiliate = hasReviews;
 
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -291,7 +292,7 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <PromotionalBannerCrossOver />
+                {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
