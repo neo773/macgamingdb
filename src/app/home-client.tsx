@@ -289,12 +289,10 @@ export default function HomeClient({
   return (
     <>
       <Script
-        id="game-schema-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdHome) }}
       />
       <Script
-        id="game-schema-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
