@@ -5,8 +5,6 @@ export const formatRatingLabel = (rating: string) => {
       return 'All Games';
     case 'EXCELLENT':
       return 'Excellent';
-    case 'VERY_GOOD':
-      return 'Very Good';
     case 'GOOD':
       return 'Good';
     case 'BARELY_PLAYABLE':

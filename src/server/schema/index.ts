@@ -9,7 +9,6 @@ export const TranslationLayerEnum = z.enum([
 ]);
 export const PerformanceEnum = z.enum([
   'EXCELLENT',
-  'VERY_GOOD',
   'GOOD',
   'PLAYABLE',
   'BARELY_PLAYABLE',

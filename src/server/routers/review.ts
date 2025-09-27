@@ -31,8 +31,7 @@ const calculateAveragePerformance = (
     BARELY_PLAYABLE: 1,
     PLAYABLE: 2,
     GOOD: 3,
-    VERY_GOOD: 4,
-    EXCELLENT: 5,
+    EXCELLENT: 4,
   };
 
   const sum = reviews.reduce((acc, review) => {
@@ -47,8 +46,7 @@ const calculateAveragePerformance = (
 
 // Convert average score to performance rating
 const scoreToRating = (score: number): Performance => {
-  if (score >= 4.5) return 'EXCELLENT';
-  if (score >= 3.5) return 'VERY_GOOD';
+  if (score >= 3.5) return 'EXCELLENT';
   if (score >= 2.5) return 'GOOD';
   if (score >= 1.5) return 'PLAYABLE';
   if (score >= 0.5) return 'BARELY_PLAYABLE';
