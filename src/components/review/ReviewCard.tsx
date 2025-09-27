@@ -10,6 +10,7 @@ import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
 const getPerformanceColor = (performance: string) => {
   const colors: Record<string, string> = {
     EXCELLENT: 'bg-green-500 text-green-50',
+    VERY_GOOD: 'bg-green-400 text-green-50',
     GOOD: 'bg-blue-500 text-blue-50',
     PLAYABLE: 'bg-yellow-500 text-yellow-900',
     BARELY_PLAYABLE: 'bg-orange-500 text-orange-50',

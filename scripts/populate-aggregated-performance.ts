@@ -17,7 +17,8 @@ const calculateAveragePerformance = (reviews: GameReview[]) => {
     BARELY_PLAYABLE: 1,
     PLAYABLE: 2,
     GOOD: 3,
-    EXCELLENT: 4,
+    VERY_GOOD: 4,
+    EXCELLENT: 5,
   };
 
   const sum = reviews.reduce((acc, review) => {
