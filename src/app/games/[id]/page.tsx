@@ -129,8 +129,6 @@ export default async function GamePage({
         ? {
             '@type': 'AggregateRating',
             ratingValue: stats.averagePerformance?.toFixed(1) || '0',
-            worstRating: '0',
-            bestRating: '4',
             ratingCount: stats.totalReviews || 0,
           }
         : undefined,
@@ -259,13 +257,13 @@ export default async function GamePage({
                               className="bg-blue-600 h-2.5 rounded-full"
                               style={{
                                 width: `${
-                                  (stats.averagePerformance / 4) * 100
+                                  (stats.averagePerformance / 5) * 100
                                 }%`,
                               }}
                             ></div>
                           </div>
                           <span className="text-white">
-                            {stats.averagePerformance.toFixed(1)}/4
+                            {stats.averagePerformance.toFixed(1)}/5
                           </span>
                         </div>
                       </div>

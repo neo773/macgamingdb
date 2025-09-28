@@ -1,5 +1,9 @@
+import { type Performance } from "@/server/schema";
 
-export const formatRatingLabel = (rating: string) => {
+
+export type PerformanceLabel = Performance & 'ALL';
+
+export const formatRatingLabel = (rating: PerformanceLabel) => {
   switch (rating) {
     case 'ALL':
       return 'All Games';
@@ -13,6 +17,8 @@ export const formatRatingLabel = (rating: string) => {
       return 'Playable';
     case 'UNPLAYABLE':
       return 'Unplayable';
+    case 'VERY_GOOD':
+      return 'Very Good';
     default:
       return rating;
   }

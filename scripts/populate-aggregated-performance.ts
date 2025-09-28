@@ -1,4 +1,6 @@
 import { createPrismaClient } from '@/lib/database/prisma';
+import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
+import { scoreToRating } from '@/server/utils/scoreToRating';
 import { type GameReview } from '@prisma/client';
 import { config } from 'dotenv';
 
@@ -10,34 +12,6 @@ if (process.env.NODE_ENV === 'production') {
 
 const prisma = createPrismaClient();
 
-// Helper function to calculate average performance (copied from utils)
-const calculateAveragePerformance = (reviews: GameReview[]) => {
-  const performanceMap = {
-    UNPLAYABLE: 0,
-    BARELY_PLAYABLE: 1,
-    PLAYABLE: 2,
-    GOOD: 3,
-    EXCELLENT: 4,
-  };
-
-  const sum = reviews.reduce((acc, review) => {
-    return (
-      acc +
-      (performanceMap[review.performance as keyof typeof performanceMap] || 0)
-    );
-  }, 0);
-
-  return reviews.length > 0 ? sum / reviews.length : 0;
-};
-
-// Convert average score to performance rating
-const scoreToRating = (score: number) => {
-  if (score >= 3.5) return 'EXCELLENT';
-  if (score >= 2.5) return 'GOOD';
-  if (score >= 1.5) return 'PLAYABLE';
-  if (score >= 0.5) return 'BARELY_PLAYABLE';
-  return 'UNPLAYABLE';
-};
 
 async function populateAggregatedPerformance() {
   console.log('🚀 Populating aggregatedPerformance for all games...');

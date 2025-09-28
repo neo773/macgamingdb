@@ -120,6 +120,7 @@ enum PerformanceRating {
   BARELY_PLAYABLE
   PLAYABLE
   GOOD
+  VERY_GOOD
   EXCELLENT
 }
 

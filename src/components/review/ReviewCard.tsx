@@ -6,27 +6,19 @@ import { Badge } from '../ui/badge';
 import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
 import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
+import { type Performance } from '@/server/schema';
 
-const getPerformanceColor = (performance: string) => {
-  const colors: Record<string, string> = {
+const getPerformanceColor = (performance: Performance) => {
+  const colors: Record<Performance, string> = {
     EXCELLENT: 'bg-green-500 text-green-50',
     GOOD: 'bg-blue-500 text-blue-50',
     PLAYABLE: 'bg-yellow-500 text-yellow-900',
     BARELY_PLAYABLE: 'bg-orange-500 text-orange-50',
     UNPLAYABLE: 'bg-red-500 text-red-50',
+    VERY_GOOD: 'bg-purple-500 text-purple-50',
   };
   return colors[performance] || 'bg-gray-500 text-gray-50';
 };
-// const getPerformanceColor = (performance: Performance) => {
-//   const colors: Record<Performance, string> = {
-//     EXCELLENT: "bg-gradient-to-tr from-[#051a0d] to-[#095025] text-[#0f0] border border-[#00ff001a]",
-//     GOOD: "bg-gradient-to-tr from-[#01070a] to-[#00448b] text-[#0096ff] border border-[#00eaff1a]",
-//     PLAYABLE: "bg-gradient-to-tr from-[#553a08] to-[#bd9f00] text-[#ffee00] border border-[#FFD7001a]",
-//     BARELY_PLAYABLE: "bg-gradient-to-tr from-[#4a2510] to-[#a35c00] text-[#ffa500] border border-[#ff85001a]",
-//     UNPLAYABLE: "bg-gradient-to-tr from-[#520b0b] to-[#761717] text-[#ff3535] border border-[#FF00001a]",
-//   };
-//   return colors[performance] || "bg-gray-500 text-gray-50";
-// };
 
 // Helper function to format method name
 const formatMethodName = (method: string) => {

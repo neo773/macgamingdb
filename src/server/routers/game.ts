@@ -141,7 +141,7 @@ export const gameRouter = router({
       const ratingCounts = performanceStats.reduce(
         (acc, stat) => {
           acc.ALL += stat.count;
-          acc[stat.performanceRating] += stat.count;
+          acc[stat.performanceRating as keyof typeof acc] += stat.count;
           return acc;
         },
         {
@@ -151,6 +151,7 @@ export const gameRouter = router({
           PLAYABLE: 0,
           BARELY_PLAYABLE: 0,
           UNPLAYABLE: 0,
+          VERY_GOOD: 0,
         },
       );
 

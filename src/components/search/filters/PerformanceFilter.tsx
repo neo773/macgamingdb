@@ -2,12 +2,13 @@ import React from 'react';
 import { ButtonFilter } from '../../ui/button-filter';
 import { PerformanceEnum } from '@/server/schema';
 import { type PerformanceFilter as PerformanceFilterType } from '@/lib/constants';
+import { type PerformanceLabel } from '@/server/utils/formatRatingLabel';
 
 interface PerformanceFilterProps {
   activeFilter: PerformanceFilterType;
   onFilterChange: (filter: PerformanceFilterType) => void;
   displayStats?: Record<string, number>;
-  formatRatingLabel: (rating: string) => string;
+  formatRatingLabel: (rating: PerformanceLabel) => string;
   className?: string;
 }
 
@@ -21,7 +22,7 @@ export const PerformanceFilter: React.FC<PerformanceFilterProps> = ({
   const performanceOptions = (['ALL', ...PerformanceEnum.options] as const).map(
     (rating) => ({
       value: rating,
-      label: formatRatingLabel(rating),
+      label: formatRatingLabel(rating as PerformanceLabel),
     }),
   );
 

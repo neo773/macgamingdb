@@ -206,6 +206,7 @@ export const updateAllPerformanceStatsForGame = async (
     'PLAYABLE',
     'GOOD',
     'EXCELLENT',
+    'VERY_GOOD',
   ];
 
   for (const performanceRating of allPerformanceRatings) {
