@@ -138,6 +138,7 @@ export default async function GamePage({
       <div className="min-h-screen flex flex-col bg-black">
         <Script
           type="application/ld+json"
+          id={`jsonLdGame${id}`}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Header />

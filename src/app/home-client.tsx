@@ -290,10 +290,12 @@ export default function HomeClient({
     <>
       <Script
         type="application/ld+json"
+        id="jsonLdHome"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdHome) }}
       />
       <Script
         type="application/ld+json"
+        id="jsonLdFaq"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
       />
 
