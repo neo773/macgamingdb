@@ -20,7 +20,6 @@ type Env = {
 };
 
 export default {
-  earlyAccess: true,
   schema: path.join("prisma", "schema.prisma"),
   // migrate: {
   //   async adapter(env: Env) {
@@ -41,4 +40,4 @@ export default {
       }
     }
   } : {})
-} satisfies PrismaConfig<Env>;
+} satisfies PrismaConfig;
