@@ -37,7 +37,7 @@ export const AdSpaceAvailableBanner = () => {
 
           {/* Description */}
           <p className="text-gray-400 text-base mb-8 max-w-sm leading-relaxed font-normal">
-            Reach thousands of Apple users across the US, UK, and EU
+            Reach Apple users across the US, UK, and EU
           </p>
 
           {/* CTA Button */}
