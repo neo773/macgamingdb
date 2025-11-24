@@ -18,7 +18,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { type Game, type GameReview } from '@prisma/client';
+import { type Game, type GameReview } from '@/generated/prisma/client';
 import { toast } from 'sonner';
 import GameReviewCard from '@/components/review/ReviewCard';
 import ExpandableReviewNote from '../../components/review/ExpandableReviewNote';

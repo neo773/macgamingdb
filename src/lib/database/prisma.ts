@@ -1,15 +1,17 @@
-import { PrismaClient } from '@prisma/client';
-import { PrismaLibSQL } from '@prisma/adapter-libsql';
+import { PrismaClient } from '@/generated/prisma/client';
+import { PrismaLibSql } from '@prisma/adapter-libsql';
 
 export function createPrismaClient(): PrismaClient {
   return process.env.NODE_ENV === 'production'
     ? new PrismaClient({
-        adapter: new PrismaLibSQL({
+        adapter: new PrismaLibSql({
           url: `${process.env.LIBSQL_DATABASE_URL}`,
           authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
         }),
       })
     : new PrismaClient({
-        log: [{ emit: 'event', level: 'query' }],
-      });
+      adapter: new PrismaLibSql({
+        url: 'file:./prisma/dev.db',
+      }),
+    });
 }

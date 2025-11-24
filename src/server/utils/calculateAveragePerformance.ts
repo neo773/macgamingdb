@@ -1,4 +1,4 @@
-import { type GameReview, type PerformanceRating } from '@prisma/client';
+import { type GameReview, type PerformanceRating } from '@/generated/prisma/client';
 
 // Helper function to calculate average performance
 

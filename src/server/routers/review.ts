@@ -13,7 +13,7 @@ import {
   type ChipsetVariant,
   type PlayMethod,
 } from '../schema';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient } from '@/generated/prisma/client';
 import { updateAllPerformanceStatsForGame } from '../helpers/performance-stats';
 import {
   getUploadSignedUrl,

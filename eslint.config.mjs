@@ -42,10 +42,10 @@ export default [
       'no-duplicate-imports': 'error',
       'no-undef': 'off',
       'no-unused-vars': 'off',
+      'import/no-relative-packages': 'off',
 
 
       // Import rules
-      'import/no-relative-packages': 'error',
       'import/no-useless-path-segments': 'error',
       'import/no-duplicates': ['error', { considerQueryString: true }],
 

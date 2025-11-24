@@ -2,7 +2,7 @@ import { initTRPC , TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { BetterAuthClient } from '@/lib/auth/auth';
 import { createPrismaClient } from '@/lib/database/prisma';
-import { type PrismaClient } from '@prisma/client';
+import { type PrismaClient } from '@/generated/prisma/client';
 import { type User } from 'better-auth';
 
 // Define a proper context type

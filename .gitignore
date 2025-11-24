@@ -46,3 +46,6 @@ next-env.d.ts
 admin.ts
 dev.db-shm
 dev.db-wal
+
+# prisma generated client
+/src/generated/

@@ -6,7 +6,7 @@ import {
   type ChipsetVariant,
   type PlayMethod,
   type Performance,
-} from '../src/server/schema/index.js';
+} from '@/server/schema';
 import {
   countGamesForPerformanceStats,
   upsertPerformanceStats,

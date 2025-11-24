@@ -1,7 +1,7 @@
 import { createPrismaClient } from '@/lib/database/prisma';
 import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
 import { scoreToRating } from '@/server/utils/scoreToRating';
-import { type GameReview } from '@prisma/client';
+
 import { config } from 'dotenv';
 
 if (process.env.NODE_ENV === 'production') {

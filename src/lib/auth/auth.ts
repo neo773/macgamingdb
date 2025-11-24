@@ -6,7 +6,7 @@ import {
   MacGamingDBMagicLinkEmail,
   MacGamingDBMagicLinkEmailText,
 } from '@/react-email-starter/emails/magic-link';
-import { type PrismaClient } from '@prisma/client';
+import { type PrismaClient } from '@/generated/prisma/client';
 
 export const BetterAuthClient = (prisma: PrismaClient) => {
   return betterAuth({

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { getGameBySteamId, searchSteam } from '@/server/helpers/steam';
 import { TRPCError } from '@trpc/server';
-import { type PerformanceRating, type PrismaClient } from '@prisma/client';
+import { type PerformanceRating, type PrismaClient } from '@/generated/prisma/client';
 import {
   ChipsetEnum,
   ChipsetVariantEnum,

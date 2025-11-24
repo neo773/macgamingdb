@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { type SteamGameSearchObject } from '@/server/helpers/steam';
-import { type PerformanceRating } from '@prisma/client';
+import { type PerformanceRating } from '@/generated/prisma/client';
 import { useState } from 'react';
 import { LogoIcon } from '../shared/LogoIcon';
 import { trpc } from '@/lib/trpc/provider';

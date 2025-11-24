@@ -1,5 +1,5 @@
 import ExpandableReviewNote from '@/components/review/ExpandableReviewNote';
-import { type GameReview, type MacConfig } from '@prisma/client';
+import { type GameReview, type MacConfig } from '@/generated/prisma/client';
 import React from 'react';
 import { Card, CardHeader, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
