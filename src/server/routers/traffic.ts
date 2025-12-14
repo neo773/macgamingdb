@@ -2,16 +2,14 @@ import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 
-const submitTrafficSourceSchema = z.object({
-  source: z.string().min(1).max(200),
-  userAgent: z.string().optional(),
-});
-
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL!;
 
 export const trafficRouter = router({
   submitSource: procedure
-    .input(submitTrafficSourceSchema)
+    .input( z.object({
+      source: z.string().min(1).max(200),
+      userAgent: z.string().optional(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         let ipInfo = 'Unknown';
