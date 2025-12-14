@@ -26,7 +26,6 @@ async function initializePerformanceStats() {
   console.log('🚀 Initializing PerformanceStats table...');
   console.log('📊 Counting unique games for each combination...');
 
-  // Get all possible combinations from enums
   const chipsets = ChipsetEnum.options;
   const chipsetVariants = ChipsetVariantEnum.options;
   const playMethods = [...PlayMethodEnum.options, 'OTHER'] as const;
@@ -36,7 +35,6 @@ async function initializePerformanceStats() {
   let createdCount = 0;
   let updatedCount = 0;
 
-  // Process regular combinations - count games for each specific combination
   for (const chipset of chipsets) {
     for (const chipsetVariant of chipsetVariants) {
       for (const playMethod of playMethods) {
@@ -44,7 +42,6 @@ async function initializePerformanceStats() {
           totalCombinations++;
 
           try {
-            // Use shared helper to count games
             const gameCount = await countGamesForPerformanceStats(prisma, {
               chipset,
               chipsetVariant: chipsetVariant as ChipsetVariant,
@@ -63,7 +60,6 @@ async function initializePerformanceStats() {
               },
             });
 
-            // Use shared helper to upsert the record
             await upsertPerformanceStats(prisma, {
               chipset,
               chipsetVariant: chipsetVariant as ChipsetVariant,
@@ -92,10 +88,8 @@ async function initializePerformanceStats() {
     }
   }
 
-  // Create aggregate "ALL" combinations
   console.log("📊 Creating aggregate 'ALL' combinations...");
 
-  // 1. chipset "ALL", playMethod "OTHER" (represents ALL playMethods) - count games with performance rating regardless of chipset/method
   for (const performanceRating of performanceRatings) {
     try {
       const gameCount = await countGamesForPerformanceStats(prisma, {
@@ -138,9 +132,7 @@ async function initializePerformanceStats() {
     }
   }
 
-  // 2. chipset "ALL", specific playMethods - count games with performance rating that have at least one review from that play method
   for (const playMethod of playMethods) {
-    // Skip OTHER since we already used it for the ALL playMethods case above
     if (playMethod === 'OTHER') continue;
 
     for (const performanceRating of performanceRatings) {
@@ -186,7 +178,6 @@ async function initializePerformanceStats() {
     }
   }
 
-  // 3. specific chipset combinations with playMethod "OTHER" (represents ALL playMethods for that chipset)
   console.log(
     "📊 Creating specific chipset + 'OTHER' play method combinations...",
   );
@@ -194,7 +185,6 @@ async function initializePerformanceStats() {
     for (const chipsetVariant of chipsetVariants) {
       for (const performanceRating of performanceRatings) {
         try {
-          // Use shared helper to count games
           const gameCount = await countGamesForPerformanceStats(prisma, {
             chipset,
             chipsetVariant: chipsetVariant as ChipsetVariant,
@@ -248,7 +238,6 @@ async function initializePerformanceStats() {
   console.log(`🆕 New records created: ${createdCount}`);
   console.log(`🔄 Existing records updated: ${updatedCount}`);
 
-  // Show some statistics
   const totalRecords = await prisma.performanceStats.count();
   const nonZeroRecords = await prisma.performanceStats.count({
     where: { count: { gt: 0 } },
@@ -258,7 +247,6 @@ async function initializePerformanceStats() {
   console.log(`🎯 Records with actual games: ${nonZeroRecords}`);
   console.log(`📊 Records with zero games: ${totalRecords - nonZeroRecords}`);
 
-  // Show aggregate statistics
   const allChipsetRecords = await prisma.performanceStats.findMany({
     where: { chipset: 'ALL' },
     orderBy: { count: 'desc' },
@@ -270,12 +258,7 @@ async function initializePerformanceStats() {
       .filter(({ count }) => count > 0)
       .slice(0, 5)
       .forEach(
-        (
-           
-          { chipsetVariant, playMethod, performanceRating, count },
-          index,
-        ) => {
-          // Display "ALL" for playMethod "OTHER" when chipset is "ALL" to show user-friendly output
+        ({ chipsetVariant, playMethod, performanceRating, count }, index) => {
           const displayPlayMethod = playMethod === 'OTHER' ? 'ALL' : playMethod;
           console.log(
             `${index + 1}. ALL ${chipsetVariant} + ${displayPlayMethod} + ${performanceRating}: ${count} games`,
@@ -284,7 +267,6 @@ async function initializePerformanceStats() {
       );
   }
 
-  // Show top combinations
   const topCombinations = await prisma.performanceStats.findMany({
     where: {
       count: { gt: 0 },

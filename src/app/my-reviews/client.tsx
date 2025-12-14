@@ -54,10 +54,8 @@ export default function MyReviewsClient({
     },
   });
 
-  // Set up initial editable reviews when edit mode is enabled
   const handleEditModeToggle = () => {
     if (!editMode) {
-      // Entering edit mode - initialize editable reviews
       const initialEdits = userReviews.reduce(
         (acc, review) => {
           acc[review.id] = review.notes || '';

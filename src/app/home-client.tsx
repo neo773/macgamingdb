@@ -41,7 +41,6 @@ export default function HomeClient({
   ChipsetFilter: ChipsetFilter,
   PlayMethodFilter: PlayMethodFilter,
 }: HomeClientProps) {
-  // Router and URL params
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -65,7 +64,6 @@ export default function HomeClient({
     })),
   ];
 
-  // Get the current filter configuration for queries
   const filterConfig = React.useMemo(() => {
     return createFilterConfig(
       PerformanceFilter,
@@ -74,10 +72,8 @@ export default function HomeClient({
     );
   }, [PerformanceFilter, ChipsetFilter, PlayMethodFilter]);
 
-  // Track if we're in search mode
   const isSearchMode = !!searchResults;
 
-  // Get filtered games - always enabled when not searching
   const {
     data: gamesData,
     fetchNextPage,
@@ -99,7 +95,6 @@ export default function HomeClient({
     },
   );
 
-  // Update URL when filters change
   const updateFilters = (
     performance: PerformanceFilter,
     chipset: string,
@@ -128,22 +123,18 @@ export default function HomeClient({
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // Handle performance filter change
   const handleFilterChange = (filter: PerformanceFilter) => {
     updateFilters(filter, ChipsetFilter, PlayMethodFilter);
   };
 
-  // Handle chipset change
   const handleChipsetChange = (value: string) => {
     updateFilters(PerformanceFilter, value, PlayMethodFilter);
   };
 
-  // Handle play method change
   const handlePlayMethodChange = (value: string) => {
     updateFilters(PerformanceFilter, ChipsetFilter, value as PlayMethodFilter);
   };
 
-  // Setup intersection observer for infinite scrolling
   useEffect(() => {
     if (
       !loadMoreRef.current ||
@@ -167,7 +158,6 @@ export default function HomeClient({
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSearchMode]);
 
-  // Handle search results
   const handleSearchResultsChange = (
     results: SteamGameSearchObject[] | null,
     isLoading: boolean,
@@ -176,21 +166,17 @@ export default function HomeClient({
     setIsSearchLoading(isLoading);
 
     if (results === null && searchResults !== null) {
-      // Clear search results, reset URL to default
       updateFilters('ALL', 'all', 'ALL');
     }
   };
 
-  // Get games to display (either search results or filtered games)
   const getGamesToDisplay = () => {
-    // Show loading skeleton while loading
     if (isSearchLoading || (isGamesLoading && !isSearchMode)) {
       return Array(6)
         .fill(null)
         .map((_, i) => <GameCardSkeleton key={`skeleton-${i}`} />);
     }
 
-    // Show search results if available
     if (searchResults) {
       if (searchResults.length === 0) {
         return (
@@ -207,7 +193,6 @@ export default function HomeClient({
       ));
     }
 
-    // Show filtered games from our database
     const allFilteredGames =
       gamesData?.pages.flatMap((page) => page.games) || [];
 

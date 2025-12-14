@@ -12,11 +12,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const prisma = createPrismaClient();
 
-
 async function populateAggregatedPerformance() {
   console.log('🚀 Populating aggregatedPerformance for all games...');
 
-  // Get all games with their reviews
   const games = await prisma.game.findMany({
     include: {
       reviews: true,
@@ -34,11 +32,9 @@ async function populateAggregatedPerformance() {
       continue;
     }
 
-    // Calculate average performance
     const avgScore = calculateAveragePerformance(game.reviews);
     const aggregatedPerformance = scoreToRating(avgScore);
 
-    // Update the game
     await prisma.game.update({
       where: { id: game.id },
       data: { aggregatedPerformance },
@@ -55,7 +51,6 @@ async function populateAggregatedPerformance() {
   console.log(`🔄 Games updated: ${updatedCount}`);
   console.log(`⏭️  Games skipped (no reviews): ${skippedCount}`);
 
-  // Show some statistics
   const perfCounts = await prisma.game.groupBy({
     by: ['aggregatedPerformance'],
     _count: { id: true },

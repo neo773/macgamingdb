@@ -14,21 +14,17 @@ export const trafficRouter = router({
     .input(submitTrafficSourceSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Get IP info for context (optional) - account for Cloudflare proxy
         let ipInfo = 'Unknown';
         if (ctx.req) {
-          // Cloudflare sets CF-Connecting-IP header with the real client IP
           const cfConnectingIp = ctx.req.headers.get('cf-connecting-ip');
           const forwarded = ctx.req.headers.get('x-forwarded-for');
           const realIp = ctx.req.headers.get('x-real-ip');
 
-          // Priority: CF-Connecting-IP > X-Forwarded-For > X-Real-IP
           const ip =
             cfConnectingIp || forwarded?.split(',')[0] || realIp || 'unknown';
           ipInfo = ip;
         }
 
-        // Create Discord embed message
         const discordPayload = {
           embeds: [
             {
@@ -63,7 +59,6 @@ export const trafficRouter = router({
           ],
         };
 
-        // Send to Discord webhook
         const response = await fetch(DISCORD_WEBHOOK_URL, {
           method: 'POST',
           headers: {

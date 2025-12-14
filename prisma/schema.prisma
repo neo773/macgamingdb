@@ -1,8 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+
+
 
 generator client {
   provider = "prisma-client"
@@ -50,7 +50,7 @@ model Game {
   aggregatedPerformance PerformanceRating?
   reviewCount           Int                @default(0) // Pre-computed review count
 
-  // Indexes for Turso cost optimization
+
   @@index([aggregatedPerformance, id])
   @@index([reviewCount])
   @@index([aggregatedPerformance, reviewCount]) // Composite index for filtered ordering
@@ -74,15 +74,15 @@ model GameReview {
   playMethod       PlayMethod
   translationLayer TranslationLayer?
   performance      PerformanceRating
-  // Performance metrics
+
   fps              Int?
   graphicsSettings GraphicsSetting?
   resolution       String? // Format: "1920x1080"
-  // Legacy Hardware Information
+
   chipset          String // e.g., "M1", "M2", "M3" 
   chipsetVariant   ChipsetVariant // e.g., "BASE", "PRO", "MAX", "ULTRA"
 
-  // Hardware information - new approach
+
   macConfigId     String?
   macConfig       MacConfig? @relation(fields: [macConfigId], references: [id])
 
@@ -92,7 +92,7 @@ model GameReview {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime?  @default(now()) @updatedAt
 
-  // Indexes for Turso cost optimization
+
   @@index([gameId, chipset])
   @@index([gameId, playMethod])
   @@index([gameId, chipset, chipsetVariant])

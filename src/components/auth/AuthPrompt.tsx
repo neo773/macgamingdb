@@ -38,12 +38,9 @@ export default function AuthPrompt({
   const [internalMagicLinkSent, setInternalMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Use external state if provided, otherwise use internal state
   const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
 
-  // Handle magic link login
   const handleLogin = async () => {
-    // e.preventDefault();
     if (!email || !email.includes('@')) {
       setError('Please enter a valid email address');
       return;
@@ -72,7 +69,6 @@ export default function AuthPrompt({
     }
   };
 
-  // Don't hide the component if magic link was sent, even if session is loading
   if (
     (typeof session?.user?.id !== 'undefined' || isPending) &&
     !magicLinkSent

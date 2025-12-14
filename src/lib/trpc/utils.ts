@@ -2,12 +2,10 @@
  * Gets base URL for API endpoints
  */
 export function getUrl() {
-  // In browser environments, get the base URL from the window
   if (typeof window !== 'undefined') {
     return '/api/trpc';
   }
 
-  // In server environments, construct the URL
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ||
     (process.env.VERCEL_URL

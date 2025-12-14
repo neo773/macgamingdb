@@ -15,7 +15,6 @@ export default function ExpandableDescription({
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if content is too long by comparing scrollHeight to clientHeight
     if (contentRef.current) {
       const fullContent = contentRef.current;
       setIsTooLong(fullContent.scrollHeight > 150);

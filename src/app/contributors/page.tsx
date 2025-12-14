@@ -10,7 +10,6 @@ export const revalidate = 3600; // revalidate every hour
 export default async function ContributorsPage() {
   const helpers = await createServerHelpers();
 
-  // Fetch top contributors
   const contributorsData = await helpers.contributor.getTopContributors.fetch({
     limit: 20,
   });

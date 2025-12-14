@@ -20,4 +20,4 @@ export const createServerHelpers = async () => {
     }),
     transformer: superjson,
   });
-}
+};

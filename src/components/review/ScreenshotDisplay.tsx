@@ -89,7 +89,7 @@ export default function ScreenshotDisplay({
               onClick={() => handleImageClick(index)}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                // Fallback to original URL if signed URL fails
+
                 if (
                   target.src === urlData.signed &&
                   urlData.original !== urlData.signed

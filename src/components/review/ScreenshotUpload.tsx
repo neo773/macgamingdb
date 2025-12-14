@@ -30,7 +30,6 @@ export default function ScreenshotUpload({
 
   const getUploadUrlMutation = trpc.review.getUploadUrl.useMutation();
 
-  // Cleanup blob URLs when component unmounts or screenshots change
   useEffect(() => {
     return () => {
       screenshots.forEach((screenshot) => {
@@ -54,20 +53,16 @@ export default function ScreenshotUpload({
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
-        // Validate file type
         if (!file.type.startsWith('image/')) {
           throw new Error(`${file.name} is not an image file`);
         }
 
-        // Validate file size (max 10MB)
         if (file.size > 10 * 1024 * 1024) {
           throw new Error(`${file.name} is too large (max 10MB)`);
         }
 
-        // Create blob URL for immediate preview
         const blobUrl = URL.createObjectURL(file);
 
-        // Get presigned URL using tRPC
         const { signedUrl, publicUrl } = await getUploadUrlMutation.mutateAsync(
           {
             filename: file.name,
@@ -76,7 +71,6 @@ export default function ScreenshotUpload({
           },
         );
 
-        // Upload file to S3
         const uploadResponse = await fetch(signedUrl, {
           method: 'PUT',
           body: file,
@@ -101,7 +95,6 @@ export default function ScreenshotUpload({
       const newScreenshots = [...screenshots, ...uploadedScreenshots];
       setScreenshots(newScreenshots);
 
-      // Pass S3 URLs to parent component for form submission
       onScreenshotsChange(newScreenshots.map((s) => s.s3Url));
       toast.success(
         `${uploadedScreenshots.length} screenshot(s) uploaded successfully!`,
@@ -111,7 +104,7 @@ export default function ScreenshotUpload({
       toast.error(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setUploading(false);
-      // Reset file input
+
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -121,7 +114,6 @@ export default function ScreenshotUpload({
   const removeScreenshot = (index: number) => {
     const screenshotToRemove = screenshots[index];
     if (screenshotToRemove) {
-      // Clean up blob URL
       URL.revokeObjectURL(screenshotToRemove.blobUrl);
     }
 

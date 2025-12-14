@@ -33,13 +33,11 @@ export const GraphicsSettings = GraphicsSettingsEnum.Enum;
 export const Chipset = ChipsetEnum.Enum;
 export const ChipsetVariant = ChipsetVariantEnum.Enum;
 
-// Create constants for software versions to allow direct access in components
 export const SOFTWARE_VERSIONS = {
   CROSSOVER: ['25.0.1', '25.0', '24.0'],
   PARALLELS: ['20', '19'],
 } as const;
 
-// Schema for validation
 export const SoftwareVersionsSchema = z.object({
   CROSSOVER: z.array(z.string()),
   PARALLELS: z.array(z.string()),

@@ -20,7 +20,6 @@ const getPerformanceColor = (performance: Performance) => {
   return colors[performance] || 'bg-gray-500 text-gray-50';
 };
 
-// Helper function to format method name
 const formatMethodName = (method: string) => {
   const formats: Record<string, string> = {
     NATIVE: 'Native',

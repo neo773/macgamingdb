@@ -12,11 +12,9 @@ const prisma = createPrismaClient();
 async function addReviewCount() {
   console.log('🚀 Adding reviewCount field and populating data...');
 
-  // First, let's check if there are any reviews at all
   const totalReviews = await prisma.gameReview.count();
   console.log(`📊 Total reviews in database: ${totalReviews}`);
 
-  // Get all games with their review counts
   const games = await prisma.game.findMany({
     include: {
       _count: {
@@ -29,7 +27,6 @@ async function addReviewCount() {
 
   console.log(`📊 Found ${games.length} games to update`);
 
-  // Log some sample games with their current counts
   const gamesWithReviews = games.filter((game) => game._count.reviews > 0);
   console.log(`📊 Games with reviews: ${gamesWithReviews.length}`);
 
@@ -42,7 +39,7 @@ async function addReviewCount() {
     });
   } else {
     console.log('⚠️  No games have any reviews!');
-    // Let's check a few games individually
+
     const sampleGames = games.slice(0, 3);
     for (const game of sampleGames) {
       const reviewCount = await prisma.gameReview.count({
@@ -54,7 +51,6 @@ async function addReviewCount() {
     }
   }
 
-  // Prepare bulk update operations in batches
   const BATCH_SIZE = 50; // Process 50 games at a time
   const totalGames = games.length;
   let processedCount = 0;
@@ -63,7 +59,6 @@ async function addReviewCount() {
     `📊 Processing ${totalGames} games in batches of ${BATCH_SIZE}...`,
   );
 
-  // Process games in batches
   for (let i = 0; i < totalGames; i += BATCH_SIZE) {
     const batch = games.slice(i, i + BATCH_SIZE);
     const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
@@ -87,7 +82,6 @@ async function addReviewCount() {
         `✅ Batch ${batchNumber} completed: ${batchResults.length} games updated`,
       );
 
-      // Show progress
       const progress = ((processedCount / totalGames) * 100).toFixed(1);
       console.log(
         `📈 Progress: ${processedCount}/${totalGames} (${progress}%)`,
@@ -97,7 +91,6 @@ async function addReviewCount() {
       throw error;
     }
 
-    // Small delay to avoid overwhelming the database
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
@@ -105,7 +98,6 @@ async function addReviewCount() {
     `✅ Successfully updated ${processedCount} games with review counts`,
   );
 
-  // Verify the updates worked by checking a few games
   console.log('\n🔍 Verifying updates...');
   const verificationGames = await prisma.game.findMany({
     where: {
@@ -121,7 +113,6 @@ async function addReviewCount() {
     );
   });
 
-  // Show distribution
   const countDistribution = await prisma.game.groupBy({
     by: ['reviewCount'],
     _count: { id: true },

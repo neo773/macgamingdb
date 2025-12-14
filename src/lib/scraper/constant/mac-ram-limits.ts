@@ -40,7 +40,7 @@ export const RAM_LIMITS: RAMLimitsStructure = {
       [ChipsetVariant.MAX]: 128,
     },
     M5: {
-      [ChipsetVariant.BASE]: 32
+      [ChipsetVariant.BASE]: 32,
     },
   },
   iMac: {

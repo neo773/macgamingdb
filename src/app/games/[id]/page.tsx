@@ -14,10 +14,8 @@ import { Container } from '@/components/ui/container';
 import Script from 'next/script';
 import { AdSpaceAvailableBanner } from './AdSpaceAvailableBanner';
 
-// Enable ISR with a revalidation time of 1 year
 export const revalidate = 31536000;
 
-// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: {
@@ -29,7 +27,6 @@ export async function generateMetadata({
     const helpers = await createServerHelpers();
     const { game } = await helpers.game.getById.fetch({ id });
 
-    // Add robust error handling for JSON parsing
     let gameDetails: SteamAppData;
     try {
       gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
@@ -60,7 +57,6 @@ export async function generateMetadata({
   }
 }
 
-// This is a Server Component that will be rendered on the server
 export default async function GamePage({
   params,
 }: {
@@ -68,20 +64,17 @@ export default async function GamePage({
 }) {
   const { id } = await params;
 
-  // Create server-side tRPC helpers
   const helpers = await createServerHelpers();
 
   try {
-    // Fetch the query data
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
 
-    // Add robust error handling for JSON parsing
     let gameDetails: SteamAppData;
     try {
       gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
     } catch (parseError) {
       console.error('Failed to parse game details:', parseError, game?.details);
-      // Provide an empty object with fallback properties instead of showing a 404
+
       gameDetails = {
         name: 'Game Information Unavailable',
         detailed_description:
@@ -91,19 +84,8 @@ export default async function GamePage({
       } as SteamAppData;
     }
 
-    // Only show affiliate if there are reviews, game is playable, and someone used CrossOver
     const hasReviews = reviews && reviews.length > 0;
-    // const isPlayable =
-    //   stats &&
-    //   typeof stats.averagePerformance === 'number' &&
-    //   stats.averagePerformance > 1.0;
-    // const hasCrossoverReview =
-    //   stats &&
-    //   stats.methods &&
-    //   typeof stats.methods.crossover === 'number' &&
-    //   stats.methods.crossover > 0;
-    // const showCrossoverAffiliate =
-    //   hasReviews && isPlayable && hasCrossoverReview;
+
     const showCrossoverAffiliate = hasReviews;
 
     const jsonLd = {
@@ -314,7 +296,6 @@ export default async function GamePage({
   } catch (error) {
     console.error('Error in server component:', error);
 
-    // Instead of notFound(), provide a graceful error page
     return (
       <div className="min-h-screen flex flex-col bg-black">
         <Header />

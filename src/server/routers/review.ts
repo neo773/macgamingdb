@@ -24,7 +24,6 @@ import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
 import { scoreToRating } from '../utils/scoreToRating';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 
-// Helper function to update aggregated performance for a game
 const updateGameAggregatedPerformance = async (
   prisma: PrismaClient,
   gameId: string,
@@ -48,7 +47,6 @@ const updateGameAggregatedPerformance = async (
   return aggregatedPerformance;
 };
 
-// Main helper function to update all performance stats after a review change
 const updateAllPerformanceStats = async (
   prisma: PrismaClient,
   gameId: string,
@@ -56,10 +54,8 @@ const updateAllPerformanceStats = async (
   chipsetVariant: ChipsetVariant,
   playMethod: PlayMethod,
 ) => {
-  // First, update the game's aggregated performance
   await updateGameAggregatedPerformance(prisma, gameId);
 
-  // Then update all performance stats using the shared helper
   await updateAllPerformanceStatsForGame(
     prisma,
     gameId,
@@ -69,7 +65,6 @@ const updateAllPerformanceStats = async (
   );
 };
 
-// Define schemas using Zod
 const createReviewSchema = z.object({
   gameId: z.string(),
   playMethod: PlayMethodEnum,
@@ -102,7 +97,6 @@ const getUploadUrlSchema = z.object({
 });
 
 export const reviewRouter = router({
-  // Check if user is authenticated
   getUserAuth: procedure.query(async ({ ctx }) => {
     return {
       authenticated: !!ctx.user,
@@ -110,7 +104,6 @@ export const reviewRouter = router({
     };
   }),
 
-  // Get Mac configurations with server-side filtering
   getMacConfigs: procedure
     .input(
       z.object({
@@ -124,7 +117,6 @@ export const reviewRouter = router({
           orderBy: { identifier: 'asc' },
         });
 
-        // Parse metadata and create searchable configs
         let configs = macConfigs.map((config) => {
           const metadata = JSON.parse(config.metadata) as MacSpecification;
           return {
@@ -143,7 +135,6 @@ export const reviewRouter = router({
           };
         });
 
-        // Server-side filtering if search term provided
         if (input.search?.trim()) {
           const searchTerms = input.search
             .toLowerCase()
@@ -154,23 +145,19 @@ export const reviewRouter = router({
           );
         }
 
-        // Group and sort for priority ordering
         const groupedConfigs: Record<string, typeof configs> = {};
         let selectedGroupKey: string | null = null;
 
-        // Group by family
         for (const config of configs) {
           const family = config.metadata.family;
           if (!groupedConfigs[family]) groupedConfigs[family] = [];
           groupedConfigs[family].push(config);
 
-          // Track selected item's group
           if (config.identifier === input.selectedConfigIdentifier) {
             selectedGroupKey = family;
           }
         }
 
-        // Sort within groups (selected first)
         for (const family of Object.keys(groupedConfigs)) {
           groupedConfigs[family].sort((a, b) => {
             if (a.identifier === input.selectedConfigIdentifier) return -1;
@@ -179,24 +166,18 @@ export const reviewRouter = router({
           });
         }
 
-        // Create final ordered list (selected group first)
         const finalConfigs: typeof configs = [];
 
-        // Add selected group first
         if (selectedGroupKey && groupedConfigs[selectedGroupKey]) {
           finalConfigs.push(...groupedConfigs[selectedGroupKey]);
         }
 
-        // Add other groups
         for (const [family, familyConfigs] of Object.entries(groupedConfigs)) {
           if (family !== selectedGroupKey) {
             finalConfigs.push(...familyConfigs);
           }
         }
 
-        // Remove searchText from response
-         
-        // eslint-disable-next-line unused-imports/no-unused-vars
         return finalConfigs.map(({ searchText, ...config }) => config);
       } catch (error) {
         console.error('Error fetching Mac configs:', error);
@@ -207,7 +188,6 @@ export const reviewRouter = router({
       }
     }),
 
-  // Get single Mac configuration by identifier
   getMacConfigById: procedure
     .input(
       z.object({
@@ -240,12 +220,10 @@ export const reviewRouter = router({
       }
     }),
 
-  // Generate presigned URL for screenshot upload
   getUploadUrl: protectedProcedure
     .input(getUploadUrlSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
             code: 'UNAUTHORIZED',
@@ -253,7 +231,6 @@ export const reviewRouter = router({
           });
         }
 
-        // Validate file type (only images)
         if (!input.contentType.startsWith('image/')) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
@@ -261,14 +238,12 @@ export const reviewRouter = router({
           });
         }
 
-        // Generate S3 key
         const key = generateScreenshotKey(
           ctx.user.user.id,
           input.gameId,
           input.filename,
         );
 
-        // Get presigned URL
         const signedUrl = await getUploadSignedUrl(key, input.contentType);
         const publicUrl = getPublicUrl(key);
 
@@ -293,7 +268,6 @@ export const reviewRouter = router({
     .input(createReviewSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Check if user is authenticated first
         if (!ctx.user?.user.id) {
           throw new TRPCError({
             code: 'UNAUTHORIZED',
@@ -301,12 +275,10 @@ export const reviewRouter = router({
           });
         }
 
-        // Validate the game exists and get its details
         const gameExists = await ctx.prisma!.game.findUnique({
           where: { id: input.gameId },
         });
 
-        // Only fetch game details from Steam if they don't exist in our database
         if (!gameExists) {
           const gameDetails = await getGameBySteamId(input.gameId);
 
@@ -338,7 +310,6 @@ export const reviewRouter = router({
         const hasScreenshots =
           input.screenshots && input.screenshots.length > 0;
 
-        // Create the review with the authenticated user's ID
         const review = await ctx.prisma!.gameReview.create({
           data: {
             gameId: input.gameId,
@@ -360,10 +331,8 @@ export const reviewRouter = router({
           },
         });
 
-        // Revalidate the game page to reflect the new review
         revalidatePath(`/games/${input.gameId}`);
 
-        // Update performance stats
         await updateAllPerformanceStats(
           ctx.prisma!,
           input.gameId,
@@ -372,7 +341,6 @@ export const reviewRouter = router({
           input.playMethod,
         );
 
-        // Update review count
         await ctx.prisma!.game.update({
           where: { id: input.gameId },
           data: { reviewCount: { increment: 1 } },
@@ -389,7 +357,6 @@ export const reviewRouter = router({
     .input(updateReviewSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
             code: 'UNAUTHORIZED',
@@ -397,13 +364,11 @@ export const reviewRouter = router({
           });
         }
 
-        // Find the review
         const review = await ctx.prisma!.gameReview.findUnique({
           where: { id: input.reviewId },
           include: { game: true },
         });
 
-        // Check if review exists
         if (!review) {
           throw new TRPCError({
             code: 'NOT_FOUND',
@@ -411,7 +376,6 @@ export const reviewRouter = router({
           });
         }
 
-        // Check if the review belongs to the authenticated user
         if (review.userId !== ctx.user.user.id) {
           throw new TRPCError({
             code: 'FORBIDDEN',
@@ -419,7 +383,6 @@ export const reviewRouter = router({
           });
         }
 
-        // Update the review notes and screenshots
         await ctx.prisma!.gameReview.update({
           where: { id: input.reviewId },
           data: {
@@ -430,11 +393,9 @@ export const reviewRouter = router({
           },
         });
 
-        // Revalidate paths
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
 
-        // Update performance stats
         await updateAllPerformanceStats(
           ctx.prisma!,
           review.gameId,
@@ -460,7 +421,6 @@ export const reviewRouter = router({
     .input(deleteReviewSchema)
     .mutation(async ({ input, ctx }) => {
       try {
-        // Check if user is authenticated
         if (!ctx.user?.user.id) {
           throw new TRPCError({
             code: 'UNAUTHORIZED',
@@ -468,13 +428,11 @@ export const reviewRouter = router({
           });
         }
 
-        // Find the review
         const review = await ctx.prisma!.gameReview.findUnique({
           where: { id: input.reviewId },
           include: { game: true },
         });
 
-        // Check if review exists
         if (!review) {
           throw new TRPCError({
             code: 'NOT_FOUND',
@@ -482,7 +440,6 @@ export const reviewRouter = router({
           });
         }
 
-        // Check if the review belongs to the authenticated user
         if (review.userId !== ctx.user.user.id) {
           throw new TRPCError({
             code: 'FORBIDDEN',
@@ -490,7 +447,6 @@ export const reviewRouter = router({
           });
         }
 
-        // Check if the user has confirmed deletion
         if (!input.confirmation) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
@@ -498,22 +454,18 @@ export const reviewRouter = router({
           });
         }
 
-        // Delete the review
         await ctx.prisma!.gameReview.delete({
           where: { id: input.reviewId },
         });
 
-        // Revalidate paths
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
 
-        // Update review count
         await ctx.prisma!.game.update({
           where: { id: review.gameId },
           data: { reviewCount: { decrement: 1 } },
         });
 
-        // Update performance stats
         await updateAllPerformanceStats(
           ctx.prisma!,
           review.gameId,

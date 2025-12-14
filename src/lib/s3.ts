@@ -56,11 +56,10 @@ export function getPublicUrl(key: string): string {
   return `${process.env.S3_ENDPOINT}/${key}`;
 }
 
-// Extract key from R2 URL
 export function extractKeyFromUrl(url: string): string | null {
   try {
     const urlObj = new URL(url);
-    // Remove leading slash
+
     return urlObj.pathname.substring(1);
   } catch {
     return null;

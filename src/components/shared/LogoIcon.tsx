@@ -1,7 +1,6 @@
 'use client';
 import React, { type SVGProps } from 'react';
 
-// Game controller icon component
 export const LogoIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

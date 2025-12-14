@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft , InfoIcon } from 'lucide-react';
+import { ChevronLeft, InfoIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { Textarea } from '@/components/ui/textarea';
@@ -62,7 +62,6 @@ export type ReviewContentWrapperProps = {
 const ConfettiSideCannons = () => {
   const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
 
-  // Single burst from each side with more particles for better effect
   confetti({
     particleCount: 100,
     angle: 60,
@@ -101,7 +100,6 @@ export default function CreateReviewForm({
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState('');
 
-  // Screen state for Mac configuration selection
   const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>(
     'form',
   );
@@ -110,7 +108,6 @@ export default function CreateReviewForm({
   const preferences = getPreferences();
   const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
 
-  // Fetch saved Mac configuration if we have one
   const { data: savedMacConfig } = trpc.review.getMacConfigById.useQuery(
     { identifier: preferences.macConfigIdentifier! },
     {
@@ -120,16 +117,12 @@ export default function CreateReviewForm({
     },
   );
 
-  // Set selectedConfig when saved config loads
   useEffect(() => {
     if (savedMacConfig) {
       setSelectedConfig(savedMacConfig);
     }
   }, [savedMacConfig]);
 
-  // Mac configurations are now fetched server-side in SelectMacConfiguration
-
-  // Form state with proper typing
   const [formData, setFormData] = useState<{
     fps: string;
     resolution: string;
@@ -155,7 +148,6 @@ export default function CreateReviewForm({
     macConfigIdentifier: preferences.macConfigIdentifier || '', // Default to empty
   });
 
-  // Update software version when play method changes
   useEffect(() => {
     if (formData.playMethod) {
       if (formData.playMethod === 'CROSSOVER') {
@@ -177,12 +169,11 @@ export default function CreateReviewForm({
     }
   }, [formData.playMethod]);
 
-  // Create review mutation
   const createReviewMutation = trpc.review.create.useMutation({
     onSuccess: () => {
       setSuccess(true);
       ConfettiSideCannons();
-      // Refresh the page after successful submission
+
       setTimeout(() => {
         onOpenChange(false);
         router.refresh();
@@ -196,7 +187,6 @@ export default function CreateReviewForm({
 
   const isSubmitting = createReviewMutation.isPending;
 
-  // Handle form input changes
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -206,17 +196,13 @@ export default function CreateReviewForm({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle select changes
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e?: React.FormEvent) => {
-    // Prevent default form submission if event is provided
     if (e) e.preventDefault();
 
-    // Validate required fields
     if (
       !formData.playMethod ||
       !formData.performance ||
@@ -228,13 +214,11 @@ export default function CreateReviewForm({
 
     setError(null);
 
-    // Determine which software version to use
     const finalSoftwareVersion = customVersion
       ? customVersionValue
       : formData.softwareVersion;
 
     try {
-      // Create the review
       await createReviewMutation.mutateAsync({
         gameId: gameId as string,
         playMethod: formData.playMethod,
@@ -259,21 +243,17 @@ export default function CreateReviewForm({
     }
   };
 
-  // Handle play method selection with fixed typing
   const handlePlayMethodSelect = (method: PlayMethod) => {
     setFormData((prev) => ({ ...prev, playMethod: method }));
     updatePreference('playMethod', method);
   };
 
-  // Helper components specific for Drawer/Dialog
   const Header = isDrawer ? 'div' : DialogHeader;
   const Title = isDrawer ? 'h3' : DialogTitle;
   const Description = isDrawer ? 'p' : DialogDescription;
   const Footer = isDrawer ? 'div' : DialogFooter;
 
-  // Helper function to transform performance rating enum values to user-friendly labels
   const transformPerformanceRating = (rating: string): string => {
-    // Split the rating by underscore and capitalize each word
     return rating
       .split('_')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -655,7 +635,6 @@ export default function CreateReviewForm({
               }
             >
               {isDrawer ? (
-                // Drawer buttons
                 <>
                   <Button
                     type="submit"
@@ -677,7 +656,6 @@ export default function CreateReviewForm({
                   </Button>
                 </>
               ) : (
-                // Dialog buttons
                 <>
                   <DialogClose asChild>
                     <Button

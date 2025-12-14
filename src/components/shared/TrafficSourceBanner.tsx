@@ -31,12 +31,10 @@ export default function TrafficSourceWidget() {
   });
 
   useEffect(() => {
-    // Check if user has already submitted or dismissed the widget
     const hasSubmitted = localStorage.getItem('traffic_source_submitted');
     const hasDismissed = localStorage.getItem('traffic_source_dismissed');
 
     if (!hasSubmitted && !hasDismissed) {
-      // Show widget after a short delay
       const timer = setTimeout(() => setIsVisible(true), 2000);
       return () => clearTimeout(timer);
     }

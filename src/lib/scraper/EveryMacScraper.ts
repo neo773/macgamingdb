@@ -147,7 +147,6 @@ export class EveryMacScraper {
       year: tableData.year || 0,
     };
 
-    // If we have multiple RAM configurations, create a spec for each
     if (tableData.ramConfigurations && tableData.ramConfigurations.length > 0) {
       return tableData.ramConfigurations.map((ram) => ({
         ...baseSpec,
@@ -155,7 +154,6 @@ export class EveryMacScraper {
       }));
     }
 
-    // Fallback to single RAM configuration
     return [
       {
         ...baseSpec,
@@ -328,8 +326,3 @@ export class EveryMacScraper {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
-
-// usage
-// const scraper = new EveryMacScraper(new WebScraper(process.env.OXYLABS_SCRAPER!));
-// const specifications = await scraper.scrapeAllSpecifications();
-// fs.writeFileSync("specifications.json", JSON.stringify(specifications, null, 2));

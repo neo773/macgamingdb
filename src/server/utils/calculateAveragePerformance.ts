@@ -1,8 +1,11 @@
-import { type GameReview, type PerformanceRating } from '@/generated/prisma/client';
+import {
+  type GameReview,
+  type PerformanceRating,
+} from '@/generated/prisma/client';
 
-// Helper function to calculate average performance
-
-export const calculateAveragePerformance = (reviews: Pick<GameReview, 'performance'>[]) => {
+export const calculateAveragePerformance = (
+  reviews: Pick<GameReview, 'performance'>[],
+) => {
   const performanceMap: Record<PerformanceRating, number> = {
     UNPLAYABLE: 0,
     BARELY_PLAYABLE: 1,

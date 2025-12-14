@@ -21,7 +21,6 @@ export default function ContributorsClient({
 }) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Setup infinite query with initial data
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     trpc.contributor.getTopContributors.useInfiniteQuery(
       {
@@ -36,7 +35,6 @@ export default function ContributorsClient({
       },
     );
 
-  // Setup intersection observer for infinite scrolling
   useEffect(() => {
     if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
 
@@ -53,11 +51,9 @@ export default function ContributorsClient({
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
-  // Get all contributors from all pages
   const allContributors =
     data?.pages.flatMap((page) => page.contributors) || [];
 
-  // Get rank badge component based on position
   const getRankBadge = (position: number) => {
     switch (position) {
       case 0:
@@ -71,7 +67,6 @@ export default function ContributorsClient({
     }
   };
 
-  // Get initials for avatar fallback
   const getInitials = (name: string) => {
     return name
       .split(' ')

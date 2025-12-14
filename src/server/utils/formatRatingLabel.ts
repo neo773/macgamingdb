@@ -1,5 +1,4 @@
-import { type Performance } from "@/server/schema";
-
+import { type Performance } from '@/server/schema';
 
 export type PerformanceLabel = Performance & 'ALL';
 

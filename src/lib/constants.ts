@@ -7,17 +7,15 @@ import {
   type PlayMethodEnum,
 } from '@/server/schema';
 
-// URL parameter keys
 export enum SearchURLParamsKeys {
   CHIPSET = 'chipset',
   PERFORMANCE = 'performance',
   PLAY_METHOD = 'playMethod',
 }
 
-// Performance filter type
 export type PerformanceFilter = 'ALL' | z.infer<typeof PerformanceEnum>;
 export type PlayMethodFilter = 'ALL' | z.infer<typeof PlayMethodEnum>;
-// Filter configuration type
+
 export interface FilterConfig {
   limit: number;
   performance: PerformanceFilter;
@@ -26,7 +24,6 @@ export interface FilterConfig {
   playMethod?: PlayMethod;
 }
 
-// Helper to create filter config from URL params
 export function createFilterConfig(
   performanceParam: string | null | undefined,
   chipsetParam: string | null | undefined,

@@ -10,8 +10,8 @@ export function createPrismaClient(): PrismaClient {
         }),
       })
     : new PrismaClient({
-      adapter: new PrismaLibSql({
-        url: 'file:./prisma/dev.db',
-      }),
-    });
+        adapter: new PrismaLibSql({
+          url: 'file:./prisma/dev.db',
+        }),
+      });
 }

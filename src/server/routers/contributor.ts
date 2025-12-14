@@ -14,10 +14,8 @@ export const contributorRouter = router({
       try {
         const { limit, cursor } = input;
 
-        // Get all users with their review counts and unique game counts
         const contributors = await ctx.prisma!.$transaction(
           async (tx) => {
-            // First, get all users with their review counts
             const userReviewCounts = await tx.user.findMany({
               select: {
                 id: true,
@@ -45,7 +43,6 @@ export const contributorRouter = router({
                 : {}),
             });
 
-            // For each user, get the count of unique games they've reviewed
             const usersWithGameCounts = await Promise.all(
               userReviewCounts.map(async (user) => {
                 const uniqueGames = await tx.gameReview.groupBy({
@@ -61,13 +58,12 @@ export const contributorRouter = router({
                   joinedAt: user.createdAt,
                   reviewCount: user._count.reviews,
                   uniqueGamesCount: uniqueGames.length,
-                  // Create a score that factors in both metrics
+
                   score: user._count.reviews * 10 + uniqueGames.length * 5,
                 };
               }),
             );
 
-            // Sort by score in descending order
             return usersWithGameCounts.sort((a, b) => b.score - a.score);
           },
           {
@@ -75,7 +71,6 @@ export const contributorRouter = router({
           },
         );
 
-        // Handle pagination
         let nextCursor: typeof cursor = undefined;
         if (contributors.length > limit) {
           const nextItem = contributors.pop();

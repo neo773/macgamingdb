@@ -112,7 +112,6 @@ export default async function StatsPage() {
       ? typedStats.query_latency / typedStats.query_count
       : 0;
 
-  // Group queries by type for better insights
   const queryAnalysis = typedStats.top_queries.reduce(
     (acc, query) => {
       const intent = getQueryIntent(query.query);
@@ -124,7 +123,6 @@ export default async function StatsPage() {
     {} as Record<string, { count: number; totalRows: number }>,
   );
 
-  // Calculate metrics for cards
   const queriesPerFrame = (
     typedStats.query_count / typedStats.current_frame_no
   ).toFixed(1);

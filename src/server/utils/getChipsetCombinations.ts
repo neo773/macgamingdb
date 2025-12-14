@@ -1,6 +1,5 @@
 import { ChipsetEnum, ChipsetVariantEnum } from '@/server/schema';
 
-
 export const getChipsetCombinations = () => {
   const combinations = [];
   for (const chipset of ChipsetEnum.options) {

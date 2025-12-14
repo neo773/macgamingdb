@@ -1,7 +1,10 @@
 import { createPrismaClient } from '@/lib/database/prisma';
 import { config } from 'dotenv';
 import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
-import { type PerformanceRating, type GameReview } from '@/generated/prisma/client';
+import {
+  type PerformanceRating,
+  type GameReview,
+} from '@/generated/prisma/client';
 
 if (process.env.NODE_ENV === 'production') {
   config({
@@ -11,7 +14,6 @@ if (process.env.NODE_ENV === 'production') {
 
 const prisma = createPrismaClient();
 
-// --- Local helpers (migration-only) ---
 const convertScore = (score: number, oldMax = 4, newMax = 5): number => {
   return (score / oldMax) * newMax;
 };
@@ -19,7 +21,6 @@ const convertScore = (score: number, oldMax = 4, newMax = 5): number => {
 const mapToPerformance = (oldScore: number): PerformanceRating => {
   const rescaled = convertScore(oldScore);
 
-  // Preserve EXCELLENT membership from old system
   if (oldScore >= 3.5) return 'EXCELLENT';
 
   if (rescaled >= 4.5) return 'EXCELLENT';
@@ -30,11 +31,9 @@ const mapToPerformance = (oldScore: number): PerformanceRating => {
   return 'UNPLAYABLE';
 };
 
-// --- Migration ---
 async function migrateTo05RatingScale() {
   console.log('🚀 Clean Migration: 0–4 ➝ 0–5 Star System\n');
 
-  // Get all games with reviews
   const games = await prisma.game.findMany({
     where: { reviewCount: { gt: 0 } },
     include: {
@@ -46,10 +45,8 @@ async function migrateTo05RatingScale() {
 
   let processed = 0;
   for (const game of games) {
-    // Old average score (0–4 scale)
     const oldAvg = calculateAveragePerformance(game.reviews as GameReview[]);
 
-    // Map to new performance category (0–5 scale, preserving EXCELLENT)
     const newRating = mapToPerformance(oldAvg);
 
     await prisma.game.update({

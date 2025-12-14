@@ -22,7 +22,6 @@ export default async function ContributorPage({
 
   const { id: contributorId } = await params;
 
-  // Get the contributor
   const contributor = await prisma.user.findUnique({
     where: {
       id: contributorId,
@@ -33,7 +32,6 @@ export default async function ContributorPage({
     notFound();
   }
 
-  // Get their reviews
   const contributorReviews = await prisma.gameReview.findMany({
     where: {
       userId: contributorId,
@@ -51,7 +49,6 @@ export default async function ContributorPage({
     .email!.split('@')[0]
     .replace(/[0-9._]/g, '');
 
-  // Get unique games count
   const uniqueGamesCount = new Set(
     contributorReviews.map((review) => review.gameId),
   ).size;

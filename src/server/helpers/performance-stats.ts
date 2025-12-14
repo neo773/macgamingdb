@@ -6,7 +6,6 @@ import type {
   Performance,
 } from '../schema';
 
-// Helper function to count games matching specific performance criteria
 export const countGamesForPerformanceStats = async (
   prisma: PrismaClient,
   criteria: {
@@ -18,7 +17,6 @@ export const countGamesForPerformanceStats = async (
 ) => {
   const { chipset, chipsetVariant, playMethod, performanceRating } = criteria;
 
-  // If chipset is "ALL" and playMethod is "OTHER", count all games with this performance
   if (chipset === 'ALL' && playMethod === 'OTHER') {
     return await prisma.game.count({
       where: {
@@ -27,7 +25,6 @@ export const countGamesForPerformanceStats = async (
     });
   }
 
-  // If chipset is "ALL" but playMethod is specific, count games with reviews from that play method
   if (chipset === 'ALL' && playMethod !== 'OTHER') {
     return await prisma.game.count({
       where: {
@@ -41,7 +38,6 @@ export const countGamesForPerformanceStats = async (
     });
   }
 
-  // If playMethod is "OTHER", count games with reviews from this chipset (any method)
   if (playMethod === 'OTHER') {
     return await prisma.game.count({
       where: {
@@ -56,7 +52,6 @@ export const countGamesForPerformanceStats = async (
     });
   }
 
-  // Specific combination: count games with exact chipset, variant, and play method
   return await prisma.game.count({
     where: {
       aggregatedPerformance: performanceRating,
@@ -71,7 +66,6 @@ export const countGamesForPerformanceStats = async (
   });
 };
 
-// Helper function to upsert a performance stats record
 export const upsertPerformanceStats = async (
   prisma: PrismaClient,
   stats: {
@@ -102,7 +96,6 @@ export const upsertPerformanceStats = async (
   });
 };
 
-// Helper function to update performance stats for a specific combination
 export const updateSpecificPerformanceStats = async (
   prisma: PrismaClient,
   chipset: Chipset,
@@ -126,14 +119,12 @@ export const updateSpecificPerformanceStats = async (
   });
 };
 
-// Helper function to update aggregate performance stats
 export const updateAggregatePerformanceStats = async (
   prisma: PrismaClient,
   chipset: Chipset,
   chipsetVariant: ChipsetVariant,
   performanceRating: Performance,
 ) => {
-  // Update specific chipset + "OTHER" (all methods) combination
   const chipsetAllMethodsCount = await countGamesForPerformanceStats(prisma, {
     chipset,
     chipsetVariant,
@@ -149,7 +140,6 @@ export const updateAggregatePerformanceStats = async (
     count: chipsetAllMethodsCount,
   });
 
-  // Update "ALL" chipset + "OTHER" (all methods) combination
   const allChipsetsAllMethodsCount = await countGamesForPerformanceStats(
     prisma,
     {
@@ -169,7 +159,6 @@ export const updateAggregatePerformanceStats = async (
   });
 };
 
-// Helper function to update "ALL" chipset + specific playMethod combination
 export const updateAllChipsetSpecificMethodStats = async (
   prisma: PrismaClient,
   playMethod: PlayMethod,
@@ -191,7 +180,6 @@ export const updateAllChipsetSpecificMethodStats = async (
   });
 };
 
-// Main helper function to update all performance stats after a review change
 export const updateAllPerformanceStatsForGame = async (
   prisma: PrismaClient,
   gameId: string,
@@ -199,7 +187,6 @@ export const updateAllPerformanceStatsForGame = async (
   chipsetVariant: ChipsetVariant,
   playMethod: PlayMethod,
 ) => {
-  // Update performance stats for all performance ratings that might be affected
   const allPerformanceRatings: Performance[] = [
     'UNPLAYABLE',
     'BARELY_PLAYABLE',
@@ -210,7 +197,6 @@ export const updateAllPerformanceStatsForGame = async (
   ];
 
   for (const performanceRating of allPerformanceRatings) {
-    // Update specific combination
     await updateSpecificPerformanceStats(
       prisma,
       chipset,
@@ -219,7 +205,6 @@ export const updateAllPerformanceStatsForGame = async (
       performanceRating,
     );
 
-    // Update aggregate combinations
     await updateAggregatePerformanceStats(
       prisma,
       chipset,
@@ -227,7 +212,6 @@ export const updateAllPerformanceStatsForGame = async (
       performanceRating,
     );
 
-    // Update "ALL" chipset + specific playMethod combination
     await updateAllChipsetSpecificMethodStats(
       prisma,
       playMethod,

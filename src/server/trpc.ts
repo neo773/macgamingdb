@@ -1,18 +1,16 @@
-import { initTRPC , TRPCError } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { BetterAuthClient } from '@/lib/auth/auth';
 import { createPrismaClient } from '@/lib/database/prisma';
 import { type PrismaClient } from '@/generated/prisma/client';
 import { type User } from 'better-auth';
 
-// Define a proper context type
 export interface TrpcContext {
   prisma: PrismaClient;
   req?: Request;
   user?: User;
 }
 
-// Create context for API route handler
 export const createTRPCContext = async (
   opts: { req?: Request } = {},
 ): Promise<TrpcContext> => {
@@ -30,7 +28,6 @@ const t = initTRPC.context<TrpcContext>().create({
 export const router = t.router;
 export const procedure = t.procedure;
 
-// Middleware to check authentication
 const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   try {
     if (!ctx.req) {
@@ -61,5 +58,4 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
   }
 });
 
-// Use this procedure when authentication is required
 export const protectedProcedure = t.procedure.use(isAuthenticated);

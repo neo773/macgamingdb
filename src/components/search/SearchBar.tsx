@@ -30,7 +30,6 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
     },
   );
 
-  // Update URL when search query changes
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
 
@@ -43,10 +42,8 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [debouncedQuery, pathname, router, searchParams]);
 
-  // Pass data and loading state to parent
   useEffect(() => {
     if (onResultsChange) {
-      // Always call onResultsChange, even when query is empty
       const results = debouncedQuery.trim() === '' ? null : data || null;
       onResultsChange(results, isLoading);
     }

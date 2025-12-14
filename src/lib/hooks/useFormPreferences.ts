@@ -24,14 +24,9 @@ export function useFormPreferences() {
   const updatePreference = useCallback(
     <K extends keyof FormPreferences>(key: K, value: FormPreferences[K]) => {
       if (typeof window === 'undefined') return;
-
-      try {
         const current = getPreferences();
         const updated = { ...current, [key]: value };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch {
-        // Silently fail if localStorage is not available
-      }
     },
     [getPreferences],
   );

@@ -4,7 +4,7 @@ export type OldMacConfig = {
   identifier: string;
   metadata: string;
 };
-// Identifier, Chip, Chip Variant, CPU Cores, GPU Cores, RAM, Year
+
 export type MacConfigIdentifier =
   `${string}-${string}-${string}-${number}-${number}-${number}-${number}`;
 
@@ -13,7 +13,6 @@ export const convertMacConfigIdentifierToNewFormat = (
 ): MacConfigIdentifier => {
   const metadata = JSON.parse(oldConfig.metadata) as MacSpecification;
 
-  // Ensure all number fields are numbers, and build the string in a type-safe way
   const identifier = String(metadata.identifier);
   const chip = String(metadata.chip);
   const chipVariant = String(metadata.chipVariant);

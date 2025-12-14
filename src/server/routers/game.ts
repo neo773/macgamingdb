@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { getGameBySteamId, searchSteam } from '@/server/helpers/steam';
 import { TRPCError } from '@trpc/server';
-import { type PerformanceRating, type PrismaClient } from '@/generated/prisma/client';
+import {
+  type PerformanceRating,
+  type PrismaClient,
+} from '@/generated/prisma/client';
 import {
   ChipsetEnum,
   ChipsetVariantEnum,
@@ -15,7 +18,6 @@ import { calculateTranslationLayerStats } from '@/server/utils/calculateTranslat
 import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '@/lib/s3';
 
-// Helper function to get game IDs from PerformanceStats efficiently
 const getGameIdsFromPerformanceStats = async (
   prisma: PrismaClient,
   filters: {
@@ -30,11 +32,10 @@ const getGameIdsFromPerformanceStats = async (
   const { chipset, chipsetVariant, playMethod, performance, limit, offset } =
     filters;
 
-  // Get games that match the performance criteria using pre-computed stats
   const games = await prisma.game.findMany({
     where: {
       aggregatedPerformance: performance,
-      // Only add review filtering if we need specific chipset/playMethod
+
       ...((chipset || playMethod !== 'ALL') && {
         reviews: {
           some: {
@@ -105,28 +106,21 @@ export const gameRouter = router({
     .query(async ({ input, ctx }) => {
       const { chipset, chipsetVariant, playMethod } = input;
 
-      // Determine query parameters based on aggregate logic
       let queryChipset: string | undefined;
       let queryChipsetVariant: ChipsetVariant | undefined;
       let queryPlayMethod: PlayMethod | undefined;
 
-      // Handle chipset logic
       if (chipset) {
-        // Specific chipset requested
         queryChipset = chipset;
         queryChipsetVariant = chipsetVariant; // Can be specific or undefined for all variants of this chipset
       } else {
-        // ALL chipsets requested - use aggregate records
         queryChipset = 'ALL';
         queryChipsetVariant = 'BASE' as ChipsetVariant; // Our representative for aggregates
       }
 
-      // Handle play method logic
       if (playMethod === 'ALL') {
-        // ALL play methods requested - use "OTHER" which represents ALL in aggregates
         queryPlayMethod = 'OTHER' as PlayMethod;
       } else {
-        // Specific play method requested
         queryPlayMethod = playMethod as PlayMethod;
       }
 
@@ -180,11 +174,9 @@ export const gameRouter = router({
           playMethod,
         } = input;
 
-        // Strategy 1: Use PerformanceStats for filtering when possible to avoid expensive JOINs
         const canUsePerformanceStats = chipset || playMethod !== 'ALL';
 
         if (canUsePerformanceStats && performance !== 'ALL') {
-          // Use pre-computed PerformanceStats to get game IDs efficiently
           const gameIds = await getGameIdsFromPerformanceStats(ctx.prisma!, {
             chipset,
             chipsetVariant,
@@ -202,7 +194,6 @@ export const gameRouter = router({
             };
           }
 
-          // Fetch games by IDs - much cheaper than JOINs
           const games = await ctx.prisma!.game.findMany({
             where: {
               id: { in: gameIds },
@@ -242,14 +233,12 @@ export const gameRouter = router({
           };
         }
 
-        // Strategy 2: Optimized query for simple cases (no chipset/playMethod filtering)
         const games = await ctx.prisma!.game.findMany({
           where: {
-            // Use indexed aggregatedPerformance field instead of JOINs
             ...(performance !== 'ALL' && {
               aggregatedPerformance: performance,
             }),
-            // Apply playMethod filter independently of chipset filter
+
             ...(playMethod !== 'ALL' && {
               reviews: {
                 some: {
@@ -257,7 +246,7 @@ export const gameRouter = router({
                 },
               },
             }),
-            // Apply chipset filter separately
+
             ...(chipset && {
               reviews: {
                 some: {
@@ -313,7 +302,6 @@ export const gameRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       try {
-        // Get reviews from our database
         const reviews = await ctx.prisma!.gameReview.findMany({
           where: { gameId: input.id },
           include: {
@@ -326,7 +314,7 @@ export const gameRouter = router({
         });
 
         let gameDetails: string = game?.details as string;
-        // if game doesn't exist fetch from steam API
+
         if (!game || !game.details) {
           const response = await getGameBySteamId(input.id);
           if (!response) {
@@ -337,17 +325,15 @@ export const gameRouter = router({
             });
           }
 
-          // Stringify the response ONCE to store in DB
           gameDetails = JSON.stringify(response);
 
-          // Store/update in database
           await ctx.prisma!.game.upsert({
             where: { id: input.id },
             update: { details: gameDetails }, // Don't stringify again
             create: { id: input.id, details: gameDetails }, // Don't stringify again
           });
         }
-        // Calculate average ratings
+
         const reviewStats =
           reviews.length > 0
             ? {

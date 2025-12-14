@@ -1,4 +1,4 @@
-// @ts-check
+
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
@@ -9,10 +9,10 @@ import unicornPlugin from 'eslint-plugin-unicorn';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 
 export default [
-  // Base JavaScript configuration
+
   js.configs.recommended,
 
-  // Global ignores
+
   {
     ignores: [
       '**/node_modules/**',
@@ -24,7 +24,7 @@ export default [
     ],
   },
 
-  // Base configuration for all files
+
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
@@ -35,7 +35,7 @@ export default [
       'unicorn': unicornPlugin,
     },
     rules: {
-      // General rules
+
       'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
       'no-control-regex': 0,
       'no-debugger': 'error',
@@ -45,11 +45,11 @@ export default [
       'import/no-relative-packages': 'off',
 
 
-      // Import rules
+
       'import/no-useless-path-segments': 'error',
       'import/no-duplicates': ['error', { considerQueryString: true }],
 
-      // Unused imports
+
       'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -63,7 +63,7 @@ export default [
     },
   },
 
-  // TypeScript specific configuration
+
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -78,9 +78,9 @@ export default [
       '@typescript-eslint': typescriptEslint,
     },
     rules: {
-      // TypeScript rules
+
       'no-redeclare': 'off', // Turn off base rule for TypeScript
-      // '@typescript-eslint/no-redeclare': 'error', // Use TypeScript-aware version
+
       '@typescript-eslint/ban-ts-comment': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -104,15 +104,15 @@ export default [
     },
   },
 
-  // JavaScript specific configuration
+
   {
     files: ['*.{js,jsx}'],
     rules: {
-      // JavaScript-specific rules if needed
+
     },
   },
 
-  // Test files
+
   {
     files: [
       '*.spec.@(ts|tsx|js|jsx)',
