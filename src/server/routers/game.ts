@@ -112,10 +112,10 @@ export const gameRouter = router({
 
       if (chipset) {
         queryChipset = chipset;
-        queryChipsetVariant = chipsetVariant; // Can be specific or undefined for all variants of this chipset
+        queryChipsetVariant = chipsetVariant; 
       } else {
         queryChipset = 'ALL';
-        queryChipsetVariant = 'BASE' as ChipsetVariant; // Our representative for aggregates
+        queryChipsetVariant = 'BASE' as ChipsetVariant; 
       }
 
       if (playMethod === 'ALL') {
@@ -182,7 +182,7 @@ export const gameRouter = router({
             chipsetVariant,
             playMethod,
             performance,
-            limit: limit * 3, // Get more IDs to account for pagination
+            limit: limit * 3, 
             offset,
           });
 
@@ -259,7 +259,7 @@ export const gameRouter = router({
           skip: offset,
           take: limit + 1,
           orderBy: {
-            reviewCount: 'desc', // This uses the indexed reviewCount field
+            reviewCount: 'desc', 
           },
         });
 
@@ -329,8 +329,8 @@ export const gameRouter = router({
 
           await ctx.prisma!.game.upsert({
             where: { id: input.id },
-            update: { details: gameDetails }, // Don't stringify again
-            create: { id: input.id, details: gameDetails }, // Don't stringify again
+            update: { details: gameDetails }, 
+            create: { id: input.id, details: gameDetails }, 
           });
         }
 
@@ -379,18 +379,18 @@ export const gameRouter = router({
             const key = extractKeyFromUrl(url);
             if (!key) {
               console.warn(`Could not extract key from URL: ${url}`);
-              return { original: url, signed: url }; // Fallback to original URL
+              return { original: url, signed: url }; 
             }
 
             try {
-              const signedUrl = await getViewSignedUrl(key, 3600); // 1 hour expiry
+              const signedUrl = await getViewSignedUrl(key, 3600); 
               return { original: url, signed: signedUrl };
             } catch (error) {
               console.warn(
                 `Could not generate signed URL for key: ${key}`,
                 error,
               );
-              return { original: url, signed: url }; // Fallback to original URL
+              return { original: url, signed: url }; 
             }
           }),
         );

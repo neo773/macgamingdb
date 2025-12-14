@@ -32,7 +32,7 @@ export const contributorRouter = router({
                   _count: 'desc',
                 },
               },
-              take: limit + 1, // Take one extra for cursor
+              take: limit + 1,
               ...(cursor
                 ? {
                     skip: 1,

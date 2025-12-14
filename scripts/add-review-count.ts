@@ -51,7 +51,7 @@ async function addReviewCount() {
     }
   }
 
-  const BATCH_SIZE = 50; // Process 50 games at a time
+  const BATCH_SIZE = 50;
   const totalGames = games.length;
   let processedCount = 0;
 

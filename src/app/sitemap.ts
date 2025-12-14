@@ -4,7 +4,7 @@ import { createPrismaClient } from '@/lib/database/prisma';
 const CHUNK_SIZE = 200;
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const prisma = createPrismaClient();

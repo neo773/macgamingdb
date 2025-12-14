@@ -29,7 +29,7 @@ export const trafficRouter = router({
           embeds: [
             {
               title: '🚀 New Traffic Source Response',
-              color: 0x00ff00, // Green color
+              color: 0x00ff00,
               fields: [
                 {
                   name: 'Source',
