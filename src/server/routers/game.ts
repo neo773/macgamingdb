@@ -3,10 +3,6 @@ import { router, procedure } from '../trpc';
 import { getGameBySteamId, searchSteam } from '@/server/helpers/steam';
 import { TRPCError } from '@trpc/server';
 import {
-  type PerformanceRating,
-  type PrismaClient,
-} from '@/generated/prisma/client';
-import {
   ChipsetEnum,
   ChipsetVariantEnum,
   PerformanceEnum,
@@ -17,43 +13,6 @@ import {
 import { calculateTranslationLayerStats } from '@/server/utils/calculateTranslationLayerStats';
 import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '@/lib/s3';
-
-const getGameIdsFromPerformanceStats = async (
-  prisma: PrismaClient,
-  filters: {
-    chipset?: string;
-    chipsetVariant?: ChipsetVariant;
-    playMethod?: PlayMethod | 'ALL';
-    performance: PerformanceRating;
-    limit: number;
-    offset: number;
-  },
-) => {
-  const { chipset, chipsetVariant, playMethod, performance, limit, offset } =
-    filters;
-
-  const games = await prisma.game.findMany({
-    where: {
-      aggregatedPerformance: performance,
-
-      ...((chipset || playMethod !== 'ALL') && {
-        reviews: {
-          some: {
-            ...(chipset && { chipset }),
-            ...(chipset && chipsetVariant && { chipsetVariant }),
-            ...(playMethod !== 'ALL' && { playMethod }),
-          },
-        },
-      }),
-    },
-    select: { id: true },
-    orderBy: { reviewCount: 'desc' },
-    skip: offset,
-    take: limit,
-  });
-
-  return games.map((game: { id: string }) => game.id);
-};
 
 export const gameRouter = router({
   search: procedure
@@ -177,14 +136,27 @@ export const gameRouter = router({
         const canUsePerformanceStats = chipset || playMethod !== 'ALL';
 
         if (canUsePerformanceStats && performance !== 'ALL') {
-          const gameIds = await getGameIdsFromPerformanceStats(ctx.prisma!, {
-            chipset,
-            chipsetVariant,
-            playMethod,
-            performance,
-            limit: limit * 3, 
-            offset,
+          const gamesForIds = await ctx.prisma!.game.findMany({
+            where: {
+              aggregatedPerformance: performance,
+
+              ...((chipset || playMethod !== 'ALL') && {
+                reviews: {
+                  some: {
+                    ...(chipset && { chipset }),
+                    ...(chipset && chipsetVariant && { chipsetVariant }),
+                    ...(playMethod !== 'ALL' && { playMethod }),
+                  },
+                },
+              }),
+            },
+            select: { id: true },
+            orderBy: { reviewCount: 'desc' },
+            skip: offset,
+            take: limit * 3,
           });
+
+          const gameIds = gamesForIds.map((game: { id: string }) => game.id);
 
           if (gameIds.length === 0) {
             return {

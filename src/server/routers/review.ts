@@ -8,63 +8,17 @@ import {
   PerformanceEnum,
   PlayMethodEnum,
   TranslationLayerEnum,
-  type Performance,
   type Chipset,
   type ChipsetVariant,
   type PlayMethod,
 } from '../schema';
-import type { PrismaClient } from '@/generated/prisma/client';
-import { updateAllPerformanceStatsForGame } from '../helpers/performance-stats';
 import {
   getUploadSignedUrl,
   generateScreenshotKey,
   getPublicUrl,
 } from '@/lib/s3';
 import { type MacSpecification } from '@/lib/scraper/EveryMacScraper';
-import { scoreToRating } from '../utils/scoreToRating';
-import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
-
-const updateGameAggregatedPerformance = async (
-  prisma: PrismaClient,
-  gameId: string,
-) => {
-  const reviews = await prisma.gameReview.findMany({
-    where: { gameId },
-    select: { performance: true },
-  });
-
-  let aggregatedPerformance: Performance | null = null;
-  if (reviews.length > 0) {
-    const avgScore = calculateAveragePerformance(reviews);
-    aggregatedPerformance = scoreToRating(avgScore);
-  }
-
-  await prisma.game.update({
-    where: { id: gameId },
-    data: { aggregatedPerformance },
-  });
-
-  return aggregatedPerformance;
-};
-
-const updateAllPerformanceStats = async (
-  prisma: PrismaClient,
-  gameId: string,
-  chipset: Chipset,
-  chipsetVariant: ChipsetVariant,
-  playMethod: PlayMethod,
-) => {
-  await updateGameAggregatedPerformance(prisma, gameId);
-
-  await updateAllPerformanceStatsForGame(
-    prisma,
-    gameId,
-    chipset,
-    chipsetVariant,
-    playMethod,
-  );
-};
-
+import { updateAllPerformanceStats } from '../utils/updateAllPerformanceStats';
 
 export const reviewRouter = router({
   getUserAuth: procedure.query(async ({ ctx }) => {
