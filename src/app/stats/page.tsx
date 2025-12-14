@@ -97,10 +97,10 @@ export const metadata: Metadata = {
 };
 
 export default async function StatsPage() {
-  const stats = await fetch('https://sqld.macgamingdb.app/turso-stats', {
+  const stats = await fetch(process.env.LIBSQL_STATS_ENDPOINT!, {
     headers: {
       authorization:
-        '4e9ea5fe2ed3f359815e273bb8df9be43993bab76458d9b0c4bd96f03b9eda82',
+        process.env.LIBSQL_STATS_TOKEN!,
     },
   }).then((res) => res.json());
 
