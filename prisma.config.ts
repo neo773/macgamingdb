@@ -19,7 +19,7 @@ export default defineConfig({
   datasource: {
     url: process.env.NODE_ENV === 'production' 
       ? process.env.LIBSQL_DATABASE_URL! 
-      : path.join('prisma', 'dev.db'),
+      : 'file:' + path.join('prisma', 'dev.db'),
   },
   ...(process.env.NODE_ENV === 'production' ? {
     migrate: {

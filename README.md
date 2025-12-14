@@ -46,4 +46,5 @@ macgamingdb/
 1. Clone the repository
 2. Install dependencies: `bun install`
 3. Set up environment variables (see `.env.example`)
-4. Run the development server: `bun run dev`
+4. Run migrations: `bun run prisma:db-push-local`
+5. Run the development server: `bun run dev`
