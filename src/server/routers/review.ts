@@ -65,36 +65,6 @@ const updateAllPerformanceStats = async (
   );
 };
 
-const createReviewSchema = z.object({
-  gameId: z.string(),
-  playMethod: PlayMethodEnum,
-  translationLayer: TranslationLayerEnum.nullable(),
-  performance: PerformanceEnum,
-  fps: z.number().nullable().optional(),
-  graphicsSettings: GraphicsSettingsEnum,
-  resolution: z.string().optional(),
-  macConfigIdentifier: z.string(),
-  notes: z.string().optional(),
-  screenshots: z.array(z.string()).optional(),
-  softwareVersion: z.string().optional(),
-});
-
-const deleteReviewSchema = z.object({
-  reviewId: z.string(),
-  confirmation: z.boolean(),
-});
-
-const updateReviewSchema = z.object({
-  reviewId: z.string(),
-  notes: z.string(),
-  screenshots: z.array(z.string()).optional(),
-});
-
-const getUploadUrlSchema = z.object({
-  filename: z.string(),
-  contentType: z.string(),
-  gameId: z.string(),
-});
 
 export const reviewRouter = router({
   getUserAuth: procedure.query(async ({ ctx }) => {
@@ -178,6 +148,7 @@ export const reviewRouter = router({
           }
         }
 
+        // eslint-disable-next-line unused-imports/no-unused-vars
         return finalConfigs.map(({ searchText, ...config }) => config);
       } catch (error) {
         console.error('Error fetching Mac configs:', error);
@@ -221,7 +192,11 @@ export const reviewRouter = router({
     }),
 
   getUploadUrl: protectedProcedure
-    .input(getUploadUrlSchema)
+    .input(z.object({
+      filename: z.string(),
+      contentType: z.string(),
+      gameId: z.string(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {
@@ -265,7 +240,19 @@ export const reviewRouter = router({
     }),
 
   create: protectedProcedure
-    .input(createReviewSchema)
+    .input(z.object({
+      gameId: z.string(),
+      playMethod: PlayMethodEnum,
+      translationLayer: TranslationLayerEnum.nullable(),
+      performance: PerformanceEnum,
+      fps: z.number().nullable().optional(),
+      graphicsSettings: GraphicsSettingsEnum,
+      resolution: z.string().optional(),
+      macConfigIdentifier: z.string(),
+      notes: z.string().optional(),
+      screenshots: z.array(z.string()).optional(),
+      softwareVersion: z.string().optional(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {
@@ -354,7 +341,11 @@ export const reviewRouter = router({
     }),
 
   updateReview: protectedProcedure
-    .input(updateReviewSchema)
+    .input( z.object({
+      reviewId: z.string(),
+      notes: z.string(),
+      screenshots: z.array(z.string()).optional(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {
@@ -418,7 +409,10 @@ export const reviewRouter = router({
     }),
 
   deleteReview: protectedProcedure
-    .input(deleteReviewSchema)
+    .input(z.object({
+      reviewId: z.string(),
+      confirmation: z.boolean(),
+    }))
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {
