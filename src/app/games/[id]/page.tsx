@@ -12,7 +12,6 @@ import GameReviewCard from '@/components/review/ReviewCard';
 import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 import Script from 'next/script';
-import { AdSpaceAvailableBanner } from './AdSpaceAvailableBanner';
 import { PromotionalBannerCrossOver } from './PromotionalBannerCrossOver';
 
 export const revalidate = 31536000;
