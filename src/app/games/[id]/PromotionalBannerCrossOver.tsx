@@ -64,7 +64,7 @@ export const PromotionalBannerCrossOver = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
           {/* Logo */}
           <img
             src="/images/promotions/crossover-logo.png"
@@ -93,12 +93,12 @@ export const PromotionalBannerCrossOver = () => {
           <div className="text-gray-300 mb-6 space-y-1">
             <Feature>Native gameplay, no cloud streaming</Feature>
             <Feature>14 Days Free Trial</Feature>
-            <Feature>No Credit Card Required</Feature>
+            <Feature>15% OFF with exlusive code <b>MGDB15</b></Feature>
           </div>
 
           {/* CTA Button */}
           <a
-            href="https://www.codeweavers.com/store?ad=1100"
+            href="https://www.codeweavers.com/store?ad=1100;deal=MGDB15"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-bold text-sm border border-cyan-400 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/40 relative overflow-hidden group"
@@ -108,6 +108,11 @@ export const PromotionalBannerCrossOver = () => {
             </span>
             <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
           </a>
+
+          {/* Affiliate disclosure */}
+          <p className="text-[10px] text-gray-500 mt-4 max-w-xs leading-tight">
+          *Affiliate link. Supports this site & Mac gaming through CodeWeavers' contributions to Wine.
+          </p>
         </div>
 
         {/* Simple grey border */}

@@ -13,6 +13,7 @@ import { type SteamAppData } from '@/server/helpers/steam';
 import { Container } from '@/components/ui/container';
 import Script from 'next/script';
 import { AdSpaceAvailableBanner } from './AdSpaceAvailableBanner';
+import { PromotionalBannerCrossOver } from './PromotionalBannerCrossOver';
 
 export const revalidate = 31536000;
 
@@ -272,7 +273,7 @@ export default async function GamePage({
 
             {reviews && reviews.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {showCrossoverAffiliate && <AdSpaceAvailableBanner />}
+                {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
                 {reviews.map((review) => (
                   <GameReviewCard review={review} key={review.id} />
                 ))}
