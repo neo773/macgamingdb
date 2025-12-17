@@ -92,8 +92,8 @@ export const PromotionalBannerCrossOver = () => {
           {/* Features */}
           <div className="text-gray-300 mb-6 space-y-1">
             <Feature>Native gameplay, no cloud streaming</Feature>
+            <Feature>15% OFF with exclusive code <b>MGDB15</b></Feature>
             <Feature>14 Days Free Trial</Feature>
-            <Feature>15% OFF with exlusive code <b>MGDB15</b></Feature>
           </div>
 
           {/* CTA Button */}
