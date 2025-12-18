@@ -6,7 +6,7 @@
     "src/react-email-starter"
   ],
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "PORT=3005 next dev --turbopack",
     "prisma:db-push-prod": "bunx --env-file=.env.prod prisma db push",
     "prisma:db-push-local": "bunx prisma db push",
     "populate:aggregated-performance": "bun --bun scripts/populate-aggregated-performance.ts",

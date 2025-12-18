@@ -117,7 +117,7 @@ export default async function GamePage({
     };
 
     return (
-      <div className="min-h-screen flex flex-col bg-black">
+      <div className="min-h-dvh flex flex-col bg-black">
         <Script
           type="application/ld+json"
           id={`jsonLdGame${id}`}
@@ -297,7 +297,7 @@ export default async function GamePage({
     console.error('Error in server component:', error);
 
     return (
-      <div className="min-h-screen flex flex-col bg-black">
+      <div className="min-h-dvh flex flex-col bg-black">
         <Header />
         <Container>
           <div className="mb-4">

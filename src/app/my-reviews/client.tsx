@@ -86,7 +86,7 @@ export default function MyReviewsClient({
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <Header />
       <Container>
         <div className="mb-4">

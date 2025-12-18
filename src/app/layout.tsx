@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
 import { Geist } from 'next/font/google';
 import { TRPCProvider } from '@/lib/trpc/provider';
 import { Toaster } from '@/components/ui/sonner';
 import Script from 'next/script';
 import { isSVGFaviconSupported } from '@/lib/utils';
+import { BackgroundGradient } from '@/components/shared/BackgroundGradient';
 import './tailwind.css';
 
 const GeistMono = Geist({ subsets: ['latin'], weight: ['400', '500'] });
@@ -13,6 +14,12 @@ export const metadata: Metadata = {
   title: 'MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks',
   description:
     'Mac compatible games list with Apple Silicon benchmarks for M1–M4. Check FPS via Rosetta, CrossOver, Parallels & GPTK.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default async function RootLayout({
@@ -44,6 +51,7 @@ export default async function RootLayout({
         sizes="any"
       />
       <body className={`${GeistMono.className} dark`}>
+        <BackgroundGradient />
         <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
         <Toaster />
       </body>

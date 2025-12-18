@@ -54,7 +54,7 @@ export default async function ContributorPage({
   ).size;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <Header />
       <Container>
         <div className="mb-4">

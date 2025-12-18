@@ -40,7 +40,7 @@ export default async function Home({
   const ratingCounts = await helpers.game.getFilterCounts.fetch(filterConfig);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <Header />
       <div className="relative mx-auto max-w-4xl px-4 pt-8 pb-4 md:px-6 md:pt-12">
         <div className="text-center">
