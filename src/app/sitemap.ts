@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { createPrismaClient } from '@/lib/database/prisma';
+import { createPrismaClient } from '@macgamingdb/server/database';
 
 const CHUNK_SIZE = 200;
 

@@ -1,5 +1,5 @@
-import Header from '@/components/shared/Header';
-import Footer from '@/components/shared/Footer';
+import Header from '@/modules/layout/components/Header';
+import Footer from '@/modules/layout/components/Footer';
 import { createServerHelpers } from '@/lib/trpc/server';
 import ContributorsClient from './client';
 import { Container } from '@/components/ui/container';

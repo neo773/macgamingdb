@@ -1,7 +1,7 @@
-import { createPrismaClient } from '@/lib/database/prisma';
-import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
-import { scoreToRating } from '@/server/utils/scoreToRating';
-
+import { createPrismaClient } from '@macgamingdb/server/database';
+import { calculateAveragePerformance } from '@macgamingdb/server/utils/calculateAveragePerformance';
+import { scoreToRating } from '@macgamingdb/server/utils/scoreToRating';
+import { createLogger } from '@macgamingdb/server/utils/logger';
 import { config } from 'dotenv';
 
 if (process.env.NODE_ENV === 'production') {
@@ -11,9 +11,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const prisma = createPrismaClient();
+const logger = createLogger('PopulateAggregatedPerformance');
 
 async function populateAggregatedPerformance() {
-  console.log('🚀 Populating aggregatedPerformance for all games...');
+  logger.log('Populating aggregatedPerformance for all games');
 
   const games = await prisma.game.findMany({
     include: {
@@ -21,7 +22,7 @@ async function populateAggregatedPerformance() {
     },
   });
 
-  console.log(`📊 Found ${games.length} games to process`);
+  logger.log(`Found ${games.length} games to process`);
 
   let updatedCount = 0;
   let skippedCount = 0;
@@ -42,23 +43,23 @@ async function populateAggregatedPerformance() {
 
     updatedCount++;
 
-    if (updatedCount % 50 === 0) {
-      console.log(`📊 Processed ${updatedCount} games...`);
+    if (updatedCount % 100 === 0) {
+      logger.log(`Processed ${updatedCount} games`);
     }
   }
 
-  console.log(`✅ Processing complete!`);
-  console.log(`🔄 Games updated: ${updatedCount}`);
-  console.log(`⏭️  Games skipped (no reviews): ${skippedCount}`);
+  logger.log('Processing complete');
+  logger.log(`Games updated: ${updatedCount}`);
+  logger.log(`Games skipped (no reviews): ${skippedCount}`);
 
   const perfCounts = await prisma.game.groupBy({
     by: ['aggregatedPerformance'],
     _count: { id: true },
   });
 
-  console.log(`\n📈 Performance distribution:`);
+  logger.log('Performance distribution:');
   perfCounts.forEach(({ aggregatedPerformance, _count }) => {
-    console.log(`${aggregatedPerformance || 'NULL'}: ${_count.id} games`);
+    logger.log(`${aggregatedPerformance || 'NULL'}: ${_count.id} games`);
   });
 }
 
@@ -66,7 +67,7 @@ async function main() {
   try {
     await populateAggregatedPerformance();
   } catch (error) {
-    console.error('💥 Script failed:', error);
+    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
     process.exit(1);
   } finally {
     await prisma.$disconnect();

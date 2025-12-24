@@ -9,7 +9,7 @@ import { Trophy, Medal, Award, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
 import { type inferRouterOutputs } from '@trpc/server';
-import { type AppRouter } from '@/server/routers/_app';
+import { type AppRouter } from '@macgamingdb/server/routers/_app';
 
 type ContributorsData =
   inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];

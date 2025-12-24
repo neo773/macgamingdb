@@ -1,6 +1,7 @@
-import { createPrismaClient } from '@/lib/database/prisma';
-import { EveryMacScraper } from '@/lib/scraper/EveryMacScraper';
-import { WebScraper } from '@/lib/scraper/WebScraper';
+import { createPrismaClient } from '@macgamingdb/server/database';
+import { EveryMacScraper } from '@macgamingdb/server/scraper/EveryMacScraper';
+import { WebScraper } from '@macgamingdb/server/scraper/WebScraper';
+import { createLogger } from '@macgamingdb/server/utils/logger';
 import { config } from 'dotenv';
 import { convertMacConfigIdentifierToNewFormat } from './migration-utils/convert-mac-config-identifier-new-format';
 
@@ -11,6 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const prisma = createPrismaClient();
+const logger = createLogger('PopulateMacConfigs');
 
 async function populateMacConfigs() {
   const apiCredentials = process.env.OXYLABS_SCRAPER;
@@ -24,9 +26,7 @@ async function populateMacConfigs() {
 
   const specifications = await scraper.scrapeAllSpecifications();
 
-  console.log(
-    `🎉 Scraping completed! Found ${specifications.length} total specifications`,
-  );
+  logger.log(`Scraping completed. Found ${specifications.length} total specifications`);
 
   await prisma.$transaction(
     async (tx) => {
@@ -55,7 +55,7 @@ async function main() {
   try {
     await populateMacConfigs();
   } catch (error) {
-    console.error('💥 Script failed:', error);
+    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
     process.exit(1);
   } finally {
     await prisma.$disconnect();

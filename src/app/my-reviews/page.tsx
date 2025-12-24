@@ -1,6 +1,6 @@
-import { createPrismaClient } from '@/lib/database/prisma';
+import { createPrismaClient } from '@macgamingdb/server/database';
 import { headers } from 'next/headers';
-import { BetterAuthClient } from '@/lib/auth/auth';
+import { BetterAuthClient } from '@macgamingdb/server/auth';
 import MyReviewsClient from './client';
 
 export default async function MyReviewsPage() {

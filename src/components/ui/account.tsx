@@ -9,7 +9,7 @@ import {
   DialogTrigger,
   DialogTitle,
 } from '@/components/ui/dialog';
-import AuthPrompt from '@/components/auth/AuthPrompt';
+import AuthPrompt from '@/modules/auth/components/AuthPrompt';
 import { authClient } from '@/lib/auth/auth-client';
 
 const Acccount = () => {

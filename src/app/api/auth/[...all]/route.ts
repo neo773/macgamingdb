@@ -1,5 +1,5 @@
-import { BetterAuthClient } from '@/lib/auth/auth';
-import { createPrismaClient } from '@/lib/database/prisma';
+import { BetterAuthClient } from '@macgamingdb/server/auth';
+import { createPrismaClient } from '@macgamingdb/server/database';
 import { toNextJsHandler } from 'better-auth/next-js';
 
 export const GET = async (req: Request) => {

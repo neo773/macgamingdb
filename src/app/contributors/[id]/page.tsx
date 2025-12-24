@@ -1,16 +1,16 @@
-import { createPrismaClient } from '@/lib/database/prisma';
+import { createPrismaClient } from '@macgamingdb/server/database';
 import { notFound } from 'next/navigation';
-import Header from '@/components/shared/Header';
-import Footer from '@/components/shared/Footer';
+import Header from '@/modules/layout/components/Header';
+import Footer from '@/modules/layout/components/Footer';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import ExpandableReviewNote from '@/components/review/ExpandableReviewNote';
-import ScreenshotDisplay from '@/components/review/ScreenshotDisplay';
+import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
+import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
 
 import { formatDistance } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
-import GameReviewCard from '@/components/review/ReviewCard';
-import { type SteamAppData } from '@/server/helpers/steam';
+import GameReviewCard from '@/modules/review/components/ReviewCard';
+import { type SteamAppData } from '@macgamingdb/server/api/steam';
 import { Container } from '@/components/ui/container';
 
 export default async function ContributorPage({

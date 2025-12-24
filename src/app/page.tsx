@@ -1,5 +1,5 @@
-import Footer from '@/components/shared/Footer';
-import Header from '@/components/shared/Header';
+import Footer from '@/modules/layout/components/Footer';
+import Header from '@/modules/layout/components/Header';
 import HomeClient from './home-client';
 import { createServerHelpers } from '@/lib/trpc/server';
 import {
@@ -17,15 +17,11 @@ export default async function Home({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const performanceParam = (await searchParams)[
-    SearchURLParamsKeys.PERFORMANCE
-  ] as string;
-  const chipsetParam = (await searchParams)[
-    SearchURLParamsKeys.CHIPSET
-  ] as string;
-  const playMethodParam = (await searchParams)[
-    SearchURLParamsKeys.PLAY_METHOD
-  ] as PlayMethodFilter;
+  const params = await searchParams;
+  
+  const performanceParam = params[SearchURLParamsKeys.PERFORMANCE] as string;
+  const chipsetParam = params[SearchURLParamsKeys.CHIPSET] as string;
+  const playMethodParam = params[SearchURLParamsKeys.PLAY_METHOD] as PlayMethodFilter;
 
   const filterConfig = createFilterConfig(
     performanceParam,

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
-import { type AppRouter } from '@/server/routers/_app';
+import { type AppRouter } from '@macgamingdb/server/routers/_app';
 import { getUrl } from '@/lib/trpc/utils';
 import superjson from 'superjson';
 

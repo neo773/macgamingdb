@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String?      @unique
+  name          String?
+  reviews       GameReview[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  emailVerified Boolean
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Game {
+  id                    String             @id // Steam ID
+  details               String? // Full JSON from Steam API
+  updatedAt             DateTime           @default(now()) @updatedAt
+  createdAt             DateTime           @default(now())
+  reviews               GameReview[]
+  aggregatedPerformance PerformanceRating?
+  reviewCount           Int                @default(0) // Pre-computed review count
+
+
+  @@index([aggregatedPerformance, id])
+  @@index([reviewCount])
+  @@index([aggregatedPerformance, reviewCount]) // Composite index for filtered ordering
+}
+
+model MacConfig {
+  id         String       @id @default(cuid())
+  identifier String       @unique
+  metadata   String // JSON
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  reviews    GameReview[]
+}
+
+model GameReview {
+  id               String            @id @default(cuid())
+  gameId           String
+  game             Game              @relation(fields: [gameId], references: [id])
+  userId           String
+  user             User              @relation(fields: [userId], references: [id])
+  playMethod       PlayMethod
+  translationLayer TranslationLayer?
+  performance      PerformanceRating
+
+  fps              Int?
+  graphicsSettings GraphicsSetting?
+  resolution       String? // Format: "1920x1080"
+
+  chipset          String // e.g., "M1", "M2", "M3" 
+  chipsetVariant   ChipsetVariant // e.g., "BASE", "PRO", "MAX", "ULTRA"
+
+
+  macConfigId     String?
+  macConfig       MacConfig? @relation(fields: [macConfigId], references: [id])
+
+  notes           String?
+  screenshots     String? // JSON array of S3 URLs
+  softwareVersion String? // Software version (CrossOver, Parallels, etc.)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime?  @default(now()) @updatedAt
+
+
+  @@index([gameId, chipset])
+  @@index([gameId, playMethod])
+  @@index([gameId, chipset, chipsetVariant])
+  @@index([gameId, chipset, playMethod])
+  @@index([macConfigId])
+  @@index([chipset, chipsetVariant, playMethod, performance]) // For filter count queries
+}
+
+enum PlayMethod {
+  NATIVE
+  CROSSOVER
+  PARALLELS
+  OTHER
+}
+
+enum TranslationLayer {
+  DXVK
+  DXMT
+  D3D_METAL
+  NONE
+}
+
+enum PerformanceRating {
+  UNPLAYABLE
+  BARELY_PLAYABLE
+  PLAYABLE
+  GOOD
+  VERY_GOOD
+  EXCELLENT
+}
+
+enum GraphicsSetting {
+  LOW
+  MEDIUM
+  HIGH
+  ULTRA
+}
+
+enum ChipsetVariant {
+  BASE
+  PRO
+  MAX
+  ULTRA
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}

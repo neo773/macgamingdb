@@ -5,7 +5,7 @@ import {
   type ChipsetVariantEnum,
   type PlayMethod,
   type PlayMethodEnum,
-} from '@/server/schema';
+} from '@macgamingdb/server/schema';
 
 export enum SearchURLParamsKeys {
   CHIPSET = 'chipset',

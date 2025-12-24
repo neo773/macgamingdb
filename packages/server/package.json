@@ -1,0 +1,40 @@
+{
+  "name": "@macgamingdb/server",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./trpc": "./src/trpc/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./routers/_app": "./src/routers/_app.ts",
+    "./routers/game": "./src/routers/game.ts",
+    "./routers/review": "./src/routers/review.ts",
+    "./routers/contributor": "./src/routers/contributor.ts",
+    "./routers/traffic": "./src/routers/traffic.ts",
+    "./api/steam": "./src/api/steam.ts",
+    "./utils/database/countGamesForPerformanceStats": "./src/utils/database/countGamesForPerformanceStats.ts",
+    "./utils/database/upsertPerformanceStats": "./src/utils/database/upsertPerformanceStats.ts",
+    "./utils/database/updateSpecificPerformanceStats": "./src/utils/database/updateSpecificPerformanceStats.ts",
+    "./utils/database/updateAggregatePerformanceStats": "./src/utils/database/updateAggregatePerformanceStats.ts",
+    "./utils/database/updateAllChipsetSpecificMethodStats": "./src/utils/database/updateAllChipsetSpecificMethodStats.ts",
+    "./utils/database/updateAllPerformanceStatsForGame": "./src/utils/database/updateAllPerformanceStatsForGame.ts",
+    "./utils/database/updateGameAggregatedPerformance": "./src/utils/database/updateGameAggregatedPerformance.ts",
+    "./utils/database/updateAllPerformanceStats": "./src/utils/database/updateAllPerformanceStats.ts",
+    "./utils/calculateAveragePerformance": "./src/utils/calculateAveragePerformance.ts",
+    "./utils/calculateTranslationLayerStats": "./src/utils/calculateTranslationLayerStats.ts",
+    "./utils/formatRatingLabel": "./src/utils/formatRatingLabel.ts",
+    "./utils/getChipsetCombinations": "./src/utils/getChipsetCombinations.ts",
+    "./utils/scoreToRating": "./src/utils/scoreToRating.ts",
+    "./auth": "./src/auth/auth.ts",
+    "./database": "./src/database/prisma.ts",
+    "./s3": "./src/services/s3.ts",
+    "./scraper/EveryMacScraper": "./src/scraper/EveryMacScraper.ts",
+    "./scraper/WebScraper": "./src/scraper/WebScraper.ts",
+    "./generated/prisma/client": "./src/generated/prisma/client.ts",
+    "./utils/logger": "./src/utils/logger.ts"
+  },
+  "dependencies": {
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "zod": "^3.24.2"
+  }
+}

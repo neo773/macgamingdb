@@ -4,8 +4,8 @@ import { Geist } from 'next/font/google';
 import { TRPCProvider } from '@/lib/trpc/provider';
 import { Toaster } from '@/components/ui/sonner';
 import Script from 'next/script';
-import { isSVGFaviconSupported } from '@/lib/utils';
-import { BackgroundGradient } from '@/components/shared/BackgroundGradient';
+import { isSVGFaviconSupported } from '@/lib/utils/isSVGFaviconSupported';
+import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
 import './tailwind.css';
 
 const GeistMono = Geist({ subsets: ['latin'], weight: ['400', '500'] });

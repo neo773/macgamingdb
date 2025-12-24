@@ -1,10 +1,11 @@
-import { createPrismaClient } from '@/lib/database/prisma';
+import { createPrismaClient } from '@macgamingdb/server/database';
+import { createLogger } from '@macgamingdb/server/utils/logger';
 import { config } from 'dotenv';
-import { calculateAveragePerformance } from '@/server/utils/calculateAveragePerformance';
+import { calculateAveragePerformance } from '@macgamingdb/server/utils/calculateAveragePerformance';
 import {
   type PerformanceRating,
   type GameReview,
-} from '@/generated/prisma/client';
+} from '@macgamingdb/server/generated/prisma/client';
 
 if (process.env.NODE_ENV === 'production') {
   config({
@@ -13,6 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const prisma = createPrismaClient();
+const logger = createLogger('MigrateTo05RatingScale');
 
 const convertScore = (score: number, oldMax = 4, newMax = 5): number => {
   return (score / oldMax) * newMax;
@@ -32,7 +34,7 @@ const mapToPerformance = (oldScore: number): PerformanceRating => {
 };
 
 async function migrateTo05RatingScale() {
-  console.log('🚀 Clean Migration: 0–4 ➝ 0–5 Star System\n');
+  logger.log('Clean Migration: 0-4 to 0-5 Star System');
 
   const games = await prisma.game.findMany({
     where: { reviewCount: { gt: 0 } },
@@ -41,7 +43,7 @@ async function migrateTo05RatingScale() {
     },
   });
 
-  console.log(`🔄 Processing ${games.length} games...\n`);
+  logger.log(`Processing ${games.length} games`);
 
   let processed = 0;
   for (const game of games) {
@@ -56,16 +58,22 @@ async function migrateTo05RatingScale() {
 
     processed++;
     if (processed % 100 === 0) {
-      console.log(`  ✅ Processed ${processed}/${games.length}`);
+      logger.log(`Processed ${processed}/${games.length}`);
     }
   }
 
-  console.log(`\n✅ Recalculated ${processed} games`);
-
-  await prisma.$disconnect();
+  logger.log(`Recalculated ${processed} games`);
 }
 
-migrateTo05RatingScale().catch((err) => {
-  console.error(err);
-  prisma.$disconnect();
-});
+async function main() {
+  try {
+    await migrateTo05RatingScale();
+  } catch (error) {
+    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main();

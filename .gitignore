@@ -49,3 +49,7 @@ dev.db-wal
 
 # prisma generated client
 /src/generated/
+
+# recursive node_modules
+**/node_modules
+**/generated/

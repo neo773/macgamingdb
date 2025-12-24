@@ -1,6 +1,5 @@
 import path from "node:path";
 import { config } from "dotenv";
-import { PrismaLibSql } from '@prisma/adapter-libsql'
 import { defineConfig } from "prisma/config";
 
 if (process.env.NODE_ENV === 'production') {
@@ -9,26 +8,14 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-type Env = {
-  LIBSQL_DATABASE_TOKEN: string;
-  LIBSQL_DATABASE_URL: string;
-};
-
 export default defineConfig({
-  schema: path.join("prisma", "schema.prisma"),
+  schema: path.join("packages", "server", "prisma", "schema.prisma"),
   datasource: {
-    url: process.env.NODE_ENV === 'production' 
-      ? process.env.LIBSQL_DATABASE_URL! 
-      : 'file:' + path.join('prisma', 'dev.db'),
+    url: process.env.NODE_ENV === 'production'
+      ? process.env.LIBSQL_DATABASE_URL!
+      : 'file:' + path.join('packages', 'server', 'prisma', 'dev.db'),
   },
-  ...(process.env.NODE_ENV === 'production' ? {
-    migrate: {
-      async adapter(env: Env) {
-        return new PrismaLibSql({
-          url: env.LIBSQL_DATABASE_URL,
-          authToken: env.LIBSQL_DATABASE_TOKEN,
-        })
-      }
-    }
-  } : {})
+    migrations: {
+      path: path.join("packages", "server", "prisma", "migrations"),
+    },
 });

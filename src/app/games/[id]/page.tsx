@@ -1,18 +1,20 @@
 import Link from 'next/link';
-import { createServerHelpers } from '@/lib/trpc/server';
-import { type Metadata } from 'next';
-import CreateReviewDialog from '@/components/review/CreateReviewDialog';
-import ExpandableDescription from '@/components/review/ExpandableDescription';
-import { Card, CardContent } from '@/components/ui/card';
-import * as React from 'react';
-import { ChevronLeft } from 'lucide-react';
-import Footer from '@/components/shared/Footer';
-import Header from '@/components/shared/Header';
-import GameReviewCard from '@/components/review/ReviewCard';
-import { type SteamAppData } from '@/server/helpers/steam';
-import { Container } from '@/components/ui/container';
 import Script from 'next/script';
-import { PromotionalBannerCrossOver } from './PromotionalBannerCrossOver';
+import { type Metadata } from 'next';
+import { ChevronLeft } from 'lucide-react';
+import { createServerHelpers } from '@/lib/trpc/server';
+import Header from '@/modules/layout/components/Header';
+import Footer from '@/modules/layout/components/Footer';
+import { Container } from '@/components/ui/container';
+import { generateGameJsonLd } from '@/lib/utils/jsonLd';
+import { parseGameDetails } from '@/modules/game/utils';
+import {
+  GameDetailHeader,
+  GameInfoCard,
+  GameStatsCard,
+  ExperienceReportsSection,
+  GamePageError,
+} from '@/modules/game/components';
 
 export const revalidate = 31536000;
 
@@ -26,17 +28,7 @@ export async function generateMetadata({
   try {
     const helpers = await createServerHelpers();
     const { game } = await helpers.game.getById.fetch({ id });
-
-    let gameDetails: SteamAppData;
-    try {
-      gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
-    } catch (parseError) {
-      console.error('Failed to parse game details in metadata:', parseError);
-      return {
-        title: 'Game Details - Mac Gaming DB',
-        description: 'Details about game performance on Mac',
-      };
-    }
+    const gameDetails = parseGameDetails(game?.details ?? null);
     const gameName = gameDetails.name || 'This Game';
 
     return {
@@ -48,8 +40,7 @@ export async function generateMetadata({
         type: 'website',
       },
     };
-  } catch (error) {
-    console.error('Error generating metadata:', error);
+  } catch {
     return {
       title: 'Game Details - Mac Gaming DB',
       description: 'Details about game performance on Mac',
@@ -63,58 +54,13 @@ export default async function GamePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
   const helpers = await createServerHelpers();
 
   try {
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
-
-    let gameDetails: SteamAppData;
-    try {
-      gameDetails = JSON.parse(game?.details || '{}') as SteamAppData;
-    } catch (parseError) {
-      console.error('Failed to parse game details:', parseError, game?.details);
-
-      gameDetails = {
-        name: 'Game Information Unavailable',
-        detailed_description:
-          'Game details could not be loaded at this time. Please try again later.',
-        header_image: '',
-        release_date: { date: 'Unknown', coming_soon: false },
-      } as SteamAppData;
-    }
-
+    const gameDetails = parseGameDetails(game?.details ?? null);
     const hasReviews = reviews && reviews.length > 0;
-
-    const showCrossoverAffiliate = hasReviews;
-
-    const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'VideoGame',
-      name: gameDetails.name || 'Game',
-      url: `https://macgamingdb.app/games/${id}`,
-      gamePlatform: 'macOS',
-      operatingSystem: 'macOS (Apple Silicon M1–M4)',
-      applicationCategory: 'Game',
-      description: gameDetails.detailed_description
-        ? gameDetails.detailed_description.replace(/<[^>]*>?/gm, '')
-        : 'Game details unavailable',
-      image: gameDetails.header_image || '',
-      publisher: gameDetails.publishers ? gameDetails.publishers[0] : '',
-      sameAs: [
-        gameDetails.website || '',
-        gameDetails.steam_appid
-          ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
-          : '',
-      ].filter(Boolean),
-      aggregateRating: stats
-        ? {
-            '@type': 'AggregateRating',
-            ratingValue: stats.averagePerformance?.toFixed(1) || '0',
-            ratingCount: stats.totalReviews || 0,
-          }
-        : undefined,
-    };
+    const jsonLd = generateGameJsonLd(id, gameDetails, stats);
 
     return (
       <div className="min-h-dvh flex flex-col bg-black">
@@ -135,207 +81,25 @@ export default async function GamePage({
             </Link>
           </div>
 
-          <div className="relative mb-8">
-            <div className="aspect-[3/1] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
-              {gameDetails.header_image ? (
-                <img
-                  src={gameDetails.header_image}
-                  alt={`${gameDetails.name} cover art`}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-                  <p className="text-gray-400">Game image unavailable</p>
-                </div>
-              )}
-              <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
-                <h1 className="text-4xl font-bold text-white mb-2">
-                  {gameDetails.name || 'Game Information Unavailable'}
-                </h1>
-                {gameDetails.release_date && (
-                  <p className="text-gray-300">
-                    Publisher: {gameDetails.publishers[0]}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          <GameDetailHeader gameDetails={gameDetails} />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Game info and stats section */}
-            <div className="md:col-span-2">
-              <h1 className="text-2xl text-white font-semibold ">
-                Game Information
-              </h1>
-              <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
-                <CardContent className="text-gray-300">
-                  <ExpandableDescription
-                    description={
-                      gameDetails.detailed_description ||
-                      'No description available.'
-                    }
-                  />
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Stats section */}
-            <div>
-              <h1 className="text-2xl text-white font-semibold ">
-                Mac Performance Stats
-              </h1>
-              <Card className=" shadow-lg mb-8 mt-4 bg-primary-gradient">
-                <CardContent>
-                  {stats ? (
-                    <>
-                      <div className="mb-6">
-                        <h3 className="text-lg font-medium mb-2 text-gray-300">
-                          Experience Reports
-                        </h3>
-                        <p className="text-3xl font-bold text-white">
-                          {stats.totalReviews}
-                        </p>
-                      </div>
-
-                      <div className="mb-6">
-                        <h3 className="text-lg font-medium mb-2 text-gray-300">
-                          Play Methods
-                        </h3>
-                        <div className="space-y-3">
-                          <div className="flex justify-between text-gray-300">
-                            <span>Native</span>
-                            <span className="font-medium text-white">
-                              {stats.methods.native}
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-gray-300">
-                            <span>CrossOver</span>
-                            <span className="font-medium text-white">
-                              {stats.methods.crossover}
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-gray-300">
-                            <span>Parallels</span>
-                            <span className="font-medium text-white">
-                              {stats.methods.parallels}
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-gray-300">
-                            <span>Other</span>
-                            <span className="font-medium text-white">
-                              {stats.methods.other}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-4">
-                        <h3 className="text-lg font-medium mb-2 text-gray-300">
-                          Average Rating
-                        </h3>
-                        <div className="flex items-center">
-                          <div className="w-full bg-gray-700 rounded-full h-2.5 mr-2">
-                            <div
-                              className="bg-blue-600 h-2.5 rounded-full"
-                              style={{
-                                width: `${
-                                  (stats.averagePerformance / 5) * 100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                          <span className="text-white">
-                            {stats.averagePerformance.toFixed(1)}/5
-                          </span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <p>No experience reports yet</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+            <GameInfoCard description={gameDetails.detailed_description} />
+            <GameStatsCard stats={stats} />
           </div>
 
-          {/* Experience Reports section */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-white">
-                Experience Reports
-              </h2>
-              {reviews && reviews.length > 0 && (
-                <CreateReviewDialog gameId={id} gameName={gameDetails.name} />
-              )}
-            </div>
-
-            {reviews && reviews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
-                {reviews.map((review) => (
-                  <GameReviewCard review={review} key={review.id} />
-                ))}
-              </div>
-            ) : (
-              <Card className="bg-primary-gradient">
-                <CardContent className="flex flex-col items-center justify-center py-8 gap-4">
-                  <h1 className="text-xl font-medium">
-                    No experience reports yet
-                  </h1>
-                  <CreateReviewDialog gameId={id} gameName={gameDetails.name} />
-                </CardContent>
-              </Card>
-            )}
-          </div>
+          <ExperienceReportsSection
+            gameId={id}
+            gameName={gameDetails.name}
+            reviews={reviews}
+            showCrossoverAffiliate={hasReviews}
+          />
         </Container>
-
         <Footer />
       </div>
     );
   } catch (error) {
     console.error('Error in server component:', error);
-
-    return (
-      <div className="min-h-dvh flex flex-col bg-black">
-        <Header />
-        <Container>
-          <div className="mb-4">
-            <Link
-              href="/"
-              className="text-blue-400 hover:text-blue-300 inline-flex items-center"
-            >
-              <ChevronLeft className="text-blue-400" />
-              Home
-            </Link>
-          </div>
-
-          <Card className="bg-primary-gradient shadow-lg mt-8">
-            <CardContent className="p-8">
-              <h1 className="text-2xl font-bold text-white mb-4">
-                Game Information Temporarily Unavailable
-              </h1>
-              <p className="text-gray-300 mb-4">
-                We're having trouble loading the information for this game. This
-                could be due to:
-              </p>
-              <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
-                <li>Temporary Steam API unavailability</li>
-                <li>Network connectivity issues</li>
-                <li>Server-side caching problems</li>
-              </ul>
-              <p className="text-gray-300">
-                Please try again later or return to the{' '}
-                <Link href="/" className="text-blue-400 hover:underline">
-                  home page
-                </Link>
-                .
-              </p>
-            </CardContent>
-          </Card>
-        </Container>
-        <Footer />
-      </div>
-    );
+    return <GamePageError />;
   }
 }
