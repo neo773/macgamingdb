@@ -1,4 +1,7 @@
 
+import next from "eslint-config-next";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
@@ -9,10 +12,10 @@ import unicornPlugin from 'eslint-plugin-unicorn';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 
 export default [
-
+  ...next,
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   js.configs.recommended,
-
-
   {
     ignores: [
       '**/node_modules/**',
@@ -23,8 +26,6 @@ export default [
       "*.lock"
     ],
   },
-
-
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
@@ -62,8 +63,6 @@ export default [
       ],
     },
   },
-
-
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -103,16 +102,12 @@ export default [
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
-
-
   {
     files: ['*.{js,jsx}'],
     rules: {
 
     },
   },
-
-
   {
     files: [
       '*.spec.@(ts|tsx|js|jsx)',
@@ -134,6 +129,5 @@ export default [
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
-  },
-
+  }
 ];
