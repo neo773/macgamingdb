@@ -79,5 +79,7 @@ macgamingdb/
 1. Clone the repository
 2. Install dependencies: `bun install`
 3. Set up environment variables (see `.env.example`)
-4. Run migrations: `bun run prisma:db-push-local`
-5. Run the development server: `bun run dev`
+4. Generate Prisma client: `bunx prisma generate`
+5. Create the local database: `bun run prisma:db-push-local`
+   - This generates `packages/server/prisma/dev.db` - use this path for `LIBSQL_DATABASE_URL` in your `.env`
+6. Run the development server: `bun run dev`
