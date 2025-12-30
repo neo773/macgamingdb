@@ -1,6 +1,8 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { magicLink } from 'better-auth/plugins/magic-link';
+import { steamAuthPlugin } from '@/lib/auth/plugins/steam/index';
+
 import { Resend } from 'resend';
 import {
   MacGamingDBMagicLinkEmail,
@@ -37,6 +39,9 @@ export const BetterAuthClient = (prisma: PrismaClient) => {
             text: MacGamingDBMagicLinkEmailText({ magicLink: url }),
           });
         },
+      }),
+      steamAuthPlugin({
+        steamApiKey: process.env.STEAM_API_KEY!,
       }),
     ],
   });
