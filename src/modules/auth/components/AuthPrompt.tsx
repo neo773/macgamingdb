@@ -6,12 +6,6 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
 
-const SteamIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M11.979 0C5.666 0 .504 4.939.043 11.16L4.8 15.91a3.614 3.614 0 0 1 2.37-1.164l3.15-4.524a3.84 3.84 0 0 1-.03-.45c0-2.126 1.733-3.84 3.84-3.84 2.126 0 3.84 1.734 3.84 3.84 0 2.126-1.733 3.84-3.84 3.84-.27 0-.54-.045-.78-.105l-4.59 3.225a3.606 3.606 0 0 1-1.02 2.31l-4.71 4.71C4.414 23.511 8.014 24 11.979 24c6.627 0 12-5.373 12-12s-5.373-12-12-12zm2.13 7.8c1.104 0 1.98.876 1.98 1.98 0 1.104-.876 1.98-1.98 1.98-1.104 0-1.98-.876-1.98-1.98 0-1.104.876-1.98 1.98-1.98zM6.63 15.63c.69 0 1.26.57 1.26 1.26s-.57 1.26-1.26 1.26-1.26-.57-1.26-1.26.57-1.26 1.26-1.26zm1.14 1.26c0 1.05-.66 1.95-1.59 2.25l-1.35-1.35c.3-.93 1.2-1.59 2.25-1.59.39 0 .69.09.9.24-.12.15-.21.33-.21.54 0 .42.33.75.75.75.21 0 .39-.09.54-.21.15.21.24.51.24.9.03.03.03.06.03.09-.54-.51-1.05-1.05-1.56-1.62z" />
-  </svg>
-);
-
 interface AuthPromptProps {
   /** Optional message to display above the form */
   promptMessage?: string;
@@ -147,7 +141,11 @@ export default function AuthPrompt({
                 'Connecting...'
               ) : (
                 <>
-                  <SteamIcon className="w-5 h-5 mr-2" />
+                  <img
+                    src="/images/steam.png"
+                    alt="Steam"
+                    className="w-5 h-5 mr-2"
+                  />
                   Login with Steam
                 </>
               )}
