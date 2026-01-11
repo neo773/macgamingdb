@@ -34,8 +34,8 @@ export const Chipset = ChipsetEnum.Enum;
 export const ChipsetVariant = ChipsetVariantEnum.Enum;
 
 export const SOFTWARE_VERSIONS = {
-  CROSSOVER: ['25.0.1', '25.0', '24.0'],
-  PARALLELS: ['20', '19'],
+  CROSSOVER: ['25.1.1', '25.1.0', '25.0.1', '25.0', '24.0'],
+  PARALLELS: ['26', '20', '19'],
 } as const;
 
 export const SoftwareVersionsSchema = z.object({
