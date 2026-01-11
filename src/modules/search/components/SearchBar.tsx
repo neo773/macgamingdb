@@ -11,7 +11,7 @@ import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
 type SearchBarProps = {
   onResultsChange?: (
     results: SteamGameSearchObject[] | null,
-    isLoading: boolean
+    isLoading: boolean,
   ) => void;
 };
 
@@ -27,11 +27,14 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
     {
       enabled: debouncedQuery.trim().length > 0,
       placeholderData: (prev) => prev,
-    }
+    },
   );
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
+    const currentQ = params.get('q') || '';
+
+    if (debouncedQuery === currentQ) return;
 
     if (debouncedQuery) {
       params.set('q', debouncedQuery);
