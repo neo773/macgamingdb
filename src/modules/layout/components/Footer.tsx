@@ -6,7 +6,6 @@ const Footer = () => {
     <footer className="mt-auto w-full py-6 text-center text-gray-600 relative">
       <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-0">
         <p className="text-xs md:text-sm">
-          Mac gamers
           © 2025-{new Date().getFullYear()} MacGamingDB - A community resource
           for Mac gamers
         </p>
