@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Acccount from '@/components/ui/account';
-import { Map, Menu, Trophy, X, Heart } from 'lucide-react';
+import { Map, Menu, Trophy, X, Heart, Github } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 import { DonationDialog } from './DonationDialog';
 
@@ -47,6 +47,14 @@ const Header = () => {
                     <Map className="size-4" />
                     Roadmap
                   </Link>
+                  <Link
+                    href="https://github.com/neo773/macgamingdb"
+                    className="text-gray-300 hover:text-white px-3 py-1 transition-colors flex items-center gap-2"
+                    target="_blank"
+                  >
+                    <Github className="size-4" />
+                    GitHub
+                  </Link>
                 </div>
                 <button
                   className="sm:hidden text-gray-300 hover:text-white"
@@ -89,6 +97,15 @@ const Header = () => {
                   >
                     <Map className="size-4" />
                     Roadmap
+                  </Link>
+                  <Link
+                    href="https://github.com/neo773/macgamingdb"
+                    className="text-gray-300 hover:text-white px-3 py-2 transition-colors flex items-center gap-2"
+                    target="_blank"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Github className="size-4" />
+                    GitHub
                   </Link>
                 </div>
               </div>
