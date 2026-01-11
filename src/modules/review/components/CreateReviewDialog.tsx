@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
-import { useMediaQuery } from '@uidotdev/usehooks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CreateReviewForm from './CreateReviewForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
 

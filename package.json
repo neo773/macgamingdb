@@ -46,7 +46,6 @@
     "@types/date-fns": "^2.6.3",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
-    "@uidotdev/usehooks": "^2.4.1",
     "better-auth": "^1.2.5",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",

@@ -18,7 +18,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { useMediaQuery } from '@uidotdev/usehooks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface DonationDialogProps {
   children: React.ReactNode;
