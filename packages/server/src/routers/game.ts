@@ -11,7 +11,10 @@ import {
 import { calculateTranslationLayerStats } from '../utils/calculateTranslationLayerStats';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
-import type { PrismaClient, PerformanceRating } from '../generated/prisma/client';
+import type {
+  PrismaClient,
+  PerformanceRating,
+} from '../generated/prisma/client';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
 
@@ -27,7 +30,9 @@ function createEmptyCounts(): RatingCounts {
   };
 }
 
-async function getUnfilteredCounts(prisma: PrismaClient): Promise<RatingCounts> {
+async function getUnfilteredCounts(
+  prisma: PrismaClient,
+): Promise<RatingCounts> {
   const counts = await prisma.game.groupBy({
     by: ['aggregatedPerformance'],
     _count: true,
@@ -161,12 +166,12 @@ export const gameRouter = router({
 
         const hasChipsetOrPlayMethodFilter = chipset || playMethod !== 'ALL';
 
-        if (hasChipsetOrPlayMethodFilter && performance !== 'ALL') {
+        if (hasChipsetOrPlayMethodFilter) {
           const gamesForIds = await ctx.prisma!.game.findMany({
             where: {
               reviews: {
                 some: {
-                  performance: performance,
+                  ...(performance !== 'ALL' && { performance }),
                   ...(chipset && { chipset }),
                   ...(chipset && chipsetVariant && { chipsetVariant }),
                   ...(playMethod !== 'ALL' && { playMethod }),
@@ -228,33 +233,17 @@ export const gameRouter = router({
           };
         }
 
+        // No chipset or playMethod filters - simple query on aggregatedPerformance
         const games = await ctx.prisma!.game.findMany({
           where: {
             ...(performance !== 'ALL' && {
               aggregatedPerformance: performance,
             }),
-
-            ...(playMethod !== 'ALL' && {
-              reviews: {
-                some: {
-                  playMethod,
-                },
-              },
-            }),
-
-            ...(chipset && {
-              reviews: {
-                some: {
-                  chipset,
-                  ...(chipsetVariant && { chipsetVariant }),
-                },
-              },
-            }),
           },
           skip: offset,
           take: limit + 1,
           orderBy: {
-            reviewCount: 'desc', 
+            reviewCount: 'desc',
           },
         });
 
@@ -324,8 +313,8 @@ export const gameRouter = router({
 
           await ctx.prisma!.game.upsert({
             where: { id: input.id },
-            update: { details: gameDetails }, 
-            create: { id: input.id, details: gameDetails }, 
+            update: { details: gameDetails },
+            create: { id: input.id, details: gameDetails },
           });
         }
 
@@ -374,18 +363,18 @@ export const gameRouter = router({
             const key = extractKeyFromUrl(url);
             if (!key) {
               console.warn(`Could not extract key from URL: ${url}`);
-              return { original: url, signed: url }; 
+              return { original: url, signed: url };
             }
 
             try {
-              const signedUrl = await getViewSignedUrl(key, 3600); 
+              const signedUrl = await getViewSignedUrl(key, 3600);
               return { original: url, signed: signedUrl };
             } catch (error) {
               console.warn(
                 `Could not generate signed URL for key: ${key}`,
                 error,
               );
-              return { original: url, signed: url }; 
+              return { original: url, signed: url };
             }
           }),
         );
