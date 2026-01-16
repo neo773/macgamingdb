@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "K863L9K6BU.app.macgamingdb.mobile",
+        "paths": ["/auth/callback*"]
+      }
+    ]
+  }
+}
