@@ -4,8 +4,7 @@
   "private": true,
   "workspaces": [
     "packages/emails",
-    "packages/server",
-    "MobileApp"
+    "packages/server"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
