@@ -44,7 +44,7 @@ export default async function RootLayout({
         name="google-site-verification"
         content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
       />
-      <meta name="google-adsense-account" content="ca-pub-4009451848051361" />
+      <meta name="google-adsense-account" content="ca-pub-4009451848051361"/>
       <link
         rel="icon"
         href={hasSVGFaviconSupport ? '/favicon.svg' : '/favicon.ico'}

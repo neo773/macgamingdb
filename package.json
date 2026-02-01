@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/emails",
-    "packages/server"
+    "packages/server",
+    "MobileApp"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
@@ -24,8 +25,12 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.826.0",
     "@aws-sdk/s3-request-presigner": "^3.826.0",
+    "@better-auth/expo": "^1.4.13",
     "@macgamingdb/emails": "workspace:*",
     "@macgamingdb/server": "workspace:*",
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.1.6",
     "@prisma/adapter-libsql": "^7",
     "@prisma/client": "^7",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -44,6 +49,7 @@
     "@trpc/server": "^11.0.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/date-fns": "^2.6.3",
+    "@types/mdx": "^2.0.13",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
     "better-auth": "^1.2.5",
@@ -58,6 +64,8 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-unicorn": "^61.0.2",
     "eslint-plugin-unused-imports": "^4.2.0",
+    "expo-network": "^8.0.8",
+    "gray-matter": "^4.0.3",
     "linkedom": "^0.18.9",
     "lucide-react": "^0.532.0",
     "motion": "^12.23.11",
@@ -66,6 +74,8 @@
     "prisma-query-formatter": "^1.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "resend": "^4.2.0",
     "sonner": "^2.0.3",
     "superjson": "^2.2.2",

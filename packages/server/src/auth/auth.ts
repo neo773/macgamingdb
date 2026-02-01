@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { magicLink } from 'better-auth/plugins/magic-link';
+import { expo } from '@better-auth/expo';
 import { Resend } from 'resend';
 import {
   MacGamingDBMagicLinkEmail,
@@ -13,10 +14,18 @@ export const BetterAuthClient = (prisma: PrismaClient) => {
     database: prismaAdapter(prisma, {
       provider: 'sqlite',
     }),
+    trustedOrigins: [
+      'macgamingdb://',
+      'exp://',
+      'http://localhost:8081',
+      'http://macgamingdb.local',
+      'https://macgamingdb.app',
+    ],
     emailAndPassword: {
       enabled: true,
     },
     plugins: [
+      expo(),
       magicLink({
         sendMagicLink: async ({ email, token, url }) => {
           console.log(

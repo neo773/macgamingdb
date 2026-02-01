@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@libsql/client', '@prisma/adapter-libsql'],
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  extension: /\.(md|mdx)$/,
+  options: {
+    remarkPlugins: [['remark-frontmatter'], ['remark-gfm']],
+  },
+});
+
+export default withMDX(nextConfig);
