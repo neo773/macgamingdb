@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const games = await prisma.$queryRaw<{ id: string; lastModified: string }[]>`
       SELECT g.id, MAX(r.updatedAt) as lastModified
       FROM Game g
-      INNER JOIN Review r ON r.gameId = g.id
+      INNER JOIN GameReview r ON r.gameId = g.id
       GROUP BY g.id
     `;
 
