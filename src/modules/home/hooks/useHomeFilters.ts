@@ -7,6 +7,9 @@ import {
   type PerformanceFilter,
   createFilterConfig,
   type PlayMethodFilter,
+  DEFAULT_PERFORMANCE_FILTER,
+  DEFAULT_CHIPSET_FILTER,
+  DEFAULT_PLAY_METHOD_FILTER,
 } from '@/lib/constants';
 import { getChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@macgamingdb/server/schema';
@@ -16,18 +19,18 @@ export function useHomeFilters() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const performanceFilter = (searchParams.get(SearchURLParamsKeys.PERFORMANCE) || 'ALL') as PerformanceFilter;
-  const chipsetFilter = searchParams.get(SearchURLParamsKeys.CHIPSET) || 'all';
-  const playMethodFilter = (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) || 'ALL') as PlayMethodFilter;
+  const performanceFilter = (searchParams.get(SearchURLParamsKeys.PERFORMANCE) || DEFAULT_PERFORMANCE_FILTER) as PerformanceFilter;
+  const chipsetFilter = searchParams.get(SearchURLParamsKeys.CHIPSET) || DEFAULT_CHIPSET_FILTER;
+  const playMethodFilter = (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) || DEFAULT_PLAY_METHOD_FILTER) as PlayMethodFilter;
 
   const chipsetOptions = useMemo(
-    () => [{ value: 'all', label: 'All Chipsets' }, ...getChipsetCombinations()],
+    () => [{ value: DEFAULT_CHIPSET_FILTER, label: 'All Chipsets' }, ...getChipsetCombinations()],
     []
   );
 
   const playMethodOptions = useMemo(
     () => [
-      { value: 'ALL', label: 'All Methods' },
+      { value: DEFAULT_PLAY_METHOD_FILTER, label: 'All Methods' },
       ...PlayMethodEnum.options.map((method) => ({
         value: method,
         label: method,
@@ -48,19 +51,19 @@ export function useHomeFilters() {
   ) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (performance !== 'ALL') {
+    if (performance !== DEFAULT_PERFORMANCE_FILTER) {
       params.set(SearchURLParamsKeys.PERFORMANCE, performance);
     } else {
       params.delete(SearchURLParamsKeys.PERFORMANCE);
     }
 
-    if (chipset !== 'all') {
+    if (chipset !== DEFAULT_CHIPSET_FILTER) {
       params.set(SearchURLParamsKeys.CHIPSET, chipset);
     } else {
       params.delete(SearchURLParamsKeys.CHIPSET);
     }
 
-    if (playMethod !== 'ALL') {
+    if (playMethod !== DEFAULT_PLAY_METHOD_FILTER) {
       params.set(SearchURLParamsKeys.PLAY_METHOD, playMethod);
     } else {
       params.delete(SearchURLParamsKeys.PLAY_METHOD);
@@ -82,7 +85,7 @@ export function useHomeFilters() {
   };
 
   const resetFilters = () => {
-    updateFilters('ALL', 'all', 'ALL');
+    updateFilters(DEFAULT_PERFORMANCE_FILTER, DEFAULT_CHIPSET_FILTER, DEFAULT_PLAY_METHOD_FILTER);
   };
 
   return {
