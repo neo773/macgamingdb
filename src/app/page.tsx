@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Footer from '@/modules/layout/components/Footer';
 import Header from '@/modules/layout/components/Header';
 import HomeClient from './home-client';
@@ -43,9 +44,11 @@ export default async function Home() {
       </div>
 
       <Container>
-        <HomeClient
-          GamesPage={{ ...GamesPage, ratingCounts }}
-        />
+        <Suspense>
+          <HomeClient
+            GamesPage={{ ...GamesPage, ratingCounts }}
+          />
+        </Suspense>
       </Container>
 
       <Footer />
