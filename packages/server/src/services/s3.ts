@@ -52,7 +52,7 @@ export function generateScreenshotKey(
   return `screenshots/${userId}/${gameId}/${timestamp}_${sanitizedFilename}`;
 }
 
-const R2_PUBLIC_URL = 'https://pub-82c0c7f8f7434ec99096a82afa208a2f.r2.dev';
+const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
 
 export function getPublicUrl(key: string): string {
   return `${R2_PUBLIC_URL}/${key}`;

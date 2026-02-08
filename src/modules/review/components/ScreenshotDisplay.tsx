@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
-const R2_PUBLIC_URL = 'https://pub-82c0c7f8f7434ec99096a82afa208a2f.r2.dev';
+const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
 
 function toPublicUrl(url: string): string {
   try {
