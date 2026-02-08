@@ -42,7 +42,7 @@ export function createFilterConfig(
     performance: filter,
   };
 
-  if (chipset !== DEFAULT_CHIPSET_FILTER) {
+  if (chipset !== 'all') {
     const [chipsetValue, variantValue] = chipset.split('-') as [
       z.infer<typeof ChipsetEnum>,
       z.infer<typeof ChipsetVariantEnum>,
@@ -51,7 +51,7 @@ export function createFilterConfig(
     config.chipsetVariant = variantValue;
   }
 
-  if (playMethod !== DEFAULT_PLAY_METHOD_FILTER) {
+  if (playMethod !== 'ALL') {
     config.playMethod = playMethod;
   }
 
