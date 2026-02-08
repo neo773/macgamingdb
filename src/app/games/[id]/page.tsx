@@ -17,7 +17,10 @@ import {
 } from '@/modules/game/components';
 
 export const revalidate = 31536000;
-export const fetchCache = 'force-cache';
+
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,

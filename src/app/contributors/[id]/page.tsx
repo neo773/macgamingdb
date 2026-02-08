@@ -15,6 +15,10 @@ import { Container } from '@/components/ui/container';
 
 export const revalidate = 3600; // revalidate every hour
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function ContributorPage({
   params,
 }: {

@@ -7,7 +7,6 @@ import { createFilterConfig } from '@/lib/constants';
 import { Container } from '@/components/ui/container';
 
 export const revalidate = 3600; // revalidate every hour
-export const fetchCache = 'force-cache';
 
 export default async function Home() {
   const defaultFilterConfig = createFilterConfig(undefined, undefined, undefined);
