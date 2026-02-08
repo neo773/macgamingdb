@@ -2,37 +2,20 @@ import Footer from '@/modules/layout/components/Footer';
 import Header from '@/modules/layout/components/Header';
 import HomeClient from './home-client';
 import { createServerHelpers } from '@/lib/trpc/server';
-import {
-  SearchURLParamsKeys,
-  createFilterConfig,
-  type PlayMethodFilter,
-} from '@/lib/constants';
+import { createFilterConfig } from '@/lib/constants';
 import { Container } from '@/components/ui/container';
 
 export const revalidate = 3600; // revalidate every hour
+export const fetchCache = 'force-cache';
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const params = await searchParams;
-  
-  const performanceParam = params[SearchURLParamsKeys.PERFORMANCE] as string;
-  const chipsetParam = params[SearchURLParamsKeys.CHIPSET] as string;
-  const playMethodParam = params[SearchURLParamsKeys.PLAY_METHOD] as PlayMethodFilter;
-
-  const filterConfig = createFilterConfig(
-    performanceParam,
-    chipsetParam,
-    playMethodParam,
-  );
+export default async function Home() {
+  const defaultFilterConfig = createFilterConfig(undefined, undefined, undefined);
 
   const helpers = await createServerHelpers();
 
-  const GamesPage = await helpers.game.getGames.fetch(filterConfig);
+  const GamesPage = await helpers.game.getGames.fetch(defaultFilterConfig);
 
-  const ratingCounts = await helpers.game.getFilterCounts.fetch(filterConfig);
+  const ratingCounts = await helpers.game.getFilterCounts.fetch(defaultFilterConfig);
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -62,9 +45,6 @@ export default async function Home({
       <Container>
         <HomeClient
           GamesPage={{ ...GamesPage, ratingCounts }}
-          PerformanceFilter={filterConfig.performance}
-          ChipsetFilter={chipsetParam || 'all'}
-          PlayMethodFilter={playMethodParam || 'ALL'}
         />
       </Container>
 

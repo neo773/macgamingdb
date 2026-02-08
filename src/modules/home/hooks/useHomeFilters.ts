@@ -11,20 +11,14 @@ import {
 import { getChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@macgamingdb/server/schema';
 
-interface UseHomeFiltersOptions {
-  performanceFilter: PerformanceFilter;
-  chipsetFilter: string;
-  playMethodFilter: PlayMethodFilter;
-}
-
-export function useHomeFilters({
-  performanceFilter,
-  chipsetFilter,
-  playMethodFilter,
-}: UseHomeFiltersOptions) {
+export function useHomeFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  const performanceFilter = (searchParams.get(SearchURLParamsKeys.PERFORMANCE) || 'ALL') as PerformanceFilter;
+  const chipsetFilter = searchParams.get(SearchURLParamsKeys.CHIPSET) || 'all';
+  const playMethodFilter = (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) || 'ALL') as PlayMethodFilter;
 
   const chipsetOptions = useMemo(
     () => [{ value: 'all', label: 'All Chipsets' }, ...getChipsetCombinations()],
@@ -92,6 +86,9 @@ export function useHomeFilters({
   };
 
   return {
+    performanceFilter,
+    chipsetFilter,
+    playMethodFilter,
     chipsetOptions,
     playMethodOptions,
     filterConfig,
