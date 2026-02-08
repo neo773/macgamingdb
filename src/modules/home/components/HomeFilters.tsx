@@ -12,7 +12,7 @@ interface HomeFiltersProps {
   performanceFilter: PerformanceFilter;
   chipsetOptions: { value: string; label: string; count?: number }[];
   playMethodOptions: { value: string; label: string }[];
-  ratingCounts: Record<string, number>;
+  ratingCounts?: Record<string, number>;
   onChipsetChange: (value: string) => void;
   onPlayMethodChange: (value: string) => void;
   onPerformanceChange: (filter: PerformanceFilter) => void;

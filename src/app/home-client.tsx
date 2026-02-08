@@ -4,7 +4,6 @@ import { useRef, useEffect } from 'react';
 import Script from 'next/script';
 import { trpc } from '@/lib/trpc/provider';
 import SearchBar from '@/modules/search/components/SearchBar';
-import { type PerformanceFilter, type PlayMethodFilter } from '@/lib/constants';
 import { type inferRouterOutputs } from '@trpc/server';
 import { type AppRouter } from '@macgamingdb/server/routers/_app';
 import { homeJsonLd, faqJsonLd } from '@/lib/utils/jsonLd';
@@ -13,24 +12,22 @@ import { HomeFilters, GameGrid } from '@/modules/home/components';
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
+type GamesPage = RouterOutput['game']['getGames'] & {
+  ratingCounts: RouterOutput['game']['getFilterCounts'];
+};
+
 interface HomeClientProps {
-  GamesPage: RouterOutput['game']['getGames'] & {
-    ratingCounts: Record<string, number>;
-  };
-  PerformanceFilter: PerformanceFilter;
-  ChipsetFilter: string;
-  PlayMethodFilter: PlayMethodFilter;
+  GamesPage: GamesPage;
 }
 
-export default function HomeClient({
-  GamesPage,
-  PerformanceFilter: performanceFilter,
-  ChipsetFilter: chipsetFilter,
-  PlayMethodFilter: playMethodFilter,
-}: HomeClientProps) {
+export default function HomeClient({ GamesPage }: HomeClientProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const {
+    performanceFilter,
+    chipsetFilter,
+    playMethodFilter,
+    isDefaultFilter,
     chipsetOptions,
     playMethodOptions,
     filterConfig,
@@ -38,11 +35,7 @@ export default function HomeClient({
     handleChipsetChange,
     handlePlayMethodChange,
     resetFilters,
-  } = useHomeFilters({
-    performanceFilter,
-    chipsetFilter,
-    playMethodFilter,
-  });
+  } = useHomeFilters();
 
   const {
     searchResults,
@@ -50,6 +43,10 @@ export default function HomeClient({
     isSearchMode,
     handleSearchResultsChange,
   } = useGameSearch();
+
+  const initialGamesData = isDefaultFilter
+    ? { pages: [GamesPage], pageParams: [undefined] }
+    : undefined;
 
   const {
     data: gamesData,
@@ -63,10 +60,21 @@ export default function HomeClient({
       getNextPageParam: (lastPage) => lastPage.nextOffset,
       enabled: !isSearchMode,
       staleTime: 30000,
-      initialData: {
-        pages: [GamesPage],
-        pageParams: [undefined],
-      },
+      initialData: initialGamesData,
+    }
+  );
+
+  const filterCountsInput = {
+    ...(filterConfig.chipset && { chipset: filterConfig.chipset }),
+    ...(filterConfig.chipsetVariant && { chipsetVariant: filterConfig.chipsetVariant }),
+    ...(filterConfig.playMethod && { playMethod: filterConfig.playMethod }),
+  };
+
+  const { data: ratingCounts } = trpc.game.getFilterCounts.useQuery(
+    filterCountsInput,
+    {
+      staleTime: 30000,
+      initialData: isDefaultFilter ? GamesPage.ratingCounts : undefined,
     }
   );
 
@@ -125,7 +133,7 @@ export default function HomeClient({
           performanceFilter={performanceFilter}
           chipsetOptions={chipsetOptions}
           playMethodOptions={playMethodOptions}
-          ratingCounts={GamesPage.ratingCounts}
+          ratingCounts={isDefaultFilter ? GamesPage.ratingCounts : ratingCounts}
           onChipsetChange={handleChipsetChange}
           onPlayMethodChange={handlePlayMethodChange}
           onPerformanceChange={handleFilterChange}
