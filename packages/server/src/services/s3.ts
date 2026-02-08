@@ -52,8 +52,10 @@ export function generateScreenshotKey(
   return `screenshots/${userId}/${gameId}/${timestamp}_${sanitizedFilename}`;
 }
 
+const R2_PUBLIC_URL = 'https://pub-82c0c7f8f7434ec99096a82afa208a2f.r2.dev';
+
 export function getPublicUrl(key: string): string {
-  return `${process.env.S3_ENDPOINT}/${key}`;
+  return `${R2_PUBLIC_URL}/${key}`;
 }
 
 export function extractKeyFromUrl(url: string): string | null {

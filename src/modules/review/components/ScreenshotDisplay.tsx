@@ -1,7 +1,17 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { trpc } from '@/lib/trpc/provider';
+import React, { useState, useMemo } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+
+const R2_PUBLIC_URL = 'https://pub-82c0c7f8f7434ec99096a82afa208a2f.r2.dev';
+
+function toPublicUrl(url: string): string {
+  try {
+    const key = new URL(url).pathname.substring(1);
+    return `${R2_PUBLIC_URL}/${key}`;
+  } catch {
+    return url;
+  }
+}
 
 interface ScreenshotDisplayProps {
   screenshots: string[];
@@ -11,26 +21,13 @@ interface ScreenshotDisplayProps {
 export default function ScreenshotDisplay({
   screenshots,
 }: ScreenshotDisplayProps) {
-  const [signedUrls, setSignedUrls] = useState<
-    { original: string; signed: string }[]
-  >([]);
-  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
-  const { data, isLoading } = trpc.game.getScreenshotSignedUrls.useQuery(
-    { screenshots },
-    {
-      enabled: screenshots.length > 0,
-      staleTime: 30 * 60 * 1000, // 30 minutes
-    }
-  );
 
-  useEffect(() => {
-    if (data) {
-      setSignedUrls(data);
-      setLoading(false);
-    }
-  }, [data]);
+  const publicUrls = useMemo(
+    () => screenshots.map(toPublicUrl),
+    [screenshots]
+  );
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index);
@@ -39,65 +36,32 @@ export default function ScreenshotDisplay({
 
   if (screenshots.length === 0) return null;
 
-  if (loading || isLoading) {
-    return (
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pt-2">
-        {screenshots.slice(0, 3).map((_, index) => (
-          <div
-            key={index}
-            className="aspect-video bg-gray-700 rounded-lg animate-pulse"
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="pt-2">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="!max-w-6xl w-full p-0 border-none bg-transparent overflow-hidden">
           <div className="w-full h-full flex items-center justify-center">
             <img
-              src={signedUrls[selectedImageIndex]?.signed}
+              src={publicUrls[selectedImageIndex]}
               alt={`Screenshot ${selectedImageIndex + 1}`}
               className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg border border-[#303030]"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                const urlData = signedUrls[selectedImageIndex];
-                if (
-                  urlData &&
-                  target.src === urlData.signed &&
-                  urlData.original !== urlData.signed
-                ) {
-                  target.src = urlData.original;
-                }
-              }}
             />
           </div>
         </DialogContent>
       </Dialog>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {signedUrls.slice(0, 3).map((urlData, index) => (
+        {publicUrls.slice(0, 3).map((url, index) => (
           <div
             key={index}
             className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-sm overflow-hidden border border-[#303030] hover:scale-105 transition-transform"
           >
             <img
-              src={urlData.signed}
+              src={url}
               alt={`Screenshot ${index + 1}`}
               className="w-full h-full object-cover cursor-pointer"
               onClick={() => handleImageClick(index)}
               onError={(e) => {
-                const target = e.target as HTMLImageElement;
-
-                if (
-                  target.src === urlData.signed &&
-                  urlData.original !== urlData.signed
-                ) {
-                  target.src = urlData.original;
-                } else {
-                  target.style.display = 'none';
-                }
+                (e.target as HTMLImageElement).style.display = 'none';
               }}
             />
           </div>
