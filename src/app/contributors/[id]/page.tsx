@@ -13,6 +13,8 @@ import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { type SteamAppData } from '@macgamingdb/server/api/steam';
 import { Container } from '@/components/ui/container';
 
+export const revalidate = 3600; // revalidate every hour
+
 export default async function ContributorPage({
   params,
 }: {

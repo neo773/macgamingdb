@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { headers } from 'next/headers';
 import { Geist } from 'next/font/google';
 import { TRPCProvider } from '@/lib/trpc/provider';
 import { Toaster } from '@/components/ui/sonner';
 import Script from 'next/script';
-import { isSVGFaviconSupported } from '@/lib/utils/isSVGFaviconSupported';
 import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
 import './tailwind.css';
 
@@ -14,6 +12,12 @@ export const metadata: Metadata = {
   title: 'MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks',
   description:
     'Mac compatible games list with Apple Silicon benchmarks for M1–M4. Check FPS via Rosetta, CrossOver, Parallels & GPTK.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
@@ -22,22 +26,11 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const headersObj: Record<string, string> = {};
-
-  headersList.forEach((value, key) => {
-    headersObj[key] = value;
-  });
-
-  const hasSVGFaviconSupport = isSVGFaviconSupported(
-    headersObj['user-agent'] || undefined,
-  );
-
   return (
     <html lang="en">
       <meta
@@ -45,14 +38,9 @@ export default async function RootLayout({
         content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
       />
       <meta name="google-adsense-account" content="ca-pub-4009451848051361"/>
-      <link
-        rel="icon"
-        href={hasSVGFaviconSupport ? '/favicon.svg' : '/favicon.ico'}
-        sizes="any"
-      />
       <body className={`${GeistMono.className} dark`}>
         <BackgroundGradient />
-        <TRPCProvider headers={headersObj}>{children}</TRPCProvider>
+        <TRPCProvider>{children}</TRPCProvider>
         <Toaster />
       </body>
       {/* <!-- Cloudflare Web Analytics --> */}

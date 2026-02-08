@@ -9,7 +9,6 @@ import {
 } from '@/lib/constants';
 import { Container } from '@/components/ui/container';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // revalidate every hour
 
 export default async function Home({

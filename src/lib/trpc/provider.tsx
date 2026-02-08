@@ -21,10 +21,8 @@ export const trpc = createTRPCReact<AppRouter>({
 
 export function TRPCProvider({
   children,
-  headers = {},
 }: {
   children: React.ReactNode;
-  headers?: Record<string, string>;
 }) {
   const [queryClient] = useState(
     () =>
@@ -42,11 +40,6 @@ export function TRPCProvider({
       links: [
         httpBatchLink({
           url: getUrl(),
-          headers() {
-            return {
-              ...headers,
-            };
-          },
           transformer: superjson,
         }),
       ],

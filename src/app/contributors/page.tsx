@@ -4,7 +4,6 @@ import { createServerHelpers } from '@/lib/trpc/server';
 import ContributorsClient from './client';
 import { Container } from '@/components/ui/container';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 3600; // revalidate every hour
 
 export default async function ContributorsPage() {
