@@ -1,30 +1,48 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
   SearchURLParamsKeys,
   type PerformanceFilter,
   createFilterConfig,
   type PlayMethodFilter,
+  DEFAULT_PERFORMANCE_FILTER,
+  DEFAULT_CHIPSET_FILTER,
+  DEFAULT_PLAY_METHOD_FILTER,
 } from '@/lib/constants';
 import { getChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@macgamingdb/server/schema';
 
-interface UseHomeFiltersOptions {
-  performanceFilter: PerformanceFilter;
-  chipsetFilter: string;
-  playMethodFilter: PlayMethodFilter;
-}
-
-export function useHomeFilters({
-  performanceFilter,
-  chipsetFilter,
-  playMethodFilter,
-}: UseHomeFiltersOptions) {
+export function useHomeFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [performanceFilter, setPerformanceFilter] = useState<PerformanceFilter>(
+    () =>
+      (searchParams.get(SearchURLParamsKeys.PERFORMANCE) ||
+        DEFAULT_PERFORMANCE_FILTER) as PerformanceFilter
+  );
+  const [chipsetFilter, setChipsetFilter] = useState(
+    () =>
+      searchParams.get(SearchURLParamsKeys.CHIPSET) || DEFAULT_CHIPSET_FILTER
+  );
+  const [playMethodFilter, setPlayMethodFilter] = useState<PlayMethodFilter>(
+    () =>
+      (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) ||
+        DEFAULT_PLAY_METHOD_FILTER) as PlayMethodFilter
+  );
+
+  const isDefaultFilter =
+    performanceFilter === DEFAULT_PERFORMANCE_FILTER &&
+    chipsetFilter === DEFAULT_CHIPSET_FILTER &&
+    playMethodFilter === DEFAULT_PLAY_METHOD_FILTER;
+
+  const filterConfig = useMemo(
+    () => createFilterConfig(performanceFilter, chipsetFilter, playMethodFilter),
+    [performanceFilter, chipsetFilter, playMethodFilter]
+  );
 
   const chipsetOptions = useMemo(
     () => [{ value: 'all', label: 'All Chipsets' }, ...getChipsetCombinations()],
@@ -42,56 +60,52 @@ export function useHomeFilters({
     []
   );
 
-  const filterConfig = useMemo(
-    () => createFilterConfig(performanceFilter, chipsetFilter, playMethodFilter),
-    [performanceFilter, chipsetFilter, playMethodFilter]
-  );
+  const syncURL = (performance: PerformanceFilter, chipset: string, playMethod: PlayMethodFilter) => {
+    const params = new URLSearchParams();
 
-  const updateFilters = (
-    performance: PerformanceFilter,
-    chipset: string,
-    playMethod: PlayMethodFilter
-  ) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (performance !== 'ALL') {
+    if (performance !== DEFAULT_PERFORMANCE_FILTER) {
       params.set(SearchURLParamsKeys.PERFORMANCE, performance);
-    } else {
-      params.delete(SearchURLParamsKeys.PERFORMANCE);
     }
-
-    if (chipset !== 'all') {
+    if (chipset !== DEFAULT_CHIPSET_FILTER) {
       params.set(SearchURLParamsKeys.CHIPSET, chipset);
-    } else {
-      params.delete(SearchURLParamsKeys.CHIPSET);
     }
-
-    if (playMethod !== 'ALL') {
+    if (playMethod !== DEFAULT_PLAY_METHOD_FILTER) {
       params.set(SearchURLParamsKeys.PLAY_METHOD, playMethod);
-    } else {
-      params.delete(SearchURLParamsKeys.PLAY_METHOD);
     }
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    const queryString = params.toString();
+    router.replace(`${pathname}${queryString ? `?${queryString}` : ''}`, {
+      scroll: false,
+    });
   };
 
   const handleFilterChange = (filter: PerformanceFilter) => {
-    updateFilters(filter, chipsetFilter, playMethodFilter);
+    setPerformanceFilter(filter);
+    syncURL(filter, chipsetFilter, playMethodFilter);
   };
 
   const handleChipsetChange = (value: string) => {
-    updateFilters(performanceFilter, value, playMethodFilter);
+    setChipsetFilter(value);
+    syncURL(performanceFilter, value, playMethodFilter);
   };
 
   const handlePlayMethodChange = (value: string) => {
-    updateFilters(performanceFilter, chipsetFilter, value as PlayMethodFilter);
+    setPlayMethodFilter(value as PlayMethodFilter);
+    syncURL(performanceFilter, chipsetFilter, value as PlayMethodFilter);
   };
 
   const resetFilters = () => {
-    updateFilters('ALL', 'all', 'ALL');
+    setPerformanceFilter(DEFAULT_PERFORMANCE_FILTER);
+    setChipsetFilter(DEFAULT_CHIPSET_FILTER);
+    setPlayMethodFilter(DEFAULT_PLAY_METHOD_FILTER);
+    syncURL(DEFAULT_PERFORMANCE_FILTER, DEFAULT_CHIPSET_FILTER, DEFAULT_PLAY_METHOD_FILTER);
   };
 
   return {
+    performanceFilter,
+    chipsetFilter,
+    playMethodFilter,
+    isDefaultFilter,
     chipsetOptions,
     playMethodOptions,
     filterConfig,

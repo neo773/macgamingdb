@@ -16,6 +16,10 @@ export enum SearchURLParamsKeys {
 export type PerformanceFilter = 'ALL' | z.infer<typeof PerformanceEnum>;
 export type PlayMethodFilter = 'ALL' | z.infer<typeof PlayMethodEnum>;
 
+export const DEFAULT_PERFORMANCE_FILTER: PerformanceFilter = 'ALL';
+export const DEFAULT_CHIPSET_FILTER = 'all';
+export const DEFAULT_PLAY_METHOD_FILTER: PlayMethodFilter = 'ALL';
+
 export interface FilterConfig {
   limit: number;
   performance: PerformanceFilter;
