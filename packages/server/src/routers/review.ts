@@ -301,6 +301,7 @@ export const reviewRouter = router({
           .returning();
 
         revalidatePath(`/games/${input.gameId}`);
+        revalidatePath('/contributors');
 
         await updateGameAggregatedPerformance(ctx.db, input.gameId);
 
@@ -362,6 +363,7 @@ export const reviewRouter = router({
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
+        revalidatePath('/contributors');
 
         return { success: true, message: 'Review updated successfully' };
       } catch (error) {
@@ -422,6 +424,7 @@ export const reviewRouter = router({
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
+        revalidatePath('/contributors');
 
         await ctx.db
           .update(games)

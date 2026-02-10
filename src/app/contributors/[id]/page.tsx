@@ -15,7 +15,7 @@ import { Container } from '@/components/ui/container';
 import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
-export const revalidate = 3600; // revalidate every hour
+export const revalidate = 365 * 24 * 60 * 60; // 1 year, revalidated on-demand via mutations
 
 export async function generateStaticParams() {
   return [];
@@ -85,7 +85,7 @@ export default async function ContributorPage({
             <Card className="bg-primary-gradient">
               <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
                 <h2 className="text-xl font-medium text-white">
-                  This contributor hasn't submitted any game reviews yet
+                  This contributor hasn&apos;t submitted any game reviews yet
                 </h2>
               </CardContent>
             </Card>
@@ -103,6 +103,7 @@ export default async function ContributorPage({
                       header={
                         <div className="aspect-[460/215] relative overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={`${gameDetails.header_image}`}
                             alt={`${gameDetails.name} cover art`}

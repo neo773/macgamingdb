@@ -6,7 +6,7 @@ import { createServerHelpers } from '@/lib/trpc/server';
 import { createFilterConfig } from '@/lib/constants';
 import { Container } from '@/components/ui/container';
 
-export const revalidate = 3600; // revalidate every hour
+export const revalidate = 1 * 60 * 60; // 1 hour
 
 export default async function Home() {
   const defaultFilterConfig = createFilterConfig(undefined, undefined, undefined);
