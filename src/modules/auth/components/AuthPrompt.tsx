@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -34,12 +34,18 @@ export default function AuthPrompt({
     isPending, //loading state
   } = useSession();
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [internalMagicLinkSent, setInternalMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
+
+  useEffect(() => {
+    // Focus the container on mount so iOS Safari doesn't auto-focus the input.
+    containerRef.current?.focus();
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !email.includes('@')) {
@@ -79,10 +85,13 @@ export default function AuthPrompt({
 
   return (
     <div
+      ref={containerRef}
+      tabIndex={-1}
       className={className}
       style={{
         backdropFilter: 'blur(2px)',
         WebkitBackdropFilter: 'blur(2px)',
+        outline: 'none',
       }}
     >
       <div
