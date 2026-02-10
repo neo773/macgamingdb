@@ -36,7 +36,8 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
       });
     }
 
-    const authSession = await BetterAuthClient(ctx.db).api.getSession({
+    const auth = await BetterAuthClient(ctx.db);
+    const authSession = await auth.api.getSession({
       headers: ctx.req.headers,
     });
 

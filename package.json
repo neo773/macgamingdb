@@ -69,6 +69,7 @@
     "eslint-plugin-unused-imports": "^4.2.0",
     "expo-network": "^8.0.8",
     "gray-matter": "^4.0.3",
+    "jose": "^6.1.3",
     "linkedom": "^0.18.9",
     "lucide-react": "^0.532.0",
     "motion": "^12.23.11",
