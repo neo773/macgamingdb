@@ -54,6 +54,7 @@
     "@types/mdx": "^2.0.13",
     "@typescript-eslint/eslint-plugin": "^8.47.0",
     "@typescript-eslint/parser": "^8.47.0",
+    "apple-signin-react": "^1.0.2",
     "better-auth": "^1.2.5",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",

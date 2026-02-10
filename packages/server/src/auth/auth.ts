@@ -13,7 +13,7 @@ import * as schema from '../drizzle/schema';
 
 async function generateAppleClientSecret(): Promise<string> {
   const teamId = process.env.APPLE_TEAM_ID!;
-  const clientId = process.env.APPLE_CLIENT_ID!;
+  const clientId = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!;
   const keyId = process.env.APPLE_KEY_ID!;
   const privateKey = (process.env.APPLE_PRIVATE_KEY!).replace(/\\n/g, '\n');
 
@@ -44,7 +44,7 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     }),
     socialProviders: {
       apple: {
-        clientId: process.env.APPLE_CLIENT_ID as string,
+        clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID as string,
         clientSecret: appleClientSecret,
         appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER as string,
       },
