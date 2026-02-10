@@ -9,7 +9,6 @@ export function createDrizzleClient() {
       ? createClient({
           url: `${process.env.LIBSQL_DATABASE_URL}`,
           authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-          tls: false,
         })
       : createClient({
           url:
