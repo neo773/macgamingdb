@@ -10,7 +10,7 @@ import {
 import { type DrizzleDB } from '../database/drizzle';
 import * as schema from '../drizzle/schema';
 
-export const BetterAuthClient = (db: DrizzleDB) => {
+export const BetterAuthClient = (db: DrizzleDB): ReturnType<typeof betterAuth> => {
   return betterAuth({
     baseURL:
       process.env.NODE_ENV === 'production'
