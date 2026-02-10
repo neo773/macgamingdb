@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
-import SignInWithApple from 'apple-signin-react';
+import { SignInWithApple } from './SignInWithApple';
 
 interface AuthPromptProps {
   /** Optional message to display above the form */
@@ -137,26 +137,11 @@ export default function AuthPrompt({
               </div>
             </div>
             <SignInWithApple
-              clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
-              redirectURI={process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!}
-              scope="email"
-              usePopup
-              onSuccess={(data) => {
-                signIn.social({
+              onClick={async () => {
+                const data = await authClient.signIn.social({
                   provider: 'apple',
-                  idToken: {
-                    token: data.authorization.id_token,
-                  },
-                  callbackURL: window.location.href,
                 });
-              }}
-              onError={() => {
-                setError('Apple sign in failed. Please try again.');
-              }}
-              buttonStyle={{
-                type: 'continue',
-                color: 'white',
-                borderRadius: 55,
+                console.log(data);
               }}
             />
           </div>
