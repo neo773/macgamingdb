@@ -15,7 +15,7 @@ import { Container } from '@/components/ui/container';
 import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
-export const revalidate = 365 * 24 * 60 * 60; // 1 year, revalidated on-demand via mutations
+export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
 export async function generateStaticParams() {
   return [];

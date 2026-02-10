@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { createDrizzleClient } from '@macgamingdb/server/database';
 import { sql } from 'drizzle-orm';
 
-export const revalidate = 1 * 60 * 60; // 1 hour
+export const revalidate = 3600; // 1 hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const db = createDrizzleClient();
