@@ -1,5 +1,5 @@
 import ExpandableReviewNote from './ExpandableReviewNote';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/generated/prisma/client';
+import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
 import React from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

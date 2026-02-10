@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateAveragePerformance } from './calculateAveragePerformance';
-import type { PerformanceRating } from '../generated/prisma/client';
+import type { PerformanceRating } from '../drizzle/types';
 
 describe('calculateAveragePerformance', () => {
   it('returns 0 for empty reviews array', () => {

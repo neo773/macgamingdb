@@ -1,7 +1,7 @@
 import {
   type GameReview,
   type PerformanceRating,
-} from '../generated/prisma/client';
+} from '../drizzle/types';
 
 export const calculateAveragePerformance = (
   reviews: Pick<GameReview, 'performance'>[],

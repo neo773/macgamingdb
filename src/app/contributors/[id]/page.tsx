@@ -1,4 +1,4 @@
-import { createPrismaClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from '@macgamingdb/server/database';
 import { notFound } from 'next/navigation';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
@@ -12,6 +12,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { type SteamAppData } from '@macgamingdb/server/api/steam';
 import { Container } from '@/components/ui/container';
+import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
+import { eq, desc } from 'drizzle-orm';
 
 export const revalidate = 3600; // revalidate every hour
 
@@ -24,31 +26,25 @@ export default async function ContributorPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const prisma = createPrismaClient();
+  const db = createDrizzleClient();
 
   const { id: contributorId } = await params;
 
-  const contributor = await prisma.user.findUnique({
-    where: {
-      id: contributorId,
-    },
+  const contributor = await db.query.users.findFirst({
+    where: eq(users.id, contributorId),
   });
 
   if (!contributor) {
     notFound();
   }
 
-  const contributorReviews = await prisma.gameReview.findMany({
-    where: {
-      userId: contributorId,
-    },
-    include: {
+  const contributorReviews = await db.query.gameReviews.findMany({
+    where: eq(gameReviews.userId, contributorId),
+    with: {
       game: true,
       macConfig: true,
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: desc(gameReviews.createdAt),
   });
 
   const contributorName = contributor

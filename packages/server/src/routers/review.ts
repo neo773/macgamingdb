@@ -19,16 +19,18 @@ import {
 import { type MacSpecification } from '../scraper/EveryMacScraper';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { scoreToRating } from '../utils/scoreToRating';
-import type { PrismaClient } from '../generated/prisma/client';
+import { type DrizzleDB } from '../database/drizzle';
+import { games, gameReviews, macConfigs } from '../drizzle/schema';
+import { eq, sql } from 'drizzle-orm';
 
 async function updateGameAggregatedPerformance(
-  prisma: PrismaClient,
+  db: DrizzleDB,
   gameId: string,
 ) {
-  const reviews = await prisma.gameReview.findMany({
-    where: { gameId },
-    select: { performance: true },
-  });
+  const reviews = await db
+    .select({ performance: gameReviews.performance })
+    .from(gameReviews)
+    .where(eq(gameReviews.gameId, gameId));
 
   let aggregatedPerformance: Performance | null = null;
   if (reviews.length > 0) {
@@ -36,10 +38,10 @@ async function updateGameAggregatedPerformance(
     aggregatedPerformance = scoreToRating(avgScore);
   }
 
-  await prisma.game.update({
-    where: { id: gameId },
-    data: { aggregatedPerformance },
-  });
+  await db
+    .update(games)
+    .set({ aggregatedPerformance })
+    .where(eq(games.id, gameId));
 }
 
 export const reviewRouter = router({
@@ -59,11 +61,12 @@ export const reviewRouter = router({
     )
     .query(async ({ input, ctx }) => {
       try {
-        const macConfigs = await ctx.prisma!.macConfig.findMany({
-          orderBy: { identifier: 'asc' },
-        });
+        const allMacConfigs = await ctx.db
+          .select()
+          .from(macConfigs)
+          .orderBy(macConfigs.identifier);
 
-        let configs = macConfigs.map((config) => {
+        let configs = allMacConfigs.map((config) => {
           const metadata = JSON.parse(config.metadata) as MacSpecification;
           return {
             id: config.id,
@@ -143,8 +146,8 @@ export const reviewRouter = router({
     )
     .query(async ({ input, ctx }) => {
       try {
-        const macConfig = await ctx.prisma!.macConfig.findUnique({
-          where: { identifier: input.identifier },
+        const macConfig = await ctx.db.query.macConfigs.findFirst({
+          where: eq(macConfigs.identifier, input.identifier),
         });
 
         if (!macConfig) {
@@ -238,8 +241,8 @@ export const reviewRouter = router({
           });
         }
 
-        const gameExists = await ctx.prisma!.game.findUnique({
-          where: { id: input.gameId },
+        const gameExists = await ctx.db.query.games.findFirst({
+          where: eq(games.id, input.gameId),
         });
 
         if (!gameExists) {
@@ -249,15 +252,17 @@ export const reviewRouter = router({
             return null;
           }
 
-          await ctx.prisma!.game.upsert({
-            where: { id: input.gameId },
-            update: { details: JSON.stringify(gameDetails) },
-            create: { id: input.gameId, details: JSON.stringify(gameDetails) },
-          });
+          await ctx.db
+            .insert(games)
+            .values({ id: input.gameId, details: JSON.stringify(gameDetails) })
+            .onConflictDoUpdate({
+              target: games.id,
+              set: { details: JSON.stringify(gameDetails) },
+            });
         }
 
-        const macConfig = await ctx.prisma!.macConfig.findUnique({
-          where: { identifier: input.macConfigIdentifier },
+        const macConfig = await ctx.db.query.macConfigs.findFirst({
+          where: eq(macConfigs.identifier, input.macConfigIdentifier),
         });
 
         if (!macConfig) {
@@ -273,14 +278,15 @@ export const reviewRouter = router({
         const hasScreenshots =
           input.screenshots && input.screenshots.length > 0;
 
-        const review = await ctx.prisma!.gameReview.create({
-          data: {
+        const [review] = await ctx.db
+          .insert(gameReviews)
+          .values({
             gameId: input.gameId,
             userId: ctx.user.user.id,
             playMethod: input.playMethod,
             translationLayer: input.translationLayer,
             performance: input.performance,
-            fps: input.fps,
+            fps: input.fps ?? null,
             graphicsSettings: input.graphicsSettings,
             resolution: input.resolution || null,
             macConfigId: macConfig.id,
@@ -291,17 +297,17 @@ export const reviewRouter = router({
               ? JSON.stringify(input.screenshots)
               : null,
             softwareVersion: input.softwareVersion || null,
-          },
-        });
+          })
+          .returning();
 
         revalidatePath(`/games/${input.gameId}`);
 
-        await updateGameAggregatedPerformance(ctx.prisma!, input.gameId);
+        await updateGameAggregatedPerformance(ctx.db, input.gameId);
 
-        await ctx.prisma!.game.update({
-          where: { id: input.gameId },
-          data: { reviewCount: { increment: 1 } },
-        });
+        await ctx.db
+          .update(games)
+          .set({ reviewCount: sql`${games.reviewCount} + 1` })
+          .where(eq(games.id, input.gameId));
 
         return { review };
       } catch (error) {
@@ -325,9 +331,9 @@ export const reviewRouter = router({
           });
         }
 
-        const review = await ctx.prisma!.gameReview.findUnique({
-          where: { id: input.reviewId },
-          include: { game: true },
+        const review = await ctx.db.query.gameReviews.findFirst({
+          where: eq(gameReviews.id, input.reviewId),
+          with: { game: true },
         });
 
         if (!review) {
@@ -344,15 +350,15 @@ export const reviewRouter = router({
           });
         }
 
-        await ctx.prisma!.gameReview.update({
-          where: { id: input.reviewId },
-          data: {
-            notes: input.notes,
-            screenshots: input.screenshots
-              ? JSON.stringify(input.screenshots)
-              : undefined,
-          },
-        });
+        const updateData: Record<string, unknown> = { notes: input.notes };
+        if (input.screenshots) {
+          updateData.screenshots = JSON.stringify(input.screenshots);
+        }
+
+        await ctx.db
+          .update(gameReviews)
+          .set(updateData)
+          .where(eq(gameReviews.id, input.reviewId));
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
@@ -384,9 +390,9 @@ export const reviewRouter = router({
           });
         }
 
-        const review = await ctx.prisma!.gameReview.findUnique({
-          where: { id: input.reviewId },
-          include: { game: true },
+        const review = await ctx.db.query.gameReviews.findFirst({
+          where: eq(gameReviews.id, input.reviewId),
+          with: { game: true },
         });
 
         if (!review) {
@@ -410,19 +416,19 @@ export const reviewRouter = router({
           });
         }
 
-        await ctx.prisma!.gameReview.delete({
-          where: { id: input.reviewId },
-        });
+        await ctx.db
+          .delete(gameReviews)
+          .where(eq(gameReviews.id, input.reviewId));
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
 
-        await ctx.prisma!.game.update({
-          where: { id: review.gameId },
-          data: { reviewCount: { decrement: 1 } },
-        });
+        await ctx.db
+          .update(games)
+          .set({ reviewCount: sql`${games.reviewCount} - 1` })
+          .where(eq(games.id, review.gameId));
 
-        await updateGameAggregatedPerformance(ctx.prisma!, review.gameId);
+        await updateGameAggregatedPerformance(ctx.db, review.gameId);
 
         return { success: true, message: 'Review deleted successfully' };
       } catch (error) {

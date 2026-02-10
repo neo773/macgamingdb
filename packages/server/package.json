@@ -25,11 +25,12 @@
     "./utils/getChipsetCombinations": "./src/utils/getChipsetCombinations.ts",
     "./utils/scoreToRating": "./src/utils/scoreToRating.ts",
     "./auth": "./src/auth/auth.ts",
-    "./database": "./src/database/prisma.ts",
+    "./database": "./src/database/drizzle.ts",
+    "./drizzle/schema": "./src/drizzle/schema.ts",
+    "./drizzle/types": "./src/drizzle/types.ts",
     "./s3": "./src/services/s3.ts",
     "./scraper/EveryMacScraper": "./src/scraper/EveryMacScraper.ts",
     "./scraper/WebScraper": "./src/scraper/WebScraper.ts",
-    "./generated/prisma/client": "./src/generated/prisma/client.ts",
     "./utils/logger": "./src/utils/logger.ts"
   },
   "dependencies": {

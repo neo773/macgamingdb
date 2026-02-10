@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
-import { type PerformanceRating } from '@macgamingdb/server/generated/prisma/client';
+import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
 import { trpc } from '@/lib/trpc/provider';

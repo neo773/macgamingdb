@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import CreateReviewDialog from '@/modules/review/components/CreateReviewDialog';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/generated/prisma/client';
+import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
 
 type ReviewWithMacConfig = GameReview & { macConfig?: MacConfig | null };
 

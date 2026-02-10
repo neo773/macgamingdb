@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { users, gameReviews } from '../drizzle/schema';
+import { eq, desc, count, inArray } from 'drizzle-orm';
 
 interface GameDetails {
   name?: string;
@@ -16,14 +18,15 @@ export const contributorRouter = router({
     )
     .query(async ({ input, ctx }) => {
       try {
-        const contributor = await ctx.prisma!.user.findUnique({
-          where: { id: input.id },
-          select: {
-            id: true,
-            email: true,
-            createdAt: true,
-          },
-        });
+        const [contributor] = await ctx.db
+          .select({
+            id: users.id,
+            email: users.email,
+            createdAt: users.createdAt,
+          })
+          .from(users)
+          .where(eq(users.id, input.id))
+          .limit(1);
 
         if (!contributor) {
           throw new TRPCError({
@@ -32,13 +35,13 @@ export const contributorRouter = router({
           });
         }
 
-        const reviews = await ctx.prisma!.gameReview.findMany({
-          where: { userId: input.id },
-          include: {
+        const reviews = await ctx.db.query.gameReviews.findMany({
+          where: eq(gameReviews.userId, input.id),
+          with: {
             game: true,
             macConfig: true,
           },
-          orderBy: { createdAt: 'desc' },
+          orderBy: desc(gameReviews.createdAt),
         });
 
         const uniqueGamesCount = new Set(reviews.map((r) => r.gameId)).size;
@@ -92,62 +95,49 @@ export const contributorRouter = router({
       try {
         const { limit, cursor } = input;
 
-        const contributors = await ctx.prisma!.$transaction(
-          async (tx) => {
-            const userReviewCounts = await tx.user.findMany({
-              select: {
-                id: true,
-                email: true,
-                createdAt: true,
-                _count: {
-                  select: {
-                    reviews: true,
-                  },
-                },
-              },
-              orderBy: {
-                reviews: {
-                  _count: 'desc',
-                },
-              },
-              take: limit + 1,
-              ...(cursor
-                ? {
-                  skip: 1,
-                  cursor: {
-                    id: cursor,
-                  },
-                }
-                : {}),
-            });
+        // Subquery: count reviews per user
+        const reviewCountSq = ctx.db
+          .select({
+            userId: gameReviews.userId,
+            reviewCount: count().as('reviewCount'),
+          })
+          .from(gameReviews)
+          .groupBy(gameReviews.userId)
+          .as('reviewCountSq');
 
-            const usersWithGameCounts = await Promise.all(
-              userReviewCounts.map(async (user) => {
-                const uniqueGames = await tx.gameReview.groupBy({
-                  by: ['gameId'],
-                  where: {
-                    userId: user.id,
-                  },
-                });
+        // Join users with review counts, ordered by review count desc
+        const userReviewCounts = await ctx.db
+          .select({
+            id: users.id,
+            email: users.email,
+            createdAt: users.createdAt,
+            reviewCount: reviewCountSq.reviewCount,
+          })
+          .from(users)
+          .innerJoin(reviewCountSq, eq(users.id, reviewCountSq.userId))
+          .orderBy(desc(reviewCountSq.reviewCount))
+          .limit(limit + 1)
+          .offset(cursor ? 1 : 0);
 
-                return {
-                  id: user.id,
-                  name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
-                  joinedAt: user.createdAt,
-                  reviewCount: user._count.reviews,
-                  uniqueGamesCount: uniqueGames.length,
+        const usersWithGameCounts = await Promise.all(
+          userReviewCounts.map(async (user) => {
+            const uniqueGames = await ctx.db
+              .selectDistinct({ gameId: gameReviews.gameId })
+              .from(gameReviews)
+              .where(eq(gameReviews.userId, user.id));
 
-                  score: user._count.reviews * 10 + uniqueGames.length * 5,
-                };
-              }),
-            );
-
-            return usersWithGameCounts.sort((a, b) => b.score - a.score);
-          },
-          {
-            timeout: 10000,
-          },
+            return {
+              id: user.id,
+              name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
+              joinedAt: user.createdAt,
+              reviewCount: user.reviewCount,
+              uniqueGamesCount: uniqueGames.length,
+              score: user.reviewCount * 10 + uniqueGames.length * 5,
+            };
+          }),
         );
+
+        const contributors = usersWithGameCounts.sort((a, b) => b.score - a.score);
 
         let nextCursor: typeof cursor = undefined;
         if (contributors.length > limit) {
@@ -155,16 +145,20 @@ export const contributorRouter = router({
           nextCursor = nextItem!.id;
         }
 
+        // Count total users who have at least one review
+        const usersWithReviews = ctx.db
+          .selectDistinct({ userId: gameReviews.userId })
+          .from(gameReviews);
+
+        const [totalResult] = await ctx.db
+          .select({ count: count() })
+          .from(users)
+          .where(inArray(users.id, usersWithReviews));
+
         return {
           contributors,
           nextCursor,
-          totalCount: await ctx.prisma!.user.count({
-            where: {
-              reviews: {
-                some: {},
-              },
-            },
-          }),
+          totalCount: totalResult?.count ?? 0,
         };
       } catch (error) {
         console.error('Error fetching contributors:', error);

@@ -1,5 +1,5 @@
 import { betterAuth } from 'better-auth';
-import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins/magic-link';
 import { expo } from '@better-auth/expo';
 import { Resend } from 'resend';
@@ -7,12 +7,19 @@ import {
   MacGamingDBMagicLinkEmail,
   MacGamingDBMagicLinkEmailText,
 } from '@macgamingdb/emails/magic-link';
-import { type PrismaClient } from '../generated/prisma/client';
+import { type DrizzleDB } from '../database/drizzle';
+import * as schema from '../drizzle/schema';
 
-export const BetterAuthClient = (prisma: PrismaClient) => {
+export const BetterAuthClient = (db: DrizzleDB): ReturnType<typeof betterAuth> => {
   return betterAuth({
-    database: prismaAdapter(prisma, {
+    baseURL:
+      process.env.NODE_ENV === 'production'
+        ? 'https://macgamingdb.app'
+        : 'http://macgamingdb.local',
+    database: drizzleAdapter(db, {
       provider: 'sqlite',
+      schema,
+      usePlural: true,
     }),
     trustedOrigins: [
       'macgamingdb://',

@@ -1,6 +1,6 @@
 import { DOMParser } from 'linkedom';
 import { type WebScraper } from './WebScraper';
-import { type ChipsetVariant } from '../generated/prisma/client';
+import { type ChipsetVariant } from '../drizzle/types';
 import { RAM_LIMITS } from './constant/mac-ram-limits';
 import { type MacFamily } from '../schema';
 import { createLogger } from '../utils/logger';
