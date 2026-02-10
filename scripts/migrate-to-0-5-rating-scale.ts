@@ -1,11 +1,10 @@
-import { createPrismaClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from '@macgamingdb/server/database';
 import { createLogger } from '@macgamingdb/server/utils/logger';
 import { config } from 'dotenv';
 import { calculateAveragePerformance } from '@macgamingdb/server/utils/calculateAveragePerformance';
-import {
-  type PerformanceRating,
-  type GameReview,
-} from '@macgamingdb/server/generated/prisma/client';
+import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
+import { games } from '@macgamingdb/server/drizzle/schema';
+import { eq, gt } from 'drizzle-orm';
 
 if (process.env.NODE_ENV === 'production') {
   config({
@@ -13,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const prisma = createPrismaClient();
+const db = createDrizzleClient();
 const logger = createLogger('MigrateTo05RatingScale');
 
 const convertScore = (score: number, oldMax = 4, newMax = 5): number => {
@@ -36,29 +35,31 @@ const mapToPerformance = (oldScore: number): PerformanceRating => {
 async function migrateTo05RatingScale() {
   logger.log('Clean Migration: 0-4 to 0-5 Star System');
 
-  const games = await prisma.game.findMany({
-    where: { reviewCount: { gt: 0 } },
-    include: {
-      reviews: { select: { performance: true } },
+  const allGames = await db.query.games.findMany({
+    where: gt(games.reviewCount, 0),
+    with: {
+      reviews: {
+        columns: { performance: true },
+      },
     },
   });
 
-  logger.log(`Processing ${games.length} games`);
+  logger.log(`Processing ${allGames.length} games`);
 
   let processed = 0;
-  for (const game of games) {
-    const oldAvg = calculateAveragePerformance(game.reviews as GameReview[]);
+  for (const game of allGames) {
+    const oldAvg = calculateAveragePerformance(game.reviews);
 
     const newRating = mapToPerformance(oldAvg);
 
-    await prisma.game.update({
-      where: { id: game.id },
-      data: { aggregatedPerformance: newRating },
-    });
+    await db
+      .update(games)
+      .set({ aggregatedPerformance: newRating })
+      .where(eq(games.id, game.id));
 
     processed++;
     if (processed % 100 === 0) {
-      logger.log(`Processed ${processed}/${games.length}`);
+      logger.log(`Processed ${processed}/${allGames.length}`);
     }
   }
 
@@ -71,8 +72,6 @@ async function main() {
   } catch (error) {
     logger.error('Script failed', error instanceof Error ? error.stack : String(error));
     process.exit(1);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 

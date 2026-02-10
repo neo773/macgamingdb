@@ -1,4 +1,4 @@
-import { type GameReview } from '../generated/prisma/client';
+import { type GameReview } from '../drizzle/types';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 
 export const calculateTranslationLayerStats = (reviews: GameReview[]) => {

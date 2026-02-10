@@ -11,10 +11,9 @@ import {
 import { calculateTranslationLayerStats } from '../utils/calculateTranslationLayerStats';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
-import type {
-  PrismaClient,
-  PerformanceRating,
-} from '../generated/prisma/client';
+import { type DrizzleDB } from '../database/drizzle';
+import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
+import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
 
@@ -31,33 +30,43 @@ function createEmptyCounts(): RatingCounts {
 }
 
 async function getUnfilteredCounts(
-  prisma: PrismaClient,
+  db: DrizzleDB,
 ): Promise<RatingCounts> {
-  const counts = await prisma.game.groupBy({
-    by: ['aggregatedPerformance'],
-    _count: true,
-    where: { aggregatedPerformance: { not: null } },
-  });
+  const counts = await db
+    .select({
+      aggregatedPerformance: games.aggregatedPerformance,
+      count: count(),
+    })
+    .from(games)
+    .where(isNotNull(games.aggregatedPerformance))
+    .groupBy(games.aggregatedPerformance);
 
   const result = createEmptyCounts();
   for (const row of counts) {
     if (row.aggregatedPerformance) {
-      result[row.aggregatedPerformance] = row._count;
-      result.ALL += row._count;
+      result[row.aggregatedPerformance] = row.count;
+      result.ALL += row.count;
     }
   }
   return result;
 }
 
 async function getFilteredCounts(
-  prisma: PrismaClient,
-  reviewFilter: Record<string, unknown>,
+  db: DrizzleDB,
+  reviewFilter: { chipset?: string; chipsetVariant?: ChipsetVariant; playMethod?: PlayMethod },
 ): Promise<RatingCounts> {
-  const pairs = await prisma.gameReview.findMany({
-    where: reviewFilter,
-    select: { gameId: true, performance: true },
-    distinct: ['gameId', 'performance'],
-  });
+  const conditions: SQL[] = [];
+  if (reviewFilter.chipset) conditions.push(eq(gameReviews.chipset, reviewFilter.chipset));
+  if (reviewFilter.chipsetVariant) conditions.push(eq(gameReviews.chipsetVariant, reviewFilter.chipsetVariant));
+  if (reviewFilter.playMethod) conditions.push(eq(gameReviews.playMethod, reviewFilter.playMethod));
+
+  const pairs = await db
+    .select({
+      gameId: gameReviews.gameId,
+      performance: gameReviews.performance,
+    })
+    .from(gameReviews)
+    .where(and(...conditions));
 
   const result = createEmptyCounts();
   const seen = new Map<PerformanceRating, Set<string>>();
@@ -136,10 +145,10 @@ export const gameRouter = router({
       const hasFilters = Object.keys(reviewFilter).length > 0;
 
       if (hasFilters) {
-        return getFilteredCounts(ctx.prisma!, reviewFilter);
+        return getFilteredCounts(ctx.db, reviewFilter);
       }
 
-      return getUnfilteredCounts(ctx.prisma!);
+      return getUnfilteredCounts(ctx.db);
     }),
 
   getGames: procedure
@@ -167,24 +176,28 @@ export const gameRouter = router({
         const hasChipsetOrPlayMethodFilter = chipset || playMethod !== 'ALL';
 
         if (hasChipsetOrPlayMethodFilter) {
-          const gamesForIds = await ctx.prisma!.game.findMany({
-            where: {
-              reviews: {
-                some: {
-                  ...(performance !== 'ALL' && { performance }),
-                  ...(chipset && { chipset }),
-                  ...(chipset && chipsetVariant && { chipsetVariant }),
-                  ...(playMethod !== 'ALL' && { playMethod }),
-                },
-              },
-            },
-            select: { id: true },
-            orderBy: { reviewCount: 'desc' },
-            skip: offset,
-            take: limit * 3,
-          });
+          // Build review filter conditions for subquery
+          const reviewConditions: SQL[] = [];
+          if (performance !== 'ALL') reviewConditions.push(eq(gameReviews.performance, performance));
+          if (chipset) reviewConditions.push(eq(gameReviews.chipset, chipset));
+          if (chipset && chipsetVariant) reviewConditions.push(eq(gameReviews.chipsetVariant, chipsetVariant));
+          if (playMethod !== 'ALL') reviewConditions.push(eq(gameReviews.playMethod, playMethod));
 
-          const gameIds = gamesForIds.map((game: { id: string }) => game.id);
+          // Get game IDs matching the review filters
+          const matchingGameIds = ctx.db
+            .selectDistinct({ gameId: gameReviews.gameId })
+            .from(gameReviews)
+            .where(and(...reviewConditions));
+
+          const gamesForIds = await ctx.db
+            .select({ id: games.id })
+            .from(games)
+            .where(inArray(games.id, matchingGameIds))
+            .orderBy(desc(games.reviewCount))
+            .offset(offset)
+            .limit(limit * 3);
+
+          const gameIds = gamesForIds.map((game) => game.id);
 
           if (gameIds.length === 0) {
             return {
@@ -194,18 +207,17 @@ export const gameRouter = router({
             };
           }
 
-          const games = await ctx.prisma!.game.findMany({
-            where: {
-              id: { in: gameIds },
-              aggregatedPerformance: { not: null },
-            },
-            orderBy: {
-              reviewCount: 'desc',
-            },
-            take: limit + 1,
-          });
+          const matchedGames = await ctx.db
+            .select()
+            .from(games)
+            .where(and(
+              inArray(games.id, gameIds),
+              isNotNull(games.aggregatedPerformance),
+            ))
+            .orderBy(desc(games.reviewCount))
+            .limit(limit + 1);
 
-          const gamesWithPerformance = games
+          const gamesWithPerformance = matchedGames
             .filter(
               (
                 game,
@@ -234,20 +246,20 @@ export const gameRouter = router({
         }
 
         // No chipset or playMethod filters - simple query on aggregatedPerformance
-        const games = await ctx.prisma!.game.findMany({
-          where: {
-            ...(performance !== 'ALL' && {
-              aggregatedPerformance: performance,
-            }),
-          },
-          skip: offset,
-          take: limit + 1,
-          orderBy: {
-            reviewCount: 'desc',
-          },
-        });
+        const conditions: SQL[] = [];
+        if (performance !== 'ALL') {
+          conditions.push(eq(games.aggregatedPerformance, performance));
+        }
 
-        const gamesWithPerformance = games
+        const matchedGames = await ctx.db
+          .select()
+          .from(games)
+          .where(conditions.length > 0 ? and(...conditions) : undefined)
+          .orderBy(desc(games.reviewCount))
+          .offset(offset)
+          .limit(limit + 1);
+
+        const gamesWithPerformance = matchedGames
           .filter(
             (
               game,
@@ -286,15 +298,15 @@ export const gameRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       try {
-        const reviews = await ctx.prisma!.gameReview.findMany({
-          where: { gameId: input.id },
-          include: {
+        const reviews = await ctx.db.query.gameReviews.findMany({
+          where: eq(gameReviews.gameId, input.id),
+          with: {
             macConfig: true,
           },
         });
 
-        const game = await ctx.prisma!.game.findUnique({
-          where: { id: input.id },
+        const game = await ctx.db.query.games.findFirst({
+          where: eq(games.id, input.id),
         });
 
         let gameDetails: string = game?.details as string;
@@ -311,11 +323,13 @@ export const gameRouter = router({
 
           gameDetails = JSON.stringify(response);
 
-          await ctx.prisma!.game.upsert({
-            where: { id: input.id },
-            update: { details: gameDetails },
-            create: { id: input.id, details: gameDetails },
-          });
+          await ctx.db
+            .insert(games)
+            .values({ id: input.id, details: gameDetails })
+            .onConflictDoUpdate({
+              target: games.id,
+              set: { details: gameDetails },
+            });
         }
 
         const reviewStats =

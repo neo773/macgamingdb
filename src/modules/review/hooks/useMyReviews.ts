@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/provider';
 import { toast } from 'sonner';
-import { type Game, type GameReview } from '@macgamingdb/server/generated/prisma/client';
+import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
 
 type ReviewWithGame = GameReview & { game: Game };
 

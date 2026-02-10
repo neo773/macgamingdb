@@ -1,15 +1,15 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@macgamingdb/server/routers/_app';
-import { createPrismaClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from '@macgamingdb/server/database';
 
 const handler = (req: Request) => {
-  const prisma = createPrismaClient();
+  const db = createDrizzleClient();
 
   return fetchRequestHandler<typeof appRouter>({
     endpoint: '/api/trpc',
     req,
     router: appRouter,
-    createContext: () => ({ req, prisma }),
+    createContext: () => ({ req, db }),
     onError: ({ path, error }) => {
       console.error(`Error in tRPC handler at ${path}: ${error.message}`);
     },

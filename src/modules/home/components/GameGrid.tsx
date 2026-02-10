@@ -3,7 +3,7 @@
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
 import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
-import { type PerformanceRating } from '@macgamingdb/server/generated/prisma/client';
+import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
 
 interface GameFromDB {
   id: string;

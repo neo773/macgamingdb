@@ -1,12 +1,11 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { BetterAuthClient } from '../auth/auth';
-import { createPrismaClient } from '../database/prisma';
-import { type PrismaClient } from '../generated/prisma/client';
+import { createDrizzleClient, type DrizzleDB } from '../database/drizzle';
 import { type User } from 'better-auth';
 
 export interface TrpcContext {
-  prisma: PrismaClient;
+  db: DrizzleDB;
   req?: Request;
   user?: User;
 }
@@ -14,9 +13,9 @@ export interface TrpcContext {
 export const createTRPCContext = async (
   opts: { req?: Request } = {},
 ): Promise<TrpcContext> => {
-  const prisma = createPrismaClient();
+  const db = createDrizzleClient();
   return {
-    prisma: prisma,
+    db,
     req: opts.req,
   };
 };
@@ -37,7 +36,7 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
       });
     }
 
-    const authSession = await BetterAuthClient(ctx.prisma!).api.getSession({
+    const authSession = await BetterAuthClient(ctx.db).api.getSession({
       headers: ctx.req.headers,
     });
 

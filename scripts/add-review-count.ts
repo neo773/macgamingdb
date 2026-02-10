@@ -1,6 +1,8 @@
-import { createPrismaClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from '@macgamingdb/server/database';
 import { createLogger } from '@macgamingdb/server/utils/logger';
 import { config } from 'dotenv';
+import { games, gameReviews } from '@macgamingdb/server/drizzle/schema';
+import { eq, count } from 'drizzle-orm';
 
 if (process.env.NODE_ENV === 'production') {
   config({
@@ -8,114 +10,58 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const prisma = createPrismaClient();
+const db = createDrizzleClient();
 const logger = createLogger('AddReviewCount');
 
 async function addReviewCount() {
   logger.log('Adding reviewCount field and populating data');
 
-  const totalReviews = await prisma.gameReview.count();
-  logger.log(`Total reviews in database: ${totalReviews}`);
+  const [totalResult] = await db.select({ count: count() }).from(gameReviews);
+  logger.log(`Total reviews in database: ${totalResult.count}`);
 
-  const games = await prisma.game.findMany({
-    include: {
-      _count: {
-        select: {
-          reviews: true,
-        },
-      },
-    },
-  });
+  const allGames = await db.select().from(games);
+  logger.log(`Found ${allGames.length} games to update`);
 
-  logger.log(`Found ${games.length} games to update`);
+  // Get review counts per game
+  const reviewCounts = await db
+    .select({
+      gameId: gameReviews.gameId,
+      reviewCount: count(),
+    })
+    .from(gameReviews)
+    .groupBy(gameReviews.gameId);
 
-  const gamesWithReviews = games.filter((game) => game._count.reviews > 0);
+  const countMap = new Map(reviewCounts.map((r) => [r.gameId, r.reviewCount]));
+
+  const gamesWithReviews = allGames.filter((game) => (countMap.get(game.id) ?? 0) > 0);
   logger.log(`Games with reviews: ${gamesWithReviews.length}`);
 
   if (gamesWithReviews.length > 0) {
     logger.log('Sample games with reviews:');
     gamesWithReviews.slice(0, 5).forEach((game) => {
       logger.log(
-        `  - Game ${game.id}: ${game._count.reviews} reviews (current reviewCount: ${game.reviewCount})`,
+        `  - Game ${game.id}: ${countMap.get(game.id)} reviews (current reviewCount: ${game.reviewCount})`,
       );
     });
-  } else {
-    logger.warn('No games have any reviews');
-
-    const sampleGames = games.slice(0, 3);
-    for (const game of sampleGames) {
-      const reviewCount = await prisma.gameReview.count({
-        where: { gameId: game.id },
-      });
-      logger.log(
-        `  - Game ${game.id}: Direct count = ${reviewCount}, _count = ${game._count.reviews}`,
-      );
-    }
   }
 
-  const BATCH_SIZE = 50;
-  const totalGames = games.length;
   let processedCount = 0;
 
-  logger.log(`Processing ${totalGames} games in batches of ${BATCH_SIZE}`);
+  for (const game of allGames) {
+    const reviewCount = countMap.get(game.id) ?? 0;
+    await db
+      .update(games)
+      .set({ reviewCount })
+      .where(eq(games.id, game.id));
 
-  for (let i = 0; i < totalGames; i += BATCH_SIZE) {
-    const batch = games.slice(i, i + BATCH_SIZE);
-    const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
-    const totalBatches = Math.ceil(totalGames / BATCH_SIZE);
-
-    logger.log(`Processing batch ${batchNumber}/${totalBatches} (${batch.length} games)`);
-
-    const updateOperations = batch.map((game) =>
-      prisma.game.update({
-        where: { id: game.id },
-        data: { reviewCount: game._count.reviews },
-      }),
-    );
-
-    try {
-      const batchResults = await prisma.$transaction(updateOperations);
-      processedCount += batchResults.length;
-      logger.log(`Batch ${batchNumber} completed: ${batchResults.length} games updated`);
-
-      const progress = ((processedCount / totalGames) * 100).toFixed(1);
-      logger.log(`Progress: ${processedCount}/${totalGames} (${progress}%)`);
-    } catch (error) {
-      logger.error(`Batch ${batchNumber} failed`, error instanceof Error ? error.stack : String(error));
-      throw error;
+    processedCount++;
+    if (processedCount % 100 === 0) {
+      const progress = ((processedCount / allGames.length) * 100).toFixed(1);
+      logger.log(`Progress: ${processedCount}/${allGames.length} (${progress}%)`);
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   logger.log(`Successfully updated ${processedCount} games with review counts`);
-
-  logger.log('Verifying updates');
-  const verificationGames = await prisma.game.findMany({
-    where: {
-      id: { in: games.slice(0, 5).map((g) => g.id) },
-    },
-    select: { id: true, reviewCount: true },
-  });
-
-  verificationGames.forEach((game) => {
-    const originalGame = games.find((g) => g.id === game.id);
-    logger.log(
-      `  - Game ${game.id}: Expected ${originalGame?._count.reviews}, Got ${game.reviewCount}`,
-    );
-  });
-
-  const countDistribution = await prisma.game.groupBy({
-    by: ['reviewCount'],
-    _count: { id: true },
-    orderBy: { reviewCount: 'desc' },
-    take: 10,
-  });
-
-  logger.log('Top review count distribution:');
-  countDistribution.forEach(({ reviewCount, _count }) => {
-    logger.log(`${reviewCount} reviews: ${_count.id} games`);
-  });
 }
 
 async function main() {
@@ -124,8 +70,6 @@ async function main() {
   } catch (error) {
     logger.error('Script failed', error instanceof Error ? error.stack : String(error));
     process.exit(1);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
