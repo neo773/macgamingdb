@@ -30,7 +30,8 @@ async function generateAppleClientSecret(): Promise<string> {
 }
 
 export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof betterAuth>> => {
-  const appleClientSecret = await generateAppleClientSecret();
+  const appleConfigured = process.env.APPLE_TEAM_ID && process.env.APPLE_KEY_ID && process.env.APPLE_PRIVATE_KEY;
+  const appleClientSecret = appleConfigured ? await generateAppleClientSecret() : '';
 
   return betterAuth({
     baseURL:
@@ -42,13 +43,14 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
       schema,
       usePlural: true,
     }),
-    socialProviders: {
-      apple: {
-        clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID as string,
-        clientSecret: appleClientSecret,
-        appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER as string,
+    ...(appleConfigured && {
+      socialProviders: {
+        apple: {
+          clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID as string,
+          clientSecret: appleClientSecret,
+        },
       },
-    },
+    }),
     trustedOrigins: [
       'macgamingdb://',
       'exp://',
