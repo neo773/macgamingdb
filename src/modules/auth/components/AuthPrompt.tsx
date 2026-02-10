@@ -117,6 +117,9 @@ export default function AuthPrompt({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
+                autoFocus={false}
+                autoComplete="email"
+                inputMode="email"
                 className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
               />
             </div>

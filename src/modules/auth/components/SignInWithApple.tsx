@@ -16,7 +16,6 @@ export const SignInWithApple: React.FC<SignInWithAppleProps> = ({
       data-border-radius={55}
       data-height={40}
       style={{ cursor: 'pointer' }}
-
     >
       <div
         style={{
