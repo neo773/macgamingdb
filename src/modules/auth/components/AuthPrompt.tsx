@@ -140,6 +140,19 @@ export default function AuthPrompt({
               clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
               redirectURI={process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!}
               scope="email"
+              usePopup
+              onSuccess={(data) => {
+                signIn.social({
+                  provider: 'apple',
+                  idToken: {
+                    token: data.authorization.id_token,
+                  },
+                  callbackURL: window.location.href,
+                });
+              }}
+              onError={() => {
+                setError('Apple sign in failed. Please try again.');
+              }}
               buttonStyle={{
                 type: 'continue',
                 color: 'white',
