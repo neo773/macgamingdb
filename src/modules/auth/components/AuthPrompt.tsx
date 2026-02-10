@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
+import SignInWithApple from 'apple-signin-react';
 
 interface AuthPromptProps {
   /** Optional message to display above the form */
@@ -127,6 +128,24 @@ export default function AuthPrompt({
             >
               {isLoggingIn ? 'Sending Magic Link...' : 'Login with Magic Link'}
             </Button>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-black px-2 text-gray-400">or</span>
+              </div>
+            </div>
+            <SignInWithApple
+              clientId={process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!}
+              redirectURI={process.env.NEXT_PUBLIC_APPLE_REDIRECT_URI!}
+              scope="email"
+              buttonStyle={{
+                type: 'continue',
+                color: 'white',
+                borderRadius: 55,
+              }}
+            />
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins/magic-link';
 import { expo } from '@better-auth/expo';
 import { Resend } from 'resend';
+import { SignJWT, importPKCS8 } from 'jose';
 import {
   MacGamingDBMagicLinkEmail,
   MacGamingDBMagicLinkEmailText,
@@ -10,7 +11,27 @@ import {
 import { type DrizzleDB } from '../database/drizzle';
 import * as schema from '../drizzle/schema';
 
-export const BetterAuthClient = (db: DrizzleDB): ReturnType<typeof betterAuth> => {
+async function generateAppleClientSecret(): Promise<string> {
+  const teamId = process.env.APPLE_TEAM_ID!;
+  const clientId = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!;
+  const keyId = process.env.APPLE_KEY_ID!;
+  const privateKey = (process.env.APPLE_PRIVATE_KEY!).replace(/\\n/g, '\n');
+
+  const key = await importPKCS8(privateKey, 'ES256');
+
+  return new SignJWT({})
+    .setProtectedHeader({ alg: 'ES256', kid: keyId })
+    .setIssuer(teamId)
+    .setIssuedAt()
+    .setExpirationTime('180d')
+    .setAudience('https://appleid.apple.com')
+    .setSubject(clientId)
+    .sign(key);
+}
+
+export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof betterAuth>> => {
+  const appleClientSecret = await generateAppleClientSecret();
+
   return betterAuth({
     baseURL:
       process.env.NODE_ENV === 'production'
@@ -21,12 +42,20 @@ export const BetterAuthClient = (db: DrizzleDB): ReturnType<typeof betterAuth> =
       schema,
       usePlural: true,
     }),
+    socialProviders: {
+      apple: {
+        clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID as string,
+        clientSecret: appleClientSecret,
+        appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER as string,
+      },
+    },
     trustedOrigins: [
       'macgamingdb://',
       'exp://',
       'http://localhost:8081',
       'http://macgamingdb.local',
       'https://macgamingdb.app',
+      'https://appleid.apple.com',
     ],
     emailAndPassword: {
       enabled: true,
@@ -58,4 +87,4 @@ export const BetterAuthClient = (db: DrizzleDB): ReturnType<typeof betterAuth> =
   });
 };
 
-export type BetterAuthClientType = ReturnType<typeof BetterAuthClient>;
+export type BetterAuthClientType = Awaited<ReturnType<typeof BetterAuthClient>>;

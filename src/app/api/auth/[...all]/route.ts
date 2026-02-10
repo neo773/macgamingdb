@@ -4,10 +4,12 @@ import { toNextJsHandler } from 'better-auth/next-js';
 
 export const GET = async (req: Request) => {
   const db = createDrizzleClient();
-  return toNextJsHandler(BetterAuthClient(db)).GET(req);
+  const auth = await BetterAuthClient(db);
+  return toNextJsHandler(auth).GET(req);
 };
 
 export const POST = async (req: Request) => {
   const db = createDrizzleClient();
-  return toNextJsHandler(BetterAuthClient(db)).POST(req);
+  const auth = await BetterAuthClient(db);
+  return toNextJsHandler(auth).POST(req);
 };

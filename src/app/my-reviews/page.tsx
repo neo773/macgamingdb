@@ -8,7 +8,8 @@ import { eq, desc } from 'drizzle-orm';
 export default async function MyReviewsPage() {
   const db = createDrizzleClient();
 
-  const session = await BetterAuthClient(db).api.getSession({
+  const auth = await BetterAuthClient(db);
+  const session = await auth.api.getSession({
     headers: await headers(),
   });
   if (!session) {
