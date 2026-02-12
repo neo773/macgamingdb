@@ -57,8 +57,7 @@ const Acccount = () => {
         <DialogTitle className="sr-only">Login</DialogTitle>
         <AuthPrompt
           promptMessage="Log in to view your reviews and submit new ones."
-          className="relative p-6"
-          containerClassName="bg-transparent border-none p-0"
+          className="p-6"
           magicLinkSent={magicLinkSent}
           onMagicLinkSent={() => setMagicLinkSent(true)}
         />
