@@ -21,9 +21,9 @@ interface AuthPromptProps {
 }
 
 export default function AuthPrompt({
-  promptMessage = 'To combat spam, please log in to share your experience.',
-  className = 'absolute inset-0 bg-black/20 flex flex-col items-center justify-center rounded-3xl p-6 z-10',
-  containerClassName = 'bg-black border border-[#272727] p-6 rounded-xl',
+  promptMessage = 'Sign in to leave a review and help the community.',
+  className = 'absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center rounded-3xl p-6 z-10',
+  containerClassName = 'bg-neutral-950 border border-neutral-800 p-8 rounded-2xl shadow-2xl',
   magicLinkSent: externalMagicLinkSent,
   onMagicLinkSent,
 }: AuthPromptProps) {
@@ -31,7 +31,7 @@ export default function AuthPrompt({
 
   const {
     data: session,
-    isPending, //loading state
+    isPending,
   } = useSession();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,6 @@ export default function AuthPrompt({
   const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
 
   useEffect(() => {
-    // Focus the container on mount so iOS Safari doesn't auto-focus the input.
     containerRef.current?.focus();
   }, []);
 
@@ -59,7 +58,7 @@ export default function AuthPrompt({
     try {
       await signIn.magicLink({
         email: email,
-        callbackURL: window.location.href, //redirect after successful login (optional)
+        callbackURL: window.location.href,
       });
 
       if (onMagicLinkSent) {
@@ -67,9 +66,9 @@ export default function AuthPrompt({
       } else {
         setInternalMagicLinkSent(true);
       }
-      toast('Magic link sent to your email!');
+      toast('Check your email for a sign-in link.');
     } catch (error) {
-      setError('Error sending magic link. Please try again.');
+      setError('Something went wrong. Please try again.');
       console.error(error);
     } finally {
       setIsLoggingIn(false);
@@ -88,66 +87,78 @@ export default function AuthPrompt({
       ref={containerRef}
       tabIndex={-1}
       className={className}
-      style={{
-        backdropFilter: 'blur(2px)',
-        WebkitBackdropFilter: 'blur(2px)',
-        outline: 'none',
-      }}
     >
       <div
-        style={{ width: '100%', maxWidth: '24rem', margin: '0 auto' }}
-        className={containerClassName}
+        className={`w-full max-w-sm mx-auto ${containerClassName}`}
       >
-        <h3 className="text-xl font-bold mb-4">Login Required</h3>
-        <p className="mb-6">{promptMessage}</p>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
         {magicLinkSent ? (
-          <div className="text-center py-4">
-            <p className="mb-2">✉️ Magic link sent!</p>
-            <p className="text-sm text-gray-400">
-              Check your email for a login link.
+          <div className="text-center py-2">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-300">
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold tracking-tight text-white mb-1.5">
+              Check your email
+            </h3>
+            <p className="text-sm text-neutral-400 leading-relaxed">
+              We sent a sign-in link to<br />
+              <span className="text-neutral-300">{email}</span>
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Email Address
-              </label>
+          <>
+            <div className="mb-6">
+              <h3 className="text-3xl font-semibold tracking-tight text-white mb-1.5">
+                Sign in
+              </h3>
+              <p className="text-sm text-neutral-400 leading-snug">
+                {promptMessage}
+              </p>
+            </div>
+
+            {error && (
+              <div className="bg-red-950 border border-red-900 text-red-400 text-sm px-4 py-3 rounded-lg mb-4">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-3">
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                placeholder="you@email.com"
                 required
                 autoFocus={false}
                 autoComplete="email"
                 inputMode="email"
-                className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                className="bg-white/5 border-neutral-800 text-white placeholder:text-neutral-600 h-10"
               />
+              <Button
+                onClick={handleLogin}
+                className="w-full"
+                disabled={isLoggingIn}
+                variant="secondary"
+                size="lg"
+              >
+                {isLoggingIn ? 'Sending link...' : 'Continue with email'}
+              </Button>
             </div>
-            <Button
-              onClick={handleLogin}
-              className="w-full"
-              disabled={isLoggingIn}
-              size="lg"
-            >
-              {isLoggingIn ? 'Sending Magic Link...' : 'Login with Magic Link'}
-            </Button>
-            <div className="relative">
+
+            <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-700" />
+                <span className="w-full border-t border-neutral-700" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-black px-2 text-gray-400">or</span>
+              <div className="relative flex justify-center text-xs">
+                <span className="bg-neutral-950 px-3 text-neutral-500 uppercase tracking-wide">
+                  or
+                </span>
               </div>
             </div>
+
             <SignInWithApple
               onClick={async () => {
                 const data = await authClient.signIn.social({
@@ -156,7 +167,7 @@ export default function AuthPrompt({
                 console.log(data);
               }}
             />
-          </div>
+          </>
         )}
       </div>
     </div>

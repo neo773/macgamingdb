@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface SignInWithAppleProps {
   onClick?: () => void;
@@ -7,6 +7,8 @@ interface SignInWithAppleProps {
 export const SignInWithApple: React.FC<SignInWithAppleProps> = ({
   onClick,
 }) => {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <div
       id="appleid-signin"
@@ -18,6 +20,8 @@ export const SignInWithApple: React.FC<SignInWithAppleProps> = ({
       style={{ cursor: 'pointer' }}
     >
       <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         style={{
           fontSynthesis: 'none',
           MozFontFeatureSettings: 'kern',
@@ -31,6 +35,8 @@ export const SignInWithApple: React.FC<SignInWithAppleProps> = ({
           maxHeight: 64,
           position: 'relative',
           letterSpacing: 'initial',
+          opacity: hovered ? 0.85 : 1,
+          transition: 'opacity 150ms ease',
         }}
         role="button"
         tabIndex={0}

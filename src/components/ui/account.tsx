@@ -53,7 +53,7 @@ const Acccount = () => {
           Login
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-black border-[#272727] p-0">
+      <DialogContent className="sm:max-w-[425px] bg-black border-[#272727] p-0 rounded-3xl">
         <DialogTitle className="sr-only">Login</DialogTitle>
         <AuthPrompt
           promptMessage="Log in to view your reviews and submit new ones."
