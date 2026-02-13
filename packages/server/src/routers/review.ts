@@ -185,10 +185,11 @@ export const reviewRouter = router({
           });
         }
 
-        if (!input.contentType.startsWith('image/')) {
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+        if (!allowedTypes.includes(input.contentType)) {
           throw new TRPCError({
             code: 'BAD_REQUEST',
-            message: 'Only image files are allowed',
+            message: 'Only PNG, JPG, WebP, and GIF files are allowed',
           });
         }
 

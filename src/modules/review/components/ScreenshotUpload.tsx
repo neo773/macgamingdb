@@ -53,8 +53,9 @@ export default function ScreenshotUpload({
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
-        if (!file.type.startsWith('image/')) {
-          throw new Error(`${file.name} is not an image file`);
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+          throw new Error(`${file.name} is not a supported format. Use PNG, JPG, WebP, or GIF.`);
         }
 
         if (file.size > 10 * 1024 * 1024) {
@@ -153,7 +154,7 @@ export default function ScreenshotUpload({
       <Input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/png, image/jpeg, image/webp, image/gif"
         multiple
         onChange={handleFileSelect}
         className="hidden"
@@ -164,6 +165,7 @@ export default function ScreenshotUpload({
           {screenshots.map((screenshot, index) => (
             <div key={index} className="relative group">
               <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={screenshot.blobUrl}
                   alt={`Screenshot ${index + 1}`}
