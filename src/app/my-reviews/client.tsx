@@ -29,6 +29,12 @@ export default function MyReviewsClient({
     handleUpdateReview,
     handleDeleteConfirm,
     handleNoteChange,
+    handleSoftwareVersionChange,
+    handleTranslationLayerChange,
+    handlePerformanceChange,
+    handleGraphicsSettingsChange,
+    handleFpsChange,
+    handleResolutionChange,
     hasUnsavedChanges,
   } = useMyReviews(userReviews);
 
@@ -79,12 +85,45 @@ export default function MyReviewsClient({
                 review={review}
                 editMode={editMode}
                 isFocused={focusedReview === review.id}
-                editableNote={editableReviews[review.id] || ''}
-                hasUnsavedChanges={hasUnsavedChanges(review.id, review.notes)}
+                editableNote={editableReviews[review.id]?.notes || ''}
+                editableSoftwareVersion={editableReviews[review.id]?.softwareVersion || ''}
+                editableTranslationLayer={
+                  editableReviews[review.id]?.translationLayer || 'NONE'
+                }
+                editablePerformance={editableReviews[review.id]?.performance || review.performance}
+                editableGraphicsSettings={
+                  editableReviews[review.id]?.graphicsSettings ||
+                  review.graphicsSettings ||
+                  'HIGH'
+                }
+                editableFps={editableReviews[review.id]?.fps || ''}
+                editableResolution={editableReviews[review.id]?.resolution || ''}
+                hasUnsavedChanges={hasUnsavedChanges(
+                  review.id,
+                  review.notes,
+                  review.softwareVersion,
+                  review.translationLayer,
+                  review.performance,
+                  review.graphicsSettings,
+                  review.fps,
+                  review.resolution,
+                )}
                 onDelete={() => setReviewToDelete(review.id)}
                 onFocus={() => setFocusedReview(review.id)}
                 onBlur={() => setFocusedReview(null)}
                 onNoteChange={(value) => handleNoteChange(review.id, value)}
+                onSoftwareVersionChange={(value) =>
+                  handleSoftwareVersionChange(review.id, value)
+                }
+                onTranslationLayerChange={(value) =>
+                  handleTranslationLayerChange(review.id, value)
+                }
+                onPerformanceChange={(value) => handlePerformanceChange(review.id, value)}
+                onGraphicsSettingsChange={(value) =>
+                  handleGraphicsSettingsChange(review.id, value)
+                }
+                onFpsChange={(value) => handleFpsChange(review.id, value)}
+                onResolutionChange={(value) => handleResolutionChange(review.id, value)}
                 onSave={() => handleUpdateReview(review.id)}
               />
             ))}

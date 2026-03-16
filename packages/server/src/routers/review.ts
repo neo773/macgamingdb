@@ -322,6 +322,12 @@ export const reviewRouter = router({
     .input( z.object({
       reviewId: z.string(),
       notes: z.string(),
+      softwareVersion: z.string().nullable().optional(),
+      translationLayer: TranslationLayerEnum.nullable().optional(),
+      performance: PerformanceEnum.optional(),
+      graphicsSettings: GraphicsSettingsEnum.optional(),
+      fps: z.number().nullable().optional(),
+      resolution: z.string().nullable().optional(),
       screenshots: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -353,6 +359,31 @@ export const reviewRouter = router({
         }
 
         const updateData: Record<string, unknown> = { notes: input.notes };
+
+        if (input.softwareVersion !== undefined) {
+          updateData.softwareVersion = input.softwareVersion?.trim() || null;
+        }
+
+        if (input.translationLayer !== undefined) {
+          updateData.translationLayer = input.translationLayer;
+        }
+
+        if (input.performance !== undefined) {
+          updateData.performance = input.performance;
+        }
+
+        if (input.graphicsSettings !== undefined) {
+          updateData.graphicsSettings = input.graphicsSettings;
+        }
+
+        if (input.fps !== undefined) {
+          updateData.fps = input.fps;
+        }
+
+        if (input.resolution !== undefined) {
+          updateData.resolution = input.resolution?.trim() || null;
+        }
+
         if (input.screenshots) {
           updateData.screenshots = JSON.stringify(input.screenshots);
         }
