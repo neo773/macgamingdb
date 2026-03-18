@@ -37,7 +37,7 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     baseURL:
       process.env.NODE_ENV === 'production'
         ? 'https://macgamingdb.app'
-        : 'http://macgamingdb.local',
+        : 'https://macgamingdb.local',
     database: drizzleAdapter(db, {
       provider: 'sqlite',
       schema,
@@ -56,6 +56,7 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
       'exp://',
       'http://localhost:8081',
       'http://macgamingdb.local',
+      'https://macgamingdb.local',
       'https://macgamingdb.app',
       'https://appleid.apple.com',
     ],

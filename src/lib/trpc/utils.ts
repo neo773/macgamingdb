@@ -10,6 +10,6 @@ export function getUrl() {
     process.env.NEXT_PUBLIC_BASE_URL ||
     (process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
-      : 'http://macgamingdb.local');
+      : 'https://macgamingdb.local');
   return `${baseUrl}/api/trpc`;
 }
