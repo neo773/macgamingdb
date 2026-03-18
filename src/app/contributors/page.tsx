@@ -4,7 +4,7 @@ import { createServerHelpers } from '@/lib/trpc/server';
 import ContributorsClient from './client';
 import { Container } from '@/components/ui/container';
 
-export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
+export const dynamic = 'force-dynamic';
 
 export default async function ContributorsPage() {
   const helpers = await createServerHelpers();

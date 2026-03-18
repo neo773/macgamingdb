@@ -5,6 +5,8 @@ import MyReviewsClient from './client';
 import { gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MyReviewsPage() {
   const db = createDrizzleClient();
 

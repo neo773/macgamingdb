@@ -108,5 +108,10 @@
     "typescript-eslint": "^8.32.1",
     "vitest": "^4.0.16"
   },
-  "packageManager": "bun@1.2.14"
+  "packageManager": "bun@1.3.10",
+  "overrides": {
+    "@types/react": "$@types/react",
+    "@types/react-dom": "$@types/react-dom",
+    "next": "$next"
+  }
 }
