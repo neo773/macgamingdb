@@ -319,9 +319,13 @@ export const reviewRouter = router({
     }),
 
   updateReview: protectedProcedure
-    .input( z.object({
+    .input(z.object({
       reviewId: z.string(),
       notes: z.string(),
+      performance: PerformanceEnum.optional(),
+      fps: z.number().nullable().optional(),
+      resolution: z.string().nullable().optional(),
+      softwareVersion: z.string().nullable().optional(),
       screenshots: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -352,7 +356,26 @@ export const reviewRouter = router({
           });
         }
 
-        const updateData: Record<string, unknown> = { notes: input.notes };
+        const updateData: Record<string, unknown> = {
+          notes: input.notes.trim() || null,
+        };
+
+        if (input.performance !== undefined) {
+          updateData.performance = input.performance;
+        }
+
+        if (input.fps !== undefined) {
+          updateData.fps = input.fps;
+        }
+
+        if (input.resolution !== undefined) {
+          updateData.resolution = input.resolution?.trim() || null;
+        }
+
+        if (input.softwareVersion !== undefined) {
+          updateData.softwareVersion = input.softwareVersion?.trim() || null;
+        }
+
         if (input.screenshots) {
           updateData.screenshots = JSON.stringify(input.screenshots);
         }
@@ -361,6 +384,13 @@ export const reviewRouter = router({
           .update(gameReviews)
           .set(updateData)
           .where(eq(gameReviews.id, input.reviewId));
+
+        if (
+          input.performance !== undefined &&
+          input.performance !== review.performance
+        ) {
+          await updateGameAggregatedPerformance(ctx.db, review.gameId);
+        }
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');

@@ -10,7 +10,10 @@ import { Container } from '@/components/ui/container';
 import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
 
 import { useMyReviews } from '@/modules/review/hooks';
-import { DeleteConfirmDialog, ReviewItem } from '@/modules/review/components/MyReviewsList';
+import {
+  DeleteConfirmDialog,
+  ReviewItem,
+} from '@/modules/review/components/MyReviewsList';
 
 export default function MyReviewsClient({
   userReviews,
@@ -18,19 +21,15 @@ export default function MyReviewsClient({
   userReviews: (GameReview & { game: Game })[];
 }) {
   const {
-    editMode,
-    reviewToDelete,
-    editableReviews,
-    focusedReview,
-    isDeleting,
-    setReviewToDelete,
-    setFocusedReview,
-    handleEditModeToggle,
-    handleUpdateReview,
-    handleDeleteConfirm,
-    handleNoteChange,
-    hasUnsavedChanges,
-  } = useMyReviews(userReviews);
+    isEditing,
+    editSessionKey,
+    pendingDeleteReviewId,
+    isDeletingReview,
+    enterEditMode,
+    exitEditMode,
+    setPendingDeleteReviewId,
+    confirmDeleteReview,
+  } = useMyReviews();
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -52,10 +51,10 @@ export default function MyReviewsClient({
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleEditModeToggle}
+              onClick={isEditing ? exitEditMode : enterEditMode}
               className="text-blue-400 hover:text-blue-300"
             >
-              {editMode ? 'Done' : <Edit2 size={18} />}
+              {isEditing ? 'Done' : <Edit2 size={18} />}
             </Button>
           )}
         </div>
@@ -75,27 +74,20 @@ export default function MyReviewsClient({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userReviews.map((review) => (
               <ReviewItem
-                key={review.id}
+                key={`${review.id}-${editSessionKey}`}
                 review={review}
-                editMode={editMode}
-                isFocused={focusedReview === review.id}
-                editableNote={editableReviews[review.id] || ''}
-                hasUnsavedChanges={hasUnsavedChanges(review.id, review.notes)}
-                onDelete={() => setReviewToDelete(review.id)}
-                onFocus={() => setFocusedReview(review.id)}
-                onBlur={() => setFocusedReview(null)}
-                onNoteChange={(value) => handleNoteChange(review.id, value)}
-                onSave={() => handleUpdateReview(review.id)}
+                isEditing={isEditing}
+                onRequestDelete={() => setPendingDeleteReviewId(review.id)}
               />
             ))}
           </div>
         )}
 
         <DeleteConfirmDialog
-          isOpen={!!reviewToDelete}
-          isDeleting={isDeleting}
-          onClose={() => setReviewToDelete(null)}
-          onConfirm={handleDeleteConfirm}
+          isOpen={!!pendingDeleteReviewId}
+          isDeleting={isDeletingReview}
+          onClose={() => setPendingDeleteReviewId(null)}
+          onConfirm={confirmDeleteReview}
         />
       </Container>
       <Footer />
