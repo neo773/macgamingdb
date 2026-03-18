@@ -1,4 +1,7 @@
 import { parseHTML } from 'linkedom';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('steam');
 
 /**
  * Represents a Steam app search result
@@ -53,7 +56,7 @@ export async function searchSteam(
 
     return apps;
   } catch (error) {
-    console.error('Error scraping Steam search results:', error);
+    logger.error({ err: error }, 'Error scraping Steam search results');
     throw error;
   }
 }
@@ -240,7 +243,7 @@ export async function getGameBySteamId(
 
     return gameDetails[steamId]?.data;
   } catch (error) {
-    console.error('Error fetching game by Steam ID:', error);
+    logger.error({ err: error }, 'Error fetching game by Steam ID');
     throw error;
   }
 }

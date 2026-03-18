@@ -21,7 +21,20 @@ import { calculateAveragePerformance } from '../utils/calculateAveragePerformanc
 import { scoreToRating } from '../utils/scoreToRating';
 import { type DrizzleDB } from '../database/drizzle';
 import { games, gameReviews, macConfigs } from '../drizzle/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('review');
+
+const CDN_URL_PREFIX = 'https://cdn.macgamingdb.app/';
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+const screenshotUrlSchema = z.array(
+  z.string().url().refine(
+    (url) => url.startsWith(CDN_URL_PREFIX),
+    { message: 'Screenshot URL must be from the CDN' },
+  ),
+).max(3);
 
 async function updateGameAggregatedPerformance(
   db: DrizzleDB,
@@ -130,7 +143,7 @@ export const reviewRouter = router({
         // eslint-disable-next-line unused-imports/no-unused-vars
         return finalConfigs.map(({ searchText, ...config }) => config);
       } catch (error) {
-        console.error('Error fetching Mac configs:', error);
+        logger.error({ err: error }, 'Failed to fetch Mac configs');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch Mac configurations',
@@ -162,7 +175,7 @@ export const reviewRouter = router({
           metadata,
         };
       } catch (error) {
-        console.error('Error fetching Mac config:', error);
+        logger.error({ err: error }, 'Failed to fetch Mac config');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch Mac configuration',
@@ -175,6 +188,7 @@ export const reviewRouter = router({
       filename: z.string(),
       contentType: z.string(),
       gameId: z.string(),
+      fileSize: z.number().positive().max(MAX_FILE_SIZE, 'File size must be under 10MB'),
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -199,7 +213,7 @@ export const reviewRouter = router({
           input.filename,
         );
 
-        const signedUrl = await getUploadSignedUrl(key, input.contentType);
+        const signedUrl = await getUploadSignedUrl(key, input.contentType, 3600, input.fileSize);
         const publicUrl = getPublicUrl(key);
 
         return {
@@ -208,7 +222,7 @@ export const reviewRouter = router({
           key,
         };
       } catch (error) {
-        console.error('Error generating presigned URL:', error);
+        logger.error({ err: error }, 'Failed to generate presigned URL');
         if (error instanceof TRPCError) {
           throw error;
         }
@@ -230,7 +244,7 @@ export const reviewRouter = router({
       resolution: z.string().optional(),
       macConfigIdentifier: z.string(),
       notes: z.string().optional(),
-      screenshots: z.array(z.string()).optional(),
+      screenshots: screenshotUrlSchema.optional(),
       softwareVersion: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -273,56 +287,79 @@ export const reviewRouter = router({
           });
         }
 
+        const existingReview = await ctx.db.query.gameReviews.findFirst({
+          where: and(
+            eq(gameReviews.userId, ctx.user.user.id),
+            eq(gameReviews.gameId, input.gameId),
+            eq(gameReviews.macConfigId, macConfig.id),
+          ),
+        });
+
+        if (existingReview) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'You have already submitted a review for this game with this Mac configuration',
+          });
+        }
+
         const macConfigMetadata = JSON.parse(
           macConfig.metadata,
         ) as MacSpecification;
         const hasScreenshots =
           input.screenshots && input.screenshots.length > 0;
 
-        const [review] = await ctx.db
-          .insert(gameReviews)
-          .values({
-            gameId: input.gameId,
-            userId: ctx.user.user.id,
-            playMethod: input.playMethod,
-            translationLayer: input.translationLayer,
-            performance: input.performance,
-            fps: input.fps ?? null,
-            graphicsSettings: input.graphicsSettings,
-            resolution: input.resolution || null,
-            macConfigId: macConfig.id,
-            chipset: macConfigMetadata.chip,
-            chipsetVariant: macConfigMetadata.chipVariant as ChipsetVariant,
-            notes: input.notes || null,
-            screenshots: hasScreenshots
-              ? JSON.stringify(input.screenshots)
-              : null,
-            softwareVersion: input.softwareVersion || null,
-          })
-          .returning();
+        const [review] = await ctx.db.transaction(async (tx) => {
+          const result = await tx
+            .insert(gameReviews)
+            .values({
+              gameId: input.gameId,
+              userId: ctx.user!.user.id,
+              playMethod: input.playMethod,
+              translationLayer: input.translationLayer,
+              performance: input.performance,
+              fps: input.fps ?? null,
+              graphicsSettings: input.graphicsSettings,
+              resolution: input.resolution || null,
+              macConfigId: macConfig.id,
+              chipset: macConfigMetadata.chip,
+              chipsetVariant: macConfigMetadata.chipVariant as ChipsetVariant,
+              notes: input.notes || null,
+              screenshots: hasScreenshots
+                ? JSON.stringify(input.screenshots)
+                : null,
+              softwareVersion: input.softwareVersion || null,
+            })
+            .returning();
+
+          await tx
+            .update(games)
+            .set({ reviewCount: sql`${games.reviewCount} + 1` })
+            .where(eq(games.id, input.gameId));
+
+          return result;
+        });
 
         revalidatePath(`/games/${input.gameId}`);
         revalidatePath('/contributors');
 
         await updateGameAggregatedPerformance(ctx.db, input.gameId);
 
-        await ctx.db
-          .update(games)
-          .set({ reviewCount: sql`${games.reviewCount} + 1` })
-          .where(eq(games.id, input.gameId));
-
         return { review };
       } catch (error) {
-        console.error('Error creating review:', error);
-        throw new Error('Failed to create review');
+        if (error instanceof TRPCError) throw error;
+        logger.error({ err: error }, 'Failed to create review');
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create review',
+        });
       }
     }),
 
   updateReview: protectedProcedure
-    .input( z.object({
+    .input(z.object({
       reviewId: z.string(),
       notes: z.string(),
-      screenshots: z.array(z.string()).optional(),
+      screenshots: screenshotUrlSchema.optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       try {
@@ -368,10 +405,8 @@ export const reviewRouter = router({
 
         return { success: true, message: 'Review updated successfully' };
       } catch (error) {
-        console.error('Error updating review:', error);
-        if (error instanceof TRPCError) {
-          throw error;
-        }
+        if (error instanceof TRPCError) throw error;
+        logger.error({ err: error }, 'Failed to update review');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to update review',
@@ -419,27 +454,27 @@ export const reviewRouter = router({
           });
         }
 
-        await ctx.db
-          .delete(gameReviews)
-          .where(eq(gameReviews.id, input.reviewId));
+        await ctx.db.transaction(async (tx) => {
+          await tx
+            .delete(gameReviews)
+            .where(eq(gameReviews.id, input.reviewId));
+
+          await tx
+            .update(games)
+            .set({ reviewCount: sql`${games.reviewCount} - 1` })
+            .where(eq(games.id, review.gameId));
+        });
 
         revalidatePath(`/games/${review.gameId}`);
         revalidatePath('/my-reviews');
         revalidatePath('/contributors');
 
-        await ctx.db
-          .update(games)
-          .set({ reviewCount: sql`${games.reviewCount} - 1` })
-          .where(eq(games.id, review.gameId));
-
         await updateGameAggregatedPerformance(ctx.db, review.gameId);
 
         return { success: true, message: 'Review deleted successfully' };
       } catch (error) {
-        console.error('Error deleting review:', error);
-        if (error instanceof TRPCError) {
-          throw error;
-        }
+        if (error instanceof TRPCError) throw error;
+        logger.error({ err: error }, 'Failed to delete review');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to delete review',

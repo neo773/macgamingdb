@@ -68,6 +68,7 @@ export default function ScreenshotUpload({
           {
             filename: file.name,
             contentType: file.type,
+            fileSize: file.size,
             gameId,
           }
         );

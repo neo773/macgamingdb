@@ -14,13 +14,13 @@ const db = createDrizzleClient();
 const logger = createLogger('AddReviewCount');
 
 async function addReviewCount() {
-  logger.log('Adding reviewCount field and populating data');
+  logger.info('Adding reviewCount field and populating data');
 
   const [totalResult] = await db.select({ count: count() }).from(gameReviews);
-  logger.log(`Total reviews in database: ${totalResult.count}`);
+  logger.info(`Total reviews in database: ${totalResult.count}`);
 
   const allGames = await db.select().from(games);
-  logger.log(`Found ${allGames.length} games to update`);
+  logger.info(`Found ${allGames.length} games to update`);
 
   // Get review counts per game
   const reviewCounts = await db
@@ -34,12 +34,12 @@ async function addReviewCount() {
   const countMap = new Map(reviewCounts.map((r) => [r.gameId, r.reviewCount]));
 
   const gamesWithReviews = allGames.filter((game) => (countMap.get(game.id) ?? 0) > 0);
-  logger.log(`Games with reviews: ${gamesWithReviews.length}`);
+  logger.info(`Games with reviews: ${gamesWithReviews.length}`);
 
   if (gamesWithReviews.length > 0) {
-    logger.log('Sample games with reviews:');
+    logger.info('Sample games with reviews:');
     gamesWithReviews.slice(0, 5).forEach((game) => {
-      logger.log(
+      logger.info(
         `  - Game ${game.id}: ${countMap.get(game.id)} reviews (current reviewCount: ${game.reviewCount})`,
       );
     });
@@ -57,18 +57,18 @@ async function addReviewCount() {
     processedCount++;
     if (processedCount % 100 === 0) {
       const progress = ((processedCount / allGames.length) * 100).toFixed(1);
-      logger.log(`Progress: ${processedCount}/${allGames.length} (${progress}%)`);
+      logger.info(`Progress: ${processedCount}/${allGames.length} (${progress}%)`);
     }
   }
 
-  logger.log(`Successfully updated ${processedCount} games with review counts`);
+  logger.info(`Successfully updated ${processedCount} games with review counts`);
 }
 
 async function main() {
   try {
     await addReviewCount();
   } catch (error) {
-    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    logger.error({ err: error }, 'Script failed');
     process.exit(1);
   }
 }

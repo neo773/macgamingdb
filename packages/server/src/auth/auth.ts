@@ -9,13 +9,17 @@ import {
   MacGamingDBMagicLinkEmailText,
 } from '@macgamingdb/emails/magic-link';
 import { type DrizzleDB } from '../database/drizzle';
+import { createLogger } from '../utils/logger';
 import * as schema from '../drizzle/schema';
+
+const logger = createLogger('auth');
+const isProduction = process.env.NODE_ENV === 'production';
 
 async function generateAppleClientSecret(): Promise<string> {
   const teamId = process.env.APPLE_TEAM_ID!;
   const clientId = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!;
   const keyId = process.env.APPLE_KEY_ID!;
-  const privateKey = (process.env.APPLE_PRIVATE_KEY!).replace(/\\n/g, '\n');
+  const privateKey = process.env.APPLE_PRIVATE_KEY!.replace(/\\n/g, '\n');
 
   const key = await importPKCS8(privateKey, 'ES256');
 
@@ -29,15 +33,21 @@ async function generateAppleClientSecret(): Promise<string> {
     .sign(key);
 }
 
-export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof betterAuth>> => {
-  const appleConfigured = process.env.APPLE_TEAM_ID && process.env.APPLE_KEY_ID && process.env.APPLE_PRIVATE_KEY;
-  const appleClientSecret = appleConfigured ? await generateAppleClientSecret() : '';
+export const BetterAuthClient = async (
+  db: DrizzleDB,
+): Promise<ReturnType<typeof betterAuth>> => {
+  const appleConfigured =
+    process.env.APPLE_TEAM_ID &&
+    process.env.APPLE_KEY_ID &&
+    process.env.APPLE_PRIVATE_KEY;
+  const appleClientSecret = appleConfigured
+    ? await generateAppleClientSecret()
+    : '';
 
   return betterAuth({
-    baseURL:
-      process.env.NODE_ENV === 'production'
-        ? 'https://macgamingdb.app'
-        : 'http://macgamingdb.local',
+    baseURL: isProduction
+      ? 'https://macgamingdb.app'
+      : 'http://macgamingdb.local',
     database: drizzleAdapter(db, {
       provider: 'sqlite',
       schema,
@@ -53,11 +63,11 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     }),
     trustedOrigins: [
       'macgamingdb://',
-      'exp://',
-      'http://localhost:8081',
-      'http://macgamingdb.local',
       'https://macgamingdb.app',
       'https://appleid.apple.com',
+      ...(!isProduction
+        ? ['exp://', 'http://localhost:8081', 'http://macgamingdb.local']
+        : []),
     ],
     emailAndPassword: {
       enabled: true,
@@ -65,14 +75,14 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     plugins: [
       expo(),
       magicLink({
-        sendMagicLink: async ({ email, token, url }) => {
-          console.log(
-            `Sending magic link to ${email} with token ${token} and url ${url}`,
-          );
+        sendMagicLink: async ({ email, url }) => {
+          logger.info({ email }, 'Magic link requested');
 
-          if (process.env.NODE_ENV !== 'production') {
+          if (!isProduction) {
+            logger.debug({ url }, 'Magic link URL (dev only)');
             return;
           }
+
           const resend = new Resend(process.env.RESEND_API_KEY);
 
           await resend.emails.send({

@@ -14,6 +14,9 @@ import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
 import { type DrizzleDB } from '../database/drizzle';
 import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
 import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('game');
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
 
@@ -93,7 +96,7 @@ export const gameRouter = router({
         const results = await searchSteam(input.query);
         return results.slice(0, 10);
       } catch (error) {
-        console.error('Search error:', error);
+        logger.error({ err: error }, 'Search error');
         throw new Error('Failed to search games');
       }
     }),
@@ -117,7 +120,7 @@ export const gameRouter = router({
           capsuleImagev5: gameData.capsule_imagev5,
         };
       } catch (error) {
-        console.error('Error fetching cover art:', error);
+        logger.error({ err: error }, 'Error fetching cover art');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch cover art from Steam API',
@@ -286,7 +289,7 @@ export const gameRouter = router({
           nextOffset: hasNextPage ? offset + limit : undefined,
         };
       } catch (error) {
-        console.error('Error fetching games:', error);
+        logger.error({ err: error }, 'Error fetching games');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch games',
@@ -314,7 +317,7 @@ export const gameRouter = router({
         if (!game || !game.details) {
           const response = await getGameBySteamId(input.id);
           if (!response) {
-            console.warn(`Game with ID ${input.id} not found on Steam.`);
+            logger.warn({ gameId: input.id }, 'Game not found on Steam');
             throw new TRPCError({
               message: 'Something went wrong',
               code: 'INTERNAL_SERVER_ERROR',
@@ -359,7 +362,7 @@ export const gameRouter = router({
           stats: reviewStats,
         };
       } catch (error) {
-        console.error(`Error fetching game details for ID ${input.id}:`, error);
+        logger.error({ err: error, gameId: input.id }, 'Error fetching game details');
         throw new Error('Failed to fetch game details');
       }
     }),
@@ -376,7 +379,7 @@ export const gameRouter = router({
           input.screenshots.map(async (url) => {
             const key = extractKeyFromUrl(url);
             if (!key) {
-              console.warn(`Could not extract key from URL: ${url}`);
+              logger.warn({ url }, 'Could not extract key from URL');
               return { original: url, signed: url };
             }
 
@@ -384,9 +387,9 @@ export const gameRouter = router({
               const signedUrl = await getViewSignedUrl(key, 3600);
               return { original: url, signed: signedUrl };
             } catch (error) {
-              console.warn(
-                `Could not generate signed URL for key: ${key}`,
-                error,
+              logger.warn(
+                { err: error, key },
+                'Could not generate signed URL',
               );
               return { original: url, signed: url };
             }
@@ -395,7 +398,7 @@ export const gameRouter = router({
 
         return signedUrls;
       } catch (error) {
-        console.error('Error generating signed URLs:', error);
+        logger.error({ err: error }, 'Error generating signed URLs');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to generate signed URLs for screenshots',

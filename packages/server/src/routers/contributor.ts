@@ -2,7 +2,10 @@ import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { users, gameReviews } from '../drizzle/schema';
-import { eq, desc, count, inArray } from 'drizzle-orm';
+import { eq, desc, count, inArray, sql } from 'drizzle-orm';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('contributor');
 
 interface GameDetails {
   name?: string;
@@ -21,6 +24,7 @@ export const contributorRouter = router({
         const [contributor] = await ctx.db
           .select({
             id: users.id,
+            name: users.name,
             email: users.email,
             createdAt: users.createdAt,
           })
@@ -45,7 +49,6 @@ export const contributorRouter = router({
         });
 
         const uniqueGamesCount = new Set(reviews.map((r) => r.gameId)).size;
-
 
         return {
           id: contributor.id,
@@ -76,7 +79,7 @@ export const contributorRouter = router({
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
-        console.error('Error fetching contributor:', error);
+        logger.error({ err: error }, 'Failed to fetch contributor');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch contributor',
@@ -95,49 +98,44 @@ export const contributorRouter = router({
       try {
         const { limit, cursor } = input;
 
-        // Subquery: count reviews per user
-        const reviewCountSq = ctx.db
+        const reviewStatsSq = ctx.db
           .select({
             userId: gameReviews.userId,
             reviewCount: count().as('reviewCount'),
+            uniqueGamesCount:
+              sql<number>`count(distinct ${gameReviews.gameId})`.as(
+                'uniqueGamesCount',
+              ),
           })
           .from(gameReviews)
           .groupBy(gameReviews.userId)
-          .as('reviewCountSq');
+          .as('reviewStatsSq');
 
-        // Join users with review counts, ordered by review count desc
         const userReviewCounts = await ctx.db
           .select({
             id: users.id,
+            name: users.name,
             email: users.email,
             createdAt: users.createdAt,
-            reviewCount: reviewCountSq.reviewCount,
+            reviewCount: reviewStatsSq.reviewCount,
+            uniqueGamesCount: reviewStatsSq.uniqueGamesCount,
           })
           .from(users)
-          .innerJoin(reviewCountSq, eq(users.id, reviewCountSq.userId))
-          .orderBy(desc(reviewCountSq.reviewCount))
+          .innerJoin(reviewStatsSq, eq(users.id, reviewStatsSq.userId))
+          .orderBy(desc(reviewStatsSq.reviewCount))
           .limit(limit + 1)
           .offset(cursor ? 1 : 0);
 
-        const usersWithGameCounts = await Promise.all(
-          userReviewCounts.map(async (user) => {
-            const uniqueGames = await ctx.db
-              .selectDistinct({ gameId: gameReviews.gameId })
-              .from(gameReviews)
-              .where(eq(gameReviews.userId, user.id));
-
-            return {
-              id: user.id,
-              name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
-              joinedAt: user.createdAt,
-              reviewCount: user.reviewCount,
-              uniqueGamesCount: uniqueGames.length,
-              score: user.reviewCount * 10 + uniqueGames.length * 5,
-            };
-          }),
-        );
-
-        const contributors = usersWithGameCounts.sort((a, b) => b.score - a.score);
+        const contributors = userReviewCounts
+          .map((user) => ({
+            id: user.id,
+            name: deriveDisplayName(user.name, user.email),
+            joinedAt: user.createdAt,
+            reviewCount: user.reviewCount,
+            uniqueGamesCount: user.uniqueGamesCount,
+            score: user.reviewCount * 10 + user.uniqueGamesCount * 5,
+          }))
+          .sort((a, b) => b.score - a.score);
 
         let nextCursor: typeof cursor = undefined;
         if (contributors.length > limit) {
@@ -161,7 +159,7 @@ export const contributorRouter = router({
           totalCount: totalResult?.count ?? 0,
         };
       } catch (error) {
-        console.error('Error fetching contributors:', error);
+        logger.error({ err: error }, 'Failed to fetch contributors');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch contributors',

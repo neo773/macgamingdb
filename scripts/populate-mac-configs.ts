@@ -28,7 +28,7 @@ async function populateMacConfigs() {
 
   const specifications = await scraper.scrapeAllSpecifications();
 
-  logger.log(`Scraping completed. Found ${specifications.length} total specifications`);
+  logger.info(`Scraping completed. Found ${specifications.length} total specifications`);
 
   for (const spec of specifications) {
     const identifier = convertMacConfigIdentifierToNewFormat({
@@ -52,7 +52,7 @@ async function main() {
   try {
     await populateMacConfigs();
   } catch (error) {
-    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    logger.error({ err: error }, 'Script failed');
     process.exit(1);
   }
 }

@@ -53,22 +53,22 @@ export class EveryMacScraper {
     const macEntries = Object.entries(this.Macs);
     const allSpecifications: MacSpecification[] = [];
 
-    logger.log(`Starting to scrape ${macEntries.length} URLs`);
+    logger.info(`Starting to scrape ${macEntries.length} URLs`);
 
     for (const [index, [familyKey, url]] of macEntries.entries()) {
       try {
-        logger.log(`Scraping ${index + 1}/${macEntries.length}: ${familyKey}`);
+        logger.info(`Scraping ${index + 1}/${macEntries.length}: ${familyKey}`);
 
         const specifications = await this.scrapeUrl(url, familyKey);
         allSpecifications.push(...specifications);
 
-        logger.log(`Found ${specifications.length} specifications`);
+        logger.info(`Found ${specifications.length} specifications`);
 
         if (index < macEntries.length - 1) {
           await this.delay(this.delayBetweenRequests);
         }
       } catch (error) {
-        logger.error(`Failed to scrape ${familyKey}`, error instanceof Error ? error.stack : String(error));
+        logger.error({ err: error, familyKey }, 'Failed to scrape family');
         continue;
       }
     }
@@ -115,7 +115,7 @@ export class EveryMacScraper {
           ...specs.filter((spec) => this.isValidSpecification(spec)),
         );
       } catch (error) {
-        logger.warn(`Failed to extract specification from wrapper: ${error instanceof Error ? error.message : String(error)}`);
+        logger.warn({ err: error }, 'Failed to extract specification from wrapper');
         continue;
       }
     }
@@ -218,7 +218,7 @@ export class EveryMacScraper {
 
       return ramConfigurations;
     } catch (error) {
-      logger.error('Failed to fetch complete specs', error instanceof Error ? error.stack : String(error));
+      logger.error({ err: error }, 'Failed to fetch complete specs');
       return [];
     }
   }

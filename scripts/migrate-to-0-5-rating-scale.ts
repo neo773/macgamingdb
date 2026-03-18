@@ -33,7 +33,7 @@ const mapToPerformance = (oldScore: number): PerformanceRating => {
 };
 
 async function migrateTo05RatingScale() {
-  logger.log('Clean Migration: 0-4 to 0-5 Star System');
+  logger.info('Clean Migration: 0-4 to 0-5 Star System');
 
   const allGames = await db.query.games.findMany({
     where: gt(games.reviewCount, 0),
@@ -44,7 +44,7 @@ async function migrateTo05RatingScale() {
     },
   });
 
-  logger.log(`Processing ${allGames.length} games`);
+  logger.info(`Processing ${allGames.length} games`);
 
   let processed = 0;
   for (const game of allGames) {
@@ -59,18 +59,18 @@ async function migrateTo05RatingScale() {
 
     processed++;
     if (processed % 100 === 0) {
-      logger.log(`Processed ${processed}/${allGames.length}`);
+      logger.info(`Processed ${processed}/${allGames.length}`);
     }
   }
 
-  logger.log(`Recalculated ${processed} games`);
+  logger.info(`Recalculated ${processed} games`);
 }
 
 async function main() {
   try {
     await migrateTo05RatingScale();
   } catch (error) {
-    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    logger.error({ err: error }, 'Script failed');
     process.exit(1);
   }
 }

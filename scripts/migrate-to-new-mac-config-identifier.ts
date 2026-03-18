@@ -15,11 +15,11 @@ const db = createDrizzleClient();
 const logger = createLogger('MigrateToNewMacConfigIdentifier');
 
 async function migrateToNewMacConfigIdentifier() {
-  logger.log('Starting Mac config identifier migration');
+  logger.info('Starting Mac config identifier migration');
 
   const allMacConfigs = await db.select().from(macConfigs);
 
-  logger.log(`Found ${allMacConfigs.length} Mac configs to process`);
+  logger.info(`Found ${allMacConfigs.length} Mac configs to process`);
 
   let processed = 0;
   let skipped = 0;
@@ -39,25 +39,22 @@ async function migrateToNewMacConfigIdentifier() {
 
       processed++;
       if (processed % 100 === 0) {
-        logger.log(`Processed ${processed} configs`);
+        logger.info(`Processed ${processed} configs`);
       }
     } catch (error) {
       const newIdentifier = convertMacConfigIdentifierToNewFormat(macConfig);
-      logger.error(
-        `Error updating macConfig with id ${macConfig.id}: newIdentifier: ${newIdentifier}`,
-        error instanceof Error ? error.stack : String(error),
-      );
+      logger.error({ err: error, macConfigId: macConfig.id, newIdentifier }, 'Error updating macConfig');
     }
   }
 
-  logger.log(`Migration complete: ${processed} processed, ${skipped} skipped`);
+  logger.info(`Migration complete: ${processed} processed, ${skipped} skipped`);
 }
 
 async function main() {
   try {
     await migrateToNewMacConfigIdentifier();
   } catch (error) {
-    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    logger.error({ err: error }, 'Script failed');
     process.exit(1);
   }
 }

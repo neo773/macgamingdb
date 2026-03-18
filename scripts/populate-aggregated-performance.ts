@@ -16,7 +16,7 @@ const db = createDrizzleClient();
 const logger = createLogger('PopulateAggregatedPerformance');
 
 async function populateAggregatedPerformance() {
-  logger.log('Populating aggregatedPerformance for all games');
+  logger.info('Populating aggregatedPerformance for all games');
 
   const allGames = await db.query.games.findMany({
     with: {
@@ -24,7 +24,7 @@ async function populateAggregatedPerformance() {
     },
   });
 
-  logger.log(`Found ${allGames.length} games to process`);
+  logger.info(`Found ${allGames.length} games to process`);
 
   let updatedCount = 0;
   let skippedCount = 0;
@@ -46,13 +46,13 @@ async function populateAggregatedPerformance() {
     updatedCount++;
 
     if (updatedCount % 100 === 0) {
-      logger.log(`Processed ${updatedCount} games`);
+      logger.info(`Processed ${updatedCount} games`);
     }
   }
 
-  logger.log('Processing complete');
-  logger.log(`Games updated: ${updatedCount}`);
-  logger.log(`Games skipped (no reviews): ${skippedCount}`);
+  logger.info('Processing complete');
+  logger.info(`Games updated: ${updatedCount}`);
+  logger.info(`Games skipped (no reviews): ${skippedCount}`);
 
   const perfCounts = await db
     .select({
@@ -63,9 +63,9 @@ async function populateAggregatedPerformance() {
     .where(isNotNull(games.aggregatedPerformance))
     .groupBy(games.aggregatedPerformance);
 
-  logger.log('Performance distribution:');
+  logger.info('Performance distribution:');
   perfCounts.forEach(({ aggregatedPerformance, count: cnt }) => {
-    logger.log(`${aggregatedPerformance || 'NULL'}: ${cnt} games`);
+    logger.info(`${aggregatedPerformance || 'NULL'}: ${cnt} games`);
   });
 }
 
@@ -73,7 +73,7 @@ async function main() {
   try {
     await populateAggregatedPerformance();
   } catch (error) {
-    logger.error('Script failed', error instanceof Error ? error.stack : String(error));
+    logger.error({ err: error }, 'Script failed');
     process.exit(1);
   }
 }

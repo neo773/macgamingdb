@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('traffic');
 
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL!;
 
@@ -71,7 +74,7 @@ export const trafficRouter = router({
 
         return { success: true, message: 'Thank you for your feedback!' };
       } catch (error) {
-        console.error('Error submitting traffic source:', error);
+        logger.error({ err: error }, 'Error submitting traffic source');
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to submit feedback',

@@ -3,6 +3,9 @@ import superjson from 'superjson';
 import { BetterAuthClient } from '../auth/auth';
 import { createDrizzleClient, type DrizzleDB } from '../database/drizzle';
 import { type User } from 'better-auth';
+import { createLogger } from '../utils/logger';
+
+const logger = createLogger('trpc');
 
 export interface TrpcContext {
   db: DrizzleDB;
@@ -48,7 +51,7 @@ const isAuthenticated = t.middleware(async ({ ctx, next }) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error }, 'Authentication failed');
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       cause:
