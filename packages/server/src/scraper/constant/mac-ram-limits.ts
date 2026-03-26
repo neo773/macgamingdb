@@ -19,6 +19,17 @@ export const RAM_LIMITS: RAMLimitsStructure = {
     M4: {
       [ChipsetVariant.BASE]: 32,
     },
+    M5: {
+      [ChipsetVariant.BASE]: 32,
+    },
+  },
+  MacBookNeo: {
+    M5: {
+      [ChipsetVariant.BASE]: 16,
+    },
+    A18: {
+      [ChipsetVariant.PRO]: 16,
+    },
   },
   MacBookPro: {
     M1: {
@@ -41,6 +52,8 @@ export const RAM_LIMITS: RAMLimitsStructure = {
     },
     M5: {
       [ChipsetVariant.BASE]: 32,
+      [ChipsetVariant.PRO]: 64,
+      [ChipsetVariant.MAX]: 128,
     },
   },
   iMac: {
@@ -60,29 +73,47 @@ export const RAM_LIMITS: RAMLimitsStructure = {
     },
     M2: {
       [ChipsetVariant.BASE]: 24,
+      [ChipsetVariant.PRO]: 32,
     },
     M3: {
       [ChipsetVariant.BASE]: 24,
     },
     M4: {
       [ChipsetVariant.BASE]: 64,
+      [ChipsetVariant.PRO]: 64,
+    },
+    M5: {
+      [ChipsetVariant.BASE]: 64,
+      [ChipsetVariant.PRO]: 128,
     },
   },
   MacStudio: {
+    M1: {
+      [ChipsetVariant.MAX]: 64,
+      [ChipsetVariant.ULTRA]: 128,
+    },
     M2: {
       [ChipsetVariant.MAX]: 96,
+      [ChipsetVariant.ULTRA]: 192,
+    },
+    M3: {
+      [ChipsetVariant.MAX]: 128,
+      [ChipsetVariant.ULTRA]: 512,
+    },
+    M4: {
+      [ChipsetVariant.MAX]: 128,
+      [ChipsetVariant.ULTRA]: 512,
+    },
+  },
+  MacPro: {
+    M2: {
       [ChipsetVariant.ULTRA]: 192,
     },
     M3: {
       [ChipsetVariant.ULTRA]: 512,
     },
     M4: {
-      [ChipsetVariant.MAX]: 128,
-    },
-  },
-  MacPro: {
-    M2: {
-      [ChipsetVariant.ULTRA]: 192,
+      [ChipsetVariant.ULTRA]: 512,
     },
   },
 } as const;

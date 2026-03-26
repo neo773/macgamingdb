@@ -45,6 +45,8 @@ export class EveryMacScraper {
       'https://everymac.com/systems/apple/mac-studio/index-macstudio.html',
     MacBookAir:
       'https://everymac.com/systems/apple/macbook-air/all-apple-silicon-macbook-air-models.html',
+    MacBookNeo:
+      'https://everymac.com/systems/apple/macbook-neo/specs/macbook-neo-a18-pro-6-core-cpu-5-core-gpu-13-2026-specs.html',
   };
 
   constructor(private readonly webScraper: WebScraper) {}
@@ -285,10 +287,10 @@ export class EveryMacScraper {
     chip: string;
     variant: ChipsetVariant;
   } {
-    const chipMatch = titleText.match(/"(M\d+)(\s+(Pro|Max|Ultra))?"/i);
+    const chipMatch = titleText.match(/"([AM]\d+)(\s+(Pro|Max|Ultra))?"/i);
 
     return {
-      chip: chipMatch?.[1] || '',
+      chip: chipMatch?.[1]?.toUpperCase() || '',
       variant: (chipMatch?.[3]?.toUpperCase() as ChipsetVariant) || 'BASE',
     };
   }

@@ -1,42 +1,22 @@
 import { z } from 'zod';
+import macConfigs from '../data/mac_configurations.json';
 
-export const PlayMethodEnum = z.enum(['NATIVE', 'CROSSOVER', 'PARALLELS']);
-export const TranslationLayerEnum = z.enum([
-  'DXVK',
-  'DXMT',
-  'D3D_METAL',
-  'NONE',
-]);
-export const PerformanceEnum = z.enum([
-  'EXCELLENT',
-  'VERY_GOOD',
-  'GOOD',
-  'PLAYABLE',
-  'BARELY_PLAYABLE',
-  'UNPLAYABLE',
-]);
+// We must assert the array length is at least 1 for z.enum
+export const PlayMethodEnum = z.enum(macConfigs.playMethods as [string, ...string[]]);
+export const TranslationLayerEnum = z.enum(macConfigs.translationLayers as [string, ...string[]]);
+export const PerformanceEnum = z.enum(macConfigs.performance as [string, ...string[]]);
 
-export const MacFamilyEnum = z.enum([
-  'MacBookAir',
-  'MacBookPro',
-  'iMac',
-  'MacMini',
-  'MacStudio',
-  'MacPro',
-]);
-export const GraphicsSettingsEnum = z.enum(['ULTRA', 'HIGH', 'MEDIUM', 'LOW']);
-export const ChipsetEnum = z.enum(['M1', 'M2', 'M3', 'M4', 'M5']);
-export const ChipsetVariantEnum = z.enum(['BASE', 'PRO', 'MAX', 'ULTRA']);
+export const MacFamilyEnum = z.enum(macConfigs.families as [string, ...string[]]);
+export const GraphicsSettingsEnum = z.enum(macConfigs.graphics as [string, ...string[]]);
+export const ChipsetEnum = z.enum(macConfigs.chipsets as [string, ...string[]]);
+export const ChipsetVariantEnum = z.enum(macConfigs.variants as [string, ...string[]]);
 
 export const MacFamily = MacFamilyEnum.Enum;
 export const GraphicsSettings = GraphicsSettingsEnum.Enum;
 export const Chipset = ChipsetEnum.Enum;
 export const ChipsetVariant = ChipsetVariantEnum.Enum;
 
-export const SOFTWARE_VERSIONS = {
-  CROSSOVER: ['26.0', '25.1.1', '25.1.0', '25.0.1', '25.0', '24.0'],
-  PARALLELS: ['26', '20', '19'],
-} as const;
+export const SOFTWARE_VERSIONS = macConfigs.softwareVersions as Readonly<Record<string, string[]>>;
 
 export const SoftwareVersionsSchema = z.object({
   CROSSOVER: z.array(z.string()),

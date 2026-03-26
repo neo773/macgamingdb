@@ -1,0 +1,28 @@
+{
+  "chipsets": ["M1", "M2", "M3", "M4", "M5", "A18"],
+  "variants": ["BASE", "PRO", "MAX", "ULTRA"],
+  "families": [
+    "MacBookAir",
+    "MacBookPro",
+    "MacBookNeo",
+    "iMac",
+    "MacMini",
+    "MacStudio",
+    "MacPro"
+  ],
+  "graphics": ["ULTRA", "HIGH", "MEDIUM", "LOW"],
+  "performance": [
+    "EXCELLENT",
+    "VERY_GOOD",
+    "GOOD",
+    "PLAYABLE",
+    "BARELY_PLAYABLE",
+    "UNPLAYABLE"
+  ],
+  "playMethods": ["NATIVE", "CROSSOVER", "PARALLELS"],
+  "translationLayers": ["DXVK", "DXMT", "D3D_METAL", "NONE"],
+  "softwareVersions": {
+    "CROSSOVER": ["26.0", "25.1.1", "25.1.0", "25.0.1", "25.0", "24.0"],
+    "PARALLELS": ["26", "20", "19"]
+  }
+}
