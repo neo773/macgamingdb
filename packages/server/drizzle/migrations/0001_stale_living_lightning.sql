@@ -1,0 +1,2 @@
+DROP INDEX `GameReview_chipset_chipsetVariant_playMethod_performance_idx`;--> statement-breakpoint
+CREATE INDEX `GameReview_filter_game_covering_idx` ON `GameReview` (`chipset`,`chipsetVariant`,`playMethod`,`performance`,`gameId`);

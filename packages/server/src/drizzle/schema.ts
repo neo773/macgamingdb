@@ -106,7 +106,7 @@ export const gameReviews = sqliteTable('GameReview', {
   index('GameReview_gameId_chipset_chipsetVariant_idx').on(table.gameId, table.chipset, table.chipsetVariant),
   index('GameReview_gameId_chipset_playMethod_idx').on(table.gameId, table.chipset, table.playMethod),
   index('GameReview_macConfigId_idx').on(table.macConfigId),
-  index('GameReview_chipset_chipsetVariant_playMethod_performance_idx').on(table.chipset, table.chipsetVariant, table.playMethod, table.performance),
+  index('GameReview_filter_game_covering_idx').on(table.chipset, table.chipsetVariant, table.playMethod, table.performance, table.gameId),
 ]);
 
 export const sessions = sqliteTable('session', {
