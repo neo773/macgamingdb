@@ -41,6 +41,8 @@ export const getHumanReadableFamily = (family: string) => {
       return 'MacBook Pro';
     case 'MacBookAir':
       return 'MacBook Air';
+    case 'MacBookNeo':
+      return 'MacBook Neo';
     case 'MacBook':
       return 'MacBook';
     case 'iMac':

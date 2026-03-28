@@ -23,9 +23,10 @@ export const MacFamilyEnum = z.enum([
   'MacMini',
   'MacStudio',
   'MacPro',
+  'MacBookNeo',
 ]);
 export const GraphicsSettingsEnum = z.enum(['ULTRA', 'HIGH', 'MEDIUM', 'LOW']);
-export const ChipsetEnum = z.enum(['M1', 'M2', 'M3', 'M4', 'M5']);
+export const ChipsetEnum = z.enum(['A18', 'M1', 'M2', 'M3', 'M4', 'M5']);
 export const ChipsetVariantEnum = z.enum(['BASE', 'PRO', 'MAX', 'ULTRA']);
 
 export const MacFamily = MacFamilyEnum.Enum;

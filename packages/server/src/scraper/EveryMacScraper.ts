@@ -33,6 +33,7 @@ export class EveryMacScraper {
   private readonly dom = new DOMParser();
   private readonly delayBetweenRequests = 1000;
 
+  // @ts-expect-error
   private readonly Macs: Record<MacFamily, string> = {
     MacBookPro:
       'https://everymac.com/systems/apple/macbook_pro/all-apple-silicon-macbook-pro-models.html',
@@ -45,9 +46,28 @@ export class EveryMacScraper {
       'https://everymac.com/systems/apple/mac-studio/index-macstudio.html',
     MacBookAir:
       'https://everymac.com/systems/apple/macbook-air/all-apple-silicon-macbook-air-models.html',
+    // TODO: Uncomment once 2nd generation Neo is out, currently Index page redirects to 1st generation
+    // MacBookNeo: 'https://everymac.com/systems/apple/macbook-neo',
   };
 
   constructor(private readonly webScraper: WebScraper) {}
+
+  // TODO: Remove this once 2nd generation Neo is out and the scraper config supports it
+  private addNeoSpecifications(): MacSpecification[] {
+    return [
+      {
+        family: 'MacBookNeo',
+        model: 'MacBook Neo A18 Pro 6 CPU/5 GPU',
+        identifier: 'Mac17,5',
+        chip: 'A18',
+        chipVariant: 'PRO',
+        cpuCores: 6,
+        gpuCores: 5,
+        ram: 8,
+        year: 2026,
+      },
+    ];
+  }
 
   async scrapeAllSpecifications(): Promise<MacSpecification[]> {
     const macEntries = Object.entries(this.Macs);
@@ -68,10 +88,16 @@ export class EveryMacScraper {
           await this.delay(this.delayBetweenRequests);
         }
       } catch (error) {
-        logger.error(`Failed to scrape ${familyKey}`, error instanceof Error ? error.stack : String(error));
+        logger.error(
+          `Failed to scrape ${familyKey}`,
+          error instanceof Error ? error.stack : String(error),
+        );
         continue;
       }
     }
+
+    // TODO: Remove once scraper config supports MacBook Neo
+    allSpecifications.push(...this.addNeoSpecifications());
 
     return allSpecifications.filter(
       (spec) => !spec.identifier.includes('(Rack)'),
@@ -115,7 +141,9 @@ export class EveryMacScraper {
           ...specs.filter((spec) => this.isValidSpecification(spec)),
         );
       } catch (error) {
-        logger.warn(`Failed to extract specification from wrapper: ${error instanceof Error ? error.message : String(error)}`);
+        logger.warn(
+          `Failed to extract specification from wrapper: ${error instanceof Error ? error.message : String(error)}`,
+        );
         continue;
       }
     }
@@ -218,7 +246,10 @@ export class EveryMacScraper {
 
       return ramConfigurations;
     } catch (error) {
-      logger.error('Failed to fetch complete specs', error instanceof Error ? error.stack : String(error));
+      logger.error(
+        'Failed to fetch complete specs',
+        error instanceof Error ? error.stack : String(error),
+      );
       return [];
     }
   }
@@ -285,7 +316,7 @@ export class EveryMacScraper {
     chip: string;
     variant: ChipsetVariant;
   } {
-    const chipMatch = titleText.match(/"(M\d+)(\s+(Pro|Max|Ultra))?"/i);
+    const chipMatch = titleText.match(/"([MA]\d+)(\s+(Pro|Max|Ultra))?"/i);
 
     return {
       chip: chipMatch?.[1] || '',
