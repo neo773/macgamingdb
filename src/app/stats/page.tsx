@@ -9,6 +9,7 @@ import {
   ResourceIntensiveTable,
   SlowestQueriesTable,
 } from '@/modules/stats/components';
+import { readFileSync } from 'fs';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,11 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default async function StatsPage() {
-  const stats = (await fetch(process.env.LIBSQL_STATS_ENDPOINT!, {
-    headers: {
-      authorization: process.env.LIBSQL_STATS_TOKEN!,
-    },
-  }).then((res) => res.json())) as Stats;
+  const stats = JSON.parse(readFileSync('/app/stats.json', 'utf-8')) as Stats;
 
   const queryAnalysis = stats.top_queries.reduce(
     (acc, query) => {
@@ -34,7 +31,7 @@ export default async function StatsPage() {
       acc[intent].totalRows += query.rows_read;
       return acc;
     },
-    {} as Record<string, QueryAnalysis>
+    {} as Record<string, QueryAnalysis>,
   );
 
   return (
