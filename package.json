@@ -13,6 +13,8 @@
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "bunx drizzle-kit migrate",
     "db:studio": "bunx drizzle-kit studio",
+    "db:seed:mac-configs": "bun --bun scripts/populate-mac-configs.ts --seed",
+    "scrape:mac-configs": "bun --bun scripts/populate-mac-configs.ts --scrape",
     "populate:aggregated-performance": "bun --bun scripts/populate-aggregated-performance.ts",
     "populate:review-count": "bun --bun scripts/add-review-count.ts",
     "build": "next build",
