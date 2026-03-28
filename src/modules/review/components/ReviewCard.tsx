@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
 import { type MacSpecification } from '@macgamingdb/server/scraper/EveryMacScraper';
 import { type Performance } from '@macgamingdb/server/schema';
+import { getHumanReadableFamily } from '@/modules/review/utils';
 
 const getPerformanceColor = (performance: Performance) => {
   const colors: Record<Performance, string> = {
@@ -121,6 +122,12 @@ const GameReviewCard = ({
             )}
             {macConfig ? (
               <>
+                <div className="flex justify-between">
+                  <dt className="font-medium">Machine:</dt>
+                  <dd className="font-semibold text-white font-mono">
+                    {getHumanReadableFamily(macConfig.family)}
+                  </dd>
+                </div>
                 <div className="flex justify-between">
                   <dt className="font-medium">Chip:</dt>
                   <dd className="font-semibold text-white font-mono">

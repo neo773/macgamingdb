@@ -21,6 +21,7 @@ import type { inferRouterOutputs } from '@trpc/server';
 
 import { type AppRouter } from '@macgamingdb/server/routers/_app';
 import { trpc } from '@/lib/trpc/provider';
+import { getDeviceIcon, getHumanReadableFamily } from '@/modules/review/utils';
 
 export type MacConfig =
   inferRouterOutputs<AppRouter>['review']['getMacConfigs'][number];
@@ -30,33 +31,6 @@ interface SelectMacConfigurationProps {
   onSelect: (config: MacConfig) => void;
   onBack: () => void;
 }
-
-export const getDeviceIcon = (family: string) => {
-  return `/images/devices/${family}.svg`;
-};
-
-export const getHumanReadableFamily = (family: string) => {
-  switch (family) {
-    case 'MacBookPro':
-      return 'MacBook Pro';
-    case 'MacBookAir':
-      return 'MacBook Air';
-    case 'MacBookNeo':
-      return 'MacBook Neo';
-    case 'MacBook':
-      return 'MacBook';
-    case 'iMac':
-      return 'iMac';
-    case 'MacMini':
-      return 'Mac mini';
-    case 'MacPro':
-      return 'Mac Pro';
-    case 'MacStudio':
-      return 'Mac Studio';
-    default:
-      return family;
-  }
-};
 
 const MacConfigSkeleton = memo(() => (
   <div className="w-full p-4 rounded-lg border border-border">
