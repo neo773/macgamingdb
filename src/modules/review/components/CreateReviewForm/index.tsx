@@ -16,10 +16,11 @@ import {
 } from '@/components/ui/tooltip';
 import AuthPrompt from '@/modules/auth/components/AuthPrompt';
 import ScreenshotUpload from '@/modules/review/components/ScreenshotUpload';
-import SelectMacConfiguration, {
+import SelectMacConfiguration from '@/modules/review/components/SelectMacConfiguration';
+import {
   getDeviceIcon,
   getHumanReadableFamily,
-} from '@/modules/review/components/SelectMacConfiguration';
+} from '@/modules/review/utils';
 
 import { useCreateReview } from '../../hooks/useCreateReview';
 import { type ReviewFormProps } from '../../types';
