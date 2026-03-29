@@ -24,8 +24,8 @@ export function GameDetailHeader({ gameDetails }: GameDetailHeaderProps) {
           <h1 className="text-4xl font-bold text-white mb-2">
             {gameDetails.name || 'Game Information Unavailable'}
           </h1>
-          {gameDetails.release_date && (
-            <p className="text-gray-300">Publisher: {gameDetails.publishers[0]}</p>
+          {gameDetails.publishers && gameDetails.publishers.length > 0 && (
+            <p className="text-gray-300">Publisher: {gameDetails.publishers.join(', ')}</p>
           )}
         </div>
       </div>
