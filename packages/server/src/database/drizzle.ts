@@ -4,17 +4,12 @@ import { createClient } from '@libsql/client';
 import * as schema from '../drizzle/schema';
 
 export function createDrizzleClient() {
-  const client =
-    process.env.NODE_ENV === 'production'
-      ? createClient({
-          url: `${process.env.LIBSQL_DATABASE_URL}`,
-          authToken: `${process.env.LIBSQL_DATABASE_TOKEN}`,
-        })
-      : createClient({
-          url:
-            'file:' +
-            path.join(process.cwd(), 'packages', 'server', 'prisma', 'dev.db'),
-        });
+  const client = createClient({
+    url:
+      process.env.LIBSQL_DATABASE_URL ??
+      'file:' + path.join(process.cwd(), 'packages', 'server', 'prisma', 'dev.db'),
+    authToken: process.env.LIBSQL_DATABASE_TOKEN || undefined,
+  });
 
   return drizzle(client, { schema });
 }
