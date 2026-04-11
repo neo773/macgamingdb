@@ -5,7 +5,7 @@ describe('getChipsetCombinations', () => {
   it('returns all chipset and variant combinations', () => {
     const combinations = getChipsetCombinations();
 
-    expect(combinations).toHaveLength(20);
+    expect(combinations).toHaveLength(24);
   });
 
   it('formats BASE variant labels without suffix', () => {
@@ -27,7 +27,7 @@ describe('getChipsetCombinations', () => {
 
   it('includes all chipset generations', () => {
     const combinations = getChipsetCombinations();
-    const chipsets = ['M1', 'M2', 'M3', 'M4', 'M5'];
+    const chipsets = ['A18', 'M1', 'M2', 'M3', 'M4', 'M5'];
 
     for (const chipset of chipsets) {
       const hasChipset = combinations.some(c => c.value.startsWith(chipset));
