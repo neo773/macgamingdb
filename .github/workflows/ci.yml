@@ -11,14 +11,20 @@ jobs:
     name: Lint, Test & Build
     runs-on: ubuntu-latest
 
+    services:
+      libsql:
+        image: ghcr.io/tursodatabase/libsql-server:latest
+        ports:
+          - 8080:8080
+
     env:
       BETTER_AUTH_URL: http://localhost:3000
       NEXT_PUBLIC_BASE_URL: http://localhost:3000
       NEXT_PUBLIC_DOMAIN: localhost
       BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      LIBSQL_DATABASE_URL: ${{ secrets.LIBSQL_DATABASE_URL }}
-      LIBSQL_DATABASE_TOKEN: ${{ secrets.LIBSQL_DATABASE_TOKEN }}
+      LIBSQL_DATABASE_URL: http://127.0.0.1:8080
+      LIBSQL_DATABASE_TOKEN: ""
       LIBSQL_STATS_ENDPOINT: ${{ secrets.LIBSQL_STATS_ENDPOINT }}
       LIBSQL_STATS_TOKEN: ${{ secrets.LIBSQL_STATS_TOKEN }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -38,6 +44,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Push database schema
+        run: NODE_ENV=production bun run db:push
 
       - name: Test
         run: bun run test
