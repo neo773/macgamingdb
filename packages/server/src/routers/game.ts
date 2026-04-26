@@ -16,6 +16,20 @@ import { type DrizzleDB } from '../database/drizzle';
 import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
 import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
 
+const GGDEALS_REGIONS = new Set([
+  'au', 'be', 'br', 'ca', 'ch', 'de', 'dk', 'es', 'eu',
+  'fi', 'fr', 'gb', 'ie', 'it', 'nl', 'no', 'pl', 'se', 'us',
+]);
+
+// Map non-supported country codes to nearest gg.deals region
+const COUNTRY_TO_REGION: Record<string, string> = {
+  at: 'eu', bg: 'eu', cy: 'eu', cz: 'eu', ee: 'eu', gr: 'eu',
+  hr: 'eu', hu: 'eu', lt: 'eu', lu: 'eu', lv: 'eu', mt: 'eu',
+  pt: 'eu', ro: 'eu', si: 'eu', sk: 'eu',
+  nz: 'au', mx: 'us', jp: 'us', kr: 'us', in: 'us', sg: 'us',
+  hk: 'us', tw: 'us', ar: 'br', cl: 'br', co: 'br',
+};
+
 function getRegionFromHeaders(headers: Headers): string {
   const geoHeaders = [
     'cf-ipcountry',
@@ -24,16 +38,27 @@ function getRegionFromHeaders(headers: Headers): string {
     'x-country-code',
     'x-country',
   ];
+
+  let country: string | null = null;
   for (const h of geoHeaders) {
     const v = headers.get(h);
-    if (v && v !== 'XX' && /^[A-Z]{2}$/i.test(v)) return v.toLowerCase();
+    if (v && v !== 'XX' && /^[A-Z]{2}$/i.test(v)) {
+      country = v.toLowerCase();
+      break;
+    }
   }
-  const lang = headers.get('accept-language');
-  if (lang) {
-    const m = lang.match(/[a-z]{2}-([A-Z]{2})/);
-    if (m) return m[1].toLowerCase();
+
+  if (!country) {
+    const lang = headers.get('accept-language');
+    if (lang) {
+      const m = lang.match(/[a-z]{2}-([A-Z]{2})/);
+      if (m) country = m[1].toLowerCase();
+    }
   }
-  return 'us';
+
+  if (!country) return 'us';
+  if (GGDEALS_REGIONS.has(country)) return country;
+  return COUNTRY_TO_REGION[country] ?? 'us';
 }
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
