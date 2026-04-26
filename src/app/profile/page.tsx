@@ -23,7 +23,7 @@ export default async function ProfilePage() {
         id: session.user.id,
         name: session.user.name,
         email: session.user.email,
-        image: session.user.image,
+        image: session.user.image ?? null,
       }}
     />
   );
