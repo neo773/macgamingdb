@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { trpc } from '@/lib/trpc/provider';
 import { formatDistance } from 'date-fns';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, Medal, Award, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -67,15 +67,6 @@ export default function ContributorsClient({
     }
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  };
-
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -94,12 +85,9 @@ export default function ContributorsClient({
               <CardContent className="px-6">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Avatar className="h-16 w-16 border-white/20 border-2">
-                      <AvatarImage src={undefined} />
-                      <AvatarFallback className="text-xl text-white bg-white/8">
-                        {getInitials(contributor.name)}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="size-16 rounded-full overflow-hidden border-2 border-white/20">
+                      <UserAvatar size={64} name={contributor.id} />
+                    </div>
                     <div className="absolute -bottom-2 -right-2 bg-primary-gradient rounded-full p-2 shadow-lg border border-white/20">
                       {getRankBadge(index)}
                     </div>

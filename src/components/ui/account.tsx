@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { LogInIcon, LogOut, Settings, Star } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Avatar from 'boring-avatars';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -34,22 +34,13 @@ const Account = () => {
   }
 
   if (session?.user?.id) {
-    const initials = session.user.name
-      ? session.user.name.slice(0, 2).toUpperCase()
-      : session.user.email?.slice(0, 2).toUpperCase() ?? '??';
-
     const avatarName = session.user.name || session.user.email || session.user.id;
 
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="size-8 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-white/20 transition-all cursor-pointer">
-            <Avatar
-              size={32}
-              name={avatarName}
-              variant="beam"
-              colors={['#6366f1', '#8b5cf6', '#a78bfa', '#c084fc', '#e879f9']}
-            />
+            <UserAvatar size={32} name={avatarName} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
