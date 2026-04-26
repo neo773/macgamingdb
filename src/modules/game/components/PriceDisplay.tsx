@@ -1,6 +1,8 @@
-import { type GGDealsGamePrice } from '@macgamingdb/server/api/ggdeals';
+'use client';
+
 import { Store, KeyRound, TrendingDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { trpc } from '@/lib/trpc/provider';
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   USD: '$', EUR: '€', GBP: '£', JPY: '¥', CAD: 'CA$', AUD: 'A$',
@@ -13,11 +15,15 @@ function currencySymbol(code: string) {
 }
 
 interface PriceDisplayProps {
-  priceData: GGDealsGamePrice;
+  gameId: string;
   compact?: boolean;
 }
 
-export function PriceDisplay({ priceData, compact }: PriceDisplayProps) {
+export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
+  const { data: priceData } = trpc.game.getPrices.useQuery({ gameId });
+
+  if (!priceData) return null;
+
   const { currentRetail, currentKeyshops, historicalRetail, historicalKeyshops, currency } =
     priceData.prices;
 

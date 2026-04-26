@@ -1,14 +1,12 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { type Metadata } from 'next';
-import { headers } from 'next/headers';
 import { ChevronLeft } from 'lucide-react';
 import { createServerHelpers } from '@/lib/trpc/server';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
 import { Container } from '@/components/ui/container';
 import { generateGameJsonLd } from '@/lib/utils/jsonLd';
-import { getRegion } from '@/lib/utils/getRegion';
 import { parseGameDetails } from '@/modules/game/utils';
 import {
   GameDetailHeader,
@@ -18,7 +16,6 @@ import {
   GamePageError,
 } from '@/modules/game/components';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
-import { getGamePrices } from '@macgamingdb/server/api/ggdeals';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
@@ -62,17 +59,10 @@ export default async function GamePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const headerStore = await headers();
-  const region = getRegion(headerStore);
   const helpers = await createServerHelpers();
 
   try {
-    const [{ game, reviews, stats }, priceData] = await Promise.all([
-      helpers.game.getById.fetch({ id }),
-      getGamePrices(id, region)
-        .then((res) => res ?? null)
-        .catch(() => null),
-    ]);
+    const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
     const gameDetails = parseGameDetails(game?.details ?? null);
     const hasReviews = reviews && reviews.length > 0;
     const jsonLd = generateGameJsonLd(id, gameDetails, stats);
@@ -103,7 +93,7 @@ export default async function GamePage({
             <GameStatsCard stats={stats} />
           </div>
 
-          {priceData && <PriceDisplay priceData={priceData} />}
+          <PriceDisplay gameId={id} />
 
           <ExperienceReportsSection
             gameId={id}

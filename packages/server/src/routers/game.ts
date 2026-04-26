@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { getGameBySteamId, searchSteam } from '../api/steam';
+import { getGamePrices } from '../api/ggdeals';
 import { TRPCError } from '@trpc/server';
 import {
   ChipsetEnum,
@@ -14,6 +15,26 @@ import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
 import { type DrizzleDB } from '../database/drizzle';
 import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
 import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
+
+function getRegionFromHeaders(headers: Headers): string {
+  const geoHeaders = [
+    'cf-ipcountry',
+    'x-vercel-ip-country',
+    'cloudfront-viewer-country',
+    'x-country-code',
+    'x-country',
+  ];
+  for (const h of geoHeaders) {
+    const v = headers.get(h);
+    if (v && v !== 'XX' && /^[A-Z]{2}$/i.test(v)) return v.toLowerCase();
+  }
+  const lang = headers.get('accept-language');
+  if (lang) {
+    const m = lang.match(/[a-z]{2}-([A-Z]{2})/);
+    if (m) return m[1].toLowerCase();
+  }
+  return 'us';
+}
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
 
@@ -400,6 +421,20 @@ export const gameRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to generate signed URLs for screenshots',
         });
+      }
+    }),
+
+  getPrices: procedure
+    .input(z.object({ gameId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const region = ctx.req
+          ? getRegionFromHeaders(ctx.req.headers)
+          : 'us';
+        const data = await getGamePrices(input.gameId, region);
+        return data ?? null;
+      } catch {
+        return null;
       }
     }),
 });
