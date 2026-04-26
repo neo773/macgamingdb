@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
 import { getGameBySteamId, searchSteam } from '../api/steam';
+import { getGamePrices } from '../api/ggdeals';
 import { TRPCError } from '@trpc/server';
 import {
   ChipsetEnum,
@@ -12,8 +13,22 @@ import { calculateTranslationLayerStats } from '../utils/calculateTranslationLay
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
 import { type DrizzleDB } from '../database/drizzle';
-import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
-import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
+import {
+  games,
+  gameReviews,
+  type PerformanceRating,
+  type PlayMethod,
+  type ChipsetVariant,
+} from '../drizzle/schema';
+import {
+  eq,
+  and,
+  desc,
+  count,
+  isNotNull,
+  inArray,
+  type SQL,
+} from 'drizzle-orm';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
 
@@ -29,9 +44,7 @@ function createEmptyCounts(): RatingCounts {
   };
 }
 
-async function getUnfilteredCounts(
-  db: DrizzleDB,
-): Promise<RatingCounts> {
+async function getUnfilteredCounts(db: DrizzleDB): Promise<RatingCounts> {
   const counts = await db
     .select({
       aggregatedPerformance: games.aggregatedPerformance,
@@ -53,12 +66,21 @@ async function getUnfilteredCounts(
 
 async function getFilteredCounts(
   db: DrizzleDB,
-  reviewFilter: { chipset?: string; chipsetVariant?: ChipsetVariant; playMethod?: PlayMethod },
+  reviewFilter: {
+    chipset?: string;
+    chipsetVariant?: ChipsetVariant;
+    playMethod?: PlayMethod;
+  },
 ): Promise<RatingCounts> {
   const conditions: SQL[] = [];
-  if (reviewFilter.chipset) conditions.push(eq(gameReviews.chipset, reviewFilter.chipset));
-  if (reviewFilter.chipsetVariant) conditions.push(eq(gameReviews.chipsetVariant, reviewFilter.chipsetVariant));
-  if (reviewFilter.playMethod) conditions.push(eq(gameReviews.playMethod, reviewFilter.playMethod));
+  if (reviewFilter.chipset)
+    conditions.push(eq(gameReviews.chipset, reviewFilter.chipset));
+  if (reviewFilter.chipsetVariant)
+    conditions.push(
+      eq(gameReviews.chipsetVariant, reviewFilter.chipsetVariant),
+    );
+  if (reviewFilter.playMethod)
+    conditions.push(eq(gameReviews.playMethod, reviewFilter.playMethod));
 
   const pairs = await db
     .select({
@@ -178,10 +200,15 @@ export const gameRouter = router({
         if (hasChipsetOrPlayMethodFilter) {
           // Build review filter conditions for subquery
           const reviewConditions: SQL[] = [];
-          if (performance !== 'ALL') reviewConditions.push(eq(gameReviews.performance, performance));
+          if (performance !== 'ALL')
+            reviewConditions.push(eq(gameReviews.performance, performance));
           if (chipset) reviewConditions.push(eq(gameReviews.chipset, chipset));
-          if (chipset && chipsetVariant) reviewConditions.push(eq(gameReviews.chipsetVariant, chipsetVariant));
-          if (playMethod !== 'ALL') reviewConditions.push(eq(gameReviews.playMethod, playMethod));
+          if (chipset && chipsetVariant)
+            reviewConditions.push(
+              eq(gameReviews.chipsetVariant, chipsetVariant),
+            );
+          if (playMethod !== 'ALL')
+            reviewConditions.push(eq(gameReviews.playMethod, playMethod));
 
           // Get game IDs matching the review filters
           const matchingGameIds = ctx.db
@@ -210,10 +237,12 @@ export const gameRouter = router({
           const matchedGames = await ctx.db
             .select()
             .from(games)
-            .where(and(
-              inArray(games.id, gameIds),
-              isNotNull(games.aggregatedPerformance),
-            ))
+            .where(
+              and(
+                inArray(games.id, gameIds),
+                isNotNull(games.aggregatedPerformance),
+              ),
+            )
             .orderBy(desc(games.reviewCount))
             .limit(limit + 1);
 
@@ -399,6 +428,20 @@ export const gameRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to generate signed URLs for screenshots',
+        });
+      }
+    }),
+
+  getPrices: procedure
+    .input(z.object({ gameIds: z.array(z.string()).min(1).max(100) }))
+    .query(async ({ input }) => {
+      try {
+        return await getGamePrices(input.gameIds);
+      } catch (error) {
+        console.error('Error fetching prices:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch game prices',
         });
       }
     }),

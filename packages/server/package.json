@@ -11,6 +11,7 @@
     "./routers/contributor": "./src/routers/contributor.ts",
     "./routers/traffic": "./src/routers/traffic.ts",
     "./api/steam": "./src/api/steam.ts",
+    "./api/ggdeals": "./src/api/ggdeals.ts",
     "./utils/database/countGamesForPerformanceStats": "./src/utils/database/countGamesForPerformanceStats.ts",
     "./utils/database/upsertPerformanceStats": "./src/utils/database/upsertPerformanceStats.ts",
     "./utils/database/updateSpecificPerformanceStats": "./src/utils/database/updateSpecificPerformanceStats.ts",

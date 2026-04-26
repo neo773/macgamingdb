@@ -1,7 +1,10 @@
 'use client';
+
 import React, { useState } from 'react';
-import { LogInIcon, Star } from 'lucide-react';
+import { LogInIcon, LogOut, Settings, Star } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Avatar from 'boring-avatars';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -9,29 +12,83 @@ import {
   DialogTrigger,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import AuthPrompt from '@/modules/auth/components/AuthPrompt';
 import { authClient } from '@/lib/auth/auth-client';
 
-const Acccount = () => {
+const Account = () => {
   const { useSession } = authClient;
   const { data: session, isPending } = useSession();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
-
-  if (!isPending && session?.user?.id) {
-    return (
-      <Link
-        href="/my-reviews"
-        className="text-gray-300 hover:text-white px-3 py-1 transition-colors flex items-center gap-2"
-      >
-        <Star className="size-4" />
-        My Reviews
-      </Link>
-    );
-  }
+  const router = useRouter();
 
   if (isPending) {
     return null;
+  }
+
+  if (session?.user?.id) {
+    const initials = session.user.name
+      ? session.user.name.slice(0, 2).toUpperCase()
+      : session.user.email?.slice(0, 2).toUpperCase() ?? '??';
+
+    const avatarName = session.user.name || session.user.email || session.user.id;
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="size-8 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-white/20 transition-all cursor-pointer">
+            <Avatar
+              size={32}
+              name={avatarName}
+              variant="beam"
+              colors={['#6366f1', '#8b5cf6', '#a78bfa', '#c084fc', '#e879f9']}
+            />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="w-48 bg-[#171717e0] backdrop-blur-md border-white/10"
+        >
+          <DropdownMenuItem asChild>
+            <Link
+              href="/my-reviews"
+              className="flex items-center gap-2 cursor-pointer focus:bg-white/90 focus:text-black"
+            >
+              <Star className="size-4" />
+              My Reviews
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              href="/profile"
+              className="flex items-center gap-2 cursor-pointer focus:bg-white/90 focus:text-black"
+            >
+              <Settings className="size-4" />
+              Account Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className="bg-white/10" />
+          <DropdownMenuItem
+            className="flex items-center gap-2 text-red-400 focus:bg-red-500/10 focus:text-red-300 cursor-pointer"
+            onClick={async () => {
+              await authClient.signOut();
+              router.push('/');
+              router.refresh();
+            }}
+          >
+            <LogOut className="size-4" />
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
   }
 
   return (
@@ -66,4 +123,4 @@ const Acccount = () => {
   );
 };
 
-export default Acccount;
+export default Account;

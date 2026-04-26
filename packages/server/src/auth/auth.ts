@@ -63,6 +63,11 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     emailAndPassword: {
       enabled: true,
     },
+    user: {
+      deleteUser: {
+        enabled: true,
+      },
+    },
     plugins: [
       expo(),
       magicLink({
