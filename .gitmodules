@@ -1,3 +1,5 @@
 [submodule "MobileApp"]
 	path = MobileApp
 	url = https://github.com/neo773/MobileApp.git
+	update = none
+	active = false
