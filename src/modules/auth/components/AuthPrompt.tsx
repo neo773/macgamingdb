@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
+import { trackEvent } from '@/lib/analytics/umami';
 import { SignInWithApple } from './SignInWithApple';
 
 interface AuthPromptProps {
@@ -49,6 +50,8 @@ export default function AuthPrompt({
         email,
         callbackURL: window.location.href,
       });
+
+      trackEvent({ name: 'signup-requested' });
 
       if (onMagicLinkSent) {
         onMagicLinkSent();
@@ -138,6 +141,7 @@ export default function AuthPrompt({
 
           <SignInWithApple
             onClick={async () => {
+              trackEvent({ name: 'signup-requested' });
               const data = await authClient.signIn.social({
                 provider: 'apple',
               });

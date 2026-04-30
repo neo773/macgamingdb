@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
 import { trpc } from '@/lib/trpc/provider';
-import { useDebounce } from 'use-debounce';
+import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
+import { trackEvent } from '@/lib/analytics/umami';
 
 type SearchBarProps = {
   onResultsChange?: (
@@ -52,6 +53,10 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
     }
   }, [data, debouncedQuery, isLoading, onResultsChange]);
 
+  const trackSearch = useDebouncedCallback(() => {
+    trackEvent({ name: 'search-performed' });
+  }, 300);
+
   return (
     <div className="relative w-full max-w-4xl">
       <div className="relative">
@@ -59,7 +64,9 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
           type="text"
           value={query}
           onChange={(e) => {
-            setQuery(e.target.value);
+            const next = e.target.value;
+            setQuery(next);
+            if (next.trim().length > 0) trackSearch();
           }}
           placeholder="Search for a game..."
           className="bg-input/30 w-full h-14 px-6 pr-12 rounded-full border-2 focus:outline-none focus:ring-2 focus:border-0 focus:ring-blue-400 border-input/70 text-lg backdrop-blur-sm  transition-all duration-200"

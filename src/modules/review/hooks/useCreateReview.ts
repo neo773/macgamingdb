@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/provider';
 import { toast } from 'sonner';
 import { triggerConfettiSideCannons } from '@/lib/utils/confetti';
+import { trackEvent } from '@/lib/analytics/umami';
 import { useFormPreferences } from '@/modules/review/hooks/useFormPreferences';
 import {
   type PlayMethod,
@@ -100,6 +101,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     onSuccess: () => {
       setSuccess(true);
       triggerConfettiSideCannons();
+      trackEvent({ name: 'review-submitted', data: { gameId } });
 
       setTimeout(() => {
         onOpenChange(false);

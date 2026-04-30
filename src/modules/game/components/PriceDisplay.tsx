@@ -3,6 +3,7 @@
 import { Store, KeyRound, TrendingDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { trpc } from '@/lib/trpc/provider';
+import { trackEvent } from '@/lib/analytics/umami';
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   USD: '$', EUR: '€', GBP: '£', JPY: '¥', CAD: 'CA$', AUD: 'A$',
@@ -51,6 +52,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
           href={priceData.url}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent({ name: 'ggdeals-click', data: { gameId } })}
           className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-gray-400 hover:border-white/20 hover:bg-white/10 hover:text-gray-300 transition-all"
         >
           <img
