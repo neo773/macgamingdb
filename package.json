@@ -85,6 +85,7 @@
     "remark-gfm": "^4.0.1",
     "resend": "^4.2.0",
     "sonner": "^2.0.3",
+    "steam-signin": "^1.0.5",
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",

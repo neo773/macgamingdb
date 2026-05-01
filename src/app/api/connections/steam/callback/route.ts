@@ -8,44 +8,33 @@ import {
   userExternalAccounts,
 } from '@macgamingdb/server/drizzle/schema';
 import { verifySteamOpenIdResponse } from '@macgamingdb/server/services/steam-openid';
+import { SteamLibraryPrivateError } from '@macgamingdb/server/services/steam-api';
 import { syncSteamLibraryForUser } from '@macgamingdb/server/services/steam-library';
-import { getPublicOrigin } from '@/lib/connections/origin';
+import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
+import { STATE_COOKIE_NAME } from '@/lib/steam-openid/stateCookieName';
+import { FLOW_ERROR, type FlowError } from '@/lib/steam-openid/flowError';
+import { verifyStateToken } from '@/lib/steam-openid/stateToken';
 
 export const dynamic = 'force-dynamic';
 
-const STATE_COOKIE = 'steam_openid_state';
-
-function libraryUrl(error?: string): URL {
-  const url = new URL('/library', getPublicOrigin());
+function libraryRedirect(error?: FlowError) {
+  const url = new URL('/library', getAppOrigin());
   if (error) url.searchParams.set('error', error);
-  return url;
+  return NextResponse.redirect(url);
 }
 
-export async function GET(req: NextRequest) {
-  const db = createDrizzleClient();
-  const auth = await BetterAuthClient(db);
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return NextResponse.redirect(new URL('/', getPublicOrigin()));
-  }
-  const userId = session.user.id;
+async function consumeStateCookie(): Promise<string | null> {
+  const store = await cookies();
+  const value = store.get(STATE_COOKIE_NAME)?.value ?? null;
+  store.delete(STATE_COOKIE_NAME);
+  return value;
+}
 
-  const cookieStore = await cookies();
-  const expectedState = cookieStore.get(STATE_COOKIE)?.value;
-  const incomingState = req.nextUrl.searchParams.get('state');
-  cookieStore.delete(STATE_COOKIE);
-  if (!expectedState || expectedState !== incomingState) {
-    return NextResponse.redirect(libraryUrl('state_mismatch'));
-  }
-
-  let steamId: string;
-  try {
-    steamId = await verifySteamOpenIdResponse(req.nextUrl.searchParams);
-  } catch (err) {
-    console.error('Steam OpenID verify failed', err);
-    return NextResponse.redirect(libraryUrl('verify_failed'));
-  }
-
+async function upsertSteamLink(
+  db: ReturnType<typeof createDrizzleClient>,
+  userId: string,
+  steamId: string,
+) {
   const existing = await db.query.userExternalAccounts.findFirst({
     where: and(
       eq(userExternalAccounts.userId, userId),
@@ -65,13 +54,49 @@ export async function GET(req: NextRequest) {
       externalUserId: steamId,
     });
   }
+}
+
+export async function GET(req: NextRequest) {
+  const db = createDrizzleClient();
+  const auth = await BetterAuthClient(db);
+  const session = await auth.api.getSession({ headers: await headers() });
+  const origin = getAppOrigin();
+
+  if (!session) {
+    return NextResponse.redirect(new URL('/', origin));
+  }
+  const userId = session.user.id;
+
+  const cookieState = await consumeStateCookie();
+  const queryState = req.nextUrl.searchParams.get('state');
+  if (
+    !cookieState ||
+    !queryState ||
+    cookieState !== queryState ||
+    !(await verifyStateToken(cookieState, userId))
+  ) {
+    return libraryRedirect(FLOW_ERROR.StateMismatch);
+  }
+
+  let steamId: string;
+  try {
+    steamId = await verifySteamOpenIdResponse(req.nextUrl.toString(), `${origin}/`);
+  } catch (err) {
+    console.error('Steam OpenID verify failed:', err instanceof Error ? err.message : 'unknown');
+    return libraryRedirect(FLOW_ERROR.VerifyFailed);
+  }
+
+  await upsertSteamLink(db, userId, steamId);
 
   try {
     await syncSteamLibraryForUser(db, userId);
   } catch (err) {
-    console.error('Initial Steam library sync failed', err);
-    return NextResponse.redirect(libraryUrl('private_library'));
+    if (err instanceof SteamLibraryPrivateError) {
+      return libraryRedirect(FLOW_ERROR.PrivateLibrary);
+    }
+    console.error('Initial Steam library sync failed:', err instanceof Error ? err.message : 'unknown');
+    return libraryRedirect(FLOW_ERROR.VerifyFailed);
   }
 
-  return NextResponse.redirect(libraryUrl());
+  return libraryRedirect();
 }

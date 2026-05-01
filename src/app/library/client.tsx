@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
+import { STEAM_LIBRARY_PRIVATE_CODE } from '@macgamingdb/server/services/steam-api';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
 import { Container } from '@/components/ui/container';
@@ -21,6 +21,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { trpc } from '@/lib/trpc/provider';
+import { FLOW_ERROR } from '@/lib/steam-openid/flowError';
 import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
@@ -51,11 +52,14 @@ export default function LibraryClient() {
   useEffect(() => {
     const err = searchParams.get('error');
     if (!err) return;
-    if (err === 'private_library') {
+    if (err === FLOW_ERROR.PrivateLibrary) {
       toast.error(
         'Could not read your Steam library. Set your library to public and try again.',
       );
-    } else if (err === 'verify_failed' || err === 'state_mismatch') {
+    } else if (
+      err === FLOW_ERROR.VerifyFailed ||
+      err === FLOW_ERROR.StateMismatch
+    ) {
       toast.error('Steam sign-in failed. Try again.');
     }
   }, [searchParams]);
@@ -65,7 +69,7 @@ export default function LibraryClient() {
     sync.mutate(undefined, {
       onSuccess: (res) => toast.success(`Synced ${res.count} games`, { id }),
       onError: (err) => {
-        if (err.message === 'STEAM_LIBRARY_PRIVATE') {
+        if (err.message === STEAM_LIBRARY_PRIVATE_CODE) {
           toast.error('Set your Steam library to public and try again.', {
             id,
           });
@@ -178,7 +182,7 @@ export default function LibraryClient() {
                 key={entry.externalGameId}
                 appId={entry.externalGameId}
                 name={entry.name}
-                rating={entry.aggregatedPerformance as PerformanceRating | null}
+                rating={entry.aggregatedPerformance}
                 playtimeMinutes={entry.playtimeMinutes}
               />
             ))}

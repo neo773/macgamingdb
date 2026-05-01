@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import { and, desc, eq, inArray } from 'drizzle-orm';
-import { router, protectedProcedure } from '../trpc';
+import { and, eq, inArray } from 'drizzle-orm';
+import { protectedProcedure, router } from '../trpc';
 import {
   LibraryProvider,
   type PerformanceRating,
@@ -8,8 +8,13 @@ import {
   userExternalAccounts,
   userLibraryEntries,
 } from '../drizzle/schema';
+import {
+  STEAM_LIBRARY_PRIVATE_CODE,
+  SteamLibraryPrivateError,
+} from '../services/steam-api';
+import { syncSteamLibraryForUser } from '../services/steam-library';
 
-const PERFORMANCE_ORDER: Record<PerformanceRating, number> = {
+const PERFORMANCE_RANK: Record<PerformanceRating, number> = {
   EXCELLENT: 0,
   VERY_GOOD: 1,
   GOOD: 2,
@@ -17,27 +22,38 @@ const PERFORMANCE_ORDER: Record<PerformanceRating, number> = {
   BARELY_PLAYABLE: 4,
   UNPLAYABLE: 5,
 };
-import {
-  SteamLibraryPrivateError,
-} from '../services/steam-openid';
-import { syncSteamLibraryForUser } from '../services/steam-library';
 
-function requireUserId(user: unknown): string {
-  const userId = (user as { user?: { id?: string } } | null | undefined)?.user?.id;
+const UNRATED_RANK = Number.MAX_SAFE_INTEGER;
+
+function rankForRating(rating: PerformanceRating | null): number {
+  return rating === null ? UNRATED_RANK : PERFORMANCE_RANK[rating];
+}
+
+function requireUserId(ctx: { user?: { user?: { id?: string } } | null }): string {
+  const userId = ctx.user?.user?.id;
   if (!userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Missing authorization' });
   }
   return userId;
 }
 
+const steamConnectionWhere = (userId: string) =>
+  and(
+    eq(userExternalAccounts.userId, userId),
+    eq(userExternalAccounts.provider, LibraryProvider.STEAM),
+  );
+
+const steamEntriesWhere = (userId: string) =>
+  and(
+    eq(userLibraryEntries.userId, userId),
+    eq(userLibraryEntries.provider, LibraryProvider.STEAM),
+  );
+
 export const libraryRouter = router({
   status: protectedProcedure.query(async ({ ctx }) => {
-    const userId = requireUserId(ctx.user);
+    const userId = requireUserId(ctx);
     const link = await ctx.db.query.userExternalAccounts.findFirst({
-      where: and(
-        eq(userExternalAccounts.userId, userId),
-        eq(userExternalAccounts.provider, LibraryProvider.STEAM),
-      ),
+      where: steamConnectionWhere(userId),
     });
     if (!link) return { linked: false as const };
     return {
@@ -49,14 +65,14 @@ export const libraryRouter = router({
   }),
 
   sync: protectedProcedure.mutation(async ({ ctx }) => {
-    const userId = requireUserId(ctx.user);
+    const userId = requireUserId(ctx);
     try {
       return await syncSteamLibraryForUser(ctx.db, userId);
     } catch (err) {
       if (err instanceof SteamLibraryPrivateError) {
         throw new TRPCError({
           code: 'PRECONDITION_FAILED',
-          message: 'STEAM_LIBRARY_PRIVATE',
+          message: STEAM_LIBRARY_PRIVATE_CODE,
         });
       }
       throw err;
@@ -64,22 +80,15 @@ export const libraryRouter = router({
   }),
 
   list: protectedProcedure.query(async ({ ctx }) => {
-    const userId = requireUserId(ctx.user);
+    const userId = requireUserId(ctx);
 
     const entries = await ctx.db
       .select()
       .from(userLibraryEntries)
-      .where(
-        and(
-          eq(userLibraryEntries.userId, userId),
-          eq(userLibraryEntries.provider, LibraryProvider.STEAM),
-        ),
-      )
-      .orderBy(desc(userLibraryEntries.playtimeMinutes));
+      .where(steamEntriesWhere(userId));
 
     if (entries.length === 0) return [];
 
-    const ids = entries.map((e) => e.externalGameId);
     const matchedGames = await ctx.db
       .select({
         id: games.id,
@@ -87,58 +96,49 @@ export const libraryRouter = router({
         reviewCount: games.reviewCount,
       })
       .from(games)
-      .where(inArray(games.id, ids));
+      .where(
+        inArray(
+          games.id,
+          entries.map((e) => e.externalGameId),
+        ),
+      );
 
-    const gameMap = new Map(matchedGames.map((g) => [g.id, g]));
+    const gameById = new Map(matchedGames.map((g) => [g.id, g]));
 
-    const rows = entries.map((e) => {
-      const matched = gameMap.get(e.externalGameId);
+    const rows = entries.map((entry) => {
+      const matched = gameById.get(entry.externalGameId);
       const rating = matched?.aggregatedPerformance ?? null;
       return {
-        externalGameId: e.externalGameId,
-        name: e.name,
-        iconHash: e.iconHash,
-        playtimeMinutes: e.playtimeMinutes,
+        externalGameId: entry.externalGameId,
+        name: entry.name,
+        iconHash: entry.iconHash,
+        playtimeMinutes: entry.playtimeMinutes,
         aggregatedPerformance: rating,
         reviewCount: matched?.reviewCount ?? 0,
         hasData: rating !== null,
       };
     });
 
-    // Sort by playability (EXCELLENT first → UNPLAYABLE), unrated last,
-    // playtime desc as tiebreaker.
     rows.sort((a, b) => {
-      const ra = a.aggregatedPerformance
-        ? PERFORMANCE_ORDER[a.aggregatedPerformance]
-        : Number.MAX_SAFE_INTEGER;
-      const rb = b.aggregatedPerformance
-        ? PERFORMANCE_ORDER[b.aggregatedPerformance]
-        : Number.MAX_SAFE_INTEGER;
-      if (ra !== rb) return ra - rb;
-      return b.playtimeMinutes - a.playtimeMinutes;
+      const byRating =
+        rankForRating(a.aggregatedPerformance) -
+        rankForRating(b.aggregatedPerformance);
+      return byRating !== 0
+        ? byRating
+        : b.playtimeMinutes - a.playtimeMinutes;
     });
 
     return rows;
   }),
 
   unlink: protectedProcedure.mutation(async ({ ctx }) => {
-    const userId = requireUserId(ctx.user);
-    await ctx.db
-      .delete(userLibraryEntries)
-      .where(
-        and(
-          eq(userLibraryEntries.userId, userId),
-          eq(userLibraryEntries.provider, LibraryProvider.STEAM),
-        ),
-      );
-    await ctx.db
-      .delete(userExternalAccounts)
-      .where(
-        and(
-          eq(userExternalAccounts.userId, userId),
-          eq(userExternalAccounts.provider, LibraryProvider.STEAM),
-        ),
-      );
+    const userId = requireUserId(ctx);
+
+    await ctx.db.transaction(async (tx) => {
+      await tx.delete(userLibraryEntries).where(steamEntriesWhere(userId));
+      await tx.delete(userExternalAccounts).where(steamConnectionWhere(userId));
+    });
+
     return { ok: true };
   }),
 });

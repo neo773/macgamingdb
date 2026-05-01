@@ -5,11 +5,30 @@ import {
   userExternalAccounts,
   userLibraryEntries,
 } from '../drizzle/schema';
-import { getOwnedGames } from './steam-openid';
+import { getOwnedGames, type SteamOwnedGame } from './steam-api';
+
+const INSERT_CHUNK_SIZE = 200;
 
 export interface SyncResult {
   count: number;
   syncedAt: string;
+}
+
+function toLibraryEntryRow(
+  userId: string,
+  syncedAt: string,
+  game: SteamOwnedGame,
+) {
+  return {
+    userId,
+    provider: LibraryProvider.STEAM,
+    externalGameId: String(game.appid),
+    gameId: null,
+    name: game.name ?? null,
+    iconHash: game.img_icon_url ?? null,
+    playtimeMinutes: game.playtime_forever ?? 0,
+    lastSyncedAt: syncedAt,
+  };
 }
 
 export async function syncSteamLibraryForUser(
@@ -24,42 +43,31 @@ export async function syncSteamLibraryForUser(
   });
   if (!link) throw new Error('Steam account not linked');
 
-  const { games: ownedGames } = await getOwnedGames(link.externalUserId);
+  const ownedGames = await getOwnedGames(link.externalUserId);
   const syncedAt = new Date().toISOString();
+  const rows = ownedGames.map((g) => toLibraryEntryRow(userId, syncedAt, g));
 
-  await db
-    .delete(userLibraryEntries)
-    .where(
-      and(
-        eq(userLibraryEntries.userId, userId),
-        eq(userLibraryEntries.provider, LibraryProvider.STEAM),
-      ),
-    );
+  await db.transaction(async (tx) => {
+    await tx
+      .delete(userLibraryEntries)
+      .where(
+        and(
+          eq(userLibraryEntries.userId, userId),
+          eq(userLibraryEntries.provider, LibraryProvider.STEAM),
+        ),
+      );
 
-  if (ownedGames.length > 0) {
-    const rows = ownedGames.map((g) => ({
-      userId,
-      provider: LibraryProvider.STEAM,
-      externalGameId: String(g.appid),
-      // gameId left null — resolved via join at read time. We avoid a write-time
-      // FK insert because most owned appids won't yet have a row in `Game`.
-      gameId: null,
-      name: g.name ?? null,
-      iconHash: g.img_icon_url ?? null,
-      playtimeMinutes: g.playtime_forever ?? 0,
-      lastSyncedAt: syncedAt,
-    }));
-
-    const CHUNK = 200;
-    for (let i = 0; i < rows.length; i += CHUNK) {
-      await db.insert(userLibraryEntries).values(rows.slice(i, i + CHUNK));
+    for (let i = 0; i < rows.length; i += INSERT_CHUNK_SIZE) {
+      await tx
+        .insert(userLibraryEntries)
+        .values(rows.slice(i, i + INSERT_CHUNK_SIZE));
     }
-  }
 
-  await db
-    .update(userExternalAccounts)
-    .set({ lastSyncedAt: syncedAt })
-    .where(eq(userExternalAccounts.id, link.id));
+    await tx
+      .update(userExternalAccounts)
+      .set({ lastSyncedAt: syncedAt })
+      .where(eq(userExternalAccounts.id, link.id));
+  });
 
   return { count: ownedGames.length, syncedAt };
 }
