@@ -17,7 +17,7 @@
     "scrape:mac-configs": "bun --bun scripts/populate-mac-configs.ts --scrape",
     "populate:aggregated-performance": "bun --bun scripts/populate-aggregated-performance.ts",
     "populate:review-count": "bun --bun scripts/add-review-count.ts",
-    "build": "bun run db:seed:mac-configs && next build",
+    "build": "bun run db:migrate && bun run db:seed:mac-configs && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
