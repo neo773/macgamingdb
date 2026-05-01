@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Account from '@/components/ui/account';
-import { Map, Menu, Trophy, X, Heart, Github, Star, Settings, LogOut } from 'lucide-react';
+import { Map, Menu, Trophy, X, Heart, Github, Star, Settings, LogOut, Library } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 import { DonationDialog } from './DonationDialog';
 import { authClient } from '@/lib/auth/auth-client';
@@ -116,6 +116,14 @@ const Header = () => {
                   {session?.user && (
                     <>
                       <div className="border-t border-white/10" />
+                      <Link
+                        href="/library"
+                        className="text-gray-300 hover:text-white px-3 py-2 transition-colors flex items-center gap-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Library className="size-4" />
+                        My Library
+                      </Link>
                       <Link
                         href="/my-reviews"
                         className="text-gray-300 hover:text-white px-3 py-2 transition-colors flex items-center gap-2"
