@@ -30,6 +30,8 @@
     "./drizzle/schema": "./src/drizzle/schema.ts",
     "./drizzle/types": "./src/drizzle/types.ts",
     "./s3": "./src/services/s3.ts",
+    "./services/steam-openid": "./src/services/steam-openid.ts",
+    "./services/steam-library": "./src/services/steam-library.ts",
     "./scraper/EveryMacScraper": "./src/scraper/EveryMacScraper.ts",
     "./scraper/WebScraper": "./src/scraper/WebScraper.ts",
     "./utils/logger": "./src/utils/logger.ts"

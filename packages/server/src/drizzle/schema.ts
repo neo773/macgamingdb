@@ -45,6 +45,11 @@ export const ChipsetVariant = {
 } as const;
 export type ChipsetVariant = (typeof ChipsetVariant)[keyof typeof ChipsetVariant];
 
+export const LibraryProvider = {
+  STEAM: 'STEAM',
+} as const;
+export type LibraryProvider = (typeof LibraryProvider)[keyof typeof LibraryProvider];
+
 // ─── Tables ──────────────────────────────────────────────────────────────────
 
 export const users = sqliteTable('user', {
@@ -138,6 +143,36 @@ export const accounts = sqliteTable('account', {
   updatedAt: text('updatedAt').notNull(),
 });
 
+export const userExternalAccounts = sqliteTable('UserExternalAccount', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  provider: text('provider').$type<LibraryProvider>().notNull(),
+  externalUserId: text('externalUserId').notNull(),
+  metadata: text('metadata'),
+  lastSyncedAt: text('lastSyncedAt'),
+  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
+  updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
+}, (table) => [
+  uniqueIndex('UserExternalAccount_userId_provider_key').on(table.userId, table.provider),
+  index('UserExternalAccount_provider_externalUserId_idx').on(table.provider, table.externalUserId),
+]);
+
+export const userLibraryEntries = sqliteTable('UserLibraryEntry', {
+  id: text('id').primaryKey().$defaultFn(() => createId()),
+  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  provider: text('provider').$type<LibraryProvider>().notNull(),
+  externalGameId: text('externalGameId').notNull(),
+  gameId: text('gameId').references(() => games.id, { onDelete: 'set null', onUpdate: 'cascade' }),
+  name: text('name'),
+  iconHash: text('iconHash'),
+  playtimeMinutes: integer('playtimeMinutes').notNull().default(0),
+  lastSyncedAt: text('lastSyncedAt').notNull().$defaultFn(() => new Date().toISOString()),
+}, (table) => [
+  uniqueIndex('UserLibraryEntry_userId_provider_externalGameId_key').on(table.userId, table.provider, table.externalGameId),
+  index('UserLibraryEntry_userId_provider_idx').on(table.userId, table.provider),
+  index('UserLibraryEntry_gameId_idx').on(table.gameId),
+]);
+
 export const verifications = sqliteTable('verification', {
   id: text('id').primaryKey(),
   identifier: text('identifier').notNull(),
@@ -153,6 +188,17 @@ export const usersRelations = relations(users, ({ many }) => ({
   reviews: many(gameReviews),
   sessions: many(sessions),
   accounts: many(accounts),
+  externalAccounts: many(userExternalAccounts),
+  libraryEntries: many(userLibraryEntries),
+}));
+
+export const userExternalAccountsRelations = relations(userExternalAccounts, ({ one }) => ({
+  user: one(users, { fields: [userExternalAccounts.userId], references: [users.id] }),
+}));
+
+export const userLibraryEntriesRelations = relations(userLibraryEntries, ({ one }) => ({
+  user: one(users, { fields: [userLibraryEntries.userId], references: [users.id] }),
+  game: one(games, { fields: [userLibraryEntries.gameId], references: [games.id] }),
 }));
 
 export const gamesRelations = relations(games, ({ many }) => ({

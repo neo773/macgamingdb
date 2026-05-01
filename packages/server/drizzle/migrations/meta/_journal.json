@@ -15,6 +15,20 @@
       "when": 1774715340162,
       "tag": "0001_stale_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1777657674541,
+      "tag": "0002_right_wendell_rand",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1777657751206,
+      "tag": "0003_talented_ravenous",
+      "breakpoints": true
     }
   ]
 }

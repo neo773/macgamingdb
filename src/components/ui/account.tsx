@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LogInIcon, LogOut, Settings, Star } from 'lucide-react';
+import { Library, LogInIcon, LogOut, Settings, Star } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserAvatar } from '@/components/ui/user-avatar';
@@ -47,6 +47,15 @@ const Account = () => {
           align="end"
           className="w-48 bg-[#171717e0] backdrop-blur-md border-white/10"
         >
+          <DropdownMenuItem asChild>
+            <Link
+              href="/library"
+              className="flex items-center gap-2 cursor-pointer focus:bg-white/90 focus:text-black"
+            >
+              <Library className="size-4" />
+              My Library
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link
               href="/my-reviews"
