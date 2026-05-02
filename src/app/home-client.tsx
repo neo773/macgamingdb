@@ -28,7 +28,7 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
     chipsetFilter,
     playMethodFilter,
     isDefaultFilter,
-    chipsetOptions,
+    chipsetGroups,
     playMethodOptions,
     filterConfig,
     handleFilterChange,
@@ -131,7 +131,7 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
           chipsetFilter={chipsetFilter}
           playMethodFilter={playMethodFilter}
           performanceFilter={performanceFilter}
-          chipsetOptions={chipsetOptions}
+          chipsetGroups={chipsetGroups}
           playMethodOptions={playMethodOptions}
           ratingCounts={isDefaultFilter ? GamesPage.ratingCounts : ratingCounts}
           onChipsetChange={handleChipsetChange}

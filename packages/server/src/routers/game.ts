@@ -5,11 +5,25 @@ import { getGamePrices } from '../api/ggdeals';
 import { getRegion } from '../utils/getRegion';
 import { TRPCError } from '@trpc/server';
 import {
+  CHIPSET_VARIANTS,
   ChipsetEnum,
   ChipsetVariantEnum,
   PerformanceEnum,
   PlayMethodEnum,
 } from '../schema';
+
+const chipsetVariantRefiner = (val: {
+  chipset?: z.infer<typeof ChipsetEnum>;
+  chipsetVariant?: z.infer<typeof ChipsetVariantEnum>;
+}, ctx: z.RefinementCtx) => {
+  if (val.chipset && val.chipsetVariant && !CHIPSET_VARIANTS[val.chipset].includes(val.chipsetVariant)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['chipsetVariant'],
+      message: `${val.chipset} has no ${val.chipsetVariant} variant`,
+    });
+  }
+};
 import { calculateTranslationLayerStats } from '../utils/calculateTranslationLayerStats';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
@@ -129,11 +143,13 @@ export const gameRouter = router({
 
   getFilterCounts: procedure
     .input(
-      z.object({
-        chipset: ChipsetEnum.optional(),
-        chipsetVariant: ChipsetVariantEnum.optional(),
-        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
-      }),
+      z
+        .object({
+          chipset: ChipsetEnum.optional(),
+          chipsetVariant: ChipsetVariantEnum.optional(),
+          playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+        })
+        .superRefine(chipsetVariantRefiner),
     )
     .query(async ({ input, ctx }) => {
       const { chipset, chipsetVariant, playMethod } = input;
@@ -155,14 +171,16 @@ export const gameRouter = router({
 
   getGames: procedure
     .input(
-      z.object({
-        limit: z.number().min(1).max(50).default(6),
-        cursor: z.number().min(0).default(0),
-        performance: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
-        chipset: ChipsetEnum.optional(),
-        chipsetVariant: ChipsetVariantEnum.optional(),
-        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
-      }),
+      z
+        .object({
+          limit: z.number().min(1).max(50).default(6),
+          cursor: z.number().min(0).default(0),
+          performance: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
+          chipset: ChipsetEnum.optional(),
+          chipsetVariant: ChipsetVariantEnum.optional(),
+          playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+        })
+        .superRefine(chipsetVariantRefiner),
     )
     .query(async ({ input, ctx }) => {
       try {

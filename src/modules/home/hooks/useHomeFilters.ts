@@ -11,7 +11,7 @@ import {
   DEFAULT_CHIPSET_FILTER,
   DEFAULT_PLAY_METHOD_FILTER,
 } from '@/lib/constants';
-import { getChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
+import { getGroupedChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@macgamingdb/server/schema';
 
 export function useHomeFilters() {
@@ -44,10 +44,7 @@ export function useHomeFilters() {
     [performanceFilter, chipsetFilter, playMethodFilter]
   );
 
-  const chipsetOptions = useMemo(
-    () => [{ value: 'all', label: 'All Chipsets' }, ...getChipsetCombinations()],
-    []
-  );
+  const chipsetGroups = useMemo(() => getGroupedChipsetCombinations(), []);
 
   const playMethodOptions = useMemo(
     () => [
@@ -106,7 +103,7 @@ export function useHomeFilters() {
     chipsetFilter,
     playMethodFilter,
     isDefaultFilter,
-    chipsetOptions,
+    chipsetGroups,
     playMethodOptions,
     filterConfig,
     handleFilterChange,

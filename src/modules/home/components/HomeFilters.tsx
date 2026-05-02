@@ -5,12 +5,13 @@ import { ChipsetFilter as ChipsetFilterComponent } from '@/modules/search/compon
 import { PlayMethodFilter as PlayMethodFilterComponent } from '@/modules/search/components/filters/PlayMethodFilter';
 import { PerformanceFilter as PerformanceFilterComponent } from '@/modules/search/components/filters/PerformanceFilter';
 import { formatRatingLabel } from '@macgamingdb/server/utils/formatRatingLabel';
+import type { ChipsetGroup } from '@macgamingdb/server/utils/getChipsetCombinations';
 
 interface HomeFiltersProps {
   chipsetFilter: string;
   playMethodFilter: PlayMethodFilter;
   performanceFilter: PerformanceFilter;
-  chipsetOptions: { value: string; label: string; count?: number }[];
+  chipsetGroups: ChipsetGroup[];
   playMethodOptions: { value: string; label: string }[];
   ratingCounts?: Record<string, number>;
   onChipsetChange: (value: string) => void;
@@ -22,7 +23,7 @@ export function HomeFilters({
   chipsetFilter,
   playMethodFilter,
   performanceFilter,
-  chipsetOptions,
+  chipsetGroups,
   playMethodOptions,
   ratingCounts,
   onChipsetChange,
@@ -35,9 +36,7 @@ export function HomeFilters({
         <div className="flex space-x-2 min-w-max">
           <ChipsetFilterComponent
             selectedChipset={chipsetFilter}
-            chipsetOptions={
-              chipsetOptions as { value: string; label: string; count: number }[]
-            }
+            chipsetGroups={chipsetGroups}
             onChipsetChange={onChipsetChange}
           />
 

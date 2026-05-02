@@ -34,6 +34,23 @@ export const GraphicsSettings = GraphicsSettingsEnum.Enum;
 export const Chipset = ChipsetEnum.Enum;
 export const ChipsetVariant = ChipsetVariantEnum.Enum;
 
+export const CHIPSET_VARIANTS: Record<
+  z.infer<typeof ChipsetEnum>,
+  z.infer<typeof ChipsetVariantEnum>[]
+> = {
+  A18: ['PRO'],
+  M1: ['BASE', 'PRO', 'MAX', 'ULTRA'],
+  M2: ['BASE', 'PRO', 'MAX', 'ULTRA'],
+  M3: ['BASE', 'PRO', 'MAX', 'ULTRA'],
+  M4: ['BASE', 'PRO', 'MAX'],
+  M5: ['BASE', 'PRO', 'MAX'],
+};
+
+export const isValidChipsetVariant = (
+  chipset: z.infer<typeof ChipsetEnum>,
+  variant: z.infer<typeof ChipsetVariantEnum>,
+): boolean => CHIPSET_VARIANTS[chipset].includes(variant);
+
 export const SOFTWARE_VERSIONS = {
   CROSSOVER: ['26.0', '25.1.1', '25.1.0', '25.0.1', '25.0', '24.0'],
   PARALLELS: ['26', '20', '19'],
