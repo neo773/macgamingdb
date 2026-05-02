@@ -14,7 +14,8 @@ type AnalyticsEvent =
   | { name: 'signup-requested' }
   | { name: 'search-performed' }
   | { name: 'review-submitted'; data: { gameId: string } }
-  | { name: 'ggdeals-click'; data: { gameId: string } };
+  | { name: 'ggdeals-click'; data: { gameId: string } }
+  | { name: 'steam-library-link-click' };
 
 export function trackEvent(event: AnalyticsEvent) {
   if (typeof window === 'undefined') return;

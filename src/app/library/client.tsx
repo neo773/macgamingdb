@@ -21,6 +21,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { trpc } from '@/lib/trpc/provider';
+import { trackEvent } from '@/lib/analytics/umami';
 import { FLOW_ERROR } from '@/lib/steam-openid/flowError';
 import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
@@ -160,7 +161,10 @@ export default function LibraryClient() {
                 See which games in your Steam library run on Apple Silicon and
                 how well they perform. Your Steam library must be set to public.
               </p>
-              <a href="/api/connections/steam/start">
+              <a
+                href="/api/connections/steam/start"
+                onClick={() => trackEvent({ name: 'steam-library-link-click' })}
+              >
                 <Button className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-500 text-white p-5">
                   Connect Steam Account
                 </Button>
