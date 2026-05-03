@@ -88,12 +88,13 @@ export const contributorRouter = router({
     .input(
       z.object({
         limit: z.number().min(1).max(50).default(10),
-        cursor: z.string().nullish(),
+        cursor: z.number().int().min(0).nullish(),
       }),
     )
     .query(async ({ input, ctx }) => {
       try {
-        const { limit, cursor } = input;
+        const { limit } = input;
+        const offset = input.cursor ?? 0;
 
         // Subquery: count reviews per user
         const reviewCountSq = ctx.db
@@ -105,7 +106,8 @@ export const contributorRouter = router({
           .groupBy(gameReviews.userId)
           .as('reviewCountSq');
 
-        // Join users with review counts, ordered by review count desc
+        // Join users with review counts, ordered by review count desc.
+        // Tie-break on users.id so paginated offsets are stable across pages.
         const userReviewCounts = await ctx.db
           .select({
             id: users.id,
@@ -115,12 +117,17 @@ export const contributorRouter = router({
           })
           .from(users)
           .innerJoin(reviewCountSq, eq(users.id, reviewCountSq.userId))
-          .orderBy(desc(reviewCountSq.reviewCount))
+          .orderBy(desc(reviewCountSq.reviewCount), users.id)
           .limit(limit + 1)
-          .offset(cursor ? 1 : 0);
+          .offset(offset);
 
-        const usersWithGameCounts = await Promise.all(
-          userReviewCounts.map(async (user) => {
+        const hasMore = userReviewCounts.length > limit;
+        const pageRows = hasMore
+          ? userReviewCounts.slice(0, limit)
+          : userReviewCounts;
+
+        const contributors = await Promise.all(
+          pageRows.map(async (user) => {
             const uniqueGames = await ctx.db
               .selectDistinct({ gameId: gameReviews.gameId })
               .from(gameReviews)
@@ -137,13 +144,7 @@ export const contributorRouter = router({
           }),
         );
 
-        const contributors = usersWithGameCounts.sort((a, b) => b.score - a.score);
-
-        let nextCursor: typeof cursor = undefined;
-        if (contributors.length > limit) {
-          const nextItem = contributors.pop();
-          nextCursor = nextItem!.id;
-        }
+        const nextCursor = hasMore ? offset + limit : null;
 
         // Count total users who have at least one review
         const usersWithReviews = ctx.db
