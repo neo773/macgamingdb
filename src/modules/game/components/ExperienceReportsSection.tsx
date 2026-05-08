@@ -1,8 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
 import CreateReviewDialog from '@/modules/review/components/CreateReviewDialog';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
-import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
+import { PromotionalBannerCrossOver } from '@/modules/game/components/PromotionalBannerCrossOver';
+import {
+  type GameReview,
+  type MacConfig,
+} from '@macgamingdb/server/drizzle/types';
 
 type ReviewWithMacConfig = GameReview & { macConfig?: MacConfig | null };
 
@@ -24,8 +27,12 @@ export function ExperienceReportsSection({
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-white">Experience Reports</h2>
-        {hasReviews && <CreateReviewDialog gameId={gameId} gameName={gameName} />}
+        <h2 className="text-2xl font-semibold text-white">
+          Experience Reports
+        </h2>
+        {hasReviews && (
+          <CreateReviewDialog gameId={gameId} gameName={gameName} />
+        )}
       </div>
 
       {hasReviews ? (
