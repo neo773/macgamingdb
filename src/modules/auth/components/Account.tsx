@@ -28,13 +28,15 @@ const Account = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const router = useRouter();
+  const { push: routerPush, refresh: routerRefresh } = router;
 
   if (isPending) {
     return null;
   }
 
   if (session?.user?.id) {
-    const avatarName = session.user.name || session.user.email || session.user.id;
+    const avatarName =
+      session.user.name || session.user.email || session.user.id;
 
     return (
       <DropdownMenu>
@@ -79,8 +81,8 @@ const Account = () => {
             className="flex items-center gap-2 text-red-400 focus:bg-red-500/10 focus:text-red-300 cursor-pointer"
             onClick={async () => {
               await authClient.signOut();
-              router.push('/');
-              router.refresh();
+              routerPush('/');
+              routerRefresh();
             }}
           >
             <LogOut className="size-4" />
@@ -104,7 +106,7 @@ const Account = () => {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 border-gray-600 text-white hover:bg-gray-800 hover:text-gray-200"
+          className="flex items-center gap-2 border-zinc-600 text-white hover:bg-zinc-800 hover:text-zinc-200"
         >
           <LogInIcon className="size-4" />
           Login

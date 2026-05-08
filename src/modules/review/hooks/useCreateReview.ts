@@ -43,7 +43,8 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState('');
   const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>('form');
-  const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
+  const [manuallySelectedConfig, setManuallySelectedConfig] =
+    useState<MacConfig | null>(null);
 
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
@@ -70,31 +71,17 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     }
   );
 
-  useEffect(() => {
-    if (savedMacConfig) {
-      setSelectedConfig(savedMacConfig);
-    }
-  }, [savedMacConfig]);
+  const selectedConfig = manuallySelectedConfig ?? savedMacConfig ?? null;
 
   useEffect(() => {
-    if (formData.playMethod) {
-      if (formData.playMethod === 'CROSSOVER') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-        }));
-      } else if (formData.playMethod === 'PARALLELS') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.PARALLELS[0],
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: '',
-        }));
-      }
-    }
+    if (!formData.playMethod) return;
+    const nextSoftwareVersion =
+      formData.playMethod === 'CROSSOVER'
+        ? SOFTWARE_VERSIONS.CROSSOVER[0]
+        : formData.playMethod === 'PARALLELS'
+          ? SOFTWARE_VERSIONS.PARALLELS[0]
+          : '';
+    setFormData((prev) => ({ ...prev, softwareVersion: nextSoftwareVersion }));
   }, [formData.playMethod]);
 
   const createReviewMutation = trpc.review.create.useMutation({
@@ -138,7 +125,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handleMacConfigSelect = (config: MacConfig) => {
-    setSelectedConfig(config);
+    setManuallySelectedConfig(config);
     setFormData((prev) => ({
       ...prev,
       macConfigIdentifier: config.identifier,

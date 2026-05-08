@@ -2,7 +2,7 @@
 
 const CheckIcon = () => (
   <svg
-    className="w-4 h-4 text-green-400"
+    className="size-4 text-green-400"
     fill="currentColor"
     viewBox="0 0 20 20"
   >
@@ -31,7 +31,7 @@ const GradientText = ({
   className?: string;
 }) => {
   const colorMap = {
-    white: 'from-gray-100 to-gray-300',
+    white: 'from-zinc-100 to-zinc-300',
     cyan: 'from-cyan-300 to-cyan-500',
     blue: 'from-blue-300 to-blue-500',
   };
@@ -52,7 +52,7 @@ export const PromotionalBannerCrossOver = () => {
         {/* Background effects */}
         <div className="absolute inset-0">
           {/* Main gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
+          <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-black" />
 
           {/* Geometric grid lines */}
           <div className="absolute inset-0 opacity-30">
@@ -90,7 +90,7 @@ export const PromotionalBannerCrossOver = () => {
           </header>
 
           {/* Features */}
-          <div className="text-gray-300 mb-6 space-y-1">
+          <div className="text-zinc-300 mb-6 space-y-1">
             <Feature>Native gameplay, no cloud streaming</Feature>
             <Feature>15% OFF with exclusive code <b>MGDB15</b></Feature>
             <Feature>14 Days Free Trial</Feature>
@@ -103,14 +103,14 @@ export const PromotionalBannerCrossOver = () => {
             rel="noopener noreferrer"
             className="rounded-full px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-black font-bold text-sm border border-cyan-400 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/40 relative overflow-hidden group"
           >
-            <span className="relative z-10 bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent">
+            <span className="relative z-10 bg-gradient-to-b from-white to-zinc-300 bg-clip-text text-transparent">
               START FREE TRIAL
             </span>
             <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
           </a>
 
           {/* Affiliate disclosure */}
-          <p className="text-[10px] text-gray-500 mt-4 max-w-xs leading-tight">
+          <p className="text-[10px] text-zinc-500 mt-4 max-w-xs leading-tight">
           *Affiliate link. Supports this site & Mac gaming through CodeWeavers' contributions to Wine.
           </p>
         </div>

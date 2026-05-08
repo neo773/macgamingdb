@@ -43,13 +43,13 @@ export function PerformanceFields({
   return (
     <>
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Performance Rating</label>
+        <label htmlFor="perf-rating" className="block text-sm font-medium">Performance Rating</label>
         <Select
           value={performance}
           onValueChange={(value) => onSelectChange('performance', value)}
           required
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger id="perf-rating" className="w-full">
             <SelectValue placeholder="Select performance rating" />
           </SelectTrigger>
           <SelectContent>
@@ -63,8 +63,9 @@ export function PerformanceFields({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">FPS (optional)</label>
+        <label htmlFor="perf-fps" className="block text-sm font-medium">FPS (optional)</label>
         <Input
+          id="perf-fps"
           type="number"
           name="fps"
           value={fps}
@@ -74,12 +75,12 @@ export function PerformanceFields({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Graphics Settings</label>
+        <label htmlFor="perf-graphics" className="block text-sm font-medium">Graphics Settings</label>
         <Select
           value={graphicsSettings}
           onValueChange={(value) => onSelectChange('graphicsSettings', value)}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger id="perf-graphics" className="w-full">
             <SelectValue placeholder="Select graphics settings" />
           </SelectTrigger>
           <SelectContent>
@@ -93,8 +94,9 @@ export function PerformanceFields({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Resolution (optional)</label>
+        <label htmlFor="perf-resolution" className="block text-sm font-medium">Resolution (optional)</label>
         <Input
+          id="perf-resolution"
           type="text"
           name="resolution"
           value={resolution}

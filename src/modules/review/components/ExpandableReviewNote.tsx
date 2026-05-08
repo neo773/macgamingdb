@@ -34,14 +34,12 @@ const ExpandableReviewNote = ({
     <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
       <p
         ref={contentRef}
-        className={cn('break-words', isExpanded ? '' : 'line-clamp-3')}
+        className={cn(
+          'break-words whitespace-pre-line',
+          isExpanded ? '' : 'line-clamp-3',
+        )}
       >
-        {notes.split('\n').map((line, i) => (
-          <React.Fragment key={i}>
-            {line}
-            {i < notes.split('\n').length - 1 && <br />}
-          </React.Fragment>
-        ))}
+        {notes}
       </p>
 
       {screenshots && <ScreenshotDisplay screenshots={screenshots} />}
@@ -53,11 +51,11 @@ const ExpandableReviewNote = ({
         >
           {isExpanded ? (
             <>
-              Read less <ChevronUp className="h-3 w-3" />
+              Read less <ChevronUp className="size-3" />
             </>
           ) : (
             <>
-              Read more <ChevronDown className="h-3 w-3" />
+              Read more <ChevronDown className="size-3" />
             </>
           )}
         </button>

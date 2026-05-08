@@ -29,9 +29,9 @@ export interface FilterConfig {
 }
 
 export function createFilterConfig(
-  performanceParam: string | null | undefined,
-  chipsetParam: string | null | undefined,
-  playMethodParam: string | null | undefined,
+  performanceParam?: string | null,
+  chipsetParam?: string | null,
+  playMethodParam?: string | null,
 ): FilterConfig {
   const filter = (performanceParam || 'ALL') as PerformanceFilter;
   const chipset = chipsetParam || 'all';

@@ -15,18 +15,27 @@ const PLAY_METHOD_LABELS: Record<PlayMethod, string> = {
 
 export function PlayMethodSelector({ selectedMethod, onSelect }: PlayMethodSelectorProps) {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium">Play Method</label>
+    <div
+      role="radiogroup"
+      aria-labelledby="play-method-label"
+      className="space-y-2"
+    >
+      <div id="play-method-label" className="block text-sm font-medium">
+        Play Method
+      </div>
       <div className="flex gap-4 justify-between">
         {PlayMethodEnum.options.map((method) => (
-          <div
+          <button
             key={method}
-            className={`cursor-pointer flex flex-col items-center ${
+            type="button"
+            role="radio"
+            aria-checked={selectedMethod === method}
+            onClick={() => onSelect(method)}
+            className={`cursor-pointer flex flex-col items-center bg-transparent border-0 p-0 ${
               selectedMethod === method
                 ? 'text-blue-500 font-medium'
-                : 'text-gray-600 dark:text-gray-400'
+                : 'text-zinc-600 dark:text-zinc-400'
             }`}
-            onClick={() => onSelect(method)}
           >
             <div
               className={`relative p-1 rounded-xl ${
@@ -36,11 +45,11 @@ export function PlayMethodSelector({ selectedMethod, onSelect }: PlayMethodSelec
               <img
                 src={`/images/${method.toLowerCase()}.png`}
                 alt={method}
-                className="w-14 h-14 object-contain p-1"
+                className="size-14 object-contain p-1"
               />
             </div>
             <span className="mt-1 text-sm">{PLAY_METHOD_LABELS[method]}</span>
-          </div>
+          </button>
         ))}
       </div>
     </div>

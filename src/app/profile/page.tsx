@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { createDrizzleClient } from '@macgamingdb/server/database';
 import { headers } from 'next/headers';
 import { BetterAuthClient } from '@macgamingdb/server/auth';
@@ -5,6 +6,11 @@ import { redirect } from 'next/navigation';
 import ProfileClient from './client';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Profile',
+  description: 'Manage your macgamingdb account, profile, and preferences.',
+};
 
 export default async function ProfilePage() {
   const db = createDrizzleClient();

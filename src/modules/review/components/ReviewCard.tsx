@@ -18,7 +18,7 @@ const getPerformanceColor = (performance: Performance) => {
     UNPLAYABLE: 'bg-red-500 text-red-50',
     VERY_GOOD: 'bg-purple-500 text-purple-50',
   };
-  return colors[performance] || 'bg-gray-500 text-gray-50';
+  return colors[performance] || 'bg-zinc-500 text-zinc-50';
 };
 
 const formatMethodName = (method: string) => {
@@ -66,7 +66,7 @@ const GameReviewCard = ({
                 </p>
 
                 {review.softwareVersion && (
-                  <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
+                  <span className="text-zinc-400 text-xs ml-1 -mt-[5px]">
                     v{review.softwareVersion}
                   </span>
                 )}
@@ -95,7 +95,7 @@ const GameReviewCard = ({
 
       <CardContent>
         <div className="border-t border-white/15 pt-3 pb-2">
-          <dl className="space-y-2 text-sm text-gray-300">
+          <dl className="space-y-2 text-sm text-zinc-300">
             <div className="flex justify-between">
               <dt className="font-medium">Graphics:</dt>
               <dd className="font-semibold text-white font-mono">
@@ -165,7 +165,7 @@ const GameReviewCard = ({
           <>
             {review.notes && (
               <div className="border-t border-white/15 pt-3 mt-2">
-                <h4 className="text-sm font-medium text-gray-300 mb-2">
+                <h4 className="text-sm font-medium text-zinc-300 mb-2">
                   Review Note:
                 </h4>
                 <ExpandableReviewNote
@@ -182,7 +182,7 @@ const GameReviewCard = ({
               review.screenshots &&
               review.screenshots.length > 0 && (
                 <div className="border-t border-white/15 pt-3 mt-2">
-                  <h4 className="text-sm font-medium text-gray-300">
+                  <h4 className="text-sm font-medium text-zinc-300">
                     Screenshots:
                   </h4>
                   <ScreenshotDisplay

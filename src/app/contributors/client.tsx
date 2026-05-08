@@ -59,7 +59,7 @@ export default function ContributorsClient({
       case 0:
         return <Trophy className="size-4 text-yellow-400" />;
       case 1:
-        return <Medal className="size-4 text-gray-300" />;
+        return <Medal className="size-4 text-zinc-300" />;
       case 2:
         return <Award className="size-4 text-amber-700" />;
       default:
@@ -69,8 +69,17 @@ export default function ContributorsClient({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allContributors.map((contributor, index) => (
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        suppressHydrationWarning
+      >
+        {allContributors.map((contributor, index) => {
+          const joinedLabel = formatDistance(
+            new Date(contributor.joinedAt),
+            new Date(),
+            { addSuffix: true },
+          );
+          return (
           <Link
             href={`/contributors/${contributor.id}`}
             key={contributor.id}
@@ -102,26 +111,21 @@ export default function ContributorsClient({
                         #{index + 1}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-400">
-                      Joined{' '}
-                      {formatDistance(
-                        new Date(contributor.joinedAt),
-                        new Date(),
-                        { addSuffix: true },
-                      )}
+                    <p className="text-sm text-zinc-400" suppressHydrationWarning>
+                      Joined {joinedLabel}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-6 space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Reviews submitted</span>
+                    <span className="text-zinc-400">Reviews submitted</span>
                     <span className="font-semibold text-white font-mono">
                       {contributor.reviewCount}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Games reviewed</span>
+                    <span className="text-zinc-400">Games reviewed</span>
                     <span className="font-semibold text-white font-mono">
                       {contributor.uniqueGamesCount}
                     </span>
@@ -130,20 +134,26 @@ export default function ContributorsClient({
               </CardContent>
             </Card>
           </Link>
-        ))}
+          );
+        })}
 
         {/* Loading skeletons */}
         {isFetchingNextPage &&
-          Array(6)
-            .fill(null)
-            .map((_, i) => (
+          [
+            'skeleton-1',
+            'skeleton-2',
+            'skeleton-3',
+            'skeleton-4',
+            'skeleton-5',
+            'skeleton-6',
+          ].map((skeletonKey) => (
               <Card
-                key={`skeleton-${i}`}
+                key={skeletonKey}
                 className="bg-black/30 border border-white/10"
               >
                 <CardContent className="px-6">
                   <div className="flex items-center gap-4">
-                    <Skeleton className="h-16 w-16 rounded-full" />
+                    <Skeleton className="size-16 rounded-full" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-6 w-32" />
                       <Skeleton className="h-4 w-24" />
@@ -174,7 +184,7 @@ export default function ContributorsClient({
             <h2 className="text-xl font-medium text-white">
               No contributors found
             </h2>
-            <p className="text-gray-300">
+            <p className="text-zinc-300">
               Be the first to submit game reviews and appear on this
               leaderboard!
             </p>

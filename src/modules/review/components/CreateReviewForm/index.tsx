@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { InfoIcon } from 'lucide-react';
 import {
   DialogHeader,
@@ -63,13 +63,18 @@ export default function CreateReviewForm({
   const Header = isDrawer ? 'div' : DialogHeader;
   const Title = isDrawer ? 'h3' : DialogTitle;
   const Description = isDrawer ? 'p' : DialogDescription;
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div className="relative overflow-hidden">
       <motion.div
         initial={false}
         animate={{ x: currentScreen === 'form' ? 0 : '-100%' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { type: 'spring', stiffness: 300, damping: 30 }
+        }
         className="w-full"
       >
         <>
@@ -102,7 +107,7 @@ export default function CreateReviewForm({
 
           <AuthPrompt promptMessage="To combat spam, please log in to share your experience with this game." />
 
-          <form onSubmit={handleSubmit} className="space-y-6 px-4 py-4">
+          <form onSubmit={handleSubmit} className="space-y-6 p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6">
               <PlayMethodSelector
                 selectedMethod={formData.playMethod}
@@ -145,8 +150,9 @@ export default function CreateReviewForm({
 
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
-                <label className="block text-sm font-medium">Notes (optional)</label>
+                <label htmlFor="review-notes" className="block text-sm font-medium">Notes (optional)</label>
                 <Textarea
+                  id="review-notes"
                   name="notes"
                   value={formData.notes}
                   onChange={handleInputChange}
@@ -157,13 +163,16 @@ export default function CreateReviewForm({
 
             <div className="space-y-2">
               <div className="flex flex-row items-center gap-2">
-                <label className="block text-sm font-medium">
+                <label
+                  htmlFor="review-screenshots"
+                  className="block text-sm font-medium"
+                >
                   Screenshots (optional)
                 </label>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <InfoIcon className="w-4 h-4" />
+                      <InfoIcon className="size-4" />
                     </TooltipTrigger>
                     <TooltipContent className="text-center">
                       <p>
@@ -184,11 +193,13 @@ export default function CreateReviewForm({
                 </TooltipProvider>
               </div>
 
-              <ScreenshotUpload
-                gameId={gameId}
-                onScreenshotsChange={handleScreenshotsChange}
-                maxFiles={3}
-              />
+              <div id="review-screenshots">
+                <ScreenshotUpload
+                  gameId={gameId}
+                  onScreenshotsChange={handleScreenshotsChange}
+                  maxFiles={3}
+                />
+              </div>
             </div>
 
             <ReviewFormFooter

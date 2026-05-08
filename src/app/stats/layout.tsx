@@ -4,7 +4,7 @@ export default function StatsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang="en">
       <body>
         <div className="bg-[#0A0A0A]">{children}</div>
       </body>

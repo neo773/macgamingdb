@@ -24,28 +24,28 @@ export function GameStatsCard({ stats }: GameStatsCardProps) {
           {stats ? (
             <>
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2 text-gray-300">
+                <h3 className="text-lg font-medium mb-2 text-zinc-300">
                   Experience Reports
                 </h3>
                 <p className="text-3xl font-bold text-white">{stats.totalReviews}</p>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2 text-gray-300">Play Methods</h3>
+                <h3 className="text-lg font-medium mb-2 text-zinc-300">Play Methods</h3>
                 <div className="space-y-3">
-                  <div className="flex justify-between text-gray-300">
+                  <div className="flex justify-between text-zinc-300">
                     <span>Native</span>
                     <span className="font-medium text-white">{stats.methods.native}</span>
                   </div>
-                  <div className="flex justify-between text-gray-300">
+                  <div className="flex justify-between text-zinc-300">
                     <span>CrossOver</span>
                     <span className="font-medium text-white">{stats.methods.crossover}</span>
                   </div>
-                  <div className="flex justify-between text-gray-300">
+                  <div className="flex justify-between text-zinc-300">
                     <span>Parallels</span>
                     <span className="font-medium text-white">{stats.methods.parallels}</span>
                   </div>
-                  <div className="flex justify-between text-gray-300">
+                  <div className="flex justify-between text-zinc-300">
                     <span>Other</span>
                     <span className="font-medium text-white">{stats.methods.other}</span>
                   </div>
@@ -53,9 +53,9 @@ export function GameStatsCard({ stats }: GameStatsCardProps) {
               </div>
 
               <div className="mb-4">
-                <h3 className="text-lg font-medium mb-2 text-gray-300">Average Rating</h3>
+                <h3 className="text-lg font-medium mb-2 text-zinc-300">Average Rating</h3>
                 <div className="flex items-center">
-                  <div className="w-full bg-gray-700 rounded-full h-2.5 mr-2">
+                  <div className="w-full bg-zinc-700 rounded-full h-2.5 mr-2">
                     <div
                       className="bg-blue-600 h-2.5 rounded-full"
                       style={{

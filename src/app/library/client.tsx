@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
 import { STEAM_LIBRARY_PRIVATE_CODE } from '@macgamingdb/server/services/steam-api';
@@ -39,7 +38,6 @@ function formatRelative(iso: string | null): string {
 }
 
 export default function LibraryClient() {
-  const searchParams = useSearchParams();
   const [unlinkOpen, setUnlinkOpen] = useState(false);
 
   const status = trpc.library.status.useQuery();
@@ -51,7 +49,8 @@ export default function LibraryClient() {
   const unlink = trpc.library.unlink.useMutation();
 
   useEffect(() => {
-    const err = searchParams.get('error');
+    if (typeof window === 'undefined') return;
+    const err = new URLSearchParams(window.location.search).get('error');
     if (!err) return;
     if (err === FLOW_ERROR.PrivateLibrary) {
       toast.error(
@@ -63,7 +62,7 @@ export default function LibraryClient() {
     ) {
       toast.error('Steam sign-in failed. Try again.');
     }
-  }, [searchParams]);
+  }, []);
 
   const handleResync = () => {
     const id = toast.loading('Syncing your Steam library...');
@@ -112,8 +111,8 @@ export default function LibraryClient() {
           <div>
             <h1 className="text-3xl font-bold text-white">My Library</h1>
             {linked && (
-              <p className="text-sm text-gray-400 mt-1 inline-flex items-center gap-1.5">
-                <SteamIcon className="size-3.5 text-gray-400" />
+              <p className="text-sm text-zinc-400 mt-1 inline-flex items-center gap-1.5">
+                <SteamIcon className="size-3.5 text-zinc-400" />
                 {games.length} games · Synced{' '}
                 {formatRelative(status.data?.lastSyncedAt ?? null)}
               </p>
@@ -147,35 +146,39 @@ export default function LibraryClient() {
         </div>
 
         {status.isLoading ? (
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <p className="text-zinc-500 text-sm">Loading…</p>
         ) : !linked ? (
           <Card className="bg-primary-gradient max-w-lg mx-auto">
             <CardContent className="py-16 flex flex-col items-center text-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/5 border border-white/10">
+              <div className="flex size-14 items-center justify-center rounded-full bg-white/5 border border-white/10">
                 <SteamIcon className="size-7 text-white" />
               </div>
               <h2 className="text-xl text-white font-medium">
                 Connect your Steam account
               </h2>
-              <p className="text-sm text-gray-400 max-w-md">
+              <p className="text-sm text-zinc-400 max-w-md">
                 See which games in your Steam library run on Apple Silicon and
                 how well they perform. Your Steam library must be set to public.
               </p>
-              <a
-                href="/api/connections/steam/start"
-                onClick={() => trackEvent({ name: 'steam-library-link-click' })}
+              <form
+                action="/api/connections/steam/start"
+                method="POST"
+                onSubmit={() => trackEvent({ name: 'steam-library-link-click' })}
               >
-                <Button className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-500 text-white p-5">
+                <Button
+                  type="submit"
+                  className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-500 text-white p-5"
+                >
                   Connect Steam Account
                 </Button>
-              </a>
+              </form>
             </CardContent>
           </Card>
         ) : list.isLoading ? (
-          <p className="text-gray-500 text-sm">Loading library...</p>
+          <p className="text-zinc-500 text-sm">Loading library…</p>
         ) : games.length === 0 ? (
           <Card className="bg-primary-gradient max-w-lg mx-auto">
-            <CardContent className="py-12 text-center text-gray-400">
+            <CardContent className="py-12 text-center text-zinc-400">
               No games found in your Steam library.
             </CardContent>
           </Card>

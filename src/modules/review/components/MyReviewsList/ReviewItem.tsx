@@ -58,6 +58,11 @@ export function ReviewItem({
   const screenshots = review.screenshots
     ? (JSON.parse(review.screenshots) as string[])
     : null;
+  const reviewedLabel = formatDistance(
+    new Date(review.createdAt),
+    new Date(),
+    { addSuffix: true },
+  );
 
   return (
     <WiggleWrapper enabled={isEditing}>
@@ -83,11 +88,8 @@ export function ReviewItem({
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
               <Link href={`/games/${review.gameId}`}></Link>
-              <div className="text-sm text-gray-300 mt-1">
-                Reviewed{' '}
-                {formatDistance(new Date(review.createdAt), new Date(), {
-                  addSuffix: true,
-                })}
+              <div className="text-sm text-zinc-300 mt-1" suppressHydrationWarning>
+                Reviewed {reviewedLabel}
               </div>
             </div>
           </div>
@@ -97,7 +99,7 @@ export function ReviewItem({
             <div className="border-t border-white/15 pt-3 mt-2">
               {hasSoftwareVersion && (
                 <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-zinc-300 mb-2">
                     Software Version:
                   </h4>
                   <Select
@@ -126,7 +128,7 @@ export function ReviewItem({
 
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-zinc-300 mb-2">
                     Performance Rating:
                   </h4>
                   <Select
@@ -149,7 +151,7 @@ export function ReviewItem({
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-zinc-300 mb-2">
                     FPS:
                   </h4>
                   <Input
@@ -164,7 +166,7 @@ export function ReviewItem({
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-zinc-300 mb-2">
                     Resolution:
                   </h4>
                   <Input
@@ -179,7 +181,7 @@ export function ReviewItem({
               </div>
 
               <div>
-                <h4 className="text-sm font-medium text-gray-300 mb-2">
+                <h4 className="text-sm font-medium text-zinc-300 mb-2">
                   Review Note:
                 </h4>
                 <Textarea
@@ -208,7 +210,7 @@ export function ReviewItem({
             <>
               {review.notes && (
                 <div className="border-t border-white/15 pt-3 mt-2">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  <h4 className="text-sm font-medium text-zinc-300 mb-2">
                     Review Note:
                   </h4>
                   <ExpandableReviewNote
@@ -220,7 +222,7 @@ export function ReviewItem({
 
               {!review.notes && screenshots && screenshots.length > 0 && (
                 <div className="border-t border-white/15 pt-3 mt-2">
-                  <h4 className="text-sm font-medium text-gray-300">
+                  <h4 className="text-sm font-medium text-zinc-300">
                     Screenshots:
                   </h4>
                   <ScreenshotDisplay screenshots={screenshots} />

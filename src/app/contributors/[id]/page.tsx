@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { createDrizzleClient } from '@macgamingdb/server/database';
 import { notFound } from 'next/navigation';
 import Header from '@/modules/layout/components/Header';
@@ -7,7 +8,7 @@ import { ChevronLeft } from 'lucide-react';
 import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
 import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
 
-import { formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { type SteamAppData } from '@macgamingdb/server/api/steam';
@@ -16,6 +17,25 @@ import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const db = createDrizzleClient();
+  const contributor = await db.query.users.findFirst({
+    where: eq(users.id, id),
+  });
+  const name = contributor?.email
+    ? contributor.email.split('@')[0].replace(/[0-9._]/g, '')
+    : 'Contributor';
+  return {
+    title: `${name} — Contributor`,
+    description: `Reviews submitted by ${name} on macgamingdb.`,
+  };
+}
 
 export async function generateStaticParams() {
   return [];
@@ -74,7 +94,7 @@ export default async function ContributorPage({
             <h1 className="text-3xl font-bold text-white capitalize">
               {contributorName} Reviews
             </h1>
-            <p className="text-gray-400">
+            <p className="text-zinc-400">
               {contributorReviews.length} reviews across {uniqueGamesCount}{' '}
               games
             </p>
@@ -95,6 +115,10 @@ export default async function ContributorPage({
                 const gameDetails = JSON.parse(
                   review.game.details ?? '{}',
                 ) as SteamAppData;
+                const reviewedLabel = format(
+                  review.createdAt,
+                  'MMM d, yyyy',
+                );
                 return (
                   <div key={review.id}>
                     <GameReviewCard
@@ -115,13 +139,11 @@ export default async function ContributorPage({
                                 {gameDetails.name || 'Unknown Game'}
                               </h3>
                             </Link>
-                            <div className="text-sm text-gray-300 mt-1">
-                              Reviewed{' '}
-                              {formatDistance(
-                                new Date(review.createdAt),
-                                new Date(),
-                                { addSuffix: true },
-                              )}
+                            <div
+                              className="text-sm text-zinc-300 mt-1"
+                              suppressHydrationWarning
+                            >
+                              Reviewed {reviewedLabel}
                             </div>
                           </div>
                         </div>
@@ -131,7 +153,7 @@ export default async function ContributorPage({
                           {review.notes && (
                             <div className="border-t border-white/15 pt-3 mt-2">
                               <div>
-                                <h4 className="text-sm font-medium text-gray-300 mb-2">
+                                <h4 className="text-sm font-medium text-zinc-300 mb-2">
                                   Review Note:
                                 </h4>
                                 <ExpandableReviewNote
@@ -149,7 +171,7 @@ export default async function ContributorPage({
                             review.screenshots &&
                             review.screenshots.length > 0 && (
                               <div className="border-t border-white/15 pt-3 mt-2">
-                                <h4 className="text-sm font-medium text-gray-300">
+                                <h4 className="text-sm font-medium text-zinc-300">
                                   Screenshots:
                                 </h4>
                                 <ScreenshotDisplay

@@ -60,11 +60,11 @@ export function GameCard({
       href={`/games/${game.objectID}`}
       className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
     >
-      <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
+      <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-zinc-800 shadow-lg shadow-blue-900/20">
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
 
         {showFallback ? (
-          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+          <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
             <LogoIcon width={60} height={60} className="opacity-60" />
           </div>
         ) : (

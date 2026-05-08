@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { createDrizzleClient } from '@macgamingdb/server/database';
 import { headers } from 'next/headers';
 import { BetterAuthClient } from '@macgamingdb/server/auth';
@@ -6,6 +7,12 @@ import { gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'My Reviews',
+  description:
+    'Reviews you have submitted on macgamingdb — manage and track your contributions.',
+};
 
 export default async function MyReviewsPage() {
   const db = createDrizzleClient();

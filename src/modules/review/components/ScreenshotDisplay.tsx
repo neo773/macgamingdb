@@ -52,14 +52,22 @@ export default function ScreenshotDisplay({
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {publicUrls.slice(0, 3).map((url, index) => (
           <div
-            key={index}
-            className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-sm overflow-hidden border border-[#303030] hover:scale-105 transition-transform"
+            key={url}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleImageClick(index)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                handleImageClick(index);
+              }
+            }}
+            className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-sm overflow-hidden border border-[#303030] hover:scale-105 transition-transform cursor-pointer"
           >
             <img
               src={url}
               alt={`Screenshot ${index + 1}`}
-              className="w-full h-full object-cover cursor-pointer"
-              onClick={() => handleImageClick(index)}
+              className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}
@@ -68,7 +76,7 @@ export default function ScreenshotDisplay({
         ))}
       </div>
       {screenshots.length > 3 && (
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs text-zinc-400 mt-2">
           +{screenshots.length - 3} more screenshot
           {screenshots.length > 4 ? 's' : ''}
         </p>

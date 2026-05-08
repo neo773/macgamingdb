@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   SearchURLParamsKeys,
   type PerformanceFilter,
@@ -14,23 +14,29 @@ import {
 import { getGroupedChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
 import { PlayMethodEnum } from '@macgamingdb/server/schema';
 
+function readInitialSearchParams(): URLSearchParams {
+  if (typeof window === 'undefined') return new URLSearchParams();
+  return new URLSearchParams(window.location.search);
+}
+
 export function useHomeFilters() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const { replace: routerReplace } = router;
   const pathname = usePathname();
 
   const [performanceFilter, setPerformanceFilter] = useState<PerformanceFilter>(
     () =>
-      (searchParams.get(SearchURLParamsKeys.PERFORMANCE) ||
+      (readInitialSearchParams().get(SearchURLParamsKeys.PERFORMANCE) ||
         DEFAULT_PERFORMANCE_FILTER) as PerformanceFilter
   );
   const [chipsetFilter, setChipsetFilter] = useState(
     () =>
-      searchParams.get(SearchURLParamsKeys.CHIPSET) || DEFAULT_CHIPSET_FILTER
+      readInitialSearchParams().get(SearchURLParamsKeys.CHIPSET) ||
+      DEFAULT_CHIPSET_FILTER
   );
   const [playMethodFilter, setPlayMethodFilter] = useState<PlayMethodFilter>(
     () =>
-      (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) ||
+      (readInitialSearchParams().get(SearchURLParamsKeys.PLAY_METHOD) ||
         DEFAULT_PLAY_METHOD_FILTER) as PlayMethodFilter
   );
 
@@ -71,7 +77,7 @@ export function useHomeFilters() {
     }
 
     const queryString = params.toString();
-    router.replace(`${pathname}${queryString ? `?${queryString}` : ''}`, {
+    routerReplace(`${pathname}${queryString ? `?${queryString}` : ''}`, {
       scroll: false,
     });
   };

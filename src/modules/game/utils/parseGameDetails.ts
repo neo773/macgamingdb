@@ -15,5 +15,3 @@ export function parseGameDetails(details: string | null): SteamAppData {
     return DEFAULT_GAME_DETAILS;
   }
 }
-
-export { DEFAULT_GAME_DETAILS };

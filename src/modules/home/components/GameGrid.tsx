@@ -27,11 +27,16 @@ export function GameGrid({
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {Array(6)
-          .fill(null)
-          .map((_, i) => (
-            <GameCardSkeleton key={`skeleton-${i}`} />
-          ))}
+        {[
+          'skeleton-1',
+          'skeleton-2',
+          'skeleton-3',
+          'skeleton-4',
+          'skeleton-5',
+          'skeleton-6',
+        ].map((skeletonKey) => (
+          <GameCardSkeleton key={skeletonKey} />
+        ))}
       </div>
     );
   }
@@ -41,7 +46,7 @@ export function GameGrid({
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="col-span-full text-center py-8">
-            <p className="text-xl text-gray-400">
+            <p className="text-xl text-zinc-400">
               No games found matching your search.
             </p>
           </div>
@@ -62,7 +67,7 @@ export function GameGrid({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="col-span-full text-center py-8">
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-zinc-400">
             No games found with the selected filters.
           </p>
         </div>
@@ -85,9 +90,14 @@ export function GameGrid({
       ))}
 
       {isFetchingNextPage &&
-        Array(6)
-          .fill(null)
-          .map((_, i) => <GameCardSkeleton key={`loading-more-${i}`} />)}
+        [
+          'loading-more-1',
+          'loading-more-2',
+          'loading-more-3',
+          'loading-more-4',
+          'loading-more-5',
+          'loading-more-6',
+        ].map((skeletonKey) => <GameCardSkeleton key={skeletonKey} />)}
     </div>
   );
 }

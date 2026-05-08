@@ -88,25 +88,33 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
             <Card className="shadow-lg mt-4 bg-primary-gradient">
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="profile-email"
+                    className="text-sm font-medium text-zinc-300"
+                  >
                     Email
                   </label>
                   <Input
+                    id="profile-email"
                     value={user.email}
                     disabled
-                    className="bg-gray-900/50 border-gray-700 text-gray-400"
+                    className="bg-zinc-900/50 border-zinc-700 text-zinc-400"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="profile-display-name"
+                    className="text-sm font-medium text-zinc-300"
+                  >
                     Display Name
                   </label>
                   <Input
+                    id="profile-display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter your display name"
-                    className="bg-gray-900/50 border-gray-700 text-white"
+                    className="bg-zinc-900/50 border-zinc-700 text-white"
                   />
                 </div>
 
@@ -126,7 +134,7 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
             <Card className="shadow-lg mt-4 border border-red-500/20 bg-primary-gradient">
               <CardContent>
                 <p className="text-white font-medium">Delete account</p>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-zinc-400 mt-1">
                   Permanently delete your account and all associated data
                   including reviews. This action is irreversible.
                 </p>
@@ -160,7 +168,7 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
                   <p className="text-sm text-red-400 font-medium">
                     Are you sure you want to delete your account?
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-zinc-400">
                     Type{' '}
                     <span className="font-mono font-semibold text-white bg-white/10 rounded px-1.5 py-0.5">
                       DELETE
@@ -171,7 +179,7 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
                     value={deleteConfirm}
                     onChange={(e) => setDeleteConfirm(e.target.value)}
                     placeholder="DELETE"
-                    className="bg-gray-900/50 border-gray-700 text-white"
+                    className="bg-zinc-900/50 border-zinc-700 text-white"
                   />
                 </div>
 

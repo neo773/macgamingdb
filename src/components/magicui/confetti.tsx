@@ -8,8 +8,8 @@ import confetti, {
 
 import React, {
   type ReactNode,
+  type Ref,
   createContext,
-  forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -28,18 +28,20 @@ type Props = React.ComponentPropsWithRef<'canvas'> & {
   globalOptions?: ConfettiGlobalOptions;
   manualstart?: boolean;
   children?: ReactNode;
+  ref?: Ref<ConfettiRef>;
 };
 
 export type ConfettiRef = Api | null;
 
 const ConfettiContext = createContext<Api>({} as Api);
 
-const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
+const ConfettiComponent = (props: Props) => {
   const {
     options,
     globalOptions = { resize: true, useWorker: true },
     manualstart = false,
     children,
+    ref,
     ...rest
   } = props;
   const instanceRef = useRef<ConfettiInstance | null>(null);
@@ -100,7 +102,7 @@ const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
       {children}
     </ConfettiContext.Provider>
   );
-});
+};
 
 ConfettiComponent.displayName = 'Confetti';
 
@@ -117,7 +119,9 @@ const ConfettiButtonComponent = ({
   children,
   ...props
 }: ConfettiButtonProps) => {
-  const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const fireConfettiBurst = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     try {
       const rect = event.currentTarget.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
@@ -135,7 +139,7 @@ const ConfettiButtonComponent = ({
   };
 
   return (
-    <Button onClick={handleClick} {...props}>
+    <Button onClick={fireConfettiBurst} {...props}>
       {children}
     </Button>
   );

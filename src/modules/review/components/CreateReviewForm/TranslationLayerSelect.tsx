@@ -24,9 +24,14 @@ const TRANSLATION_LAYER_LABELS: Record<string, string> = {
 export function TranslationLayerSelect({ value, onChange }: TranslationLayerSelectProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium">Translation Layer</label>
+      <label
+        htmlFor="translation-layer-select"
+        className="block text-sm font-medium"
+      >
+        Translation Layer
+      </label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger id="translation-layer-select" className="w-full">
           <SelectValue placeholder="Select translation layer" />
         </SelectTrigger>
         <SelectContent>

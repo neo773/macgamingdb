@@ -26,9 +26,12 @@ export function MacConfigButton({
   return (
     <div className="space-y-2">
       <div className="flex flex-row items-center gap-2">
-        <label className="block text-sm font-medium">Mac Configuration</label>
+        <label htmlFor="mac-config-button" className="block text-sm font-medium">
+          Mac Configuration
+        </label>
       </div>
       <Button
+        id="mac-config-button"
         type="button"
         variant="outline"
         className="w-full justify-between rounded-md"
@@ -47,7 +50,7 @@ export function MacConfigButton({
               className="w-4 h-auto"
             />
           )}
-          <ChevronLeft className="h-4 w-4 rotate-180" />
+          <ChevronLeft className="size-4 rotate-180" />
         </div>
       </Button>
     </div>

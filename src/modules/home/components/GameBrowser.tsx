@@ -8,7 +8,11 @@ import { type inferRouterOutputs } from '@trpc/server';
 import { type AppRouter } from '@macgamingdb/server/routers/_app';
 import { homeJsonLd, faqJsonLd } from '@/lib/utils/jsonLd';
 import { useHomeFilters, useGameSearch } from '@/modules/home/hooks';
-import { HomeFilters, GameGrid } from '@/modules/home/components';
+import { GameGrid } from '@/modules/home/components';
+import { ChipsetFilter } from '@/modules/search/components/filters/ChipsetFilter';
+import { PlayMethodFilter } from '@/modules/search/components/filters/PlayMethodFilter';
+import { PerformanceFilter } from '@/modules/search/components/filters/PerformanceFilter';
+import { formatRatingLabel } from '@macgamingdb/server/utils/formatRatingLabel';
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
@@ -16,11 +20,11 @@ type GamesPage = RouterOutput['game']['getGames'] & {
   ratingCounts: RouterOutput['game']['getFilterCounts'];
 };
 
-interface HomeClientProps {
+interface GameBrowserProps {
   GamesPage: GamesPage;
 }
 
-export default function HomeClient({ GamesPage }: HomeClientProps) {
+export default function GameBrowser({ GamesPage }: GameBrowserProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -38,10 +42,11 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
   } = useHomeFilters();
 
   const {
+    query: searchQuery,
+    setQuery: setSearchQuery,
     searchResults,
     isSearchLoading,
     isSearchMode,
-    handleSearchResultsChange,
   } = useGameSearch();
 
   const initialGamesData = isDefaultFilter
@@ -96,13 +101,9 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSearchMode]);
 
-  const handleSearchChange = (
-    results: Parameters<typeof handleSearchResultsChange>[0],
-    isLoading: boolean
-  ) => {
-    handleSearchResultsChange(results, isLoading);
-
-    if (results === null && searchResults !== null) {
+  const handleSearchInput = (next: string) => {
+    setSearchQuery(next);
+    if (next.trim().length === 0 && searchResults !== null) {
       resetFilters();
     }
   };
@@ -114,30 +115,49 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
       <Script
         type="application/ld+json"
         id="jsonLdHome"
+        // eslint-disable-next-line react/no-danger -- ld+json structured data requires raw HTML injection
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
       />
       <Script
         type="application/ld+json"
         id="jsonLdFaq"
+        // eslint-disable-next-line react/no-danger -- ld+json structured data requires raw HTML injection
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       <div className="flex justify-center md:px-8 md:p-0 mb-8">
-        <SearchBar onResultsChange={handleSearchChange} />
+        <SearchBar
+          value={searchQuery}
+          onChange={handleSearchInput}
+          isLoading={isSearchLoading}
+        />
       </div>
 
       {!searchResults && (
-        <HomeFilters
-          chipsetFilter={chipsetFilter}
-          playMethodFilter={playMethodFilter}
-          performanceFilter={performanceFilter}
-          chipsetGroups={chipsetGroups}
-          playMethodOptions={playMethodOptions}
-          ratingCounts={isDefaultFilter ? GamesPage.ratingCounts : ratingCounts}
-          onChipsetChange={handleChipsetChange}
-          onPlayMethodChange={handlePlayMethodChange}
-          onPerformanceChange={handleFilterChange}
-        />
+        <div className="mb-6">
+          <div className="overflow-x-auto pb-2">
+            <div className="flex gap-2 min-w-max">
+              <ChipsetFilter
+                selectedChipset={chipsetFilter}
+                chipsetGroups={chipsetGroups}
+                onChipsetChange={handleChipsetChange}
+              />
+              <PlayMethodFilter
+                selectedPlayMethod={playMethodFilter}
+                playMethodOptions={playMethodOptions}
+                onPlayMethodChange={handlePlayMethodChange}
+              />
+              <PerformanceFilter
+                activeFilter={performanceFilter}
+                onFilterChange={handleFilterChange}
+                displayStats={
+                  isDefaultFilter ? GamesPage.ratingCounts : ratingCounts
+                }
+                formatRatingLabel={formatRatingLabel}
+              />
+            </div>
+          </div>
+        </div>
       )}
 
       <GameGrid

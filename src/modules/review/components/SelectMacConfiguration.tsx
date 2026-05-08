@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, memo } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -35,7 +35,7 @@ interface SelectMacConfigurationProps {
 const MacConfigSkeleton = memo(() => (
   <div className="w-full p-4 rounded-lg border border-border">
     <div className="flex items-center gap-4">
-      <Skeleton className="w-12 h-12 rounded" />
+      <Skeleton className="size-12 rounded" />
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-3/4" />
         <div className="flex items-center gap-2">
@@ -77,24 +77,24 @@ const MacConfigGuide = memo(() => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-gradient-to-br from-gray-500/10 to-gray-500/5 border  dark:border-white/10 rounded-xl p-4 backdrop-blur-sm">
+    <div className="bg-gradient-to-br from-zinc-500/10 to-zinc-500/5 border  dark:border-white/10 rounded-xl p-4 backdrop-blur-sm">
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 w-8 h-8 from-gray-200 to-gray-400 bg-gradient-to-br rounded-lg flex items-center justify-center mt-0.5">
-          <InfoIcon className="h-4 w-4 text-gray-900" />
+        <div className="flex-shrink-0 size-8 from-zinc-200 to-zinc-400 bg-gradient-to-br rounded-lg flex items-center justify-center mt-0.5">
+          <InfoIcon className="size-4 text-zinc-900" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-1">
+          <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 mb-1">
             Not sure which Mac you have?
           </h3>
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-sm text-muted-foreground hover:text-gray-100 transition-colors flex items-center gap-1 group"
+            className="text-sm text-muted-foreground hover:text-zinc-100 transition-colors flex items-center gap-1 group"
           >
             Follow these steps
             <ChevronDown
               className={cn(
-                'h-3 w-3 transition-transform group-hover:scale-110',
+                'size-3 transition-transform group-hover:scale-110',
                 isExpanded && 'rotate-180'
               )}
             />
@@ -106,17 +106,17 @@ const MacConfigGuide = memo(() => {
         <div className="mt-4 space-y-6 animate-in slide-in-from-top-2 duration-300">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full text-xs flex items-center justify-center mt-0.5 font-semibold shadow-sm">
+              <span className="flex-shrink-0 size-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full text-xs flex items-center justify-center mt-0.5 font-semibold shadow-sm">
                 1
               </span>
-              <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+              <span className="text-sm text-zinc-700 dark:text-zinc-300 font-medium">
                 Click the Apple{'\u2122'} icon in the top-left corner
               </span>
             </div>
             <div className="ml-9">
               <img
                 src="/images/guide/how-find-specs/1.jpeg"
-                className="w-full max-w-md rounded-lg border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-shadow"
+                className="w-full max-w-md rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-md hover:shadow-lg transition-shadow"
                 alt="Click Apple icon"
               />
             </div>
@@ -124,17 +124,17 @@ const MacConfigGuide = memo(() => {
 
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full text-xs flex items-center justify-center mt-0.5 font-semibold shadow-sm">
+              <span className="flex-shrink-0 size-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full text-xs flex items-center justify-center mt-0.5 font-semibold shadow-sm">
                 2
               </span>
-              <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
+              <span className="text-sm text-zinc-700 dark:text-zinc-300 font-medium">
                 Select "About This Mac"
               </span>
             </div>
             <div className="ml-9">
               <img
                 src="/images/guide/how-find-specs/2.jpeg"
-                className="w-full max-w-md rounded-lg border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-shadow"
+                className="w-full max-w-md rounded-lg border border-zinc-200 dark:border-zinc-700 shadow-md hover:shadow-lg transition-shadow"
                 alt="Click About This Mac"
               />
             </div>
@@ -167,7 +167,7 @@ const MacConfigCard = memo(
           <img
             src={getDeviceIcon(config.metadata.family)}
             alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
-            className="w-12 h-12 object-contain opacity-80"
+            className="size-12 object-contain opacity-80"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
@@ -185,22 +185,22 @@ const MacConfigCard = memo(
           </h4>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <Cpu className="w-3 h-3" />
+              <Cpu className="size-3" />
               <span>{config.metadata.cpuCores}C CPU</span>
             </div>
             <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <Gpu className="w-3 h-3" />
+              <Gpu className="size-3" />
               <span>{config.metadata.gpuCores}C GPU</span>
             </div>
             <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <MemoryStick className="w-3 h-3" />
+              <MemoryStick className="size-3" />
               <span>{config.metadata.ram}GB RAM</span>
             </div>
           </div>
         </div>
 
         {/* Selection Indicator */}
-        {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
+        {isSelected && <Check className="size-5 text-primary flex-shrink-0" />}
       </div>
     </button>
   )
@@ -245,7 +245,7 @@ interface HeaderProps {
 const Header = memo(({ onBack }: HeaderProps) => (
   <div className="flex items-center gap-3">
     <Button variant="ghost" size="sm" onClick={onBack} className="p-2">
-      <ChevronLeft className="h-5 w-5" />
+      <ChevronLeft className="size-5" />
     </Button>
     <div className="flex-1">
       <h2 className="text-lg font-semibold">Select Mac Configuration</h2>
@@ -268,7 +268,7 @@ const SearchBar = memo(
     isSearching,
   }: SearchBarProps & { isSearching?: boolean }) => (
     <div className="relative">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         placeholder="Search Mac models, chipsets..."
         value={value}
@@ -277,11 +277,51 @@ const SearchBar = memo(
       />
       {isSearching && (
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          <div className="animate-spin rounded-full h-4 w-4 border-b border-muted-foreground"></div>
+          <div className="animate-spin rounded-full size-4 border-b border-muted-foreground"></div>
         </div>
       )}
     </div>
   )
+);
+
+interface MacConfigContentProps {
+  macConfigsLoading: boolean;
+  macConfigs: MacConfig[];
+  groupedConfigs: Record<string, MacConfig[]>;
+  selectedConfigIdentifier: string;
+  onSelectConfig: (config: MacConfig) => void;
+}
+
+const MacConfigContent = memo(
+  ({
+    macConfigsLoading,
+    macConfigs,
+    groupedConfigs,
+    selectedConfigIdentifier,
+    onSelectConfig,
+  }: MacConfigContentProps) => {
+    if (macConfigsLoading && macConfigs.length === 0) {
+      return <LoadingState />;
+    }
+
+    if (macConfigs.length === 0 && !macConfigsLoading) {
+      return <NoResultsState />;
+    }
+
+    return (
+      <>
+        {Object.entries(groupedConfigs).map(([familyKey, configs]) => (
+          <MacConfigGroup
+            key={familyKey}
+            familyKey={familyKey}
+            configs={configs}
+            selectedConfigIdentifier={selectedConfigIdentifier}
+            onSelect={onSelectConfig}
+          />
+        ))}
+      </>
+    );
+  },
 );
 
 export default function SelectMacConfiguration({
@@ -290,6 +330,7 @@ export default function SelectMacConfiguration({
   onBack,
 }: SelectMacConfigurationProps) {
   const [macConfigSearch, setMacConfigSearch] = useState('');
+  const prefersReducedMotion = useReducedMotion();
 
   const {
     data: macConfigs = [],
@@ -323,40 +364,16 @@ export default function SelectMacConfiguration({
     setMacConfigSearch('');
   };
 
-  const renderContent = () => {
-    if (macConfigsLoading && macConfigs.length === 0) {
-      return <LoadingState />;
-    }
-
-    if (macConfigs.length === 0 && !macConfigsLoading) {
-      return <NoResultsState />;
-    }
-
-    return (
-      <>
-        {Object.entries(groupedConfigs).map(([familyKey, configs]) => (
-          <MacConfigGroup
-            key={familyKey}
-            familyKey={familyKey}
-            configs={configs}
-            selectedConfigIdentifier={selectedConfigIdentifier}
-            onSelect={handleMacConfigSelect}
-          />
-        ))}
-      </>
-    );
-  };
-
   return (
     <motion.div
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
-      transition={{
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { type: 'spring', stiffness: 300, damping: 30 }
+      }
       className="absolute inset-0 px-4 md:px-0 flex flex-col gap-3"
     >
       <Header onBack={onBack} />
@@ -369,7 +386,13 @@ export default function SelectMacConfiguration({
       <ScrollArea className="flex-1 min-h-0">
         <MacConfigGuide />
 
-        {renderContent()}
+        <MacConfigContent
+          macConfigsLoading={macConfigsLoading}
+          macConfigs={macConfigs}
+          groupedConfigs={groupedConfigs}
+          selectedConfigIdentifier={selectedConfigIdentifier}
+          onSelectConfig={handleMacConfigSelect}
+        />
       </ScrollArea>
     </motion.div>
   );

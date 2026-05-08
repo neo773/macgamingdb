@@ -28,11 +28,11 @@ export default function ExpandableDescription({
   return (
     <div className="mt-2">
       <div
-        className={`overflow-hidden relative ${isExpanded ? '' : 'max-h-[200px]'}`}
-        style={{ transition: 'max-height 0.3s ease-in-out' }}
+        className={`overflow-hidden relative transition-[max-height] duration-300 ease-in-out ${isExpanded ? '' : 'max-h-[200px]'}`}
       >
         <div
           ref={contentRef}
+          // eslint-disable-next-line react/no-danger -- Steam game description is sanitized HTML from upstream
           dangerouslySetInnerHTML={{ __html: description }}
           className="game-description"
         />

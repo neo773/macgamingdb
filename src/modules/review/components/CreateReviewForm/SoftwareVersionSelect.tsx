@@ -38,12 +38,17 @@ export function SoftwareVersionSelect({
     playMethod === 'CROSSOVER' ? SOFTWARE_VERSIONS.CROSSOVER : SOFTWARE_VERSIONS.PARALLELS;
 
   return (
-    <div className="flex flex-col justify-center space-y-2">
-      <label className="block text-sm font-medium">Software Version</label>
+    <div className="flex flex-col justify-center gap-2">
+      <label
+        htmlFor="software-version-select"
+        className="block text-sm font-medium"
+      >
+        Software Version
+      </label>
       {!customVersion ? (
         <div>
           <Select value={softwareVersion} onValueChange={onVersionChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger id="software-version-select" className="w-full">
               <SelectValue placeholder="Select software version" />
             </SelectTrigger>
             <SelectContent>
@@ -53,13 +58,13 @@ export function SoftwareVersionSelect({
                 </SelectItem>
               ))}
               <SelectItem key="custom" value="custom">
-                Custom version...
+                Custom version…
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
       ) : (
-        <div className="flex space-x-2 items-center">
+        <div className="flex gap-2 items-center">
           <Input
             type="text"
             value={customVersionValue}

@@ -41,10 +41,10 @@ export function ResourceIntensiveTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {queries.map((query, index) => {
+            {queries.map((query) => {
               const totalImpact = query.rows_read + query.rows_written;
               return (
-                <TableRow key={index}>
+                <TableRow key={`${query.query}-${totalImpact}`}>
                   <TableCell>
                     <Badge variant="outline">{getQueryIntent(query.query)}</Badge>
                   </TableCell>

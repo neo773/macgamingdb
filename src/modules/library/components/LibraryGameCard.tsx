@@ -64,7 +64,7 @@ export function LibraryGameCard({
 
         {playtime && (
           <div className="absolute top-2 right-2">
-            <span className="inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-black/60 text-gray-200 border border-white/10 backdrop-blur-sm">
+            <span className="inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-black/60 text-zinc-200 border border-white/10 backdrop-blur-sm">
               {playtime}
             </span>
           </div>

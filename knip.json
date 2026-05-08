@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/app/**/{page,layout,loading,error,not-found,template,default,route}.{ts,tsx,mdx}",
+    "src/app/**/middleware.ts",
+    "src/middleware.ts",
+    "scripts/**/*.{ts,js}",
+    "next.config.{ts,js,mjs}",
+    "drizzle.config.{ts,js}",
+    "vitest.config.{ts,js}",
+    "eslint.config.{ts,js,mjs}",
+    "postcss.config.{ts,js,mjs}",
+    "tailwind.config.{ts,js,mjs}"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.{ts,js}"],
+  "ignore": [
+    "src/components/ui/**",
+    "src/components/magicui/**",
+    ".expect/**",
+    "MobileApp/**",
+    "packages/**"
+  ]
+}

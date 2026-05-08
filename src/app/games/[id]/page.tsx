@@ -58,8 +58,10 @@ export default async function GamePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const helpers = await createServerHelpers();
+  const [{ id }, helpers] = await Promise.all([
+    params,
+    createServerHelpers(),
+  ]);
 
   try {
     const { game, reviews, stats } = await helpers.game.getById.fetch({ id });

@@ -12,11 +12,11 @@ const Footer = () => {
           <div className="flex flex-col gap-3">
             <Link href="/" className="flex items-center gap-2 w-fit">
               <LogoIcon className="size-5" />
-              <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
+              <span className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-400">
                 MacGamingDB
               </span>
             </Link>
-            <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
+            <p className="text-sm text-zinc-500 max-w-xs leading-relaxed">
               A community-driven resource helping Mac gamers discover and share
               game compatibility information.
             </p>
@@ -24,18 +24,18 @@ const Footer = () => {
 
           {/* Resources */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-medium text-gray-300">Resources</h3>
+            <h3 className="text-sm font-medium text-zinc-300">Resources</h3>
             <nav className="flex flex-col gap-2.5">
               <Link
                 href="/blog"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <BookOpen className="size-3.5" />
                 Blog
               </Link>
               <Link
                 href="/contributors"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <Trophy className="size-3.5" />
                 Contributors
@@ -43,7 +43,7 @@ const Footer = () => {
               <Link
                 href="https://macgamingdb.userjot.com/"
                 target="_blank"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <Map className="size-3.5" />
                 Roadmap
@@ -53,12 +53,12 @@ const Footer = () => {
 
           {/* Community */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-medium text-gray-300">Community</h3>
+            <h3 className="text-sm font-medium text-zinc-300">Community</h3>
             <nav className="flex flex-col gap-2.5">
               <Link
                 href="https://github.com/neo773/macgamingdb"
                 target="_blank"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <Github className="size-3.5" />
                 GitHub
@@ -67,7 +67,7 @@ const Footer = () => {
                 href="https://x.com/n3o773"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <span className="text-base leading-none">𝕏</span>
                 Twitter
@@ -75,7 +75,7 @@ const Footer = () => {
               <a
                 href="https://macgamingdb.betteruptime.com/"
                 target="_blank"
-                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+                className="text-sm text-zinc-500 hover:text-white transition-colors w-fit flex items-center gap-2"
               >
                 <Activity className="size-3.5" />
                 Uptime Status
@@ -86,10 +86,10 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-500" suppressHydrationWarning>
             &copy; 2025&ndash;{new Date().getFullYear()} MacGamingDB
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-500">
             Made with &#10084;&#65039; in Mumbai &#127470;&#127475;
           </p>
         </div>

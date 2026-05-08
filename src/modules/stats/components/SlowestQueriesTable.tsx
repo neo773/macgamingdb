@@ -41,11 +41,11 @@ export function SlowestQueriesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {queries.map((query, index) => {
+            {queries.map((query) => {
               const efficiency =
                 (query.rows_read + query.rows_written) / query.elapsed_ms;
               return (
-                <TableRow key={index}>
+                <TableRow key={`${query.query}-${query.elapsed_ms}`}>
                   <TableCell>
                     <Badge variant="outline">{getQueryIntent(query.query)}</Badge>
                   </TableCell>

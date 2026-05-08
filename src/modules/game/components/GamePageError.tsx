@@ -25,16 +25,16 @@ export function GamePageError() {
             <h1 className="text-2xl font-bold text-white mb-4">
               Game Information Temporarily Unavailable
             </h1>
-            <p className="text-gray-300 mb-4">
+            <p className="text-zinc-300 mb-4">
               We're having trouble loading the information for this game. This could be
               due to:
             </p>
-            <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
+            <ul className="list-disc pl-5 text-zinc-300 mb-6 space-y-2">
               <li>Temporary Steam API unavailability</li>
               <li>Network connectivity issues</li>
               <li>Server-side caching problems</li>
             </ul>
-            <p className="text-gray-300">
+            <p className="text-zinc-300">
               Please try again later or return to the{' '}
               <Link href="/" className="text-blue-400 hover:underline">
                 home page

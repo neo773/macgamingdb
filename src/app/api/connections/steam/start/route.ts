@@ -12,18 +12,20 @@ export const dynamic = 'force-dynamic';
 
 const STATE_TTL_SECONDS = 10 * 60;
 
-export async function GET() {
+export async function POST() {
   const db = createDrizzleClient();
   const auth = await BetterAuthClient(db);
   const session = await auth.api.getSession({ headers: await headers() });
   const origin = getAppOrigin();
 
   if (!session) {
-    return NextResponse.redirect(`${origin}/`);
+    return NextResponse.redirect(`${origin}/`, { status: 303 });
   }
 
-  const state = await issueStateToken(session.user.id);
-  const cookieStore = await cookies();
+  const [state, cookieStore] = await Promise.all([
+    issueStateToken(session.user.id),
+    cookies(),
+  ]);
   cookieStore.set(STATE_COOKIE_NAME, state, {
     httpOnly: true,
     secure: true,

@@ -24,27 +24,28 @@ interface DonationDialogProps {
   children: React.ReactNode;
 }
 
+const DonationContent = (
+  <div className="flex flex-col gap-4">
+    <p className="text-zinc-300 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-lg p-2 text-center">
+      Help keep MGDB ad-free and running! Your support helps us maintain and
+      improve the platform.
+    </p>
+    <div className="flex flex-col gap-4 rounded-lg overflow-hidden">
+      <iframe
+        src="https://buymeacoffee.com/widget/page/huzef?color=%23FFDD00&description=Support%20me%20on%20Buy%20me%20a%20coffee%21"
+        loading="eager"
+        className="w-full h-140"
+        title="Support MacGamingDB on Buy Me a Coffee"
+      />
+    </div>
+    <p className="text-sm text-zinc-300 text-center">
+      Every contribution, no matter how small, makes a difference! ❤️
+    </p>
+  </div>
+);
+
 export const DonationDialog: React.FC<DonationDialogProps> = ({ children }) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
-
-  const content = (
-    <div className="flex flex-col gap-4">
-      <p className="text-gray-300 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-lg p-2 text-center">
-        Help keep MGDB ad-free and running! Your support helps us maintain and
-        improve the platform.
-      </p>
-      <div className="flex flex-col gap-4 rounded-lg overflow-hidden">
-        <iframe
-          src="https://buymeacoffee.com/widget/page/huzef?color=%23FFDD00&description=Support%20me%20on%20Buy%20me%20a%20coffee%21"
-          loading="eager"
-          className="w-full h-140"
-        />
-      </div>
-      <p className="text-sm text-gray-300 text-center">
-        Every contribution, no matter how small, makes a difference! ❤️
-      </p>
-    </div>
-  );
 
   if (isDesktop) {
     return (
@@ -58,7 +59,7 @@ export const DonationDialog: React.FC<DonationDialogProps> = ({ children }) => {
             </DialogTitle>
             <DialogDescription className="text-center"></DialogDescription>
           </DialogHeader>
-          {content}
+          {DonationContent}
         </DialogContent>
       </Dialog>
     );
@@ -75,7 +76,7 @@ export const DonationDialog: React.FC<DonationDialogProps> = ({ children }) => {
           </DrawerTitle>
           <DrawerDescription className="text-center"></DrawerDescription>
         </DrawerHeader>
-        <div className="px-4 pb-4">{content}</div>
+        <div className="px-4 pb-4">{DonationContent}</div>
       </DrawerContent>
     </Drawer>
   );
