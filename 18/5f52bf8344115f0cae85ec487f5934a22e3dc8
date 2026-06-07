@@ -1,0 +1,94 @@
+packages/server/src/routers/library.ts
+  s_c8903c0e4472f4::t_d116a6a69c2093 105-109
+  s_c8903c0e4472f4::t_a1b68bea143a0d 124-128
+  s_c8903c0e4472f4::t_4c4e1e3019ca0f 16-28
+  s_c8903c0e4472f4::t_8f6406d39646a4 180-184
+  s_c8903c0e4472f4::t_de9805fc2bcb43 66-91
+package.json
+  s_c8903c0e4472f4::t_4554c3964ca59b 91
+  s_c8903c0e4472f4::t_40049f427efac9 96-97
+packages/server/src/routers/game.ts
+  s_c8903c0e4472f4::t_3171c29ed937aa 115,129,158,187,333,405,450
+  s_c8903c0e4472f4::t_0c36232db9a9e8 335
+  s_c8903c0e4472f4::t_155077ec0695be 23-25,28,30-31
+  s_c8903c0e4472f4::t_a382a179818dcd 131
+  s_c8903c0e4472f4::t_e8e5beb2b5843d 408-412,415
+  s_c8903c0e4472f4::t_ec0c0d73e7d376 160-164,166,168
+  s_c8903c0e4472f4::t_39f9676489e2fb 117
+  s_c8903c0e4472f4::t_ba0d4c2855428c 14-21
+  s_c8903c0e4472f4::t_b2f954ca0bc60c 189-196,198,200
+  s_c8903c0e4472f4::t_46b36c07310ef9 452
+packages/server/src/trpc/index.ts
+  s_c8903c0e4472f4::t_87a57ed1de8a0d 24
+  s_c8903c0e4472f4::t_55fc3de9aa2686 2
+packages/server/src/auth/auth.ts
+  s_c8903c0e4472f4::t_8d003f9cf29d87 64
+  s_c8903c0e4472f4::t_2f7ec820c570d0 87-110,112-115
+  s_c8903c0e4472f4::t_529dcb4c73359f 111
+  s_c8903c0e4472f4::t_80a89a57e7df2d 43-51
+  s_c8903c0e4472f4::t_0722d1875d8917 62-63
+  s_c8903c0e4472f4::t_c1275dfe7bac4d 4-5
+src/lib/steam-openid/stateToken.ts
+  s_c8903c0e4472f4::t_551dd83c1860df 1-6
+src/app/api/connections/steam/app-callback/route.ts
+  s_c8903c0e4472f4::t_84659f56af3bb4 1-82
+packages/server/src/services/steam-openid-state.ts
+  s_c8903c0e4472f4::t_a91d7219e3202f 1-56
+packages/server/src/routers/contributor.ts
+  s_c8903c0e4472f4::t_af19cf57644a24 23,99
+  s_c8903c0e4472f4::t_337a1851499293 16-20
+  s_c8903c0e4472f4::t_65e1cc852a8606 6-9
+  s_c8903c0e4472f4::t_d159c4e2655dc5 29
+  s_c8903c0e4472f4::t_b528b42ded0351 64
+  s_c8903c0e4472f4::t_1b721bc25c713b 106
+  s_c8903c0e4472f4::t_97fa145b72b989 152
+src/app/api/rest/[[...trpc]]/route.ts
+  s_c8903c0e4472f4::t_78f9bad6466d9e 1-30
+packages/server/src/routers/review.ts
+  s_c8903c0e4472f4::t_9cb973ba942c6f 390-391
+  s_c8903c0e4472f4::t_d16af4cebadf73 62-113
+  s_c8903c0e4472f4::t_1ab5dcb0668ea4 483,488
+  s_c8903c0e4472f4::t_0a11d19bbbacda 31
+  s_c8903c0e4472f4::t_52782527717f30 115,203
+  s_c8903c0e4472f4::t_a5c3ac1764340f 19-22,24-25
+  s_c8903c0e4472f4::t_b76bbc9566ec49 293-294
+  s_c8903c0e4472f4::t_1277a29d581bf5 288-289
+  s_c8903c0e4472f4::t_0aaf9ace01a2d0 209
+  s_c8903c0e4472f4::t_ca37cd879fc62f 237,243
+  s_c8903c0e4472f4::t_53fcbce14e7e66 122
+  s_c8903c0e4472f4::t_7163325d87529e 23
+openapi.json
+  s_c8903c0e4472f4::t_8c2a96180a4e49 978-1185
+  s_c8903c0e4472f4::t_ffac24160f1875 1-564,567-977,1186-1662,1665-2123,2126-2395,2764-2986
+  s_c8903c0e4472f4::t_0ccdd9b6bd6708 565-566,1663-1664,2124-2125
+  s_c8903c0e4472f4::t_b1d7f6e4a7f273 2396-2763
+scripts/generate-openapi.ts
+  s_c8903c0e4472f4::t_1f5bd7516e1ef4 1-24
+packages/server/package.json
+  s_c8903c0e4472f4::t_4554c3964ca59b 44
+  s_c8903c0e4472f4::t_1ec152a071f681 34
+  s_c8903c0e4472f4::t_40049f427efac9 45-46
+packages/server/src/schema/openapi.ts
+  s_c8903c0e4472f4::t_a509062fb2db62 212-241
+  s_c8903c0e4472f4::t_b2d24b39739a38 10-15
+  s_c8903c0e4472f4::t_8d0cf9aa1bf208 1-9,16-85,87-105,112-175,177-211
+  s_c8903c0e4472f4::t_f4813a2d48ac3a 106-111
+  s_c8903c0e4472f4::t_26eb68cecf2dc3 176
+  s_c8903c0e4472f4::t_62a6ac313a31ce 86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "185f52bf8344115f0cae85ec487f5934a22e3dc8",
+  "prompts": {},
+  "sessions": {
+    "s_c8903c0e4472f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a5c34cda-e348-468d-80c6-ebdcff71bf1f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
