@@ -1,0 +1,19 @@
+src/app/privacy/page.tsx
+  s_c8903c0e4472f4::t_503206a977012f 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "8379d4e10ec90db3398de73c757bd21a1d0404c1",
+  "prompts": {},
+  "sessions": {
+    "s_c8903c0e4472f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a5c34cda-e348-468d-80c6-ebdcff71bf1f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
