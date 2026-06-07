@@ -1,4 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server';
+import { type OpenApiMeta } from 'trpc-to-openapi';
 import superjson from 'superjson';
 import { BetterAuthClient } from '../auth/auth';
 import { createDrizzleClient, type DrizzleDB } from '../database/drizzle';
@@ -20,7 +21,7 @@ export const createTRPCContext = async (
   };
 };
 
-const t = initTRPC.context<TrpcContext>().create({
+const t = initTRPC.context<TrpcContext>().meta<OpenApiMeta>().create({
   transformer: superjson,
 });
 

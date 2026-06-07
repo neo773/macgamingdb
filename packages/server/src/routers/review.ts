@@ -16,12 +16,19 @@ import {
   generateScreenshotKey,
   getPublicUrl,
 } from '../services/s3';
+import {
+  CreateReviewResultSchema,
+  MacConfigSchema,
+  MutationResultSchema,
+  MyReviewsSchema,
+  UploadUrlSchema,
+} from '../schema/openapi';
 import { type MacSpecification } from '../scraper/EveryMacScraper';
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { scoreToRating } from '../utils/scoreToRating';
 import { type DrizzleDB } from '../database/drizzle';
 import { games, gameReviews, macConfigs } from '../drizzle/schema';
-import { eq, sql } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 
 async function updateGameAggregatedPerformance(
   db: DrizzleDB,
@@ -52,13 +59,67 @@ export const reviewRouter = router({
     };
   }),
 
+  listMine: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/reviews/mine', protect: true, tags: ['reviews'] } })
+    .input(z.void())
+    .output(MyReviewsSchema)
+    .query(async ({ ctx }) => {
+      if (!ctx.user?.user.id) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Missing authorization',
+        });
+      }
+
+      try {
+        const reviews = await ctx.db.query.gameReviews.findMany({
+          where: eq(gameReviews.userId, ctx.user.user.id),
+          with: {
+            game: true,
+            macConfig: true,
+          },
+          orderBy: desc(gameReviews.createdAt),
+        });
+
+        return reviews.map((review) => ({
+          id: review.id,
+          gameId: review.gameId,
+          userId: review.userId,
+          playMethod: review.playMethod,
+          translationLayer: review.translationLayer,
+          performance: review.performance,
+          fps: review.fps,
+          graphicsSettings: review.graphicsSettings,
+          resolution: review.resolution,
+          chipset: review.chipset,
+          chipsetVariant: review.chipsetVariant,
+          macConfigId: review.macConfigId,
+          notes: review.notes,
+          screenshots: review.screenshots,
+          softwareVersion: review.softwareVersion,
+          createdAt: review.createdAt,
+          updatedAt: review.updatedAt,
+          macConfig: review.macConfig,
+          gameDetails: review.game.details,
+        }));
+      } catch (error) {
+        console.error('Error fetching my reviews:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch reviews',
+        });
+      }
+    }),
+
   getMacConfigs: procedure
+    .meta({ openapi: { method: 'GET', path: '/mac-configs', protect: false, tags: ['mac-configs'] } })
     .input(
       z.object({
         search: z.string().optional(),
         selectedConfigIdentifier: z.string().optional(),
       }),
     )
+    .output(z.array(MacConfigSchema))
     .query(async ({ input, ctx }) => {
       try {
         const allMacConfigs = await ctx.db
@@ -139,11 +200,13 @@ export const reviewRouter = router({
     }),
 
   getMacConfigById: procedure
+    .meta({ openapi: { method: 'GET', path: '/mac-configs/{identifier}', protect: false, tags: ['mac-configs'] } })
     .input(
       z.object({
         identifier: z.string(),
       }),
     )
+    .output(MacConfigSchema.nullable())
     .query(async ({ input, ctx }) => {
       try {
         const macConfig = await ctx.db.query.macConfigs.findFirst({
@@ -171,11 +234,13 @@ export const reviewRouter = router({
     }),
 
   getUploadUrl: protectedProcedure
+    .meta({ openapi: { method: 'POST', path: '/reviews/upload-url', protect: true, tags: ['reviews'] } })
     .input(z.object({
       filename: z.string(),
       contentType: z.string(),
       gameId: z.string(),
     }))
+    .output(UploadUrlSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {
@@ -220,10 +285,13 @@ export const reviewRouter = router({
     }),
 
   create: protectedProcedure
+    .meta({ openapi: { method: 'POST', path: '/reviews', protect: true, tags: ['reviews'] } })
+    .output(CreateReviewResultSchema)
     .input(z.object({
       gameId: z.string(),
       playMethod: PlayMethodEnum,
-      translationLayer: TranslationLayerEnum.nullable(),
+      // nullish: REST clients omit the key entirely for Native reviews
+      translationLayer: TranslationLayerEnum.nullish(),
       performance: PerformanceEnum,
       fps: z.number().nullable().optional(),
       graphicsSettings: GraphicsSettingsEnum,
@@ -319,6 +387,8 @@ export const reviewRouter = router({
     }),
 
   updateReview: protectedProcedure
+    .meta({ openapi: { method: 'PATCH', path: '/reviews/{reviewId}', protect: true, tags: ['reviews'] } })
+    .output(MutationResultSchema)
     .input(z.object({
       reviewId: z.string(),
       notes: z.string(),
@@ -410,10 +480,12 @@ export const reviewRouter = router({
     }),
 
   deleteReview: protectedProcedure
+    .meta({ openapi: { method: 'DELETE', path: '/reviews/{reviewId}', protect: true, tags: ['reviews'] } })
     .input(z.object({
       reviewId: z.string(),
       confirmation: z.boolean(),
     }))
+    .output(MutationResultSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         if (!ctx.user?.user.id) {

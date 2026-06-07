@@ -31,6 +31,7 @@
     "./drizzle/types": "./src/drizzle/types.ts",
     "./s3": "./src/services/s3.ts",
     "./services/steam-openid": "./src/services/steam-openid.ts",
+    "./services/steam-openid-state": "./src/services/steam-openid-state.ts",
     "./services/steam-api": "./src/services/steam-api.ts",
     "./services/steam-library": "./src/services/steam-library.ts",
     "./scraper/EveryMacScraper": "./src/scraper/EveryMacScraper.ts",
@@ -40,6 +41,8 @@
   "dependencies": {
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
-    "zod": "^3.24.2"
+    "trpc-to-openapi": "2.4.0",
+    "zod": "^3.25.0",
+    "zod-openapi": "4.2.4"
   }
 }

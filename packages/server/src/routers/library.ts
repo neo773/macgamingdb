@@ -13,6 +13,19 @@ import {
   SteamLibraryPrivateError,
 } from '../services/steam-api';
 import { syncSteamLibraryForUser } from '../services/steam-library';
+import { buildSteamOpenIdRedirectUrl } from '../services/steam-openid';
+import {
+  getAppOrigin,
+  issueStateToken,
+} from '../services/steam-openid-state';
+import {
+  LibraryEntrySchema,
+  LibraryLinkUrlSchema,
+  LibraryStatusSchema,
+  LibrarySyncResultSchema,
+  OkResultSchema,
+} from '../schema/openapi';
+import { z } from 'zod';
 
 const PERFORMANCE_RANK: Record<PerformanceRating, number> = {
   EXCELLENT: 0,
@@ -50,7 +63,32 @@ const steamEntriesWhere = (userId: string) =>
   );
 
 export const libraryRouter = router({
-  status: protectedProcedure.query(async ({ ctx }) => {
+  // Cookie-free Steam link flow for native clients: mints a signed state
+  // token and returns the Steam OpenID URL whose return_to points at
+  // /api/connections/steam/app-callback. The callback recovers the user
+  // from the token, so no browser session is needed.
+  linkStartUrl: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/library/link-url', protect: true, tags: ['library'] } })
+    .input(z.void())
+    .output(LibraryLinkUrlSchema)
+    .query(async ({ ctx }) => {
+      const userId = requireUserId(ctx);
+      const origin = getAppOrigin();
+
+      const state = await issueStateToken(userId);
+      const returnTo = new URL('/api/connections/steam/app-callback', origin);
+      returnTo.searchParams.set('state', state);
+
+      return {
+        url: buildSteamOpenIdRedirectUrl(returnTo.toString(), `${origin}/`),
+      };
+    }),
+
+  status: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/library/status', protect: true, tags: ['library'] } })
+    .input(z.void())
+    .output(LibraryStatusSchema)
+    .query(async ({ ctx }) => {
     const userId = requireUserId(ctx);
     const link = await ctx.db.query.userExternalAccounts.findFirst({
       where: steamConnectionWhere(userId),
@@ -64,7 +102,11 @@ export const libraryRouter = router({
     };
   }),
 
-  sync: protectedProcedure.mutation(async ({ ctx }) => {
+  sync: protectedProcedure
+    .meta({ openapi: { method: 'POST', path: '/library/sync', protect: true, tags: ['library'] } })
+    .input(z.void())
+    .output(LibrarySyncResultSchema)
+    .mutation(async ({ ctx }) => {
     const userId = requireUserId(ctx);
     try {
       return await syncSteamLibraryForUser(ctx.db, userId);
@@ -79,7 +121,11 @@ export const libraryRouter = router({
     }
   }),
 
-  list: protectedProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/library', protect: true, tags: ['library'] } })
+    .input(z.void())
+    .output(z.array(LibraryEntrySchema))
+    .query(async ({ ctx }) => {
     const userId = requireUserId(ctx);
 
     const entries = await ctx.db
@@ -131,7 +177,11 @@ export const libraryRouter = router({
     return rows;
   }),
 
-  unlink: protectedProcedure.mutation(async ({ ctx }) => {
+  unlink: protectedProcedure
+    .meta({ openapi: { method: 'DELETE', path: '/library/link', protect: true, tags: ['library'] } })
+    .input(z.void())
+    .output(OkResultSchema)
+    .mutation(async ({ ctx }) => {
     const userId = requireUserId(ctx);
 
     await ctx.db.transaction(async (tx) => {

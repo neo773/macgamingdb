@@ -3,19 +3,30 @@ import { router, procedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { users, gameReviews } from '../drizzle/schema';
 import { eq, desc, count, inArray } from 'drizzle-orm';
+import {
+  ContributorDetailSchema,
+  ContributorsPageSchema,
+} from '../schema/openapi';
 
 interface GameDetails {
   name?: string;
   header_image?: string;
 }
 
+// better-auth writes user.createdAt as epoch millis while our own rows are ISO
+// strings — SQLite's dynamic typing happily stores both in the TEXT column
+const toISODateString = (value: string | number): string =>
+  typeof value === 'number' ? new Date(value).toISOString() : value;
+
 export const contributorRouter = router({
   getById: procedure
+    .meta({ openapi: { method: 'GET', path: '/contributors/{id}', protect: false, tags: ['contributors'] } })
     .input(
       z.object({
         id: z.string(),
       }),
     )
+    .output(ContributorDetailSchema)
     .query(async ({ input, ctx }) => {
       try {
         const [contributor] = await ctx.db
@@ -50,7 +61,7 @@ export const contributorRouter = router({
         return {
           id: contributor.id,
           name: contributor.email!.split('@')[0].replace(/[0-9._]/g, ''),
-          joinedAt: contributor.createdAt,
+          joinedAt: toISODateString(contributor.createdAt),
           reviewCount: reviews.length,
           uniqueGamesCount,
           reviews: reviews.map((review) => {
@@ -85,12 +96,14 @@ export const contributorRouter = router({
     }),
 
   getTopContributors: procedure
+    .meta({ openapi: { method: 'GET', path: '/contributors', protect: false, tags: ['contributors'] } })
     .input(
       z.object({
         limit: z.number().min(1).max(50).default(10),
         cursor: z.number().int().min(0).nullish(),
       }),
     )
+    .output(ContributorsPageSchema)
     .query(async ({ input, ctx }) => {
       try {
         const { limit } = input;
@@ -136,7 +149,7 @@ export const contributorRouter = router({
             return {
               id: user.id,
               name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
-              joinedAt: user.createdAt,
+              joinedAt: toISODateString(user.createdAt),
               reviewCount: user.reviewCount,
               uniqueGamesCount: uniqueGames.length,
               score: user.reviewCount * 10 + uniqueGames.length * 5,

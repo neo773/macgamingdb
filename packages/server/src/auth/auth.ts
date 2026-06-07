@@ -1,6 +1,8 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins/magic-link';
+import { bearer } from 'better-auth/plugins/bearer';
+import { emailOTP } from 'better-auth/plugins/email-otp';
 import { expo } from '@better-auth/expo';
 import { Resend } from 'resend';
 import { SignJWT, importPKCS8 } from 'jose';
@@ -38,6 +40,15 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
       process.env.NODE_ENV === 'production'
         ? 'https://macgamingdb.app'
         : 'https://macgamingdb.local',
+    logger: {
+      level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+    },
+    onAPIError: {
+      onError(error, ctx) {
+        console.error('[better-auth] API error:', error);
+        console.error('[better-auth] path:', (ctx as { path?: string })?.path);
+      },
+    },
     database: drizzleAdapter(db, {
       provider: 'sqlite',
       schema,
@@ -48,6 +59,9 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
         apple: {
           clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID as string,
           clientSecret: appleClientSecret,
+          // Native iOS Sign in with Apple produces idTokens with the app's
+          // bundle id as audience — required for the idToken sign-in flow
+          appBundleIdentifier: 'com.zefholdings.MacGamingDB',
         },
       },
     }),
@@ -70,6 +84,35 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
     },
     plugins: [
       expo(),
+      // Mobile session tokens: sign-in responses carry `set-auth-token`,
+      // and getSession accepts `Authorization: Bearer <token>`
+      bearer(),
+      emailOTP({
+        otpLength: 6,
+        expiresIn: 600,
+        async sendVerificationOTP({ email, otp }) {
+          console.log(`Sending OTP to ${email}: ${otp}`);
+
+          if (process.env.NODE_ENV !== 'production') {
+            return;
+          }
+          const resend = new Resend(process.env.RESEND_API_KEY);
+
+          await resend.emails.send({
+            from: 'MacGamingDB <hello@macgamingdb.app>',
+            replyTo: 'support@macgamingdb.app',
+            to: email,
+            subject: `${otp} is your MacGamingDB verification code`,
+            text: [
+              `Your MacGamingDB verification code is: ${otp}`,
+              '',
+              'It expires in 10 minutes. If you did not request this, you can ignore this email.',
+              '',
+              `@macgamingdb.app #${otp}`,
+            ].join('\n'),
+          });
+        },
+      }),
       magicLink({
         sendMagicLink: async ({ email, token, url }) => {
           console.log(

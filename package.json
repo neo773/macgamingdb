@@ -88,11 +88,13 @@
     "steam-signin": "^1.0.5",
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.0.2",
+    "trpc-to-openapi": "2.4.0",
     "tw-animate-css": "^1.2.4",
     "ua-parser-js": "^2.0.3",
     "use-debounce": "^10.0.5",
     "vaul": "^1.1.2",
-    "zod": "^3.24.2"
+    "zod": "^3.25.0",
+    "zod-openapi": "4.2.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250420.0",

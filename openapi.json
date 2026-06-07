@@ -1,0 +1,2986 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "MacGamingDB API",
+    "description": "REST API for MacGamingDB — Mac gaming performance reports.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://macgamingdb.app/api/rest"
+    }
+  ],
+  "tags": [
+    {
+      "name": "games"
+    },
+    {
+      "name": "reviews"
+    },
+    {
+      "name": "mac-configs"
+    },
+    {
+      "name": "contributors"
+    }
+  ],
+  "paths": {
+    "/games/search": {
+      "get": {
+        "operationId": "game-search",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "objectID": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "tagIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "objectID",
+                      "name",
+                      "url"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games/{gameId}/cover-art": {
+      "get": {
+        "operationId": "game-getCoverArt",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gameId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "headerImage": {
+                      "type": "string"
+                    },
+                    "capsuleImage": {
+                      "type": "string"
+                    },
+                    "capsuleImagev5": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "headerImage"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games/filter-counts": {
+      "get": {
+        "operationId": "game-getFilterCounts",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "chipset",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "A18",
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "chipsetVariant",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BASE",
+                "PRO",
+                "MAX",
+                "ULTRA"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "playMethod",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "NATIVE",
+                "CROSSOVER",
+                "PARALLELS"
+              ],
+              "default": "ALL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ALL": {
+                      "type": "number"
+                    },
+                    "EXCELLENT": {
+                      "type": "number"
+                    },
+                    "VERY_GOOD": {
+                      "type": "number"
+                    },
+                    "GOOD": {
+                      "type": "number"
+                    },
+                    "PLAYABLE": {
+                      "type": "number"
+                    },
+                    "BARELY_PLAYABLE": {
+                      "type": "number"
+                    },
+                    "UNPLAYABLE": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "ALL",
+                    "EXCELLENT",
+                    "VERY_GOOD",
+                    "GOOD",
+                    "PLAYABLE",
+                    "BARELY_PLAYABLE",
+                    "UNPLAYABLE"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games": {
+      "get": {
+        "operationId": "game-getGames",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 6
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "performance",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "EXCELLENT",
+                "VERY_GOOD",
+                "GOOD",
+                "PLAYABLE",
+                "BARELY_PLAYABLE",
+                "UNPLAYABLE"
+              ],
+              "default": "ALL"
+            }
+          },
+          {
+            "in": "query",
+            "name": "chipset",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "A18",
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "chipsetVariant",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BASE",
+                "PRO",
+                "MAX",
+                "ULTRA"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "playMethod",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "NATIVE",
+                "CROSSOVER",
+                "PARALLELS"
+              ],
+              "default": "ALL"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "details": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "performanceRating": {
+                            "type": "string",
+                            "enum": [
+                              "EXCELLENT",
+                              "VERY_GOOD",
+                              "GOOD",
+                              "PLAYABLE",
+                              "BARELY_PLAYABLE",
+                              "UNPLAYABLE"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "details",
+                          "performanceRating"
+                        ]
+                      }
+                    },
+                    "hasNextPage": {
+                      "type": "boolean"
+                    },
+                    "nextOffset": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "games",
+                    "hasNextPage"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games/{id}": {
+      "get": {
+        "operationId": "game-getById",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "game": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "details": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        },
+                        "aggregatedPerformance": {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            "EXCELLENT",
+                            "VERY_GOOD",
+                            "GOOD",
+                            "PLAYABLE",
+                            "BARELY_PLAYABLE",
+                            "UNPLAYABLE",
+                            null
+                          ]
+                        },
+                        "reviewCount": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "details"
+                      ]
+                    },
+                    "reviews": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "gameId": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "playMethod": {
+                            "type": "string",
+                            "enum": [
+                              "NATIVE",
+                              "CROSSOVER",
+                              "PARALLELS",
+                              "OTHER"
+                            ]
+                          },
+                          "translationLayer": {
+                            "type": "string",
+                            "nullable": true,
+                            "enum": [
+                              "DXVK",
+                              "DXMT",
+                              "D3D_METAL",
+                              "NONE",
+                              null
+                            ]
+                          },
+                          "performance": {
+                            "type": "string",
+                            "enum": [
+                              "EXCELLENT",
+                              "VERY_GOOD",
+                              "GOOD",
+                              "PLAYABLE",
+                              "BARELY_PLAYABLE",
+                              "UNPLAYABLE"
+                            ]
+                          },
+                          "fps": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "graphicsSettings": {
+                            "type": "string",
+                            "nullable": true,
+                            "enum": [
+                              "ULTRA",
+                              "HIGH",
+                              "MEDIUM",
+                              "LOW",
+                              null
+                            ]
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "chipset": {
+                            "type": "string"
+                          },
+                          "chipsetVariant": {
+                            "type": "string",
+                            "enum": [
+                              "BASE",
+                              "PRO",
+                              "MAX",
+                              "ULTRA"
+                            ]
+                          },
+                          "macConfigId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "notes": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshots": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "softwareVersion": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "macConfig": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "identifier": {
+                                "type": "string"
+                              },
+                              "metadata": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "identifier",
+                              "metadata",
+                              "createdAt",
+                              "updatedAt"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "gameId",
+                          "userId",
+                          "playMethod",
+                          "translationLayer",
+                          "performance",
+                          "fps",
+                          "graphicsSettings",
+                          "resolution",
+                          "chipset",
+                          "chipsetVariant",
+                          "macConfigId",
+                          "notes",
+                          "screenshots",
+                          "softwareVersion",
+                          "createdAt",
+                          "updatedAt",
+                          "macConfig"
+                        ]
+                      }
+                    },
+                    "stats": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "totalReviews": {
+                          "type": "number"
+                        },
+                        "methods": {
+                          "type": "object",
+                          "properties": {
+                            "native": {
+                              "type": "number"
+                            },
+                            "crossover": {
+                              "type": "number"
+                            },
+                            "parallels": {
+                              "type": "number"
+                            },
+                            "other": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "native",
+                            "crossover",
+                            "parallels",
+                            "other"
+                          ]
+                        },
+                        "averagePerformance": {
+                          "type": "number"
+                        },
+                        "translationLayers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "properties": {
+                              "count": {
+                                "type": "number"
+                              },
+                              "averagePerformance": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "count",
+                              "averagePerformance"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "totalReviews",
+                        "methods",
+                        "averagePerformance",
+                        "translationLayers"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "game",
+                    "reviews",
+                    "stats"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/screenshots/signed-urls": {
+      "get": {
+        "operationId": "game-getScreenshotSignedUrls",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "screenshots",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      },
+                      "signed": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "original",
+                      "signed"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games/{gameId}/prices": {
+      "get": {
+        "operationId": "game-getPrices",
+        "tags": [
+          "games"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gameId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "prices": {
+                      "type": "object",
+                      "properties": {
+                        "currentRetail": {
+                          "type": "string"
+                        },
+                        "currentKeyshops": {
+                          "type": "string"
+                        },
+                        "historicalRetail": {
+                          "type": "string"
+                        },
+                        "historicalKeyshops": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "currentRetail",
+                        "currentKeyshops",
+                        "historicalRetail",
+                        "historicalKeyshops",
+                        "currency"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "url",
+                    "prices"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/mine": {
+      "get": {
+        "operationId": "review-listMine",
+        "tags": [
+          "reviews"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "gameId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "playMethod": {
+                        "type": "string",
+                        "enum": [
+                          "NATIVE",
+                          "CROSSOVER",
+                          "PARALLELS",
+                          "OTHER"
+                        ]
+                      },
+                      "translationLayer": {
+                        "type": "string",
+                        "nullable": true,
+                        "enum": [
+                          "DXVK",
+                          "DXMT",
+                          "D3D_METAL",
+                          "NONE",
+                          null
+                        ]
+                      },
+                      "performance": {
+                        "type": "string",
+                        "enum": [
+                          "EXCELLENT",
+                          "VERY_GOOD",
+                          "GOOD",
+                          "PLAYABLE",
+                          "BARELY_PLAYABLE",
+                          "UNPLAYABLE"
+                        ]
+                      },
+                      "fps": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "graphicsSettings": {
+                        "type": "string",
+                        "nullable": true,
+                        "enum": [
+                          "ULTRA",
+                          "HIGH",
+                          "MEDIUM",
+                          "LOW",
+                          null
+                        ]
+                      },
+                      "resolution": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "chipset": {
+                        "type": "string"
+                      },
+                      "chipsetVariant": {
+                        "type": "string",
+                        "enum": [
+                          "BASE",
+                          "PRO",
+                          "MAX",
+                          "ULTRA"
+                        ]
+                      },
+                      "macConfigId": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "notes": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "screenshots": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "softwareVersion": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "macConfig": {
+                        "type": "object",
+                        "nullable": true,
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "identifier": {
+                            "type": "string"
+                          },
+                          "metadata": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "identifier",
+                          "metadata",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      },
+                      "gameDetails": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "gameId",
+                      "userId",
+                      "playMethod",
+                      "translationLayer",
+                      "performance",
+                      "fps",
+                      "graphicsSettings",
+                      "resolution",
+                      "chipset",
+                      "chipsetVariant",
+                      "macConfigId",
+                      "notes",
+                      "screenshots",
+                      "softwareVersion",
+                      "createdAt",
+                      "updatedAt",
+                      "macConfig",
+                      "gameDetails"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mac-configs": {
+      "get": {
+        "operationId": "review-getMacConfigs",
+        "tags": [
+          "mac-configs"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "selectedConfigIdentifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "identifier": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "properties": {
+                          "family": {
+                            "type": "string"
+                          },
+                          "model": {
+                            "type": "string"
+                          },
+                          "identifier": {
+                            "type": "string"
+                          },
+                          "chip": {
+                            "type": "string"
+                          },
+                          "chipVariant": {
+                            "type": "string"
+                          },
+                          "cpuCores": {
+                            "type": "number"
+                          },
+                          "gpuCores": {
+                            "type": "number"
+                          },
+                          "ram": {
+                            "type": "number"
+                          },
+                          "year": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "family",
+                          "model",
+                          "identifier",
+                          "chip",
+                          "chipVariant",
+                          "cpuCores",
+                          "gpuCores",
+                          "ram",
+                          "year"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "identifier",
+                      "label",
+                      "metadata"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mac-configs/{identifier}": {
+      "get": {
+        "operationId": "review-getMacConfigById",
+        "tags": [
+          "mac-configs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "identifier": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "family": {
+                          "type": "string"
+                        },
+                        "model": {
+                          "type": "string"
+                        },
+                        "identifier": {
+                          "type": "string"
+                        },
+                        "chip": {
+                          "type": "string"
+                        },
+                        "chipVariant": {
+                          "type": "string"
+                        },
+                        "cpuCores": {
+                          "type": "number"
+                        },
+                        "gpuCores": {
+                          "type": "number"
+                        },
+                        "ram": {
+                          "type": "number"
+                        },
+                        "year": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "family",
+                        "model",
+                        "identifier",
+                        "chip",
+                        "chipVariant",
+                        "cpuCores",
+                        "gpuCores",
+                        "ram",
+                        "year"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "identifier",
+                    "label",
+                    "metadata"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/upload-url": {
+      "post": {
+        "operationId": "review-getUploadUrl",
+        "tags": [
+          "reviews"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filename": {
+                    "type": "string"
+                  },
+                  "contentType": {
+                    "type": "string"
+                  },
+                  "gameId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "filename",
+                  "contentType",
+                  "gameId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "signedUrl": {
+                      "type": "string"
+                    },
+                    "publicUrl": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "signedUrl",
+                    "publicUrl",
+                    "key"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "post": {
+        "operationId": "review-create",
+        "tags": [
+          "reviews"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gameId": {
+                    "type": "string"
+                  },
+                  "playMethod": {
+                    "type": "string",
+                    "enum": [
+                      "NATIVE",
+                      "CROSSOVER",
+                      "PARALLELS"
+                    ]
+                  },
+                  "translationLayer": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "DXVK",
+                      "DXMT",
+                      "D3D_METAL",
+                      "NONE",
+                      null
+                    ]
+                  },
+                  "performance": {
+                    "type": "string",
+                    "enum": [
+                      "EXCELLENT",
+                      "VERY_GOOD",
+                      "GOOD",
+                      "PLAYABLE",
+                      "BARELY_PLAYABLE",
+                      "UNPLAYABLE"
+                    ]
+                  },
+                  "fps": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "graphicsSettings": {
+                    "type": "string",
+                    "enum": [
+                      "ULTRA",
+                      "HIGH",
+                      "MEDIUM",
+                      "LOW"
+                    ]
+                  },
+                  "resolution": {
+                    "type": "string"
+                  },
+                  "macConfigIdentifier": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  },
+                  "screenshots": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "softwareVersion": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gameId",
+                  "playMethod",
+                  "performance",
+                  "graphicsSettings",
+                  "macConfigIdentifier"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "review": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "gameId": {
+                          "type": "string"
+                        },
+                        "userId": {
+                          "type": "string"
+                        },
+                        "playMethod": {
+                          "type": "string",
+                          "enum": [
+                            "NATIVE",
+                            "CROSSOVER",
+                            "PARALLELS",
+                            "OTHER"
+                          ]
+                        },
+                        "translationLayer": {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            "DXVK",
+                            "DXMT",
+                            "D3D_METAL",
+                            "NONE",
+                            null
+                          ]
+                        },
+                        "performance": {
+                          "type": "string",
+                          "enum": [
+                            "EXCELLENT",
+                            "VERY_GOOD",
+                            "GOOD",
+                            "PLAYABLE",
+                            "BARELY_PLAYABLE",
+                            "UNPLAYABLE"
+                          ]
+                        },
+                        "fps": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "graphicsSettings": {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            "ULTRA",
+                            "HIGH",
+                            "MEDIUM",
+                            "LOW",
+                            null
+                          ]
+                        },
+                        "resolution": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "chipset": {
+                          "type": "string"
+                        },
+                        "chipsetVariant": {
+                          "type": "string",
+                          "enum": [
+                            "BASE",
+                            "PRO",
+                            "MAX",
+                            "ULTRA"
+                          ]
+                        },
+                        "macConfigId": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "notes": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "screenshots": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "softwareVersion": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "gameId",
+                        "userId",
+                        "playMethod",
+                        "translationLayer",
+                        "performance",
+                        "fps",
+                        "graphicsSettings",
+                        "resolution",
+                        "chipset",
+                        "chipsetVariant",
+                        "macConfigId",
+                        "notes",
+                        "screenshots",
+                        "softwareVersion",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "review"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{reviewId}": {
+      "patch": {
+        "operationId": "review-updateReview",
+        "tags": [
+          "reviews"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reviewId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "notes": {
+                    "type": "string"
+                  },
+                  "performance": {
+                    "type": "string",
+                    "enum": [
+                      "EXCELLENT",
+                      "VERY_GOOD",
+                      "GOOD",
+                      "PLAYABLE",
+                      "BARELY_PLAYABLE",
+                      "UNPLAYABLE"
+                    ]
+                  },
+                  "fps": {
+                    "type": "number",
+                    "nullable": true
+                  },
+                  "resolution": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "softwareVersion": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "screenshots": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "notes"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "review-deleteReview",
+        "tags": [
+          "reviews"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reviewId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "confirmation",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contributors/{id}": {
+      "get": {
+        "operationId": "contributor-getById",
+        "tags": [
+          "contributors"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "joinedAt": {
+                      "type": "string"
+                    },
+                    "reviewCount": {
+                      "type": "number"
+                    },
+                    "uniqueGamesCount": {
+                      "type": "number"
+                    },
+                    "reviews": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "gameId": {
+                            "type": "string"
+                          },
+                          "gameName": {
+                            "type": "string"
+                          },
+                          "gameDetails": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "playMethod": {
+                            "type": "string",
+                            "enum": [
+                              "NATIVE",
+                              "CROSSOVER",
+                              "PARALLELS",
+                              "OTHER"
+                            ]
+                          },
+                          "softwareVersion": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "translationLayer": {
+                            "type": "string",
+                            "nullable": true,
+                            "enum": [
+                              "DXVK",
+                              "DXMT",
+                              "D3D_METAL",
+                              "NONE",
+                              null
+                            ]
+                          },
+                          "performance": {
+                            "type": "string",
+                            "enum": [
+                              "EXCELLENT",
+                              "VERY_GOOD",
+                              "GOOD",
+                              "PLAYABLE",
+                              "BARELY_PLAYABLE",
+                              "UNPLAYABLE"
+                            ]
+                          },
+                          "fps": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "graphicsSettings": {
+                            "type": "string",
+                            "nullable": true,
+                            "enum": [
+                              "ULTRA",
+                              "HIGH",
+                              "MEDIUM",
+                              "LOW",
+                              null
+                            ]
+                          },
+                          "resolution": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "notes": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshots": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "macConfig": {
+                            "type": "object",
+                            "nullable": true,
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "identifier": {
+                                "type": "string"
+                              },
+                              "metadata": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "nullable": true
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "identifier",
+                              "metadata",
+                              "createdAt",
+                              "updatedAt"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "gameId",
+                          "gameDetails",
+                          "playMethod",
+                          "softwareVersion",
+                          "translationLayer",
+                          "performance",
+                          "fps",
+                          "graphicsSettings",
+                          "resolution",
+                          "notes",
+                          "screenshots",
+                          "createdAt",
+                          "macConfig"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "joinedAt",
+                    "reviewCount",
+                    "uniqueGamesCount",
+                    "reviews"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contributors": {
+      "get": {
+        "operationId": "contributor-getTopContributors",
+        "tags": [
+          "contributors"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "contributors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "joinedAt": {
+                            "type": "string"
+                          },
+                          "reviewCount": {
+                            "type": "number"
+                          },
+                          "uniqueGamesCount": {
+                            "type": "number"
+                          },
+                          "score": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "joinedAt",
+                          "reviewCount",
+                          "uniqueGamesCount",
+                          "score"
+                        ]
+                      }
+                    },
+                    "nextCursor": {
+                      "type": "number",
+                      "nullable": true
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "contributors",
+                    "nextCursor",
+                    "totalCount"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/library/link-url": {
+      "get": {
+        "operationId": "library-linkStartUrl",
+        "tags": [
+          "library"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "url"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/library/status": {
+      "get": {
+        "operationId": "library-status",
+        "tags": [
+          "library"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "linked": {
+                      "type": "boolean"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "externalUserId": {
+                      "type": "string"
+                    },
+                    "lastSyncedAt": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "linked"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/library/sync": {
+      "post": {
+        "operationId": "library-sync",
+        "tags": [
+          "library"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number"
+                    },
+                    "syncedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "syncedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/library": {
+      "get": {
+        "operationId": "library-list",
+        "tags": [
+          "library"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "externalGameId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "iconHash": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "playtimeMinutes": {
+                        "type": "number"
+                      },
+                      "aggregatedPerformance": {
+                        "type": "string",
+                        "nullable": true,
+                        "enum": [
+                          "EXCELLENT",
+                          "VERY_GOOD",
+                          "GOOD",
+                          "PLAYABLE",
+                          "BARELY_PLAYABLE",
+                          "UNPLAYABLE",
+                          null
+                        ]
+                      },
+                      "reviewCount": {
+                        "type": "number"
+                      },
+                      "hasData": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "externalGameId",
+                      "name",
+                      "iconHash",
+                      "playtimeMinutes",
+                      "aggregatedPerformance",
+                      "reviewCount",
+                      "hasData"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/library/link": {
+      "delete": {
+        "operationId": "library-unlink",
+        "tags": [
+          "library"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization not provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.UNAUTHORIZED"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.FORBIDDEN"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "error.BAD_REQUEST": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Invalid input data"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "BAD_REQUEST"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ]
+            },
+            "description": "An array of issues that were responsible for the error",
+            "example": []
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "title": "Invalid input data error (400)",
+        "description": "The error information",
+        "example": {
+          "code": "BAD_REQUEST",
+          "message": "Invalid input data",
+          "issues": []
+        }
+      },
+      "error.NOT_FOUND": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Not found"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "NOT_FOUND"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ]
+            },
+            "description": "An array of issues that were responsible for the error",
+            "example": []
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "title": "Not found error (404)",
+        "description": "The error information",
+        "example": {
+          "code": "NOT_FOUND",
+          "message": "Not found",
+          "issues": []
+        }
+      },
+      "error.INTERNAL_SERVER_ERROR": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Internal server error"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "INTERNAL_SERVER_ERROR"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ]
+            },
+            "description": "An array of issues that were responsible for the error",
+            "example": []
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "title": "Internal server error error (500)",
+        "description": "The error information",
+        "example": {
+          "code": "INTERNAL_SERVER_ERROR",
+          "message": "Internal server error",
+          "issues": []
+        }
+      },
+      "error.UNAUTHORIZED": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Authorization not provided"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "UNAUTHORIZED"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ]
+            },
+            "description": "An array of issues that were responsible for the error",
+            "example": []
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "title": "Authorization not provided error (401)",
+        "description": "The error information",
+        "example": {
+          "code": "UNAUTHORIZED",
+          "message": "Authorization not provided",
+          "issues": []
+        }
+      },
+      "error.FORBIDDEN": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message",
+            "example": "Insufficient access"
+          },
+          "code": {
+            "type": "string",
+            "description": "The error code",
+            "example": "FORBIDDEN"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ]
+            },
+            "description": "An array of issues that were responsible for the error",
+            "example": []
+          }
+        },
+        "required": [
+          "message",
+          "code"
+        ],
+        "title": "Insufficient access error (403)",
+        "description": "The error information",
+        "example": {
+          "code": "FORBIDDEN",
+          "message": "Insufficient access",
+          "issues": []
+        }
+      }
+    }
+  }
+}

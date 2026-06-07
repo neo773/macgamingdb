@@ -11,15 +11,24 @@ import {
   PerformanceEnum,
   PlayMethodEnum,
 } from '../schema';
+import {
+  CoverArtSchema,
+  GameByIdSchema,
+  GamePricesSchema,
+  GamesPageSchema,
+  RatingCountsSchema,
+  SteamSearchResultSchema,
+} from '../schema/openapi';
 
-const chipsetVariantRefiner = (val: {
+// Validated in the handler (not via .superRefine) so the input stays a plain
+// ZodObject — trpc-to-openapi requires that for GET query parameters.
+const assertValidChipsetVariant = (val: {
   chipset?: z.infer<typeof ChipsetEnum>;
   chipsetVariant?: z.infer<typeof ChipsetVariantEnum>;
-}, ctx: z.RefinementCtx) => {
+}) => {
   if (val.chipset && val.chipsetVariant && !CHIPSET_VARIANTS[val.chipset].includes(val.chipsetVariant)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ['chipsetVariant'],
+    throw new TRPCError({
+      code: 'BAD_REQUEST',
       message: `${val.chipset} has no ${val.chipsetVariant} variant`,
     });
   }
@@ -103,7 +112,9 @@ async function getFilteredCounts(
 
 export const gameRouter = router({
   search: procedure
+    .meta({ openapi: { method: 'GET', path: '/games/search', protect: false, tags: ['games'] } })
     .input(z.object({ query: z.string() }))
+    .output(z.array(SteamSearchResultSchema))
     .query(async ({ input }) => {
       try {
         const results = await searchSteam(input.query);
@@ -115,7 +126,9 @@ export const gameRouter = router({
     }),
 
   getCoverArt: procedure
+    .meta({ openapi: { method: 'GET', path: '/games/{gameId}/cover-art', protect: false, tags: ['games'] } })
     .input(z.object({ gameId: z.string() }))
+    .output(CoverArtSchema)
     .query(async ({ input }) => {
       try {
         const gameData = await getGameBySteamId(input.gameId);
@@ -142,16 +155,17 @@ export const gameRouter = router({
     }),
 
   getFilterCounts: procedure
+    .meta({ openapi: { method: 'GET', path: '/games/filter-counts', protect: false, tags: ['games'] } })
     .input(
-      z
-        .object({
-          chipset: ChipsetEnum.optional(),
-          chipsetVariant: ChipsetVariantEnum.optional(),
-          playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
-        })
-        .superRefine(chipsetVariantRefiner),
+      z.object({
+        chipset: ChipsetEnum.optional(),
+        chipsetVariant: ChipsetVariantEnum.optional(),
+        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      }),
     )
+    .output(RatingCountsSchema)
     .query(async ({ input, ctx }) => {
+      assertValidChipsetVariant(input);
       const { chipset, chipsetVariant, playMethod } = input;
 
       const reviewFilter = {
@@ -170,19 +184,20 @@ export const gameRouter = router({
     }),
 
   getGames: procedure
+    .meta({ openapi: { method: 'GET', path: '/games', protect: false, tags: ['games'] } })
     .input(
-      z
-        .object({
-          limit: z.number().min(1).max(50).default(6),
-          cursor: z.number().min(0).default(0),
-          performance: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
-          chipset: ChipsetEnum.optional(),
-          chipsetVariant: ChipsetVariantEnum.optional(),
-          playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
-        })
-        .superRefine(chipsetVariantRefiner),
+      z.object({
+        limit: z.number().min(1).max(50).default(6),
+        cursor: z.number().min(0).default(0),
+        performance: z.enum(['ALL', ...PerformanceEnum.options]).default('ALL'),
+        chipset: ChipsetEnum.optional(),
+        chipsetVariant: ChipsetVariantEnum.optional(),
+        playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      }),
     )
+    .output(GamesPageSchema)
     .query(async ({ input, ctx }) => {
+      assertValidChipsetVariant(input);
       try {
         const {
           limit,
@@ -315,7 +330,9 @@ export const gameRouter = router({
     }),
 
   getById: procedure
+    .meta({ openapi: { method: 'GET', path: '/games/{id}', protect: false, tags: ['games'] } })
     .input(z.object({ id: z.string() }))
+    .output(GameByIdSchema)
     .query(async ({ input, ctx }) => {
       try {
         const reviews = await ctx.db.query.gameReviews.findMany({
@@ -385,11 +402,17 @@ export const gameRouter = router({
     }),
 
   getScreenshotSignedUrls: procedure
+    .meta({ openapi: { method: 'GET', path: '/screenshots/signed-urls', protect: false, tags: ['games'] } })
     .input(
       z.object({
-        screenshots: z.array(z.string()),
+        // REST query params arrive as a comma-separated string
+        screenshots: z.preprocess(
+          (value) => (typeof value === 'string' ? value.split(',') : value),
+          z.array(z.string()),
+        ),
       }),
     )
+    .output(z.array(z.object({ original: z.string(), signed: z.string() })))
     .query(async ({ input }) => {
       try {
         const signedUrls = await Promise.all(
@@ -424,7 +447,9 @@ export const gameRouter = router({
     }),
 
   getPrices: procedure
+    .meta({ openapi: { method: 'GET', path: '/games/{gameId}/prices', protect: false, tags: ['games'] } })
     .input(z.object({ gameId: z.string() }))
+    .output(GamePricesSchema)
     .query(async ({ input, ctx }) => {
       try {
         const region = ctx.req ? getRegion(ctx.req.headers) : 'us';
