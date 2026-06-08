@@ -69,7 +69,7 @@ export const MacConfigRowSchema = z.object({
   identifier: z.string(),
   metadata: z.string(),
   createdAt: z.string(),
-  updatedAt: z.string().nullable(),
+  updatedAt: z.string(),
 });
 
 export const MacConfigSchema = z.object({
