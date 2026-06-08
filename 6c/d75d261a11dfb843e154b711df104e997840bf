@@ -1,0 +1,19 @@
+packages/server/src/schema/openapi.ts
+  s_c8903c0e4472f4::t_fe55624593759a 72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6cd75d261a11dfb843e154b711df104e997840bf",
+  "prompts": {},
+  "sessions": {
+    "s_c8903c0e4472f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a5c34cda-e348-468d-80c6-ebdcff71bf1f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
