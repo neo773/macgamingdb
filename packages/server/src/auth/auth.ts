@@ -12,6 +12,7 @@ import {
 } from '@macgamingdb/emails/magic-link';
 import { type DrizzleDB } from '../database/drizzle';
 import * as schema from '../drizzle/schema';
+import { REVIEW_ACCOUNT_EMAIL, REVIEW_ACCOUNT_OTP } from './auth.const';
 
 async function generateAppleClientSecret(): Promise<string> {
   const teamId = process.env.APPLE_TEAM_ID!;
@@ -90,8 +91,14 @@ export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof
       emailOTP({
         otpLength: 6,
         expiresIn: 600,
+        generateOTP: ({ email }) =>
+          email === REVIEW_ACCOUNT_EMAIL ? REVIEW_ACCOUNT_OTP : undefined,
         async sendVerificationOTP({ email, otp }) {
           console.log(`Sending OTP to ${email}: ${otp}`);
+
+          if (email === REVIEW_ACCOUNT_EMAIL) {
+            return;
+          }
 
           if (process.env.NODE_ENV !== 'production') {
             return;
