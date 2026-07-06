@@ -1,11 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { getChipsetCombinations } from './getChipsetCombinations';
+import { CHIPSET_VARIANTS } from '../schema';
 
 describe('getChipsetCombinations', () => {
   it('returns all chipset and variant combinations', () => {
     const combinations = getChipsetCombinations();
+    const expected = Object.values(CHIPSET_VARIANTS).flat().length;
 
-    expect(combinations).toHaveLength(24);
+    expect(combinations).toHaveLength(expected);
   });
 
   it('formats BASE variant labels without suffix', () => {
