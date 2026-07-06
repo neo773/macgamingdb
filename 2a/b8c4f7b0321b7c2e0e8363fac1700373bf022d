@@ -1,0 +1,19 @@
+packages/server/src/utils/getChipsetCombinations.test.ts
+  s_f94abe0f2340d4::t_75d6cbd89b92e1 3,8,10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "2ab8c4f7b0321b7c2e0e8363fac1700373bf022d",
+  "prompts": {},
+  "sessions": {
+    "s_f94abe0f2340d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5d9da16b-fe6c-4178-80cf-15899f2c84ed",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
