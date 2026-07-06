@@ -1,0 +1,23 @@
+packages/server/src/auth/auth.ts
+  s_f94abe0f2340d4::t_ef65bf78d805ba 15
+  s_f94abe0f2340d4::t_907134de09ad3b 94-95,99-101
+  s_f94abe0f2340d4::t_dfc2d95ab5ac6c 102
+packages/server/src/auth/auth.const.ts
+  s_f94abe0f2340d4::t_26269cfeb049d1 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "23aa0c0a2d07261cf25243ed0c19d179d33b2894",
+  "prompts": {},
+  "sessions": {
+    "s_f94abe0f2340d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5d9da16b-fe6c-4178-80cf-15899f2c84ed",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
