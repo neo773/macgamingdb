@@ -3,7 +3,7 @@ import {
   type TranslationLayer,
   type Performance,
   type GraphicsSettings,
-} from '@macgamingdb/server/schema';
+} from 'macgamingdb-server/schema';
 
 export interface ReviewFormData {
   fps: string;

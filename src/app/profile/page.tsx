@@ -1,6 +1,6 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import { headers } from 'next/headers';
-import { BetterAuthClient } from '@macgamingdb/server/auth';
+import { BetterAuthClient } from 'macgamingdb-server/auth';
 import { redirect } from 'next/navigation';
 import ProfileClient from './client';
 

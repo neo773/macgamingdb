@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { type TranslationLayer, TranslationLayerEnum } from '@macgamingdb/server/schema';
+import { type TranslationLayer, TranslationLayerEnum } from 'macgamingdb-server/schema';
 
 interface TranslationLayerSelectProps {
   value: TranslationLayer;

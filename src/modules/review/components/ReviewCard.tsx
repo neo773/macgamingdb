@@ -1,12 +1,12 @@
 import ExpandableReviewNote from './ExpandableReviewNote';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
+import { type GameReview, type MacConfig } from 'macgamingdb-server/drizzle/types';
 import React from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
-import { type MacSpecification } from '@macgamingdb/server/scraper/EveryMacScraper';
-import { type Performance } from '@macgamingdb/server/schema';
+import { type MacSpecification } from 'macgamingdb-server/scraper/EveryMacScraper';
+import { type Performance } from 'macgamingdb-server/schema';
 import { getHumanReadableFamily } from '@/modules/review/utils';
 
 const getPerformanceColor = (performance: Performance) => {

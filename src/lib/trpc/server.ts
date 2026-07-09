@@ -1,6 +1,6 @@
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import { appRouter } from '@macgamingdb/server/routers/_app';
-import { createTRPCContext } from '@macgamingdb/server/trpc';
+import { appRouter } from 'macgamingdb-server/routers/_app';
+import { createTRPCContext } from 'macgamingdb-server/trpc';
 import superjson from 'superjson';
 
 /**

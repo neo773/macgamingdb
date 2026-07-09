@@ -15,7 +15,7 @@ import {
   PerformanceEnum,
   GraphicsSettingsEnum,
   SOFTWARE_VERSIONS,
-} from '@macgamingdb/server/schema';
+} from 'macgamingdb-server/schema';
 import { type ReviewFormData } from '../types';
 
 interface MacConfig {

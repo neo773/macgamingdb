@@ -1,5 +1,5 @@
-import { BetterAuthClient } from '@macgamingdb/server/auth';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { BetterAuthClient } from 'macgamingdb-server/auth';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import { toNextJsHandler } from 'better-auth/next-js';
 
 export const GET = async (req: Request) => {

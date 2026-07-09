@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "packages/emails",
-    "packages/server"
+    "packages/macgamingdb-emails",
+    "packages/macgamingdb-server"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
@@ -32,8 +32,8 @@
     "@aws-sdk/s3-request-presigner": "^3.826.0",
     "@better-auth/expo": "^1.4.13",
     "@libsql/client": "^0.17.0",
-    "@macgamingdb/emails": "workspace:*",
-    "@macgamingdb/server": "workspace:*",
+    "macgamingdb-emails": "workspace:*",
+    "macgamingdb-server": "workspace:*",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
     "@next/mdx": "^16.1.6",

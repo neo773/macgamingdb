@@ -1,4 +1,4 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import { notFound } from 'next/navigation';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
@@ -11,7 +11,7 @@ import { formatDistance } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { Container } from '@/components/ui/container';
-import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
+import { users, gameReviews } from 'macgamingdb-server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations

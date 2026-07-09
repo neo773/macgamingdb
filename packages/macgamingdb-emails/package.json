@@ -1,5 +1,5 @@
 {
-  "name": "@macgamingdb/emails",
+  "name": "macgamingdb-emails",
   "version": "1.0.0",
   "private": true,
   "exports": {

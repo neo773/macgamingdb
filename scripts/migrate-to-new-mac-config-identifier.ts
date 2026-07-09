@@ -1,8 +1,8 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { createLogger } from '@macgamingdb/server/utils/logger';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { createLogger } from 'macgamingdb-server/utils/logger';
 import { config } from 'dotenv';
 import { convertMacConfigIdentifierToNewFormat } from './migration-utils/convert-mac-config-identifier-new-format';
-import { macConfigs } from '@macgamingdb/server/drizzle/schema';
+import { macConfigs } from 'macgamingdb-server/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 if (process.env.NODE_ENV === 'production') {

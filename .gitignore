@@ -52,4 +52,4 @@ dev.db-wal
 
 # recursive node_modules
 **/node_modules
-**/generated/
+**/generated/MobileAppSwift/

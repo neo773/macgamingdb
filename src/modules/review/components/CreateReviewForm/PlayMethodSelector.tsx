@@ -1,6 +1,6 @@
 'use client';
 
-import { type PlayMethod, PlayMethodEnum } from '@macgamingdb/server/schema';
+import { type PlayMethod, PlayMethodEnum } from 'macgamingdb-server/schema';
 
 interface PlayMethodSelectorProps {
   selectedMethod: PlayMethod;

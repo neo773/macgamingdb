@@ -19,7 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
+import { type AppRouter } from 'macgamingdb-server/routers/_app';
 import { trpc } from '@/lib/trpc/provider';
 import { getDeviceIcon, getHumanReadableFamily } from '@/modules/review/utils';
 

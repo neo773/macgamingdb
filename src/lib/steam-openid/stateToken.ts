@@ -3,4 +3,4 @@ export {
   issueStateToken,
   verifyStateToken,
   verifyStateTokenUserId,
-} from '@macgamingdb/server/services/steam-openid-state';
+} from 'macgamingdb-server/services/steam-openid-state';

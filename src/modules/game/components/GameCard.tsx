@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
+import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
 

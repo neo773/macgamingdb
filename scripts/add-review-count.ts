@@ -1,7 +1,7 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { createLogger } from '@macgamingdb/server/utils/logger';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { createLogger } from 'macgamingdb-server/utils/logger';
 import { config } from 'dotenv';
-import { games, gameReviews } from '@macgamingdb/server/drizzle/schema';
+import { games, gameReviews } from 'macgamingdb-server/drizzle/schema';
 import { eq, count } from 'drizzle-orm';
 
 if (process.env.NODE_ENV === 'production') {

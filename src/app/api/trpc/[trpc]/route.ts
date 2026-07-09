@@ -1,6 +1,6 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '@macgamingdb/server/routers/_app';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { appRouter } from 'macgamingdb-server/routers/_app';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 
 const handler = (req: Request) => {
   const db = createDrizzleClient();

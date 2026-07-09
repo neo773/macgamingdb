@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import { sql } from 'drizzle-orm';
 
 export const revalidate = 3600; // 1 hour

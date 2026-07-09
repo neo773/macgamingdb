@@ -13,7 +13,7 @@ import {
   type GraphicsSettings,
   PerformanceEnum,
   GraphicsSettingsEnum,
-} from '@macgamingdb/server/schema';
+} from 'macgamingdb-server/schema';
 import { transformPerformanceRating } from '../../utils';
 
 interface PerformanceFieldsProps {

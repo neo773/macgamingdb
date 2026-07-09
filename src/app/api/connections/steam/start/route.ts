@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { headers, cookies } from 'next/headers';
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { BetterAuthClient } from '@macgamingdb/server/auth';
-import { buildSteamOpenIdRedirectUrl } from '@macgamingdb/server/services/steam-openid';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { BetterAuthClient } from 'macgamingdb-server/auth';
+import { buildSteamOpenIdRedirectUrl } from 'macgamingdb-server/services/steam-openid';
 import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
 import { CALLBACK_PATH } from '@/lib/steam-openid/callbackPath';
 import { STATE_COOKIE_NAME } from '@/lib/steam-openid/stateCookieName';

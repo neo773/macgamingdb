@@ -7,7 +7,7 @@ import Footer from '@/modules/layout/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, Edit2 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
-import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
+import { type Game, type GameReview } from 'macgamingdb-server/drizzle/types';
 
 import { useMyReviews } from '@/modules/review/hooks';
 import {

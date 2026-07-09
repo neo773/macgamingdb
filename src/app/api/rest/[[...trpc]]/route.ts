@@ -1,7 +1,7 @@
 import { type NextRequest } from 'next/server';
 import { createOpenApiFetchHandler } from 'trpc-to-openapi';
-import { appRouter } from '@macgamingdb/server/routers/_app';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { appRouter } from 'macgamingdb-server/routers/_app';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 
 export const dynamic = 'force-dynamic';
 

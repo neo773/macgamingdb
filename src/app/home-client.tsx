@@ -5,7 +5,7 @@ import Script from 'next/script';
 import { trpc } from '@/lib/trpc/provider';
 import SearchBar from '@/modules/search/components/SearchBar';
 import { type inferRouterOutputs } from '@trpc/server';
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
+import { type AppRouter } from 'macgamingdb-server/routers/_app';
 import { homeJsonLd, faqJsonLd } from '@/lib/utils/jsonLd';
 import { useHomeFilters, useGameSearch } from '@/modules/home/hooks';
 import { HomeFilters, GameGrid } from '@/modules/home/components';

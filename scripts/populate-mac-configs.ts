@@ -1,9 +1,9 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { EveryMacScraper } from '@macgamingdb/server/scraper/EveryMacScraper';
-import { WebScraper } from '@macgamingdb/server/scraper/WebScraper';
-import { createLogger } from '@macgamingdb/server/utils/logger';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { EveryMacScraper } from 'macgamingdb-server/scraper/EveryMacScraper';
+import { WebScraper } from 'macgamingdb-server/scraper/WebScraper';
+import { createLogger } from 'macgamingdb-server/utils/logger';
 import { convertMacConfigIdentifierToNewFormat } from './migration-utils/convert-mac-config-identifier-new-format';
-import { macConfigs } from '@macgamingdb/server/drizzle/schema';
+import { macConfigs } from 'macgamingdb-server/drizzle/schema';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 

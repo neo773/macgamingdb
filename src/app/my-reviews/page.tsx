@@ -1,8 +1,8 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import { headers } from 'next/headers';
-import { BetterAuthClient } from '@macgamingdb/server/auth';
+import { BetterAuthClient } from 'macgamingdb-server/auth';
 import MyReviewsClient from './client';
-import { gameReviews } from '@macgamingdb/server/drizzle/schema';
+import { gameReviews } from 'macgamingdb-server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';

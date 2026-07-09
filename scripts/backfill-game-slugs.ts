@@ -1,7 +1,7 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { createLogger } from '@macgamingdb/server/utils/logger';
-import { games } from '@macgamingdb/server/drizzle/schema';
-import { generateUniqueGameSlug } from '@macgamingdb/server/utils/generateUniqueGameSlug';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { createLogger } from 'macgamingdb-server/utils/logger';
+import { games } from 'macgamingdb-server/drizzle/schema';
+import { generateUniqueGameSlug } from 'macgamingdb-server/utils/generateUniqueGameSlug';
 import { config } from 'dotenv';
 import { and, eq, isNull, isNotNull } from 'drizzle-orm';
 

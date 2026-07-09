@@ -4,8 +4,8 @@ import { type PerformanceFilter, type PlayMethodFilter } from '@/lib/constants';
 import { ChipsetFilter as ChipsetFilterComponent } from '@/modules/search/components/filters/ChipsetFilter';
 import { PlayMethodFilter as PlayMethodFilterComponent } from '@/modules/search/components/filters/PlayMethodFilter';
 import { PerformanceFilter as PerformanceFilterComponent } from '@/modules/search/components/filters/PerformanceFilter';
-import { formatRatingLabel } from '@macgamingdb/server/utils/formatRatingLabel';
-import type { ChipsetGroup } from '@macgamingdb/server/utils/getChipsetCombinations';
+import { formatRatingLabel } from 'macgamingdb-server/utils/formatRatingLabel';
+import type { ChipsetGroup } from 'macgamingdb-server/utils/getChipsetCombinations';
 
 interface HomeFiltersProps {
   chipsetFilter: string;

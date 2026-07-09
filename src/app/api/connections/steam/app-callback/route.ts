@@ -1,14 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { and, eq } from 'drizzle-orm';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import {
   LibraryProvider,
   userExternalAccounts,
-} from '@macgamingdb/server/drizzle/schema';
-import { verifySteamOpenIdResponse } from '@macgamingdb/server/services/steam-openid';
-import { verifyStateTokenUserId } from '@macgamingdb/server/services/steam-openid-state';
-import { SteamLibraryPrivateError } from '@macgamingdb/server/services/steam-api';
-import { syncSteamLibraryForUser } from '@macgamingdb/server/services/steam-library';
+} from 'macgamingdb-server/drizzle/schema';
+import { verifySteamOpenIdResponse } from 'macgamingdb-server/services/steam-openid';
+import { verifyStateTokenUserId } from 'macgamingdb-server/services/steam-openid-state';
+import { SteamLibraryPrivateError } from 'macgamingdb-server/services/steam-api';
+import { syncSteamLibraryForUser } from 'macgamingdb-server/services/steam-library';
 import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
 
 export const dynamic = 'force-dynamic';

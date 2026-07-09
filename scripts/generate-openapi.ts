@@ -6,7 +6,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { generateOpenApiDocument } from 'trpc-to-openapi';
-import { appRouter } from '../packages/server/src/routers/_app';
+import { appRouter } from '../packages/macgamingdb-server/src/routers/_app';
 
 const outputPath = process.argv[2] ?? 'openapi.json';
 

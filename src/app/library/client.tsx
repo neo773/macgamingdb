@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
-import { STEAM_LIBRARY_PRIVATE_CODE } from '@macgamingdb/server/services/steam-api';
+import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/services/steam-api';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
 import { Container } from '@/components/ui/container';

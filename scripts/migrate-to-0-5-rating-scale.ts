@@ -1,9 +1,9 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { createLogger } from '@macgamingdb/server/utils/logger';
+import { createDrizzleClient } from 'macgamingdb-server/database';
+import { createLogger } from 'macgamingdb-server/utils/logger';
 import { config } from 'dotenv';
-import { calculateAveragePerformance } from '@macgamingdb/server/utils/calculateAveragePerformance';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
-import { games } from '@macgamingdb/server/drizzle/schema';
+import { calculateAveragePerformance } from 'macgamingdb-server/utils/calculateAveragePerformance';
+import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
+import { games } from 'macgamingdb-server/drizzle/schema';
 import { eq, gt } from 'drizzle-orm';
 
 if (process.env.NODE_ENV === 'production') {

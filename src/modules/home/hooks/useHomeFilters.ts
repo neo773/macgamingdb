@@ -11,8 +11,8 @@ import {
   DEFAULT_CHIPSET_FILTER,
   DEFAULT_PLAY_METHOD_FILTER,
 } from '@/lib/constants';
-import { getGroupedChipsetCombinations } from '@macgamingdb/server/utils/getChipsetCombinations';
-import { PlayMethodEnum } from '@macgamingdb/server/schema';
+import { getGroupedChipsetCombinations } from 'macgamingdb-server/utils/getChipsetCombinations';
+import { PlayMethodEnum } from 'macgamingdb-server/schema';
 
 export function useHomeFilters() {
   const searchParams = useSearchParams();

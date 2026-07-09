@@ -9,8 +9,6 @@
         "@aws-sdk/s3-request-presigner": "^3.826.0",
         "@better-auth/expo": "^1.4.13",
         "@libsql/client": "^0.17.0",
-        "@macgamingdb/emails": "workspace:*",
-        "@macgamingdb/server": "workspace:*",
         "@mdx-js/loader": "^3.1.1",
         "@mdx-js/react": "^3.1.1",
         "@next/mdx": "^16.1.6",
@@ -54,6 +52,8 @@
         "jose": "^6.1.3",
         "linkedom": "^0.18.9",
         "lucide-react": "^0.532.0",
+        "macgamingdb-emails": "workspace:*",
+        "macgamingdb-server": "workspace:*",
         "motion": "^12.23.11",
         "next": "^16.1.1",
         "next-themes": "^0.4.6",
@@ -95,8 +95,8 @@
         "vitest": "^4.0.16",
       },
     },
-    "packages/emails": {
-      "name": "@macgamingdb/emails",
+    "packages/macgamingdb-emails": {
+      "name": "macgamingdb-emails",
       "version": "1.0.0",
       "dependencies": {
         "@react-email/components": "^0.0.36",
@@ -111,8 +111,8 @@
         "react-email": "^4.1.0",
       },
     },
-    "packages/server": {
-      "name": "@macgamingdb/server",
+    "packages/macgamingdb-server": {
+      "name": "macgamingdb-server",
       "version": "1.0.0",
       "dependencies": {
         "fuse.js": "^7.4.2",
@@ -703,10 +703,6 @@
     "@lottiefiles/dotlottie-react": ["@lottiefiles/dotlottie-react@0.13.3", "", { "dependencies": { "@lottiefiles/dotlottie-web": "0.42.0" }, "peerDependencies": { "react": "^17 || ^18 || ^19" } }, "sha512-V4FfdYlqzjBUX7f0KV6vfQOOI0Cp+3XeG/ZqSDFSEVg5P7fpROpDv5/I9aTM8sOCESK1SWT96Fem+QVUnBV1wQ=="],
 
     "@lottiefiles/dotlottie-web": ["@lottiefiles/dotlottie-web@0.42.0", "", {}, "sha512-Zr2LCaOAoPCsdAQgeLyCSiQ1+xrAJtRCyuEYDj0qR5heUwpc+Pxbb88JyTVumcXFfKOBMOMmrlsTScLz2mrvQQ=="],
-
-    "@macgamingdb/emails": ["@macgamingdb/emails@workspace:packages/emails"],
-
-    "@macgamingdb/server": ["@macgamingdb/server@workspace:packages/server"],
 
     "@mdx-js/loader": ["@mdx-js/loader@3.1.1", "", { "dependencies": { "@mdx-js/mdx": "^3.0.0", "source-map": "^0.7.0" }, "peerDependencies": { "webpack": ">=5" }, "optionalPeers": ["webpack"] }, "sha512-0TTacJyZ9mDmY+VefuthVshaNIyCGZHJG2fMnGaDttCt8HmjUF7SizlHJpaCDoGnN635nK1wpzfpx/Xx5S4WnQ=="],
 
@@ -2357,6 +2353,10 @@
     "lru.min": ["lru.min@1.1.3", "", {}, "sha512-Lkk/vx6ak3rYkRR0Nhu4lFUT2VDnQSxBe8Hbl7f36358p6ow8Bnvr8lrLt98H8J1aGxfhbX4Fs5tYg2+FTwr5Q=="],
 
     "lucide-react": ["lucide-react@0.532.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-HwmXOIZwuZ21wryFq0ZrwkjAMxI77+jLxLdNzWCiUa/Kf5ozkTFCWT6C1/yapP68uKgj8wlxxqnNCH1xo9NEpg=="],
+
+    "macgamingdb-emails": ["macgamingdb-emails@workspace:packages/macgamingdb-emails"],
+
+    "macgamingdb-server": ["macgamingdb-server@workspace:packages/macgamingdb-server"],
 
     "magic-string": ["magic-string@0.30.21", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ=="],
 

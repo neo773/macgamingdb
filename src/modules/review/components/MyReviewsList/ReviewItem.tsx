@@ -18,14 +18,14 @@ import { useReviewDraft } from '@/modules/review/hooks';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
 import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
+import { type SteamAppData } from 'macgamingdb-server/api/steam';
 import {
   PerformanceEnum,
   PlayMethodEnum,
   SOFTWARE_VERSIONS,
   type Performance,
-} from '@macgamingdb/server/schema';
-import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
+} from 'macgamingdb-server/schema';
+import { type Game, type GameReview } from 'macgamingdb-server/drizzle/types';
 import { transformPerformanceRating } from '../../utils';
 
 type ReviewWithGame = GameReview & { game: Game };

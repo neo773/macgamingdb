@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { PlayMethod, TranslationLayer } from '@macgamingdb/server/schema';
+import type { PlayMethod, TranslationLayer } from 'macgamingdb-server/schema';
 
 interface FormPreferences {
   playMethod?: PlayMethod;
