@@ -3,10 +3,8 @@ import Script from 'next/script';
 import { type Metadata } from 'next';
 import { permanentRedirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import {
-  normalizeGameDetails,
-  type NormalizedGameDetails,
-} from '@macgamingdb/server/utils/normalizeGameDetails';
+import { normalizeGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
+import { type NormalizedGameDetails } from '@macgamingdb/server/gameSources/NormalizedGameDetails';
 import { createServerHelpers } from '@/lib/trpc/server';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';

@@ -3,21 +3,12 @@
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
 import { type RouterOutputs } from '@/lib/trpc/provider';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
 import { normalizeGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
-
-interface GameFromDB {
-  id: string;
-  slug: string | null;
-  source: string;
-  details: string | null;
-  performanceRating: string | null;
-}
 
 interface GameGridProps {
   isLoading: boolean;
   searchResults: RouterOutputs['game']['search'] | null;
-  games: GameFromDB[];
+  games: RouterOutputs['game']['getGames']['games'];
   isFetchingNextPage: boolean;
 }
 
@@ -84,10 +75,11 @@ export function GameGrid({
             game={{
               objectID: game.id,
               slug: game.slug,
+              source: game.source,
               name: gameDetails?.name ?? 'Unknown',
               url: '',
               releaseYear: gameDetails?.releaseYear ?? undefined,
-              performanceRating: (game.performanceRating ?? undefined) as PerformanceRating | undefined,
+              performanceRating: game.performanceRating,
             }}
           />
         );

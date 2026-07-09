@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
+import type { GameSource } from '../gameSources/GameSource';
 
 // Enum-like const objects (SQLite has no native enums)
 export const PlayMethod = {
@@ -68,7 +69,7 @@ export const games = sqliteTable('Game', {
   id: text('id').primaryKey(),
   slug: text('slug'),
   igdbId: integer('igdbId'),
-  source: text('source').notNull().default('steam'),
+  source: text('source').$type<GameSource>().notNull().default('steam'),
   details: text('details'),
   updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
   createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),

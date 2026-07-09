@@ -3,20 +3,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
+import { type GameSearchResult } from '@macgamingdb/server/gameSources/GameSearchResult';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
 import { trpc } from '@/lib/trpc/provider';
 
-type GameCardGame = {
-  objectID: string;
-  slug?: string | null;
-  name: string;
-  url?: string;
-  tagIds?: string[];
-  source?: 'steam' | 'igdb';
-  igdbId?: number;
-  coverImage?: string;
-  releaseYear?: number;
+type GameCardGame = GameSearchResult & {
   performanceRating?: PerformanceRating;
 };
 
@@ -114,7 +106,7 @@ export function GameCard({ game }: { game: GameCardGame }) {
     </>
   );
 
-  if (isIgdb) {
+  if (isIgdb && !game.slug) {
     return (
       <button
         type="button"

@@ -511,7 +511,11 @@
                             "nullable": true
                           },
                           "source": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "steam",
+                              "igdb"
+                            ]
                           },
                           "details": {
                             "type": "string",

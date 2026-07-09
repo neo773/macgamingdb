@@ -44,6 +44,7 @@ export function LibraryGameCard({
         <GameCard
           game={{
             objectID: appId,
+            source: 'steam',
             name: name ?? `App ${appId}`,
             url: '',
             performanceRating: rating ?? undefined,

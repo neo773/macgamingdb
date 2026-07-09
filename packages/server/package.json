@@ -30,6 +30,8 @@
     "./utils/slugifyGameName": "./src/utils/slugifyGameName.ts",
     "./utils/generateUniqueGameSlug": "./src/utils/generateUniqueGameSlug.ts",
     "./utils/normalizeGameDetails": "./src/utils/normalizeGameDetails.ts",
+    "./gameSources/NormalizedGameDetails": "./src/gameSources/NormalizedGameDetails.ts",
+    "./gameSources/GameSearchResult": "./src/gameSources/GameSearchResult.ts",
     "./utils/getOrCreateSteamGame": "./src/utils/getOrCreateSteamGame.ts",
     "./auth": "./src/auth/auth.ts",
     "./database": "./src/database/drizzle.ts",

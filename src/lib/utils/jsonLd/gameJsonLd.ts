@@ -1,4 +1,4 @@
-import { type NormalizedGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
+import { type NormalizedGameDetails } from '@macgamingdb/server/gameSources/NormalizedGameDetails';
 
 interface GameStats {
   averagePerformance: number;

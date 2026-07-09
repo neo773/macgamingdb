@@ -1,13 +1,9 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
-import { searchSteam, type SteamAppData } from '../api/steam';
-import {
-  searchIGDBGames,
-  getIGDBGameById,
-  getSteamAppIdFromIGDB,
-} from '../api/igdb';
+import { type SteamAppData } from '../api/steam';
+import { getIGDBGameById, getSteamAppIdFromIGDB } from '../api/igdb';
 import { getOrCreateSteamGame } from '../utils/getOrCreateSteamGame';
-import { combineGameSearchResults } from '../utils/combineGameSearchResults';
+import { searchGames } from '../gameSources/searchGames';
 import { generateUniqueGameSlug } from '../utils/generateUniqueGameSlug';
 import { getGamePrices } from '../api/ggdeals';
 import { getRegion } from '../utils/getRegion';
@@ -124,49 +120,7 @@ export const gameRouter = router({
     .meta({ openapi: { method: 'GET', path: '/games/search', protect: false, tags: ['games'] } })
     .input(z.object({ query: z.string() }))
     .output(z.array(GameSearchResultSchema))
-    .query(async ({ input, ctx }) => {
-      const [steamResult, igdbResult] = await Promise.allSettled([
-        searchSteam(input.query),
-        searchIGDBGames(input.query),
-      ]);
-
-      if (steamResult.status === 'rejected') {
-        console.error('Steam search error:', steamResult.reason);
-      }
-      if (igdbResult.status === 'rejected') {
-        console.error('IGDB search error:', igdbResult.reason);
-      }
-
-      const steamResults =
-        steamResult.status === 'fulfilled'
-          ? steamResult.value.slice(0, 10)
-          : [];
-      const igdbResults =
-        igdbResult.status === 'fulfilled' ? igdbResult.value : [];
-
-      const cachedGames =
-        steamResults.length > 0
-          ? await ctx.db
-              .select({ id: games.id, slug: games.slug })
-              .from(games)
-              .where(
-                inArray(
-                  games.id,
-                  steamResults.map((result) => result.objectID),
-                ),
-              )
-          : [];
-      const slugBySteamAppId = new Map(
-        cachedGames.map((game) => [game.id, game.slug]),
-      );
-
-      return combineGameSearchResults({
-        query: input.query,
-        steamResults,
-        igdbResults,
-        slugBySteamAppId,
-      });
-    }),
+    .query(async ({ input, ctx }) => searchGames(ctx.db, input.query)),
 
   getOrCreateFromIGDB: procedure
     .meta({ openapi: { method: 'POST', path: '/games/from-igdb', protect: false, tags: ['games'] } })

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { GAME_SOURCES } from '../gameSources/GameSource';
 import {
   ChipsetVariantEnum,
   GraphicsSettingsEnum,
@@ -29,7 +30,7 @@ export const GameSearchResultSchema = z.object({
   name: z.string(),
   url: z.string(),
   tagIds: z.array(z.string()).optional(),
-  source: z.enum(['steam', 'igdb']),
+  source: z.enum(GAME_SOURCES),
   igdbId: z.number().optional(),
   coverImage: z.string().optional(),
   slug: z.string().nullable().optional(),
@@ -60,7 +61,7 @@ export const RatingCountsSchema = z.object({
 export const GameListItemSchema = z.object({
   id: z.string(),
   slug: z.string().nullable(),
-  source: z.string(),
+  source: z.enum(GAME_SOURCES),
   details: z.string().nullable(),
   performanceRating: PerformanceEnum,
 });
