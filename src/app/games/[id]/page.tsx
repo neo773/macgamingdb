@@ -1,13 +1,17 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { type Metadata } from 'next';
+import { permanentRedirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
+import {
+  normalizeGameDetails,
+  type NormalizedGameDetails,
+} from '@macgamingdb/server/utils/normalizeGameDetails';
 import { createServerHelpers } from '@/lib/trpc/server';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
 import { Container } from '@/components/ui/container';
 import { generateGameJsonLd } from '@/lib/utils/jsonLd';
-import { parseGameDetails } from '@/modules/game/utils';
 import {
   GameDetailHeader,
   GameInfoCard,
@@ -18,6 +22,22 @@ import {
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
+
+const FALLBACK_GAME_DETAILS: NormalizedGameDetails = {
+  source: 'steam',
+  name: 'Game Information Unavailable',
+  headerImage: null,
+  descriptionHtml:
+    'Game details could not be loaded at this time. Please try again later.',
+  developers: [],
+  publishers: [],
+  website: null,
+  steamAppId: null,
+  releaseDate: null,
+  releaseYear: null,
+  genres: [],
+  screenshots: [],
+};
 
 export async function generateStaticParams() {
   return [];
@@ -33,12 +53,19 @@ export async function generateMetadata({
   try {
     const helpers = await createServerHelpers();
     const { game } = await helpers.game.getById.fetch({ id });
-    const gameDetails = parseGameDetails(game?.details ?? null);
-    const gameName = gameDetails.name || 'This Game';
+    const gameDetails = normalizeGameDetails(
+      game?.source ?? 'steam',
+      game?.details ?? null,
+    );
+    const gameName = gameDetails?.name || 'This Game';
+    const canonicalId = game?.slug ?? id;
 
     return {
       title: `${gameName} – Mac Compatibility & Apple Silicon Performance | MacGamingDB`,
       description: `Can you play ${gameName} on Mac? Check Apple Silicon (M1–M4) compatibility, FPS benchmarks, and user reports for Native, Rosetta 2, CrossOver, Parallels & Game Porting Toolkit.`,
+      alternates: {
+        canonical: `https://macgamingdb.app/games/${canonicalId}`,
+      },
       openGraph: {
         title: `${gameName} – Mac Compatibility & Apple Silicon Performance`,
         description: `Discover how ${gameName} runs on macOS. Includes benchmarks, compatibility layers (Rosetta, CrossOver, Parallels, GPTK), and community reviews.`,
@@ -61,52 +88,63 @@ export default async function GamePage({
   const { id } = await params;
   const helpers = await createServerHelpers();
 
+  let data;
   try {
-    const { game, reviews, stats } = await helpers.game.getById.fetch({ id });
-    const gameDetails = parseGameDetails(game?.details ?? null);
-    const hasReviews = reviews && reviews.length > 0;
-    const jsonLd = generateGameJsonLd(id, gameDetails, stats);
-
-    return (
-      <div className="min-h-dvh flex flex-col bg-black">
-        <Script
-          type="application/ld+json"
-          id={`jsonLdGame${id}`}
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Header />
-        <Container>
-          <div className="mb-4">
-            <Link
-              href="/"
-              className="text-blue-400 hover:text-blue-300 inline-flex items-center"
-            >
-              <ChevronLeft className="text-blue-400" />
-              Home
-            </Link>
-          </div>
-
-          <GameDetailHeader gameDetails={gameDetails} />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <GameInfoCard description={gameDetails.detailed_description} />
-            <GameStatsCard stats={stats} />
-          </div>
-
-          <PriceDisplay gameId={id} />
-
-          <ExperienceReportsSection
-            gameId={id}
-            gameName={gameDetails.name}
-            reviews={reviews}
-            showCrossoverAffiliate={hasReviews}
-          />
-        </Container>
-        <Footer />
-      </div>
-    );
+    data = await helpers.game.getById.fetch({ id });
   } catch (error) {
     console.error('Error in server component:', error);
     return <GamePageError />;
   }
+
+  const { game, reviews, stats } = data;
+
+  if (game?.slug && id !== game.slug) {
+    permanentRedirect(`/games/${game.slug}`);
+  }
+
+  const gameDetails =
+    normalizeGameDetails(game?.source ?? 'steam', game?.details ?? null) ??
+    FALLBACK_GAME_DETAILS;
+  const identifier = game?.slug ?? id;
+  const hasReviews = reviews && reviews.length > 0;
+  const jsonLd = generateGameJsonLd(identifier, gameDetails, stats);
+
+  return (
+    <div className="min-h-dvh flex flex-col bg-black">
+      <Script
+        type="application/ld+json"
+        id={`jsonLdGame${id}`}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Header />
+      <Container>
+        <div className="mb-4">
+          <Link
+            href="/"
+            className="text-blue-400 hover:text-blue-300 inline-flex items-center"
+          >
+            <ChevronLeft className="text-blue-400" />
+            Home
+          </Link>
+        </div>
+
+        <GameDetailHeader gameDetails={gameDetails} />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <GameInfoCard description={gameDetails.descriptionHtml ?? ''} />
+          <GameStatsCard stats={stats} />
+        </div>
+
+        <PriceDisplay gameId={id} />
+
+        <ExperienceReportsSection
+          gameId={id}
+          gameName={gameDetails.name}
+          reviews={reviews}
+          showCrossoverAffiliate={hasReviews}
+        />
+      </Container>
+      <Footer />
+    </div>
+  );
 }

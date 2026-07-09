@@ -1,6 +1,14 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
-import { getGameBySteamId, searchSteam } from '../api/steam';
+import { searchSteam, type SteamAppData } from '../api/steam';
+import {
+  searchIGDBGames,
+  getIGDBGameById,
+  getSteamAppIdFromIGDB,
+} from '../api/igdb';
+import { getOrCreateSteamGame } from '../utils/getOrCreateSteamGame';
+import { combineGameSearchResults } from '../utils/combineGameSearchResults';
+import { generateUniqueGameSlug } from '../utils/generateUniqueGameSlug';
 import { getGamePrices } from '../api/ggdeals';
 import { getRegion } from '../utils/getRegion';
 import { TRPCError } from '@trpc/server';
@@ -16,8 +24,9 @@ import {
   GameByIdSchema,
   GamePricesSchema,
   GamesPageSchema,
+  GameSearchResultSchema,
   RatingCountsSchema,
-  SteamSearchResultSchema,
+  MaterializeFromIgdbResultSchema,
 } from '../schema/openapi';
 
 // Validated in the handler (not via .superRefine) so the input stays a plain
@@ -37,7 +46,7 @@ import { calculateTranslationLayerStats } from '../utils/calculateTranslationLay
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
 import { type DrizzleDB } from '../database/drizzle';
-import { games, gameReviews, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
+import { games, gameReviews, gameAliases, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
 import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
@@ -114,14 +123,131 @@ export const gameRouter = router({
   search: procedure
     .meta({ openapi: { method: 'GET', path: '/games/search', protect: false, tags: ['games'] } })
     .input(z.object({ query: z.string() }))
-    .output(z.array(SteamSearchResultSchema))
-    .query(async ({ input }) => {
+    .output(z.array(GameSearchResultSchema))
+    .query(async ({ input, ctx }) => {
+      const [steamResult, igdbResult] = await Promise.allSettled([
+        searchSteam(input.query),
+        searchIGDBGames(input.query),
+      ]);
+
+      if (steamResult.status === 'rejected') {
+        console.error('Steam search error:', steamResult.reason);
+      }
+      if (igdbResult.status === 'rejected') {
+        console.error('IGDB search error:', igdbResult.reason);
+      }
+
+      const steamResults =
+        steamResult.status === 'fulfilled'
+          ? steamResult.value.slice(0, 10)
+          : [];
+      const igdbResults =
+        igdbResult.status === 'fulfilled' ? igdbResult.value : [];
+
+      const cachedGames =
+        steamResults.length > 0
+          ? await ctx.db
+              .select({ id: games.id, slug: games.slug })
+              .from(games)
+              .where(
+                inArray(
+                  games.id,
+                  steamResults.map((result) => result.objectID),
+                ),
+              )
+          : [];
+      const slugBySteamAppId = new Map(
+        cachedGames.map((game) => [game.id, game.slug]),
+      );
+
+      return combineGameSearchResults({
+        query: input.query,
+        steamResults,
+        igdbResults,
+        slugBySteamAppId,
+      });
+    }),
+
+  getOrCreateFromIGDB: procedure
+    .meta({ openapi: { method: 'POST', path: '/games/from-igdb', protect: false, tags: ['games'] } })
+    .input(z.object({ igdbId: z.number().int().positive() }))
+    .output(MaterializeFromIgdbResultSchema)
+    .mutation(async ({ input, ctx }) => {
       try {
-        const results = await searchSteam(input.query);
-        return results.slice(0, 10);
+        const existing = await ctx.db.query.games.findFirst({
+          where: eq(games.igdbId, input.igdbId),
+        });
+        if (existing) {
+          return { id: existing.id, slug: existing.slug };
+        }
+
+        const igdbGame = await getIGDBGameById(input.igdbId);
+        if (!igdbGame) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Game not found on IGDB',
+          });
+        }
+
+        const steamAppId = getSteamAppIdFromIGDB(igdbGame);
+        if (steamAppId) {
+          const steamGame = await getOrCreateSteamGame(ctx.db, steamAppId);
+          if (steamGame) {
+            return { id: steamGame.id, slug: steamGame.slug };
+          }
+        }
+
+        const releaseYear = igdbGame.first_release_date
+          ? new Date(igdbGame.first_release_date * 1000).getUTCFullYear()
+          : undefined;
+
+        const isTaken = async (candidate: string): Promise<boolean> => {
+          const [row] = await ctx.db
+            .select({ id: games.id })
+            .from(games)
+            .where(eq(games.slug, candidate))
+            .limit(1);
+          return row !== undefined;
+        };
+
+        const slug = await generateUniqueGameSlug(igdbGame.name, {
+          releaseYear,
+          fallbackId: String(input.igdbId),
+          isTaken,
+        });
+
+        const id = `igdb-${input.igdbId}`;
+
+        await ctx.db
+          .insert(games)
+          .values({
+            id,
+            slug,
+            details: JSON.stringify(igdbGame),
+            source: 'igdb',
+            igdbId: input.igdbId,
+          })
+          .onConflictDoNothing();
+
+        const persisted = await ctx.db.query.games.findFirst({
+          where: eq(games.igdbId, input.igdbId),
+        });
+
+        return persisted
+          ? { id: persisted.id, slug: persisted.slug }
+          : { id, slug };
       } catch (error) {
-        console.error('Search error:', error);
-        throw new Error('Failed to search games');
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+        console.error(
+          `Error materializing IGDB game ${input.igdbId}:`,
+          error,
+        );
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to materialize game from IGDB',
+        });
       }
     }),
 
@@ -129,9 +255,12 @@ export const gameRouter = router({
     .meta({ openapi: { method: 'GET', path: '/games/{gameId}/cover-art', protect: false, tags: ['games'] } })
     .input(z.object({ gameId: z.string() }))
     .output(CoverArtSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const gameData = await getGameBySteamId(input.gameId);
+        const game = await getOrCreateSteamGame(ctx.db, input.gameId);
+        const gameData = game?.details
+          ? (JSON.parse(game.details) as SteamAppData)
+          : null;
 
         if (!gameData || !gameData.header_image) {
           throw new TRPCError({
@@ -146,6 +275,9 @@ export const gameRouter = router({
           capsuleImagev5: gameData.capsule_imagev5,
         };
       } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
         console.error('Error fetching cover art:', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -264,6 +396,8 @@ export const gameRouter = router({
             )
             .map((game) => ({
               id: game.id,
+              slug: game.slug,
+              source: game.source,
               details: game.details,
               performanceRating: game.aggregatedPerformance,
             }));
@@ -306,6 +440,8 @@ export const gameRouter = router({
           )
           .map((game) => ({
             id: game.id,
+            slug: game.slug,
+            source: game.source,
             details: game.details,
             performanceRating: game.aggregatedPerformance,
           }));
@@ -335,39 +471,53 @@ export const gameRouter = router({
     .output(GameByIdSchema)
     .query(async ({ input, ctx }) => {
       try {
+        let game = await ctx.db.query.games.findFirst({
+          where: eq(games.slug, input.id),
+        });
+
+        if (!game) {
+          game = await ctx.db.query.games.findFirst({
+            where: eq(games.id, input.id),
+          });
+        }
+
+        if (!game) {
+          const alias = await ctx.db.query.gameAliases.findFirst({
+            where: eq(gameAliases.aliasId, input.id),
+          });
+          if (alias) {
+            game = await ctx.db.query.games.findFirst({
+              where: eq(games.id, alias.canonicalId),
+            });
+          }
+        }
+
+        const isNumericId = /^[0-9]+$/.test(input.id);
+
+        if ((!game || !game.details) && isNumericId) {
+          const steamAppId = game?.id ?? input.id;
+          const created = await getOrCreateSteamGame(ctx.db, steamAppId);
+          if (created) {
+            game = created;
+          }
+        }
+
+        if (!game || !game.details) {
+          console.warn(`Game with ID ${input.id} could not be resolved.`);
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Game not found',
+          });
+        }
+
+        const gameDetails: string = game.details;
+
         const reviews = await ctx.db.query.gameReviews.findMany({
-          where: eq(gameReviews.gameId, input.id),
+          where: eq(gameReviews.gameId, game.id),
           with: {
             macConfig: true,
           },
         });
-
-        const game = await ctx.db.query.games.findFirst({
-          where: eq(games.id, input.id),
-        });
-
-        let gameDetails: string = game?.details as string;
-
-        if (!game || !game.details) {
-          const response = await getGameBySteamId(input.id);
-          if (!response) {
-            console.warn(`Game with ID ${input.id} not found on Steam.`);
-            throw new TRPCError({
-              message: 'Something went wrong',
-              code: 'INTERNAL_SERVER_ERROR',
-            });
-          }
-
-          gameDetails = JSON.stringify(response);
-
-          await ctx.db
-            .insert(games)
-            .values({ id: input.id, details: gameDetails })
-            .onConflictDoUpdate({
-              target: games.id,
-              set: { details: gameDetails },
-            });
-        }
 
         const reviewStats =
           reviews.length > 0
@@ -396,6 +546,9 @@ export const gameRouter = router({
           stats: reviewStats,
         };
       } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
         console.error(`Error fetching game details for ID ${input.id}:`, error);
         throw new Error('Failed to fetch game details');
       }

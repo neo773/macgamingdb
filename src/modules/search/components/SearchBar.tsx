@@ -3,15 +3,16 @@
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-import { trpc } from '@/lib/trpc/provider';
+import { trpc, type RouterOutputs } from '@/lib/trpc/provider';
 import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
 import { trackEvent } from '@/lib/analytics/umami';
+
+type GameSearchResults = RouterOutputs['game']['search'];
 
 type SearchBarProps = {
   onResultsChange?: (
-    results: SteamGameSearchObject[] | null,
+    results: GameSearchResults | null,
     isLoading: boolean,
   ) => void;
 };

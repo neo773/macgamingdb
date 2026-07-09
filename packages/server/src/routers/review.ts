@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { router, procedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { revalidatePath } from 'next/cache';
-import { getGameBySteamId } from '../api/steam';
+import { getOrCreateSteamGame } from '../utils/getOrCreateSteamGame';
 import {
   GraphicsSettingsEnum,
   PerformanceEnum,
@@ -315,19 +315,11 @@ export const reviewRouter = router({
         });
 
         if (!gameExists) {
-          const gameDetails = await getGameBySteamId(input.gameId);
+          const created = await getOrCreateSteamGame(ctx.db, input.gameId);
 
-          if (!gameDetails) {
+          if (!created) {
             return null;
           }
-
-          await ctx.db
-            .insert(games)
-            .values({ id: input.gameId, details: JSON.stringify(gameDetails) })
-            .onConflictDoUpdate({
-              target: games.id,
-              set: { details: JSON.stringify(gameDetails) },
-            });
         }
 
         const macConfig = await ctx.db.query.macConfigs.findFirst({

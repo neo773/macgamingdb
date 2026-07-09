@@ -2,18 +2,21 @@
 
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
-import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
+import { type RouterOutputs } from '@/lib/trpc/provider';
 import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
+import { normalizeGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
 
 interface GameFromDB {
   id: string;
+  slug: string | null;
+  source: string;
   details: string | null;
   performanceRating: string | null;
 }
 
 interface GameGridProps {
   isLoading: boolean;
-  searchResults: SteamGameSearchObject[] | null;
+  searchResults: RouterOutputs['game']['search'] | null;
   games: GameFromDB[];
   isFetchingNextPage: boolean;
 }
@@ -72,17 +75,23 @@ export function GameGrid({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-      {games.map((game) => (
-        <GameCard
-          key={game.id}
-          game={{
-            objectID: game.id,
-            name: game.details ? JSON.parse(game.details).name : 'Unknown',
-            url: '',
-            performanceRating: (game.performanceRating ?? undefined) as PerformanceRating | undefined,
-          }}
-        />
-      ))}
+      {games.map((game) => {
+        const gameDetails = normalizeGameDetails(game.source, game.details);
+
+        return (
+          <GameCard
+            key={game.id}
+            game={{
+              objectID: game.id,
+              slug: game.slug,
+              name: gameDetails?.name ?? 'Unknown',
+              url: '',
+              releaseYear: gameDetails?.releaseYear ?? undefined,
+              performanceRating: (game.performanceRating ?? undefined) as PerformanceRating | undefined,
+            }}
+          />
+        );
+      })}
 
       {isFetchingNextPage &&
         Array(6)

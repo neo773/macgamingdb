@@ -1,17 +1,29 @@
 'use client';
 
 import Link from 'next/link';
-import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
+import { useRouter } from 'next/navigation';
 import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
 import { trpc } from '@/lib/trpc/provider';
 
-export function GameCard({
-  game,
-}: {
-  game: SteamGameSearchObject & { performanceRating?: PerformanceRating };
-}) {
+type GameCardGame = {
+  objectID: string;
+  slug?: string | null;
+  name: string;
+  url?: string;
+  tagIds?: string[];
+  source?: 'steam' | 'igdb';
+  igdbId?: number;
+  coverImage?: string;
+  releaseYear?: number;
+  performanceRating?: PerformanceRating;
+};
+
+export function GameCard({ game }: { game: GameCardGame }) {
+  const router = useRouter();
+  const isIgdb = game.source === 'igdb';
+
   const [showFallback, setShowFallback] = useState(false);
   const [steamApiImageUrl, setSteamApiImageUrl] = useState<string | null>(null);
   const [steamApiImageReady, setSteamApiImageReady] = useState(false);
@@ -20,6 +32,8 @@ export function GameCard({
     { gameId: game.objectID },
     { enabled: false, retry: false }
   );
+
+  const materialize = trpc.game.getOrCreateFromIGDB.useMutation();
 
   const preloadImage = (url: string): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -33,7 +47,7 @@ export function GameCard({
   const handleImageLoadError = async () => {
     setShowFallback(true);
 
-    if (steamApiImageUrl) return;
+    if (isIgdb || steamApiImageUrl) return;
 
     try {
       const result = await fetchCoverArt();
@@ -50,16 +64,27 @@ export function GameCard({
     }
   };
 
-  const imageSource =
-    steamApiImageReady && steamApiImageUrl
+  const imageSource = isIgdb
+    ? game.coverImage ?? ''
+    : steamApiImageReady && steamApiImageUrl
       ? steamApiImageUrl
       : `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${game.objectID}/header.jpg`;
 
-  return (
-    <Link
-      href={`/games/${game.objectID}`}
-      className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
-    >
+  const handleIgdbClick = () => {
+    if (materialize.isPending || game.igdbId === undefined) return;
+
+    materialize.mutate(
+      { igdbId: game.igdbId },
+      {
+        onSuccess: (result) => {
+          router.push(`/games/${result.slug ?? result.id}`);
+        },
+      }
+    );
+  };
+
+  const cardInner = (
+    <>
       <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent z-10" />
 
@@ -79,8 +104,36 @@ export function GameCard({
       <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-transparent">
         <div className="font-medium text-white group-hover:text-blue-400 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
           {game.name}
+          {game.releaseYear !== undefined && (
+            <span className="ml-2 text-sm font-normal text-gray-400">
+              {game.releaseYear}
+            </span>
+          )}
         </div>
       </div>
+    </>
+  );
+
+  if (isIgdb) {
+    return (
+      <button
+        type="button"
+        onClick={handleIgdbClick}
+        disabled={materialize.isPending}
+        aria-busy={materialize.isPending}
+        className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block w-full text-left disabled:pointer-events-none disabled:opacity-70"
+      >
+        {cardInner}
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      href={`/games/${game.slug ?? game.objectID}`}
+      className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
+    >
+      {cardInner}
     </Link>
   );
 }

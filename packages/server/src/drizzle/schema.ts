@@ -66,15 +66,28 @@ export const users = sqliteTable('user', {
 
 export const games = sqliteTable('Game', {
   id: text('id').primaryKey(),
+  slug: text('slug'),
+  igdbId: integer('igdbId'),
+  source: text('source').notNull().default('steam'),
   details: text('details'),
   updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
   createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
   aggregatedPerformance: text('aggregatedPerformance').$type<PerformanceRating>(),
   reviewCount: integer('reviewCount').notNull().default(0),
 }, (table) => [
+  uniqueIndex('Game_slug_key').on(table.slug),
+  uniqueIndex('Game_igdbId_key').on(table.igdbId),
   index('Game_aggregatedPerformance_id_idx').on(table.aggregatedPerformance, table.id),
   index('Game_reviewCount_idx').on(table.reviewCount),
   index('Game_aggregatedPerformance_reviewCount_idx').on(table.aggregatedPerformance, table.reviewCount),
+]);
+
+export const gameAliases = sqliteTable('GameAlias', {
+  aliasId: text('aliasId').primaryKey(),
+  canonicalId: text('canonicalId').notNull().references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
+}, (table) => [
+  index('GameAlias_canonicalId_idx').on(table.canonicalId),
 ]);
 
 export const macConfigs = sqliteTable('MacConfig', {
@@ -203,6 +216,11 @@ export const userLibraryEntriesRelations = relations(userLibraryEntries, ({ one 
 
 export const gamesRelations = relations(games, ({ many }) => ({
   reviews: many(gameReviews),
+  aliases: many(gameAliases),
+}));
+
+export const gameAliasesRelations = relations(gameAliases, ({ one }) => ({
+  canonical: one(games, { fields: [gameAliases.canonicalId], references: [games.id] }),
 }));
 
 export const macConfigsRelations = relations(macConfigs, ({ many }) => ({

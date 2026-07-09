@@ -24,6 +24,23 @@ export const SteamSearchResultSchema = z.object({
   tagIds: z.array(z.string()).optional(),
 });
 
+export const GameSearchResultSchema = z.object({
+  objectID: z.string(),
+  name: z.string(),
+  url: z.string(),
+  tagIds: z.array(z.string()).optional(),
+  source: z.enum(['steam', 'igdb']),
+  igdbId: z.number().optional(),
+  coverImage: z.string().optional(),
+  slug: z.string().nullable().optional(),
+  releaseYear: z.number().optional(),
+});
+
+export const MaterializeFromIgdbResultSchema = z.object({
+  id: z.string(),
+  slug: z.string().nullable(),
+});
+
 export const CoverArtSchema = z.object({
   headerImage: z.string(),
   capsuleImage: z.string().optional(),
@@ -42,6 +59,8 @@ export const RatingCountsSchema = z.object({
 
 export const GameListItemSchema = z.object({
   id: z.string(),
+  slug: z.string().nullable(),
+  source: z.string(),
   details: z.string().nullable(),
   performanceRating: PerformanceEnum,
 });
@@ -129,6 +148,9 @@ export const GameByIdSchema = z.object({
     // Fields are optional because a game may not exist in the DB yet —
     // in that case only `details` (freshly fetched from Steam) is present.
     id: z.string().optional(),
+    slug: z.string().nullable().optional(),
+    source: z.string().optional(),
+    igdbId: z.number().nullable().optional(),
     details: z.string(),
     createdAt: z.string().optional(),
     updatedAt: z.string().optional(),

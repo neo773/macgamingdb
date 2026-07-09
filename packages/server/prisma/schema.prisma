@@ -24,17 +24,30 @@ model User {
 
 model Game {
   id                    String             @id // Steam ID
+  slug                  String?            @unique // SEO-friendly URL slug
+  igdbId                Int?               @unique // IGDB game id when sourced from IGDB
+  source                String             @default("steam") // "steam" | "igdb"
   details               String? // Full JSON from Steam API
   updatedAt             DateTime           @default(now()) @updatedAt
   createdAt             DateTime           @default(now())
   reviews               GameReview[]
   aggregatedPerformance PerformanceRating?
   reviewCount           Int                @default(0) // Pre-computed review count
+  aliases               GameAlias[]
 
 
   @@index([aggregatedPerformance, id])
   @@index([reviewCount])
   @@index([aggregatedPerformance, reviewCount]) // Composite index for filtered ordering
+}
+
+model GameAlias {
+  aliasId     String   @id // An old id or slug that should redirect
+  canonicalId String // Current canonical Game.id
+  canonical   Game     @relation(fields: [canonicalId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@index([canonicalId])
 }
 
 model MacConfig {

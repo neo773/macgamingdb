@@ -1,7 +1,7 @@
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
+import { type NormalizedGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
 
 interface GameDetailHeaderProps {
-  gameDetails: SteamAppData;
+  gameDetails: NormalizedGameDetails;
 }
 
 export function GameDetailHeader({ gameDetails }: GameDetailHeaderProps) {
@@ -9,9 +9,9 @@ export function GameDetailHeader({ gameDetails }: GameDetailHeaderProps) {
     <div className="relative mb-8">
       <div className="aspect-[3/1] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
-        {gameDetails.header_image ? (
+        {gameDetails.headerImage ? (
           <img
-            src={gameDetails.header_image}
+            src={gameDetails.headerImage}
             alt={`${gameDetails.name} cover art`}
             className="w-full h-full object-cover"
           />

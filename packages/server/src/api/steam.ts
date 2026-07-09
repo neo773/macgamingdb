@@ -1,4 +1,5 @@
 import { parseHTML } from 'linkedom';
+import { extractReleaseYear } from '../utils/extractReleaseYear';
 
 /**
  * Represents a Steam app search result
@@ -8,6 +9,7 @@ export interface SteamGameSearchObject {
   name: string;
   url: string;
   tagIds?: string[];
+  releaseYear?: number;
 }
 
 /**
@@ -20,7 +22,7 @@ export async function searchSteam(
 ): Promise<SteamGameSearchObject[]> {
   try {
     const encodedTerm = encodeURIComponent(term);
-    const url = `https://store.steampowered.com/search/?term=${encodedTerm}`;
+    const url = `https://store.steampowered.com/search/?term=${encodedTerm}&category1=998`;
 
     const response = await fetch(url);
     const html = await response.text();
@@ -47,6 +49,9 @@ export async function searchSteam(
           name,
           url,
           tagIds: tagIds?.map(String),
+          releaseYear: extractReleaseYear(
+            element.querySelector('.search_released')?.textContent,
+          ),
         } as SteamGameSearchObject;
       })
       .filter((app): app is NonNullable<typeof app> => app !== null);

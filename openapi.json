@@ -65,12 +65,33 @@
                         "items": {
                           "type": "string"
                         }
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "steam",
+                          "igdb"
+                        ]
+                      },
+                      "igdbId": {
+                        "type": "number"
+                      },
+                      "coverImage": {
+                        "type": "string"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "releaseYear": {
+                        "type": "number"
                       }
                     },
                     "required": [
                       "objectID",
                       "name",
-                      "url"
+                      "url",
+                      "source"
                     ]
                   }
                 }
@@ -93,6 +114,79 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/error.NOT_FOUND"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.INTERNAL_SERVER_ERROR"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/games/from-igdb": {
+      "post": {
+        "operationId": "game-getOrCreateFromIGDB",
+        "tags": [
+          "games"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "igdbId": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true
+                  }
+                },
+                "required": [
+                  "igdbId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "slug"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error.BAD_REQUEST"
                 }
               }
             }
@@ -412,6 +506,13 @@
                           "id": {
                             "type": "string"
                           },
+                          "slug": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "source": {
+                            "type": "string"
+                          },
                           "details": {
                             "type": "string",
                             "nullable": true
@@ -430,6 +531,8 @@
                         },
                         "required": [
                           "id",
+                          "slug",
+                          "source",
                           "details",
                           "performanceRating"
                         ]
@@ -512,6 +615,17 @@
                       "properties": {
                         "id": {
                           "type": "string"
+                        },
+                        "slug": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "igdbId": {
+                          "type": "number",
+                          "nullable": true
                         },
                         "details": {
                           "type": "string"
@@ -659,8 +773,7 @@
                                 "type": "string"
                               },
                               "updatedAt": {
-                                "type": "string",
-                                "nullable": true
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -1107,8 +1220,7 @@
                             "type": "string"
                           },
                           "updatedAt": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -2198,8 +2310,7 @@
                                 "type": "string"
                               },
                               "updatedAt": {
-                                "type": "string",
-                                "nullable": true
+                                "type": "string"
                               }
                             },
                             "required": [

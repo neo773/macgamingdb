@@ -1,4 +1,4 @@
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
+import { type NormalizedGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
 
 interface GameStats {
   averagePerformance: number;
@@ -6,27 +6,27 @@ interface GameStats {
 }
 
 export function generateGameJsonLd(
-  id: string,
-  gameDetails: SteamAppData,
+  identifier: string,
+  gameDetails: NormalizedGameDetails,
   stats: GameStats | null
 ) {
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoGame',
     name: gameDetails.name || 'Game',
-    url: `https://macgamingdb.app/games/${id}`,
+    url: `https://macgamingdb.app/games/${identifier}`,
     gamePlatform: 'macOS',
     operatingSystem: 'macOS (Apple Silicon M1–M4)',
     applicationCategory: 'Game',
-    description: gameDetails.detailed_description
-      ? gameDetails.detailed_description.replace(/<[^>]*>?/gm, '')
+    description: gameDetails.descriptionHtml
+      ? gameDetails.descriptionHtml.replace(/<[^>]*>?/gm, '')
       : 'Game details unavailable',
-    image: gameDetails.header_image || '',
-    publisher: gameDetails.publishers ? gameDetails.publishers[0] : '',
+    image: gameDetails.headerImage || '',
+    publisher: gameDetails.publishers.length > 0 ? gameDetails.publishers[0] : '',
     sameAs: [
       gameDetails.website || '',
-      gameDetails.steam_appid
-        ? `https://store.steampowered.com/app/${gameDetails.steam_appid}`
+      gameDetails.steamAppId
+        ? `https://store.steampowered.com/app/${gameDetails.steamAppId}`
         : '',
     ].filter(Boolean),
     aggregateRating: stats
