@@ -54,7 +54,6 @@ export function ReviewItem({
       : SOFTWARE_VERSIONS.PARALLELS
     : [];
 
-  const gameDetails = JSON.parse(review.game.details ?? '{}') as SteamAppData;
   const screenshots = review.screenshots
     ? (JSON.parse(review.screenshots) as string[])
     : null;
@@ -77,12 +76,12 @@ export function ReviewItem({
           <div className="aspect-[460/215] relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
             <img
-              src={gameDetails.header_image}
-              alt={review.game.id}
+              src={review.game.headerImage ?? undefined}
+              alt={review.game.name ?? review.game.id}
               className="w-full h-full object-none"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-              <Link href={`/games/${review.gameId}`}></Link>
+              <Link href={`/games/${review.game.slug ?? review.gameId}`}></Link>
               <div className="text-sm text-gray-300 mt-1">
                 Reviewed{' '}
                 {formatDistance(new Date(review.createdAt), new Date(), {

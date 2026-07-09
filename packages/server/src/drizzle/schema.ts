@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, uniqueIndex, primaryKey } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
 import type { GameSource } from '../gameSources/GameSource';
@@ -68,19 +68,35 @@ export const users = sqliteTable('user', {
 export const games = sqliteTable('Game', {
   id: text('id').primaryKey(),
   slug: text('slug'),
-  igdbId: integer('igdbId'),
-  source: text('source').$type<GameSource>().notNull().default('steam'),
-  details: text('details'),
+  name: text('name'),
+  headerImage: text('headerImage'),
+  descriptionHtml: text('descriptionHtml'),
+  website: text('website'),
+  releaseDate: text('releaseDate'),
+  releaseYear: integer('releaseYear'),
+  developers: text('developers', { mode: 'json' }).$type<string[]>(),
+  publishers: text('publishers', { mode: 'json' }).$type<string[]>(),
+  genres: text('genres', { mode: 'json' }).$type<string[]>(),
+  screenshots: text('screenshots', { mode: 'json' }).$type<string[]>(),
   updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
   createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
   aggregatedPerformance: text('aggregatedPerformance').$type<PerformanceRating>(),
   reviewCount: integer('reviewCount').notNull().default(0),
 }, (table) => [
   uniqueIndex('Game_slug_key').on(table.slug),
-  uniqueIndex('Game_igdbId_key').on(table.igdbId),
   index('Game_aggregatedPerformance_id_idx').on(table.aggregatedPerformance, table.id),
   index('Game_reviewCount_idx').on(table.reviewCount),
   index('Game_aggregatedPerformance_reviewCount_idx').on(table.aggregatedPerformance, table.reviewCount),
+]);
+
+export const gameSourceLinks = sqliteTable('GameSourceLink', {
+  gameId: text('gameId').notNull().references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  source: text('source').$type<GameSource>().notNull(),
+  externalId: text('externalId').notNull(),
+  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
+}, (table) => [
+  primaryKey({ columns: [table.source, table.externalId] }),
+  index('GameSourceLink_gameId_idx').on(table.gameId),
 ]);
 
 export const gameAliases = sqliteTable('GameAlias', {
@@ -218,10 +234,15 @@ export const userLibraryEntriesRelations = relations(userLibraryEntries, ({ one 
 export const gamesRelations = relations(games, ({ many }) => ({
   reviews: many(gameReviews),
   aliases: many(gameAliases),
+  sourceLinks: many(gameSourceLinks),
 }));
 
 export const gameAliasesRelations = relations(gameAliases, ({ one }) => ({
   canonical: one(games, { fields: [gameAliases.canonicalId], references: [games.id] }),
+}));
+
+export const gameSourceLinksRelations = relations(gameSourceLinks, ({ one }) => ({
+  game: one(games, { fields: [gameSourceLinks.gameId], references: [games.id] }),
 }));
 
 export const macConfigsRelations = relations(macConfigs, ({ many }) => ({

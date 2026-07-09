@@ -1,10 +1,9 @@
 import { z } from 'zod';
 import { router, procedure } from '../trpc';
-import { type SteamAppData } from '../api/steam';
-import { getIGDBGameById, getSteamAppIdFromIGDB } from '../api/igdb';
-import { getOrCreateSteamGame } from '../utils/getOrCreateSteamGame';
 import { searchGames } from '../gameSources/searchGames';
-import { generateUniqueGameSlug } from '../utils/generateUniqueGameSlug';
+import { resolveGame } from '../gameSources/resolveGame';
+import { materializeGame } from '../gameSources/materializeGame';
+import { parseGameRef } from '../gameSources/parseGameRef';
 import { getGamePrices } from '../api/ggdeals';
 import { getRegion } from '../utils/getRegion';
 import { TRPCError } from '@trpc/server';
@@ -22,7 +21,6 @@ import {
   GamesPageSchema,
   GameSearchResultSchema,
   RatingCountsSchema,
-  MaterializeFromIgdbResultSchema,
 } from '../schema/openapi';
 
 // Validated in the handler (not via .superRefine) so the input stays a plain
@@ -42,7 +40,7 @@ import { calculateTranslationLayerStats } from '../utils/calculateTranslationLay
 import { calculateAveragePerformance } from '../utils/calculateAveragePerformance';
 import { getViewSignedUrl, extractKeyFromUrl } from '../services/s3';
 import { type DrizzleDB } from '../database/drizzle';
-import { games, gameReviews, gameAliases, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
+import { games, gameReviews, gameSourceLinks, type PerformanceRating, type PlayMethod, type ChipsetVariant } from '../drizzle/schema';
 import { eq, and, desc, count, isNotNull, inArray, type SQL } from 'drizzle-orm';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
@@ -122,122 +120,21 @@ export const gameRouter = router({
     .output(z.array(GameSearchResultSchema))
     .query(async ({ input, ctx }) => searchGames(ctx.db, input.query)),
 
-  getOrCreateFromIGDB: procedure
-    .meta({ openapi: { method: 'POST', path: '/games/from-igdb', protect: false, tags: ['games'] } })
-    .input(z.object({ igdbId: z.number().int().positive() }))
-    .output(MaterializeFromIgdbResultSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const existing = await ctx.db.query.games.findFirst({
-          where: eq(games.igdbId, input.igdbId),
-        });
-        if (existing) {
-          return { id: existing.id, slug: existing.slug };
-        }
-
-        const igdbGame = await getIGDBGameById(input.igdbId);
-        if (!igdbGame) {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Game not found on IGDB',
-          });
-        }
-
-        const steamAppId = getSteamAppIdFromIGDB(igdbGame);
-        if (steamAppId) {
-          const steamGame = await getOrCreateSteamGame(ctx.db, steamAppId);
-          if (steamGame) {
-            return { id: steamGame.id, slug: steamGame.slug };
-          }
-        }
-
-        const releaseYear = igdbGame.first_release_date
-          ? new Date(igdbGame.first_release_date * 1000).getUTCFullYear()
-          : undefined;
-
-        const isTaken = async (candidate: string): Promise<boolean> => {
-          const [row] = await ctx.db
-            .select({ id: games.id })
-            .from(games)
-            .where(eq(games.slug, candidate))
-            .limit(1);
-          return row !== undefined;
-        };
-
-        const slug = await generateUniqueGameSlug(igdbGame.name, {
-          releaseYear,
-          fallbackId: String(input.igdbId),
-          isTaken,
-        });
-
-        const id = `igdb-${input.igdbId}`;
-
-        await ctx.db
-          .insert(games)
-          .values({
-            id,
-            slug,
-            details: JSON.stringify(igdbGame),
-            source: 'igdb',
-            igdbId: input.igdbId,
-          })
-          .onConflictDoNothing();
-
-        const persisted = await ctx.db.query.games.findFirst({
-          where: eq(games.igdbId, input.igdbId),
-        });
-
-        return persisted
-          ? { id: persisted.id, slug: persisted.slug }
-          : { id, slug };
-      } catch (error) {
-        if (error instanceof TRPCError) {
-          throw error;
-        }
-        console.error(
-          `Error materializing IGDB game ${input.igdbId}:`,
-          error,
-        );
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to materialize game from IGDB',
-        });
-      }
-    }),
-
   getCoverArt: procedure
     .meta({ openapi: { method: 'GET', path: '/games/{gameId}/cover-art', protect: false, tags: ['games'] } })
     .input(z.object({ gameId: z.string() }))
     .output(CoverArtSchema)
     .query(async ({ input, ctx }) => {
-      try {
-        const game = await getOrCreateSteamGame(ctx.db, input.gameId);
-        const gameData = game?.details
-          ? (JSON.parse(game.details) as SteamAppData)
-          : null;
+      const game = await resolveGame(ctx.db, input.gameId);
 
-        if (!gameData || !gameData.header_image) {
-          throw new TRPCError({
-            code: 'NOT_FOUND',
-            message: 'Cover art not found for this game',
-          });
-        }
-
-        return {
-          headerImage: gameData.header_image,
-          capsuleImage: gameData.capsule_image,
-          capsuleImagev5: gameData.capsule_imagev5,
-        };
-      } catch (error) {
-        if (error instanceof TRPCError) {
-          throw error;
-        }
-        console.error('Error fetching cover art:', error);
+      if (!game?.headerImage) {
         throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to fetch cover art from Steam API',
+          code: 'NOT_FOUND',
+          message: 'Cover art not found for this game',
         });
       }
+
+      return { headerImage: game.headerImage };
     }),
 
   getFilterCounts: procedure
@@ -351,8 +248,9 @@ export const gameRouter = router({
             .map((game) => ({
               id: game.id,
               slug: game.slug,
-              source: game.source,
-              details: game.details,
+              name: game.name,
+              headerImage: game.headerImage,
+              releaseYear: game.releaseYear,
               performanceRating: game.aggregatedPerformance,
             }));
 
@@ -395,8 +293,9 @@ export const gameRouter = router({
           .map((game) => ({
             id: game.id,
             slug: game.slug,
-            source: game.source,
-            details: game.details,
+            name: game.name,
+            headerImage: game.headerImage,
+            releaseYear: game.releaseYear,
             performanceRating: game.aggregatedPerformance,
           }));
 
@@ -425,46 +324,26 @@ export const gameRouter = router({
     .output(GameByIdSchema)
     .query(async ({ input, ctx }) => {
       try {
-        let game = await ctx.db.query.games.findFirst({
-          where: eq(games.slug, input.id),
-        });
+        let game = await resolveGame(ctx.db, input.id);
 
-        if (!game) {
-          game = await ctx.db.query.games.findFirst({
-            where: eq(games.id, input.id),
-          });
-        }
-
-        if (!game) {
-          const alias = await ctx.db.query.gameAliases.findFirst({
-            where: eq(gameAliases.aliasId, input.id),
-          });
-          if (alias) {
-            game = await ctx.db.query.games.findFirst({
-              where: eq(games.id, alias.canonicalId),
-            });
+        if (!game?.name) {
+          const ref = parseGameRef(input.id);
+          if (ref) {
+            game = await materializeGame(ctx.db, ref.source, ref.externalId);
           }
         }
 
-        const isNumericId = /^[0-9]+$/.test(input.id);
-
-        if ((!game || !game.details) && isNumericId) {
-          const steamAppId = game?.id ?? input.id;
-          const created = await getOrCreateSteamGame(ctx.db, steamAppId);
-          if (created) {
-            game = created;
-          }
-        }
-
-        if (!game || !game.details) {
-          console.warn(`Game with ID ${input.id} could not be resolved.`);
+        if (!game || game.name === null) {
           throw new TRPCError({
             code: 'NOT_FOUND',
             message: 'Game not found',
           });
         }
 
-        const gameDetails: string = game.details;
+        const sourceLinks = await ctx.db.query.gameSourceLinks.findMany({
+          where: eq(gameSourceLinks.gameId, game.id),
+          columns: { source: true, externalId: true },
+        });
 
         const reviews = await ctx.db.query.gameReviews.findMany({
           where: eq(gameReviews.gameId, game.id),
@@ -492,10 +371,7 @@ export const gameRouter = router({
             : null;
 
         return {
-          game: {
-            ...game,
-            details: gameDetails,
-          },
+          game: { ...game, name: game.name, sourceLinks },
           reviews,
           stats: reviewStats,
         };
@@ -559,8 +435,23 @@ export const gameRouter = router({
     .output(GamePricesSchema)
     .query(async ({ input, ctx }) => {
       try {
+        const game = await resolveGame(ctx.db, input.gameId);
+        if (!game) {
+          return null;
+        }
+
+        const steamLink = await ctx.db.query.gameSourceLinks.findFirst({
+          where: and(
+            eq(gameSourceLinks.gameId, game.id),
+            eq(gameSourceLinks.source, 'steam'),
+          ),
+        });
+        if (!steamLink) {
+          return null;
+        }
+
         const region = ctx.req ? getRegion(ctx.req.headers) : 'us';
-        const data = await getGamePrices(input.gameId, region);
+        const data = await getGamePrices(steamLink.externalId, region);
         return data ?? null;
       } catch {
         return null;

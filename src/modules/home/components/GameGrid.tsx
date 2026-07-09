@@ -3,7 +3,6 @@
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
 import { type RouterOutputs } from '@/lib/trpc/provider';
-import { normalizeGameDetails } from '@macgamingdb/server/utils/normalizeGameDetails';
 
 interface GameGridProps {
   isLoading: boolean;
@@ -46,7 +45,7 @@ export function GameGrid({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {searchResults.map((game) => (
-          <GameCard key={game.objectID} game={game} />
+          <GameCard key={game.ref} game={game} />
         ))}
       </div>
     );
@@ -66,24 +65,19 @@ export function GameGrid({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-      {games.map((game) => {
-        const gameDetails = normalizeGameDetails(game.source, game.details);
-
-        return (
-          <GameCard
-            key={game.id}
-            game={{
-              objectID: game.id,
-              slug: game.slug,
-              source: game.source,
-              name: gameDetails?.name ?? 'Unknown',
-              url: '',
-              releaseYear: gameDetails?.releaseYear ?? undefined,
-              performanceRating: game.performanceRating,
-            }}
-          />
-        );
-      })}
+      {games.map((game) => (
+        <GameCard
+          key={game.id}
+          game={{
+            ref: game.id,
+            slug: game.slug,
+            name: game.name ?? 'Unknown',
+            coverImage: game.headerImage,
+            releaseYear: game.releaseYear,
+            performanceRating: game.performanceRating,
+          }}
+        />
+      ))}
 
       {isFetchingNextPage &&
         Array(6)

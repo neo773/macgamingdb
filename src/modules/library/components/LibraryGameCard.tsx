@@ -43,10 +43,11 @@ export function LibraryGameCard({
       <div className={unrated ? 'opacity-50 grayscale transition-opacity duration-200 group-hover:opacity-70' : ''}>
         <GameCard
           game={{
-            objectID: appId,
-            source: 'steam',
+            ref: appId,
+            slug: null,
             name: name ?? `App ${appId}`,
-            url: '',
+            coverImage: `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`,
+            releaseYear: null,
             performanceRating: rating ?? undefined,
           }}
         />

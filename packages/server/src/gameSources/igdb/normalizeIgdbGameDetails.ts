@@ -48,29 +48,24 @@ function formatIgdbReleaseDate(
 export function normalizeIgdbGameDetails(
   data: IGDBGameData,
 ): NormalizedGameDetails {
-  const developers = (data.involved_companies ?? [])
-    .filter((company) => company.developer)
-    .map((company) => company.company.name);
-
-  const publishers = (data.involved_companies ?? [])
-    .filter((company) => company.publisher)
-    .map((company) => company.company.name);
-
-  const officialWebsite = (data.websites ?? []).find(
-    (website) => website.category === IGDB_WEBSITE_CATEGORY_OFFICIAL,
-  );
+  const steamAppId = getSteamAppIdFromIGDB(data);
 
   return {
-    source: 'igdb',
     name: data.name,
     headerImage: data.cover
       ? igdbImageUrl(data.cover.image_id, 't_720p')
       : null,
     descriptionHtml: igdbSummaryToHtml(data.summary),
-    developers,
-    publishers,
-    website: officialWebsite?.url ?? null,
-    steamAppId: getSteamAppIdFromIGDB(data),
+    developers: (data.involved_companies ?? [])
+      .filter((company) => company.developer)
+      .map((company) => company.company.name),
+    publishers: (data.involved_companies ?? [])
+      .filter((company) => company.publisher)
+      .map((company) => company.company.name),
+    website:
+      (data.websites ?? []).find(
+        (website) => website.category === IGDB_WEBSITE_CATEGORY_OFFICIAL,
+      )?.url ?? null,
     releaseDate: formatIgdbReleaseDate(data.first_release_date),
     releaseYear:
       data.first_release_date !== undefined
@@ -80,5 +75,9 @@ export function normalizeIgdbGameDetails(
     screenshots: (data.screenshots ?? []).map((screenshot) =>
       igdbImageUrl(screenshot.image_id, 't_screenshot_big'),
     ),
+    externalIds: {
+      igdb: String(data.id),
+      ...(steamAppId !== null && { steam: steamAppId }),
+    },
   };
 }

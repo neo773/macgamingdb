@@ -8,11 +8,6 @@ import {
   ContributorsPageSchema,
 } from '../schema/openapi';
 
-interface GameDetails {
-  name?: string;
-  header_image?: string;
-}
-
 // better-auth writes user.createdAt as epoch millis while our own rows are ISO
 // strings — SQLite's dynamic typing happily stores both in the TEXT column
 const toISODateString = (value: string | number): string =>
@@ -65,12 +60,12 @@ export const contributorRouter = router({
           reviewCount: reviews.length,
           uniqueGamesCount,
           reviews: reviews.map((review) => {
-            const gameDetails = JSON.parse(review.game.details!) as GameDetails;
             return {
               id: review.id,
               gameId: review.gameId,
-              gameName: gameDetails.name,
-              gameDetails: review.game.details,
+              gameName: review.game.name,
+              gameSlug: review.game.slug,
+              gameHeaderImage: review.game.headerImage,
               playMethod: review.playMethod,
               softwareVersion: review.softwareVersion,
               translationLayer: review.translationLayer,

@@ -5,6 +5,7 @@ import {
   LibraryProvider,
   type PerformanceRating,
   games,
+  gameSourceLinks,
   userExternalAccounts,
   userLibraryEntries,
 } from '../drizzle/schema';
@@ -137,22 +138,28 @@ export const libraryRouter = router({
 
     const matchedGames = await ctx.db
       .select({
-        id: games.id,
+        externalId: gameSourceLinks.externalId,
         aggregatedPerformance: games.aggregatedPerformance,
         reviewCount: games.reviewCount,
       })
-      .from(games)
+      .from(gameSourceLinks)
+      .innerJoin(games, eq(gameSourceLinks.gameId, games.id))
       .where(
-        inArray(
-          games.id,
-          entries.map((e) => e.externalGameId),
+        and(
+          eq(gameSourceLinks.source, 'steam'),
+          inArray(
+            gameSourceLinks.externalId,
+            entries.map((e) => e.externalGameId),
+          ),
         ),
       );
 
-    const gameById = new Map(matchedGames.map((g) => [g.id, g]));
+    const gameByExternalId = new Map(
+      matchedGames.map((game) => [game.externalId, game]),
+    );
 
     const rows = entries.map((entry) => {
-      const matched = gameById.get(entry.externalGameId);
+      const matched = gameByExternalId.get(entry.externalGameId);
       const rating = matched?.aggregatedPerformance ?? null;
       return {
         externalGameId: entry.externalGameId,

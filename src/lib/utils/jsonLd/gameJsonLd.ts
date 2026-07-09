@@ -1,4 +1,4 @@
-import { type NormalizedGameDetails } from '@macgamingdb/server/gameSources/NormalizedGameDetails';
+import { type RouterOutputs } from '@/lib/trpc/provider';
 
 interface GameStats {
   averagePerformance: number;
@@ -7,26 +7,28 @@ interface GameStats {
 
 export function generateGameJsonLd(
   identifier: string,
-  gameDetails: NormalizedGameDetails,
+  game: RouterOutputs['game']['getById']['game'],
   stats: GameStats | null
 ) {
+  const steamLink = game.sourceLinks.find((link) => link.source === 'steam');
+
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoGame',
-    name: gameDetails.name || 'Game',
+    name: game.name,
     url: `https://macgamingdb.app/games/${identifier}`,
     gamePlatform: 'macOS',
     operatingSystem: 'macOS (Apple Silicon M1–M4)',
     applicationCategory: 'Game',
-    description: gameDetails.descriptionHtml
-      ? gameDetails.descriptionHtml.replace(/<[^>]*>?/gm, '')
+    description: game.descriptionHtml
+      ? game.descriptionHtml.replace(/<[^>]*>?/gm, '')
       : 'Game details unavailable',
-    image: gameDetails.headerImage || '',
-    publisher: gameDetails.publishers.length > 0 ? gameDetails.publishers[0] : '',
+    image: game.headerImage || '',
+    publisher: game.publishers?.[0] ?? '',
     sameAs: [
-      gameDetails.website || '',
-      gameDetails.steamAppId
-        ? `https://store.steampowered.com/app/${gameDetails.steamAppId}`
+      game.website || '',
+      steamLink
+        ? `https://store.steampowered.com/app/${steamLink.externalId}`
         : '',
     ].filter(Boolean),
     aggregateRating: stats

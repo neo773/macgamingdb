@@ -36,6 +36,20 @@
       "when": 1783633524337,
       "tag": "0004_curly_chamber",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1783639565251,
+      "tag": "0005_flippant_lionheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1783639634379,
+      "tag": "0006_slow_meggan",
+      "breakpoints": true
     }
   ]
 }

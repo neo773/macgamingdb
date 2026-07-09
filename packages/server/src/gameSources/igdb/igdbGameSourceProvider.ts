@@ -1,11 +1,13 @@
 import {
   searchIGDBGames,
+  getIGDBGameById,
   getSteamAppIdFromIGDB,
   igdbImageUrl,
 } from '../../api/igdb';
-import type { GameSearchProvider } from '../GameSearchProvider';
+import type { GameSourceProvider } from '../GameSourceProvider';
+import { normalizeIgdbGameDetails } from './normalizeIgdbGameDetails';
 
-export const igdbGameSearchProvider: GameSearchProvider = {
+export const igdbGameSourceProvider: GameSourceProvider = {
   source: 'igdb',
 
   async search(query, limit) {
@@ -17,17 +19,25 @@ export const igdbGameSearchProvider: GameSearchProvider = {
       .filter((game) => getSteamAppIdFromIGDB(game) === null)
       .slice(0, limit)
       .map((game) => ({
-        objectID: `igdb-${game.id}`,
-        name: game.name,
-        url: '',
+        ref: `igdb-${game.id}`,
         source: 'igdb',
-        igdbId: game.id,
+        name: game.name,
+        slug: null,
         coverImage: game.cover
           ? igdbImageUrl(game.cover.image_id, 't_cover_big')
-          : undefined,
+          : null,
         releaseYear: game.first_release_date
           ? new Date(game.first_release_date * 1000).getUTCFullYear()
-          : undefined,
+          : null,
       }));
+  },
+
+  async fetchGame(externalId) {
+    const igdbId = Number.parseInt(externalId, 10);
+    if (Number.isNaN(igdbId)) {
+      return null;
+    }
+    const data = await getIGDBGameById(igdbId);
+    return data ? normalizeIgdbGameDetails(data) : null;
   },
 };

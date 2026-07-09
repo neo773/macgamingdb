@@ -2,7 +2,9 @@ import { z } from 'zod';
 import { router, procedure, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
 import { revalidatePath } from 'next/cache';
-import { getOrCreateSteamGame } from '../utils/getOrCreateSteamGame';
+import { resolveGame } from '../gameSources/resolveGame';
+import { materializeGame } from '../gameSources/materializeGame';
+import { parseGameRef } from '../gameSources/parseGameRef';
 import {
   GraphicsSettingsEnum,
   PerformanceEnum,
@@ -100,7 +102,9 @@ export const reviewRouter = router({
           createdAt: review.createdAt,
           updatedAt: review.updatedAt,
           macConfig: review.macConfig,
-          gameDetails: review.game.details,
+          gameName: review.game.name,
+          gameSlug: review.game.slug,
+          gameHeaderImage: review.game.headerImage,
         }));
       } catch (error) {
         console.error('Error fetching my reviews:', error);
@@ -310,16 +314,17 @@ export const reviewRouter = router({
           });
         }
 
-        const gameExists = await ctx.db.query.games.findFirst({
-          where: eq(games.id, input.gameId),
-        });
+        let game = await resolveGame(ctx.db, input.gameId);
 
-        if (!gameExists) {
-          const created = await getOrCreateSteamGame(ctx.db, input.gameId);
+        if (!game) {
+          const ref = parseGameRef(input.gameId);
+          game = ref
+            ? await materializeGame(ctx.db, ref.source, ref.externalId)
+            : null;
+        }
 
-          if (!created) {
-            return null;
-          }
+        if (!game) {
+          return null;
         }
 
         const macConfig = await ctx.db.query.macConfigs.findFirst({
@@ -342,7 +347,7 @@ export const reviewRouter = router({
         const [review] = await ctx.db
           .insert(gameReviews)
           .values({
-            gameId: input.gameId,
+            gameId: game.id,
             userId: ctx.user.user.id,
             playMethod: input.playMethod,
             translationLayer: input.translationLayer,
@@ -361,15 +366,15 @@ export const reviewRouter = router({
           })
           .returning();
 
-        revalidatePath(`/games/${input.gameId}`);
+        revalidatePath(`/games/${game.slug ?? game.id}`);
         revalidatePath('/contributors');
 
-        await updateGameAggregatedPerformance(ctx.db, input.gameId);
+        await updateGameAggregatedPerformance(ctx.db, game.id);
 
         await ctx.db
           .update(games)
           .set({ reviewCount: sql`${games.reviewCount} + 1` })
-          .where(eq(games.id, input.gameId));
+          .where(eq(games.id, game.id));
 
         return { review };
       } catch (error) {

@@ -18,34 +18,17 @@ export const PlayMethodWithOtherEnum = z.enum([
 // These describe what the procedures actually return today. They are used both
 // for runtime output validation on REST requests and to generate openapi.json.
 
-export const SteamSearchResultSchema = z.object({
-  objectID: z.string(),
-  name: z.string(),
-  url: z.string(),
-  tagIds: z.array(z.string()).optional(),
-});
-
 export const GameSearchResultSchema = z.object({
-  objectID: z.string(),
-  name: z.string(),
-  url: z.string(),
-  tagIds: z.array(z.string()).optional(),
+  ref: z.string(),
   source: z.enum(GAME_SOURCES),
-  igdbId: z.number().optional(),
-  coverImage: z.string().optional(),
-  slug: z.string().nullable().optional(),
-  releaseYear: z.number().optional(),
-});
-
-export const MaterializeFromIgdbResultSchema = z.object({
-  id: z.string(),
+  name: z.string(),
   slug: z.string().nullable(),
+  coverImage: z.string().nullable(),
+  releaseYear: z.number().nullable(),
 });
 
 export const CoverArtSchema = z.object({
   headerImage: z.string(),
-  capsuleImage: z.string().optional(),
-  capsuleImagev5: z.string().optional(),
 });
 
 export const RatingCountsSchema = z.object({
@@ -61,8 +44,9 @@ export const RatingCountsSchema = z.object({
 export const GameListItemSchema = z.object({
   id: z.string(),
   slug: z.string().nullable(),
-  source: z.enum(GAME_SOURCES),
-  details: z.string().nullable(),
+  name: z.string().nullable(),
+  headerImage: z.string().nullable(),
+  releaseYear: z.number().nullable(),
   performanceRating: PerformanceEnum,
 });
 
@@ -124,7 +108,9 @@ export const GameReviewWithMacConfigSchema = GameReviewSchema.extend({
 });
 
 export const MyReviewSchema = GameReviewWithMacConfigSchema.extend({
-  gameDetails: z.string().nullable(),
+  gameName: z.string().nullable(),
+  gameSlug: z.string().nullable(),
+  gameHeaderImage: z.string().nullable(),
 });
 
 export const MyReviewsSchema = z.array(MyReviewSchema);
@@ -146,17 +132,25 @@ export const GameStatsSchema = z.object({
 
 export const GameByIdSchema = z.object({
   game: z.object({
-    // Fields are optional because a game may not exist in the DB yet —
-    // in that case only `details` (freshly fetched from Steam) is present.
-    id: z.string().optional(),
-    slug: z.string().nullable().optional(),
-    source: z.string().optional(),
-    igdbId: z.number().nullable().optional(),
-    details: z.string(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
-    aggregatedPerformance: PerformanceEnum.nullable().optional(),
-    reviewCount: z.number().optional(),
+    id: z.string(),
+    slug: z.string().nullable(),
+    name: z.string(),
+    headerImage: z.string().nullable(),
+    descriptionHtml: z.string().nullable(),
+    website: z.string().nullable(),
+    releaseDate: z.string().nullable(),
+    releaseYear: z.number().nullable(),
+    developers: z.array(z.string()).nullable(),
+    publishers: z.array(z.string()).nullable(),
+    genres: z.array(z.string()).nullable(),
+    screenshots: z.array(z.string()).nullable(),
+    sourceLinks: z.array(
+      z.object({ source: z.enum(GAME_SOURCES), externalId: z.string() }),
+    ),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    aggregatedPerformance: PerformanceEnum.nullable(),
+    reviewCount: z.number(),
   }),
   reviews: z.array(GameReviewWithMacConfigSchema),
   stats: GameStatsSchema.nullable(),
@@ -194,8 +188,9 @@ export const ContributorsPageSchema = z.object({
 export const ContributorReviewSchema = z.object({
   id: z.string(),
   gameId: z.string(),
-  gameName: z.string().optional(),
-  gameDetails: z.string().nullable(),
+  gameName: z.string().nullable(),
+  gameSlug: z.string().nullable(),
+  gameHeaderImage: z.string().nullable(),
   playMethod: PlayMethodWithOtherEnum,
   softwareVersion: z.string().nullable(),
   translationLayer: TranslationLayerEnum.nullable(),

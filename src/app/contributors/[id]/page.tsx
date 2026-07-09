@@ -10,7 +10,6 @@ import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
 import { formatDistance } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
 import { Container } from '@/components/ui/container';
 import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
@@ -92,9 +91,6 @@ export default async function ContributorPage({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {contributorReviews.map((review) => {
-                const gameDetails = JSON.parse(
-                  review.game.details ?? '{}',
-                ) as SteamAppData;
                 return (
                   <div key={review.id}>
                     <GameReviewCard
@@ -105,14 +101,14 @@ export default async function ContributorPage({
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`${gameDetails.header_image}`}
-                            alt={`${gameDetails.name} cover art`}
+                            src={`${review.game.headerImage}`}
+                            alt={`${review.game.name} cover art`}
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                            <Link href={`/games/${review.gameId}`}>
+                            <Link href={`/games/${review.game.slug ?? review.gameId}`}>
                               <h3 className="text-lg font-semibold text-white hover:text-blue-300 transition-colors">
-                                {gameDetails.name || 'Unknown Game'}
+                                {review.game.name ?? 'Unknown Game'}
                               </h3>
                             </Link>
                             <div className="text-sm text-gray-300 mt-1">
