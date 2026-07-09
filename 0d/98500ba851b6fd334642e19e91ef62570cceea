@@ -1,0 +1,107 @@
+packages/server/src/drizzle/schema.ts
+  s_9ebfe402b13a9b::t_3544d405051b8d 71-80,92-99
+  s_9ebfe402b13a9b::t_4cb1e9b71231ba 237,244-245
+  s_9ebfe402b13a9b::t_0f59f6733392ff 1
+  s_9ebfe402b13a9b::t_bdaa8112c900a3 100-101
+  s_9ebfe402b13a9b::t_17ae4b32b9bd42 246-247
+packages/server/src/gameSources/materializeGame.ts
+  s_9ebfe402b13a9b::t_32643bf284bebe 1-114
+src/lib/utils/jsonLd/gameJsonLd.ts
+  s_9ebfe402b13a9b::t_2781b7b20c26e4 1,10,13-14,18,23-24,26-27,29-31
+src/modules/game/components/GameDetailHeader.tsx
+  s_9ebfe402b13a9b::t_a04e87befb77b2 1,4,7,12,14-15,24-26
+packages/server/src/routers/review.ts
+  s_9ebfe402b13a9b::t_81664952ae37a6 5-7
+  s_9ebfe402b13a9b::t_6893c88207fe7c 350
+  s_9ebfe402b13a9b::t_237cb51adc8ffc 317,319-324,326-327
+  s_9ebfe402b13a9b::t_ac058f917b0867 105-107
+  s_9ebfe402b13a9b::t_30126601c440d0 369,372,377
+packages/server/src/routers/library.ts
+  s_9ebfe402b13a9b::t_de50af1d606855 141,145-146,148-153,157-159,162
+  s_9ebfe402b13a9b::t_67599be5232f1b 8
+packages/server/src/gameSources/searchGames.ts
+  s_9ebfe402b13a9b::t_7d9091f92b5112 4,6-7,15,23-47,58,67,74,95,97,102,108-109
+src/app/contributors/[id]/page.tsx
+  s_9ebfe402b13a9b::t_2a15d0f941d458 104-105,109,111
+packages/server/drizzle/migrations/meta/0006_snapshot.json
+  s_9ebfe402b13a9b::t_beb5654482bdc8 1-1113
+scripts/backfill-game-slugs.ts
+  s_9ebfe402b13a9b::t_9c3709d2f409d4 42
+  s_9ebfe402b13a9b::t_1452f5965a739c 19,21,43,52-53,57
+packages/server/drizzle/migrations/meta/_journal.json
+  s_9ebfe402b13a9b::t_beb5654482bdc8 39-52
+README.md
+  s_9ebfe402b13a9b::t_4ef2661c7eb38f 82-84
+packages/server/src/routers/contributor.ts
+  s_9ebfe402b13a9b::t_08b544f5273e1a 66-68
+src/modules/library/components/LibraryGameCard.tsx
+  s_9ebfe402b13a9b::t_2cf94db7330901 46-47,49-50
+packages/server/src/schema/openapi.ts
+  s_9ebfe402b13a9b::t_be5963a31d75fe 22,24,26-27
+  s_9ebfe402b13a9b::t_0a9de5be2cf0d0 47-49
+  s_9ebfe402b13a9b::t_e75bb97c1b8ab8 135-153
+  s_9ebfe402b13a9b::t_bcb9c98e07e736 111-113
+  s_9ebfe402b13a9b::t_a0998902f2691b 191-193
+src/modules/game/components/GameCard.tsx
+  s_9ebfe402b13a9b::t_99c67ae72880db 8-13,20-24,28,34,37,44
+packages/server/src/gameSources/steam/normalizeSteamGameDetails.ts
+  s_9ebfe402b13a9b::t_d333eb431d703d 21-24
+packages/server/src/gameSources/igdb/igdbGameSourceProvider.ts
+  s_9ebfe402b13a9b::t_6ac811a59d2e9d 1-43
+packages/server/src/gameSources/resolveGame.ts
+  s_9ebfe402b13a9b::t_4d3eeda4179d88 1-49
+packages/server/src/gameSources/assignGameSlug.ts
+  s_9ebfe402b13a9b::t_74f2d268158fe2 1-23
+packages/server/drizzle/migrations/0006_slow_meggan.sql
+  s_9ebfe402b13a9b::t_18a66fb100dfd1 1-26
+  s_9ebfe402b13a9b::t_beb5654482bdc8 27-30
+src/modules/home/components/GameGrid.tsx
+  s_9ebfe402b13a9b::t_45918a289ff278 48
+  s_9ebfe402b13a9b::t_683ebab7b00ebc 68-80
+packages/server/src/routers/game.ts
+  s_9ebfe402b13a9b::t_782e58edaa0676 43
+  s_9ebfe402b13a9b::t_43001c5b097449 128,130,132-133,136-137
+  s_9ebfe402b13a9b::t_dba7fadd833190 327,329-332,336,343-346,374
+  s_9ebfe402b13a9b::t_4ee74d0336b45c 438-452,454
+  s_9ebfe402b13a9b::t_e7dbfc86cc22b0 251-253
+  s_9ebfe402b13a9b::t_7ba24d2f88713e 296-298
+  s_9ebfe402b13a9b::t_281c5197ecda8e 4-6
+openapi.json
+  s_9ebfe402b13a9b::t_b6620d4f48e558 54,64,71-74,76-77,81-82,84-86,426,428,430,434-437,453-455,542,545-561,565-613,639-655,1232-1240,1264-1266,2233-2238,2240,2341-2343
+packages/server/src/gameSources/NormalizedGameDetails.ts
+  s_9ebfe402b13a9b::t_d6d4f71682f90f 14
+src/app/games/[id]/page.tsx
+  s_9ebfe402b13a9b::t_70000aa7224841 36,39-40,45-46,76,80,82,88,103,106,110,113-114
+packages/server/src/gameSources/igdb/normalizeIgdbGameDetails.ts
+  s_9ebfe402b13a9b::t_5491a58fa3b6c4 51,59-68,78-81
+packages/server/src/gameSources/parseGameRef.ts
+  s_9ebfe402b13a9b::t_f8dcef46034a7e 1-24
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_9ebfe402b13a9b::t_10c1787fa407fd 79-80,84
+packages/server/src/gameSources/GameSourceProvider.ts
+  s_9ebfe402b13a9b::t_e4b1760329b1fc 1-9
+packages/server/src/gameSources/gameSourceProviders.ts
+  s_9ebfe402b13a9b::t_40b0e10ef58adc 1-9
+packages/server/src/gameSources/steam/steamGameSourceProvider.ts
+  s_9ebfe402b13a9b::t_63122f99ba9242 1-25
+packages/server/drizzle/migrations/0005_flippant_lionheart.sql
+  s_9ebfe402b13a9b::t_1f8f95e524703e 1-20
+packages/server/drizzle/migrations/meta/0005_snapshot.json
+  s_9ebfe402b13a9b::t_3244abc840816b 1-1142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0d98500ba851b6fd334642e19e91ef62570cceea",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
