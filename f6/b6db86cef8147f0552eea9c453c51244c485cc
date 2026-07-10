@@ -1,0 +1,59 @@
+src/modules/review/components/ScreenshotUpload.tsx
+  s_9ebfe402b13a9b::t_5868315eeab8f2 1
+  s_9ebfe402b13a9b::t_b443700a071204 131
+  s_9ebfe402b13a9b::t_252b13c692ad11 31-32,34-35,37,41-43
+src/modules/review/hooks/useCreateReview.ts
+  s_9ebfe402b13a9b::t_e05255d8a5854c 39-44
+  s_9ebfe402b13a9b::t_73468f0e25d6b5 114-118
+  s_9ebfe402b13a9b::t_5f103f7b7c5f2f 3
+  s_9ebfe402b13a9b::t_0ebe4464b3750a 52,57-58,64-65,81
+  s_9ebfe402b13a9b::t_e2d3e213bbbe6f 128
+src/modules/auth/components/AuthPrompt.tsx
+  s_9ebfe402b13a9b::t_44ffe3f75aaa45 3
+  s_9ebfe402b13a9b::t_eb52fceaf3ac76 73
+src/app/home-client.tsx
+  s_9ebfe402b13a9b::t_e5b8ccd5d079fa 39,43-44
+  s_9ebfe402b13a9b::t_40b15ad14c5798 103-107
+  s_9ebfe402b13a9b::t_fb9a090af2880b 80-85
+  s_9ebfe402b13a9b::t_3c4aaf8f294dc2 11
+src/modules/library/components/LibraryErrorToastEffect.tsx
+  s_9ebfe402b13a9b::t_fbc6b16b038630 1-27
+src/modules/search/components/SearchBar.tsx
+  s_9ebfe402b13a9b::t_c7b3ad618378d6 6-8,11,17-18
+src/modules/home/hooks/useGameSearch.ts
+  s_9ebfe402b13a9b::t_4bf16aa4a24d23 4-6,8,12-14,16-21,23-39,41-54,57-60,62,64,66
+src/hooks/useMediaQuery.ts
+  s_9ebfe402b13a9b::t_c11a89987b534d 1,4,6-10,12,14
+src/app/library/client.tsx
+  s_9ebfe402b13a9b::t_dd1ed0cbc037ee 82
+  s_9ebfe402b13a9b::t_c54ef6d8293683 3
+  s_9ebfe402b13a9b::t_1949fc49ce1c53 25
+src/hooks/useInfiniteScroll.ts
+  s_9ebfe402b13a9b::t_d5cbc1cbae730e 1-34
+src/modules/review/components/ExpandableReviewNote.tsx
+  s_9ebfe402b13a9b::t_83b9c95e393473 17-19,21,26-30
+  s_9ebfe402b13a9b::t_e02db0c5185674 35
+src/modules/review/components/ExpandableDescription.tsx
+  s_9ebfe402b13a9b::t_e6a634ac0c4d70 42
+  s_9ebfe402b13a9b::t_cdfd6b0420066a 16-29
+  s_9ebfe402b13a9b::t_15d0642ef35d67 3
+src/app/contributors/client.tsx
+  s_9ebfe402b13a9b::t_86ec642955cf8a 36-40
+  s_9ebfe402b13a9b::t_f1b67e1bf91978 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f6b6db86cef8147f0552eea9c453c51244c485cc",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
