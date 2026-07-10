@@ -1,0 +1,23 @@
+src/app/sitemap.ts
+  s_9ebfe402b13a9b::t_1c8fb4315ea9c2 19-20
+src/app/page.tsx
+  s_9ebfe402b13a9b::t_2aa8aae68e3c0d 9
+next.config.ts
+  s_9ebfe402b13a9b::t_7999ce9541b091 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9c5728e66fc9a0f41e09633e39bc4462dca96754",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
