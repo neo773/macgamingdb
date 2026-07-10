@@ -1,0 +1,156 @@
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/normalize-igdb-game-details.util.ts
+  s_9ebfe402b13a9b::t_2e44fb3947ce02 21,28
+  s_9ebfe402b13a9b::t_f9966254e9c78a 79
+  s_9ebfe402b13a9b::t_b59ad948436ba1 1-4
+  s_9ebfe402b13a9b::t_cd0d5d4da459b6 36
+  s_9ebfe402b13a9b::t_7d474795dc7dd8 70-72
+packages/macgamingdb-server/src/modules/review/commands/backfill-aggregated-performance.command.ts
+  s_9ebfe402b13a9b::t_ce7ba0e1eb50cb 4
+  s_9ebfe402b13a9b::t_6034254c860b03 47
+package.json
+  s_9ebfe402b13a9b::t_65445c6d24e8f3 46
+src/modules/review/components/ScreenshotDisplay.tsx
+  s_9ebfe402b13a9b::t_c67f03e84018a6 38
+  s_9ebfe402b13a9b::t_5904290d1c77a9 3
+packages/macgamingdb-server/src/modules/game/utils/generate-unique-game-slug.util.ts
+  s_9ebfe402b13a9b::t_b4940118e0333f 1-4
+  s_9ebfe402b13a9b::t_b524c4f0189925 24,26,35
+src/modules/home/components/GameGrid.tsx
+  s_9ebfe402b13a9b::t_1e77faea302fae 34
+  s_9ebfe402b13a9b::t_e26a5f756f25a0 55
+  s_9ebfe402b13a9b::t_1fef1df616e381 3
+src/modules/review/components/ReviewCard.tsx
+  s_9ebfe402b13a9b::t_831833e5b1ab36 198-199
+  s_9ebfe402b13a9b::t_da2812f5435c72 3-4
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-web-api.service.ts
+  s_9ebfe402b13a9b::t_50c3dc9f4c0005 40
+  s_9ebfe402b13a9b::t_d95d112a87a075 2
+packages/macgamingdb-server/src/modules/game/utils/slugify-game-name.util.ts
+  s_9ebfe402b13a9b::t_dae1a1f767c4a7 1-2
+  s_9ebfe402b13a9b::t_55111e5f33cb24 14
+packages/macgamingdb-server/src/modules/library/services/library.service.ts
+  s_9ebfe402b13a9b::t_15a22aa0835929 3-4
+  s_9ebfe402b13a9b::t_ba62ac5c9fab25 105
+  s_9ebfe402b13a9b::t_1b9b2e224343f0 139
+  s_9ebfe402b13a9b::t_b15c4d6f77e980 35
+src/modules/review/components/ScreenshotUpload.tsx
+  s_9ebfe402b13a9b::t_028574b3f0e792 162
+  s_9ebfe402b13a9b::t_46d97b41027916 6
+src/app/games/[id]/page.tsx
+  s_9ebfe402b13a9b::t_252ece8808d65d 80
+  s_9ebfe402b13a9b::t_a793d1ef71fa90 17
+packages/macgamingdb-server/src/modules/review/commands/backfill-review-counts.command.ts
+  s_9ebfe402b13a9b::t_4e1a569fe9e832 58
+  s_9ebfe402b13a9b::t_dc84ae596d8ea7 4
+packages/macgamingdb-server/src/modules/game/services/game-search.service.ts
+  s_9ebfe402b13a9b::t_c6951ead66a08a 70
+  s_9ebfe402b13a9b::t_0a575590715a64 3
+packages/macgamingdb-server/src/modules/game/utils/dedupe-game-search-results-by-name-and-year.util.ts
+  s_9ebfe402b13a9b::t_946682d634ea64 1-2
+  s_9ebfe402b13a9b::t_bf5f3d44f87c6e 27,34
+src/modules/review/components/SelectMacConfiguration.tsx
+  s_9ebfe402b13a9b::t_d44712efb968f0 17
+  s_9ebfe402b13a9b::t_512a66ed5a88c9 329,333
+  s_9ebfe402b13a9b::t_d239ee493363b9 368
+src/modules/home/hooks/useGameSearch.ts
+  s_9ebfe402b13a9b::t_90d5f71d7e9dda 5
+  s_9ebfe402b13a9b::t_17dabd0a409f51 47,51
+  s_9ebfe402b13a9b::t_b99b1e2666ce1d 27
+  s_9ebfe402b13a9b::t_ca6ce6691d18a1 58-62
+src/app/my-reviews/client.tsx
+  s_9ebfe402b13a9b::t_0bbfee21ec3548 49
+  s_9ebfe402b13a9b::t_825d61dc78f8f4 61
+  s_9ebfe402b13a9b::t_f317f20fb2f82e 4
+CODE_STYLE.md
+  s_9ebfe402b13a9b::t_4d308edd7c089d 21
+packages/macgamingdb-server/src/modules/game/drivers/steam/utils/normalize-steam-game-details.util.ts
+  s_9ebfe402b13a9b::t_c84e5634c5bb18 22-24
+  s_9ebfe402b13a9b::t_93e86023fb8fa4 1-2
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_9ebfe402b13a9b::t_0e803926d932ba 251
+  s_9ebfe402b13a9b::t_691d7cd398c0a5 223
+  s_9ebfe402b13a9b::t_ccb468acd057c8 282
+  s_9ebfe402b13a9b::t_bd44b403438d89 355
+  s_9ebfe402b13a9b::t_c08f187cd63397 168
+  s_9ebfe402b13a9b::t_09accfb7cf6ef6 12-13
+  s_9ebfe402b13a9b::t_ca61557f2b6a50 295
+  s_9ebfe402b13a9b::t_918554f02badc9 338
+src/modules/game/components/ExperienceReportsSection.tsx
+  s_9ebfe402b13a9b::t_e5c00dc4bc19a4 23
+  s_9ebfe402b13a9b::t_e23e3042f8d75e 1
+packages/macgamingdb-ui/src/utilities/WiggleWrapper/WiggleWrapper.tsx
+  s_9ebfe402b13a9b::t_bc1b1e0acde428 44
+  s_9ebfe402b13a9b::t_a9e6148dbf2c8f 4
+src/app/contributors/[id]/page.tsx
+  s_9ebfe402b13a9b::t_dde39ca0ef508b 133-134
+  s_9ebfe402b13a9b::t_35165d66a5cacf 3-4
+  s_9ebfe402b13a9b::t_843551b91637c5 72
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/services/everymac-scraper.service.ts
+  s_9ebfe402b13a9b::t_b3e0c83f33d1e0 141
+  s_9ebfe402b13a9b::t_c8c8e2f6f38a60 264
+  s_9ebfe402b13a9b::t_b23fe8bb992be7 3
+  s_9ebfe402b13a9b::t_ec4ac79575b18f 304-305
+packages/macgamingdb-server/src/modules/game/commands/backfill-game-slugs.command.ts
+  s_9ebfe402b13a9b::t_dad6881bf19d7d 4
+  s_9ebfe402b13a9b::t_21bfa91853feb0 54
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_9ebfe402b13a9b::t_ae2b5006c5e0ab 354
+  s_9ebfe402b13a9b::t_c7093acf52b931 76
+  s_9ebfe402b13a9b::t_19e09734bd6cd8 291
+  s_9ebfe402b13a9b::t_910670d978c216 380
+  s_9ebfe402b13a9b::t_50b757196e3927 3-4
+packages/macgamingdb-ui/src/input/ButtonFilter/ButtonFilter.tsx
+  s_9ebfe402b13a9b::t_512190b250b239 2
+  s_9ebfe402b13a9b::t_193c0a4947955c 44
+packages/macgamingdb-server/src/modules/game/services/game-materialization.service.ts
+  s_9ebfe402b13a9b::t_8b75a67e4f2c69 222
+  s_9ebfe402b13a9b::t_6dab53b2112b1f 4
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_d5e57b186b9b06 34
+src/app/library/client.tsx
+  s_9ebfe402b13a9b::t_153189e8f59e5a 7
+  s_9ebfe402b13a9b::t_f11d47e1bfa6e2 78
+  s_9ebfe402b13a9b::t_914d175bae5b32 161
+  s_9ebfe402b13a9b::t_d51d89f3ebd5ed 46
+packages/macgamingdb-ui/package.json
+  s_9ebfe402b13a9b::t_a880df8c90e630 52
+src/app/contributors/client.tsx
+  s_9ebfe402b13a9b::t_a3764ba23a0597 160
+  s_9ebfe402b13a9b::t_02dd3c73b0b9d9 3
+src/modules/game/components/GameDetailHeader.tsx
+  s_9ebfe402b13a9b::t_be361c6247604f 1
+  s_9ebfe402b13a9b::t_a8dd8e674ad311 26
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_9ebfe402b13a9b::t_e8f35d0d3f21ce 221
+  s_9ebfe402b13a9b::t_f99d760f4184b2 5
+packages/macgamingdb-ui/src/feedback/Confetti/Confetti.tsx
+  s_9ebfe402b13a9b::t_ab3529f08bf57e 20-21
+  s_9ebfe402b13a9b::t_2dac1b517b056a 51
+src/modules/game/components/GameCard.tsx
+  s_9ebfe402b13a9b::t_820faddabf2aa9 5
+  s_9ebfe402b13a9b::t_6e5d43f517e00a 45
+packages/macgamingdb-server/src/modules/game/drivers/steam/utils/search-steam.util.ts
+  s_9ebfe402b13a9b::t_bee515a045c750 3
+  s_9ebfe402b13a9b::t_90c866099b3457 45
+packages/macgamingdb-server/src/modules/game/drivers/igdb/services/igdb-game-source.service.ts
+  s_9ebfe402b13a9b::t_d9874c8e9448c4 2
+  s_9ebfe402b13a9b::t_e5afce4c7e2d5d 30
+bun.lock
+  s_9ebfe402b13a9b::t_66b04bf096beb1 17,109,149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "67910d73775123420c9e01be069e855893ab4826",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
