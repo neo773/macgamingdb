@@ -25,26 +25,12 @@ services:
       - APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY}
       - APPLE_APP_BUNDLE_IDENTIFIER=${APPLE_APP_BUNDLE_IDENTIFIER}
       - STEAM_OPENID_REALM=${STEAM_OPENID_REALM}
-    healthcheck:
-      test:
-        [
-          'CMD',
-          'bun',
-          '-e',
-          'const response = await fetch("http://127.0.0.1:4000/rest/mac-configs"); if (!response.ok) process.exit(1);',
-        ]
-      interval: 15s
-      timeout: 10s
-      retries: 8
-      start_period: 1200s
-
   web:
     build:
       context: .
       dockerfile: Dockerfile.web
     depends_on:
-      api:
-        condition: service_healthy
+      - api
     environment:
       - INTERNAL_API_URL=http://api:4000
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
