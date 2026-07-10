@@ -19,9 +19,10 @@ import { ContributorsPageSchema } from "../modules/contributor/routers/../dtos/c
 import { GameSearchResultSchema } from "../modules/game/routers/../dtos/game-search-result.dto";
 import { CoverArtSchema } from "../modules/game/routers/../dtos/cover-art.dto";
 import { RatingCountsSchema } from "../modules/game/routers/../dtos/rating-counts.dto";
-import { ChipsetEnum, ChipsetVariantEnum } from "../modules/game/routers/../../../schema/index";
 import { PlayMethodEnum, PerformanceEnum, TranslationLayerEnum, GraphicsSettingsEnum } from "../modules/review/routers/../../../schema/index";
+import { ChipsetEnum, ChipsetVariantEnum } from "../modules/game/routers/../../../schema/index";
 import { GamesPageSchema } from "../modules/game/routers/../dtos/games-page.dto";
+import { SitemapEntrySchema } from "../modules/game/routers/../dtos/sitemap-entry.dto";
 import { GameByIdSchema } from "../modules/game/routers/../dtos/game-by-id.dto";
 import { GamePricesSchema } from "../modules/game/routers/../dtos/game-prices.dto";
 import { LibraryLinkUrlSchema } from "../modules/library/routers/../dtos/library-link-url.dto";
@@ -78,6 +79,10 @@ const appRouter = t.router({
       playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
     }))
       .output(GamesPageSchema)
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
+    getSitemapEntries: publicProcedure
+      .input(z.void())
+      .output(z.array(SitemapEntrySchema))
       .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     getById: publicProcedure
       .input(z.object({ id: z.string() }))

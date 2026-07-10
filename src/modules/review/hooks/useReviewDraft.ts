@@ -6,9 +6,9 @@ import { type inferRouterInputs } from '@trpc/server';
 import { trpc } from '@/lib/trpc/provider';
 import { toast } from 'sonner';
 import { type AppRouter } from 'macgamingdb-server/generated';
-import { type Game, type GameReview } from 'macgamingdb-server/drizzle/types';
+import { type RouterOutputs } from '@/lib/trpc/provider';
 
-type ReviewWithGame = GameReview & { game: Game };
+type MyReview = RouterOutputs['review']['listMine'][number];
 
 type UpdateReviewInput = inferRouterInputs<AppRouter>['review']['updateReview'];
 
@@ -31,7 +31,7 @@ function draftMatchesOriginal(
   );
 }
 
-export function useReviewDraft(review: ReviewWithGame) {
+export function useReviewDraft(review: MyReview) {
   const router = useRouter();
 
   const originalDraft: ReviewDraft = {

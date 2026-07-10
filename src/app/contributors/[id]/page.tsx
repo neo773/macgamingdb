@@ -1,5 +1,5 @@
-import { createDrizzleClient } from 'macgamingdb-server/database';
 import { notFound } from 'next/navigation';
+import { TRPCClientError } from '@trpc/client';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
 import Link from 'next/link';
@@ -11,8 +11,7 @@ import { formatDistance } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { Container } from '@/components/ui/container';
-import { users, gameReviews } from 'macgamingdb-server/drizzle/schema';
-import { eq, desc } from 'drizzle-orm';
+import { createServerHelpers } from '@/lib/trpc/server';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
@@ -25,34 +24,22 @@ export default async function ContributorPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const db = createDrizzleClient();
-
   const { id: contributorId } = await params;
 
-  const contributor = await db.query.users.findFirst({
-    where: eq(users.id, contributorId),
-  });
+  const helpers = await createServerHelpers();
 
-  if (!contributor) {
-    notFound();
-  }
+  const contributor = await helpers.contributor.getById
+    .fetch({ id: contributorId })
+    .catch((error) => {
+      if (error instanceof TRPCClientError && error.data?.code === 'NOT_FOUND') {
+        notFound();
+      }
+      throw error;
+    });
 
-  const contributorReviews = await db.query.gameReviews.findMany({
-    where: eq(gameReviews.userId, contributorId),
-    with: {
-      game: true,
-      macConfig: true,
-    },
-    orderBy: desc(gameReviews.createdAt),
-  });
-
-  const contributorName = contributor
-    .email!.split('@')[0]
-    .replace(/[0-9._]/g, '');
-
-  const uniqueGamesCount = new Set(
-    contributorReviews.map((review) => review.gameId),
-  ).size;
+  const contributorName = contributor.name;
+  const contributorReviews = contributor.reviews;
+  const uniqueGamesCount = contributor.uniqueGamesCount;
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -101,14 +88,14 @@ export default async function ContributorPage({
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`${review.game.headerImage}`}
-                            alt={`${review.game.name} cover art`}
+                            src={`${review.gameHeaderImage}`}
+                            alt={`${review.gameName} cover art`}
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                            <Link href={`/games/${review.game.slug ?? review.gameId}`}>
+                            <Link href={`/games/${review.gameSlug ?? review.gameId}`}>
                               <h3 className="text-lg font-semibold text-white hover:text-blue-300 transition-colors">
-                                {review.game.name ?? 'Unknown Game'}
+                                {review.gameName ?? 'Unknown Game'}
                               </h3>
                             </Link>
                             <div className="text-sm text-gray-300 mt-1">

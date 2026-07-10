@@ -1,31 +1,18 @@
-import { createDrizzleClient } from 'macgamingdb-server/database';
-import { headers } from 'next/headers';
-import { BetterAuthClient } from 'macgamingdb-server/auth';
+import { getServerSession } from '@/lib/auth/server';
+import { createServerHelpersWithAuth } from '@/lib/trpc/server';
 import MyReviewsClient from './client';
-import { gameReviews } from 'macgamingdb-server/drizzle/schema';
-import { eq, desc } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MyReviewsPage() {
-  const db = createDrizzleClient();
+  const session = await getServerSession();
 
-  const auth = await BetterAuthClient(db);
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
   if (!session) {
     return <div>Not authenticated</div>;
   }
 
-  const userReviews = await db.query.gameReviews.findMany({
-    where: eq(gameReviews.userId, session.user.id),
-    with: {
-      game: true,
-      macConfig: true,
-    },
-    orderBy: desc(gameReviews.createdAt),
-  });
+  const helpers = await createServerHelpersWithAuth();
+  const userReviews = await helpers.review.listMine.fetch();
 
   return <MyReviewsClient userReviews={userReviews} />;
 }

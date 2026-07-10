@@ -25,13 +25,13 @@ import {
   SOFTWARE_VERSIONS,
   type Performance,
 } from 'macgamingdb-server/schema';
-import { type Game, type GameReview } from 'macgamingdb-server/drizzle/types';
+import { type RouterOutputs } from '@/lib/trpc/provider';
 import { transformPerformanceRating } from '../../utils';
 
-type ReviewWithGame = GameReview & { game: Game };
+type MyReview = RouterOutputs['review']['listMine'][number];
 
 interface ReviewItemProps {
-  review: ReviewWithGame;
+  review: MyReview;
   isEditing: boolean;
   onRequestDelete: () => void;
 }
@@ -76,12 +76,12 @@ export function ReviewItem({
           <div className="aspect-[460/215] relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
             <img
-              src={review.game.headerImage ?? undefined}
-              alt={review.game.name ?? review.game.id}
+              src={review.gameHeaderImage ?? undefined}
+              alt={review.gameName ?? review.gameId}
               className="w-full h-full object-none"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-              <Link href={`/games/${review.game.slug ?? review.gameId}`}></Link>
+              <Link href={`/games/${review.gameSlug ?? review.gameId}`}></Link>
               <div className="text-sm text-gray-300 mt-1">
                 Reviewed{' '}
                 {formatDistance(new Date(review.createdAt), new Date(), {

@@ -17,6 +17,7 @@ import { GamePricesSchema } from '../dtos/game-prices.dto';
 import { GamesPageSchema } from '../dtos/games-page.dto';
 import { GameSearchResultSchema } from '../dtos/game-search-result.dto';
 import { RatingCountsSchema } from '../dtos/rating-counts.dto';
+import { SitemapEntrySchema } from '../dtos/sitemap-entry.dto';
 import { type PerformanceRating } from '../../../database/schema';
 import { getRegion } from '../../../engine/utils/get-region.util';
 import { GameService } from '../services/game.service';
@@ -107,6 +108,17 @@ export class GameRouter {
     },
   ) {
     return this.gameService.getGames(input);
+  }
+
+  @Query({
+    input: z.void(),
+    output: z.array(SitemapEntrySchema),
+    meta: {
+      openapi: { method: 'GET', path: '/games/sitemap-entries', protect: false, tags: ['games'] },
+    },
+  })
+  async getSitemapEntries() {
+    return this.gameService.getSitemapEntries();
   }
 
   @Query({

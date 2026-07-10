@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  ChipsetVariantEnum,
   GraphicsSettingsEnum,
   PerformanceEnum,
   TranslationLayerEnum,
@@ -18,6 +19,8 @@ export const ContributorReviewSchema = z.object({
   translationLayer: TranslationLayerEnum.nullable(),
   performance: PerformanceEnum,
   fps: z.number().nullable(),
+  chipset: z.string(),
+  chipsetVariant: ChipsetVariantEnum,
   graphicsSettings: GraphicsSettingsEnum.nullable(),
   resolution: z.string().nullable(),
   notes: z.string().nullable(),

@@ -1,5 +1,4 @@
 import ExpandableReviewNote from './ExpandableReviewNote';
-import { type GameReview, type MacConfig } from 'macgamingdb-server/drizzle/types';
 import React from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -31,13 +30,29 @@ const formatMethodName = (method: string) => {
   return formats[method] || method;
 };
 
+type ReviewCardData = {
+  id: string;
+  playMethod: string;
+  softwareVersion: string | null;
+  translationLayer: string | null;
+  performance: Performance;
+  chipset: string;
+  chipsetVariant: string;
+  graphicsSettings: string | null;
+  fps: number | null;
+  resolution: string | null;
+  notes: string | null;
+  screenshots: string | null;
+  macConfig?: { metadata: string } | null;
+};
+
 const GameReviewCard = ({
   review,
   header,
   customReviewNote,
   className,
 }: {
-  review: GameReview & { macConfig?: MacConfig | null };
+  review: ReviewCardData;
   header?: React.ReactNode;
   customReviewNote?: React.ReactNode;
   className?: string;

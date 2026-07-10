@@ -1,26 +1,16 @@
 import type { MetadataRoute } from 'next';
-import { createDrizzleClient } from 'macgamingdb-server/database';
-import { sql } from 'drizzle-orm';
+import { createServerHelpers } from '@/lib/trpc/server';
 
 export const revalidate = 3600; // 1 hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const db = createDrizzleClient();
+  const helpers = await createServerHelpers();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const games = await db.all<{
-    id: string;
-    slug: string | null;
-    lastModified: string;
-  }>(sql`
-    SELECT g.id, g.slug, MAX(r.updatedAt) as lastModified
-    FROM Game g
-    INNER JOIN GameReview r ON r.gameId = g.id
-    GROUP BY g.id
-  `);
+  const entries = await helpers.game.getSitemapEntries.fetch();
 
-  return games.map((game) => ({
-    url: `${baseUrl}/games/${game.slug ?? game.id}`,
-    lastModified: new Date(game.lastModified),
+  return entries.map((entry) => ({
+    url: `${baseUrl}/games/${entry.slug ?? entry.id}`,
+    lastModified: new Date(entry.lastModified),
   }));
 }

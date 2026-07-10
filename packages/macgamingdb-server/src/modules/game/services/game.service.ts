@@ -1,5 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, count, desc, eq, inArray, isNotNull, type SQL } from 'drizzle-orm';
+import {
+  and,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  max,
+  type SQL,
+} from 'drizzle-orm';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
@@ -437,5 +446,23 @@ export class GameService {
     } catch {
       return null;
     }
+  }
+
+  async getSitemapEntries() {
+    const rows = await this.db
+      .select({
+        id: games.id,
+        slug: games.slug,
+        lastModified: max(gameReviews.updatedAt),
+      })
+      .from(games)
+      .innerJoin(gameReviews, eq(gameReviews.gameId, games.id))
+      .groupBy(games.id);
+
+    return rows.map((row) => ({
+      id: row.id,
+      slug: row.slug,
+      lastModified: row.lastModified ?? new Date(0).toISOString(),
+    }));
   }
 }

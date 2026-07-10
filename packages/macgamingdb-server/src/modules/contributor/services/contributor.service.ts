@@ -59,6 +59,8 @@ export class ContributorService {
           translationLayer: review.translationLayer,
           performance: review.performance,
           fps: review.fps,
+          chipset: review.chipset,
+          chipsetVariant: review.chipsetVariant,
           graphicsSettings: review.graphicsSettings,
           resolution: review.resolution,
           notes: review.notes,
