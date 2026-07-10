@@ -1,0 +1,21 @@
+packages/macgamingdb-server/src/database/commands/migrate-database.command.ts
+  s_9ebfe402b13a9b::t_ea580cc34d88ad 107,113,120-161
+  s_9ebfe402b13a9b::t_4b824cd2a0eba3 6
+  s_9ebfe402b13a9b::t_9d43cf54b578c1 73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bdb9107dbb6211759b9262b80a7796d79922fcbb",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
