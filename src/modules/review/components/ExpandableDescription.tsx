@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 
 interface ExpandableDescriptionProps {
   description: string;

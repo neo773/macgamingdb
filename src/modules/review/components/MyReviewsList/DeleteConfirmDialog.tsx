@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
+} from 'macgamingdb-ui/feedback/Dialog';
 
 interface DeleteConfirmDialogProps {
   isOpen: boolean;

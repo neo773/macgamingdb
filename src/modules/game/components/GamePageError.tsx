@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
+import { Container } from 'macgamingdb-ui/layout/Container';
 
 export function GamePageError() {
   return (

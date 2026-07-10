@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import { X, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { trpc } from '@/lib/trpc/provider';

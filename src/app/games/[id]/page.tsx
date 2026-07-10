@@ -6,7 +6,7 @@ import { ChevronLeft } from 'lucide-react';
 import { createServerHelpers } from '@/lib/trpc/server';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
+import { Container } from 'macgamingdb-ui/layout/Container';
 import { generateGameJsonLd } from '@/lib/utils/jsonLd';
 import {
   GameDetailHeader,

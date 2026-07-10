@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Account from '@/components/ui/account';
+import Account from '@/components/Account/Account';
 import { Map, Menu, Trophy, X, Heart, Github, Star, Settings, LogOut, Library } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 import { DonationDialog } from './DonationDialog';

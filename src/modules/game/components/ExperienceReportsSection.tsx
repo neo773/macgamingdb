@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import CreateReviewDialog from '@/modules/review/components/CreateReviewDialog';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';

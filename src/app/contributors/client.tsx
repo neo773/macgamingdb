@@ -3,10 +3,10 @@
 import { useRef, useEffect } from 'react';
 import { trpc } from '@/lib/trpc/provider';
 import { formatDistance } from 'date-fns';
-import { UserAvatar } from '@/components/ui/user-avatar';
-import { Card, CardContent } from '@/components/ui/card';
+import { UserAvatar } from 'macgamingdb-ui/display/UserAvatar';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { Trophy, Medal, Award, Star } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
 import Link from 'next/link';
 import { type inferRouterOutputs } from '@trpc/server';
 import { type AppRouter } from 'macgamingdb-server/generated';

@@ -7,10 +7,10 @@ import { ChevronLeft, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
+} from 'macgamingdb-ui/feedback/Dialog';
 import { authClient } from '@/lib/auth/auth-client';
 
 interface ProfileUser {

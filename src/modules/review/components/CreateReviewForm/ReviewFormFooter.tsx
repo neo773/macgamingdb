@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { DialogClose, DialogFooter } from 'macgamingdb-ui/feedback/Dialog';
 
 interface ReviewFormFooterProps {
   isDrawer: boolean;

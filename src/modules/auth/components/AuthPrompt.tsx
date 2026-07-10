@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth/auth-client';
 import { trackEvent } from '@/lib/analytics/umami';

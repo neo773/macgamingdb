@@ -1,7 +1,7 @@
 'use client';
 
 import { Store, KeyRound, TrendingDown } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { trpc } from '@/lib/trpc/provider';
 import { trackEvent } from '@/lib/analytics/umami';
 

@@ -8,9 +8,9 @@ import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNo
 import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
 
 import { formatDistance } from 'date-fns';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
-import { Container } from '@/components/ui/container';
+import { Container } from 'macgamingdb-ui/layout/Container';
 import { createServerHelpers } from '@/lib/trpc/server';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations

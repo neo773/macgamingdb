@@ -1,18 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from 'macgamingdb-ui/feedback/Dialog';
 import {
   Drawer,
   DrawerContent,
   DrawerTrigger,
   DrawerClose,
-} from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
+} from 'macgamingdb-ui/feedback/Drawer';
+import { Button } from 'macgamingdb-ui/input/Button';
 import { PlusIcon } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CreateReviewForm from './CreateReviewForm';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
 
 type AddReviewDialogProps = {
   gameId: string;

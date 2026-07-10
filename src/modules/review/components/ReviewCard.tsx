@@ -1,7 +1,7 @@
 import ExpandableReviewNote from './ExpandableReviewNote';
 import React from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardContent } from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
 import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
 import { type MacSpecification } from 'macgamingdb-server/modules/mac-config/types/mac-specification.type';

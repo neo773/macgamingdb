@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { ChevronLeft, Edit2 } from 'lucide-react';
-import { Container } from '@/components/ui/container';
+import { Container } from 'macgamingdb-ui/layout/Container';
 import { type RouterOutputs } from '@/lib/trpc/provider';
 
 import { useMyReviews } from '@/modules/review/hooks';

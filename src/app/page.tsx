@@ -4,7 +4,7 @@ import Header from '@/modules/layout/components/Header';
 import HomeClient from './home-client';
 import { createServerHelpers } from '@/lib/trpc/server';
 import { createFilterConfig } from '@/lib/constants';
-import { Container } from '@/components/ui/container';
+import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const revalidate = 3600; // 1 hour
 

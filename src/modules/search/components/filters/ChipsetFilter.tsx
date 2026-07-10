@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from 'macgamingdb-ui/input/DropdownMenu';
 import { DEFAULT_CHIPSET_FILTER } from '@/lib/constants';
 import type { ChipsetGroup } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
 

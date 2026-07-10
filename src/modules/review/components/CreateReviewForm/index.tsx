@@ -6,14 +6,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
+} from 'macgamingdb-ui/feedback/Dialog';
+import { Textarea } from 'macgamingdb-ui/input/Textarea';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from 'macgamingdb-ui/feedback/Tooltip';
 import AuthPrompt from '@/modules/auth/components/AuthPrompt';
 import ScreenshotUpload from '@/modules/review/components/ScreenshotUpload';
 import SelectMacConfiguration from '@/modules/review/components/SelectMacConfiguration';

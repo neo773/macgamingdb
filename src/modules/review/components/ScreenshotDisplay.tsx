@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from 'macgamingdb-ui/feedback/Dialog';
 
 const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
 

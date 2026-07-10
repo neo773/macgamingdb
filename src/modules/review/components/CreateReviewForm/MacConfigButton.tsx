@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 import { ChevronLeft } from 'lucide-react';
 
 interface MacConfigButtonProps {

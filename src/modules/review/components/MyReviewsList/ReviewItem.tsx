@@ -2,17 +2,17 @@
 
 import Link from 'next/link';
 import { formatDistance } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
+import { Textarea } from 'macgamingdb-ui/input/Textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { WiggleWrapper } from '@/components/ui/wiggle-wrapper';
+} from 'macgamingdb-ui/input/Select';
+import { WiggleWrapper } from 'macgamingdb-ui/utilities/WiggleWrapper';
 import { Save, X } from 'lucide-react';
 import { useReviewDraft } from '@/modules/review/hooks';
 import GameReviewCard from '@/modules/review/components/ReviewCard';

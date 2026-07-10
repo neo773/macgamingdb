@@ -1,14 +1,14 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from 'macgamingdb-ui/input/Select';
 import { type PlayMethod, SOFTWARE_VERSIONS } from 'macgamingdb-server/schema';
 
 interface SoftwareVersionSelectProps {

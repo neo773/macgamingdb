@@ -1,13 +1,13 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from 'macgamingdb-ui/input/Select';
 import {
   type Performance,
   type GraphicsSettings,

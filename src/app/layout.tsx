@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist } from 'next/font/google';
 import { TRPCProvider } from '@/lib/trpc/provider';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'macgamingdb-ui/feedback/Toaster';
 import Script from 'next/script';
 import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
 import './tailwind.css';

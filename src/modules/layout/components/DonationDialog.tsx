@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from 'macgamingdb-ui/feedback/Dialog';
 import {
   Drawer,
   DrawerContent,
@@ -17,7 +17,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
+} from 'macgamingdb-ui/feedback/Drawer';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface DonationDialogProps {

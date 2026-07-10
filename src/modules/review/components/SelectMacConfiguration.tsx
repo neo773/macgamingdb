@@ -2,8 +2,8 @@
 
 import React, { useState, useMemo, memo } from 'react';
 import { motion } from 'motion/react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Check,
   ChevronDown,
@@ -14,9 +14,9 @@ import {
   MemoryStick,
   Search,
 } from 'lucide-react';
-import { cn } from '@/components/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from 'macgamingdb-ui/utilities/cn';
+import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
+import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
 import type { inferRouterOutputs } from '@trpc/server';
 
 import { type AppRouter } from 'macgamingdb-server/generated';

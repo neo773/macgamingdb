@@ -8,9 +8,9 @@ import { toast } from 'sonner';
 import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/modules/library/drivers/steam/constants/steam-library-private-code.constant';
 import Header from '@/modules/layout/components/Header';
 import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
+} from 'macgamingdb-ui/feedback/Dialog';
 import { trpc } from '@/lib/trpc/provider';
 import { trackEvent } from '@/lib/analytics/umami';
 import { FLOW_ERROR } from '@/lib/steam-openid/flowError';
