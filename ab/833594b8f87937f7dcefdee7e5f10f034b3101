@@ -1,0 +1,19 @@
+README.md
+  s_9ebfe402b13a9b::t_00bd60d6696aa4 1,5,7,9,11,13-19,21-24,26,28-35,37,39-44,46,48,50,52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ab833594b8f87937f7dcefdee7e5f10f034b3101",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
