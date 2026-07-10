@@ -85,14 +85,14 @@ export class LibraryService {
   async sync(userId: string) {
     try {
       return await this.steamLibrarySyncService.syncLibraryForUser({ userId });
-    } catch (err) {
-      if (err instanceof SteamLibraryPrivateError) {
+    } catch (error) {
+      if (error instanceof SteamLibraryPrivateError) {
         throw new LibraryException(
           STEAM_LIBRARY_PRIVATE_CODE,
           'STEAM_LIBRARY_PRIVATE_PRECONDITION_FAILED',
         );
       }
-      throw err;
+      throw error;
     }
   }
 
@@ -117,7 +117,7 @@ export class LibraryService {
           eq(gameSourceLinks.source, 'steam'),
           inArray(
             gameSourceLinks.externalId,
-            entries.map((e) => e.externalGameId),
+            entries.map((entry) => entry.externalGameId),
           ),
         ),
       );
@@ -140,20 +140,26 @@ export class LibraryService {
       };
     });
 
-    rows.sort((a, b) => {
+    rows.sort((firstRow, secondRow) => {
       const byRating =
-        rankForRating(a.aggregatedPerformance) -
-        rankForRating(b.aggregatedPerformance);
-      return byRating !== 0 ? byRating : b.playtimeMinutes - a.playtimeMinutes;
+        rankForRating(firstRow.aggregatedPerformance) -
+        rankForRating(secondRow.aggregatedPerformance);
+      return byRating !== 0
+        ? byRating
+        : secondRow.playtimeMinutes - firstRow.playtimeMinutes;
     });
 
     return rows;
   }
 
   async unlink(userId: string) {
-    await this.db.transaction(async (tx) => {
-      await tx.delete(userLibraryEntries).where(steamEntriesWhere(userId));
-      await tx.delete(userExternalAccounts).where(steamConnectionWhere(userId));
+    await this.db.transaction(async (transaction) => {
+      await transaction
+        .delete(userLibraryEntries)
+        .where(steamEntriesWhere(userId));
+      await transaction
+        .delete(userExternalAccounts)
+        .where(steamConnectionWhere(userId));
     });
 
     return { ok: true };

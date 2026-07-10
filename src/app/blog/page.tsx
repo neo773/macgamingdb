@@ -39,7 +39,10 @@ async function getBlogPosts(): Promise<BlogPost[]> {
   }
 
   // Sort by date descending
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return posts.sort(
+    (firstPost, secondPost) =>
+      new Date(secondPost.date).getTime() - new Date(firstPost.date).getTime(),
+  );
 }
 
 function formatDate(dateString: string) {

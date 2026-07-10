@@ -22,7 +22,7 @@ interface PerformanceFieldsProps {
   graphicsSettings: GraphicsSettings;
   resolution: string;
   onSelectChange: (name: string, value: string) => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const GRAPHICS_LABELS: Record<string, string> = {

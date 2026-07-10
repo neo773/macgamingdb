@@ -54,8 +54,8 @@ const MacConfigGroupSkeleton = memo(() => (
   <div className="py-3">
     <Skeleton className="h-4 w-24 mb-3" />
     <div className="grid gap-3">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <MacConfigSkeleton key={i} />
+      {Array.from({ length: 3 }).map((_, index) => (
+        <MacConfigSkeleton key={index} />
       ))}
     </div>
   </div>
@@ -63,8 +63,8 @@ const MacConfigGroupSkeleton = memo(() => (
 
 const LoadingState = memo(() => (
   <div className="space-y-6">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <MacConfigGroupSkeleton key={i} />
+    {Array.from({ length: 3 }).map((_, index) => (
+      <MacConfigGroupSkeleton key={index} />
     ))}
   </div>
 ));
@@ -170,8 +170,8 @@ const MacConfigCard = memo(
             src={getDeviceIcon(config.metadata.family)}
             alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
             className="w-12 h-12 object-contain opacity-80"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
             }}
           />
         </div>
@@ -274,7 +274,7 @@ const SearchBar = memo(
       <Input
         placeholder="Search Mac models, chipsets..."
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className="pl-10 rounded-full"
       />
       {isSearching && (

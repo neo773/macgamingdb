@@ -61,8 +61,8 @@ export function ScreenshotDisplay({
               alt={`Screenshot ${index + 1}`}
               className="w-full h-full object-cover cursor-pointer"
               onClick={() => handleImageClick(index)}
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
+              onError={(event) => {
+                (event.target as HTMLImageElement).style.display = 'none';
               }}
             />
           </div>

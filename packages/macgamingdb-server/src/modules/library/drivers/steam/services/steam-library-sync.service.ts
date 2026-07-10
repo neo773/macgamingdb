@@ -42,8 +42,8 @@ export class SteamLibrarySyncService {
       toLibraryEntryRow({ userId, syncedAt, game }),
     );
 
-    await this.db.transaction(async (tx) => {
-      await tx
+    await this.db.transaction(async (transaction) => {
+      await transaction
         .delete(userLibraryEntries)
         .where(
           and(
@@ -57,12 +57,12 @@ export class SteamLibrarySyncService {
         index < rows.length;
         index += STEAM_LIBRARY_INSERT_CHUNK_SIZE
       ) {
-        await tx
+        await transaction
           .insert(userLibraryEntries)
           .values(rows.slice(index, index + STEAM_LIBRARY_INSERT_CHUNK_SIZE));
       }
 
-      await tx
+      await transaction
         .update(userExternalAccounts)
         .set({ lastSyncedAt: syncedAt })
         .where(eq(userExternalAccounts.id, link.id));

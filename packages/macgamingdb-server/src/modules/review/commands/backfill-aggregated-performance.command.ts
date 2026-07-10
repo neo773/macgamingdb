@@ -49,8 +49,8 @@ export class BackfillAggregatedPerformanceCommand extends CommandRunner {
         continue;
       }
 
-      const avgScore = calculateAveragePerformance(game.reviews);
-      const aggregatedPerformance = scoreToRating(avgScore);
+      const averageScore = calculateAveragePerformance(game.reviews);
+      const aggregatedPerformance = scoreToRating(averageScore);
 
       if (!dryRun) {
         await this.db

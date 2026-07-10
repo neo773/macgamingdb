@@ -9,15 +9,15 @@ export function LibraryErrorToastEffect() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const err = searchParams.get('error');
-    if (!err) return;
-    if (err === FLOW_ERROR.PrivateLibrary) {
+    const errorCode = searchParams.get('error');
+    if (!errorCode) return;
+    if (errorCode === FLOW_ERROR.PrivateLibrary) {
       toast.error(
         'Could not read your Steam library. Set your library to public and try again.',
       );
     } else if (
-      err === FLOW_ERROR.VerifyFailed ||
-      err === FLOW_ERROR.StateMismatch
+      errorCode === FLOW_ERROR.VerifyFailed ||
+      errorCode === FLOW_ERROR.StateMismatch
     ) {
       toast.error('Steam sign-in failed. Try again.');
     }

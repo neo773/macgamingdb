@@ -54,9 +54,9 @@ export function AuthPrompt({
         setInternalMagicLinkSent(true);
       }
       toast('Check your email for a sign-in link.');
-    } catch (err) {
+    } catch (caughtError) {
       setError('Something went wrong. Please try again.');
-      console.error(err);
+      console.error(caughtError);
     } finally {
       setIsLoggingIn(false);
     }
@@ -108,8 +108,8 @@ export function AuthPrompt({
             <Input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              onChange={(event) => setEmail(event.target.value)}
+              onKeyDown={(event) => event.key === 'Enter' && handleLogin()}
               placeholder="you@email.com"
               required
               autoFocus={false}

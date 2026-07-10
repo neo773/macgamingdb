@@ -15,8 +15,8 @@ export const calculateAveragePerformance = (
     EXCELLENT: 5,
   };
 
-  const sum = reviews.reduce((acc, review) => {
-    return acc + performanceMap[review.performance];
+  const sum = reviews.reduce((accumulator, review) => {
+    return accumulator + performanceMap[review.performance];
   }, 0);
 
   return reviews.length > 0 ? sum / reviews.length : 0;

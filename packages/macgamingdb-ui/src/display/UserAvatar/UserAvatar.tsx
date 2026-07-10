@@ -11,8 +11,8 @@ const PALETTES: readonly (readonly string[])[] = [
 
 function paletteFor(seed: string): readonly string[] {
   let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  for (let index = 0; index < seed.length; index++) {
+    hash = (hash * 31 + seed.charCodeAt(index)) | 0;
   }
   return PALETTES[Math.abs(hash) % PALETTES.length];
 }

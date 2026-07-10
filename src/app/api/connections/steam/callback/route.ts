@@ -58,7 +58,7 @@ async function upsertSteamLink(
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   const db = createDrizzleClient();
   const auth = await BetterAuthClient(db);
   const session = await auth.api.getSession({ headers: await headers() });
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
   const userId = session.user.id;
 
   const cookieState = await consumeStateCookie();
-  const queryState = req.nextUrl.searchParams.get('state');
+  const queryState = request.nextUrl.searchParams.get('state');
   if (
     !cookieState ||
     !queryState ||
@@ -83,11 +83,11 @@ export async function GET(req: NextRequest) {
   let steamId: string;
   try {
     steamId = await new SteamOpenIdService().verifyResponse({
-      callbackUrl: req.nextUrl.toString(),
+      callbackUrl: request.nextUrl.toString(),
       realm: `${origin}/`,
     });
-  } catch (err) {
-    console.error('Steam OpenID verify failed:', err instanceof Error ? err.message : 'unknown');
+  } catch (error) {
+    console.error('Steam OpenID verify failed:', error instanceof Error ? error.message : 'unknown');
     return libraryRedirect(FLOW_ERROR.VerifyFailed);
   }
 
@@ -95,11 +95,11 @@ export async function GET(req: NextRequest) {
 
   try {
     await new SteamLibrarySyncService(db, new SteamWebApiService()).syncLibraryForUser({ userId });
-  } catch (err) {
-    if (err instanceof SteamLibraryPrivateError) {
+  } catch (error) {
+    if (error instanceof SteamLibraryPrivateError) {
       return libraryRedirect(FLOW_ERROR.PrivateLibrary);
     }
-    console.error('Initial Steam library sync failed:', err instanceof Error ? err.message : 'unknown');
+    console.error('Initial Steam library sync failed:', error instanceof Error ? error.message : 'unknown');
     return libraryRedirect(FLOW_ERROR.VerifyFailed);
   }
 

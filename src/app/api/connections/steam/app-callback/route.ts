@@ -28,8 +28,8 @@ function appRedirect(status: 'ok' | 'error', error?: string) {
   return NextResponse.redirect(url);
 }
 
-export async function GET(req: NextRequest) {
-  const state = req.nextUrl.searchParams.get('state');
+export async function GET(request: NextRequest) {
+  const state = request.nextUrl.searchParams.get('state');
   if (!state) {
     return appRedirect('error', 'state-missing');
   }
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
   let steamId: string;
   try {
     steamId = await new SteamOpenIdService().verifyResponse({
-      callbackUrl: req.url,
+      callbackUrl: request.url,
       realm: `${getAppOrigin()}/`,
     });
   } catch (error) {

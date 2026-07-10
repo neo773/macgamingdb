@@ -104,7 +104,7 @@ export function ProfileClient({ user }: { user: ProfileUser }) {
                   </label>
                   <Input
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(event) => setName(event.target.value)}
                     placeholder="Enter your display name"
                     className="bg-gray-900/50 border-gray-700 text-white"
                   />
@@ -169,7 +169,7 @@ export function ProfileClient({ user }: { user: ProfileUser }) {
                   </p>
                   <Input
                     value={deleteConfirm}
-                    onChange={(e) => setDeleteConfirm(e.target.value)}
+                    onChange={(event) => setDeleteConfirm(event.target.value)}
                     placeholder="DELETE"
                     className="bg-gray-900/50 border-gray-700 text-white"
                   />

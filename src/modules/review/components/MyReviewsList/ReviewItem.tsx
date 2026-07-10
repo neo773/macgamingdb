@@ -155,8 +155,8 @@ export function ReviewItem({
                   <Input
                     type="number"
                     value={draft.fps ?? ''}
-                    onChange={(e) => {
-                      const parsed = parseInt(e.target.value, 10);
+                    onChange={(event) => {
+                      const parsed = parseInt(event.target.value, 10);
                       updateDraftField('fps', isNaN(parsed) ? null : parsed);
                     }}
                     placeholder="e.g. 60"
@@ -170,8 +170,11 @@ export function ReviewItem({
                   <Input
                     type="text"
                     value={draft.resolution ?? ''}
-                    onChange={(e) =>
-                      updateDraftField('resolution', e.target.value || null)
+                    onChange={(event) =>
+                      updateDraftField(
+                        'resolution',
+                        event.target.value || null,
+                      )
                     }
                     placeholder="e.g. 1920x1080"
                   />
@@ -184,7 +187,9 @@ export function ReviewItem({
                 </h4>
                 <Textarea
                   value={draft.notes}
-                  onChange={(e) => updateDraftField('notes', e.target.value)}
+                  onChange={(event) =>
+                    updateDraftField('notes', event.target.value)
+                  }
                   className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
                   placeholder="Add your thoughts about this game..."
                 />

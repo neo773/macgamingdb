@@ -25,7 +25,7 @@ export function useGameSearch({ onClear }: UseGameSearchOptions = {}) {
     { query: debouncedQuery },
     {
       enabled: isNonEmptyString(debouncedQuery.trim()),
-      placeholderData: (prev) => prev,
+      placeholderData: (previousData) => previousData,
     },
   );
 

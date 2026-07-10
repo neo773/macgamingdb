@@ -356,12 +356,16 @@ export class GameService {
           ? {
               totalReviews: reviews.length,
               methods: {
-                native: reviews.filter((r) => r.playMethod === 'NATIVE').length,
-                crossover: reviews.filter((r) => r.playMethod === 'CROSSOVER')
+                native: reviews.filter((review) => review.playMethod === 'NATIVE')
                   .length,
-                parallels: reviews.filter((r) => r.playMethod === 'PARALLELS')
+                crossover: reviews.filter(
+                  (review) => review.playMethod === 'CROSSOVER',
+                ).length,
+                parallels: reviews.filter(
+                  (review) => review.playMethod === 'PARALLELS',
+                ).length,
+                other: reviews.filter((review) => review.playMethod === 'OTHER')
                   .length,
-                other: reviews.filter((r) => r.playMethod === 'OTHER').length,
               },
               averagePerformance: calculateAveragePerformance(reviews),
               translationLayers: calculateTranslationLayerStats(reviews),

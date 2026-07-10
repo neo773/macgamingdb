@@ -35,10 +35,10 @@ export const ExpandableReviewNote = ({
         ref={measureRef}
         className={cn('break-words', isExpanded ? '' : 'line-clamp-3')}
       >
-        {notes.split('\n').map((line, i) => (
-          <React.Fragment key={i}>
+        {notes.split('\n').map((line, index) => (
+          <React.Fragment key={index}>
             {line}
-            {i < notes.split('\n').length - 1 && <br />}
+            {index < notes.split('\n').length - 1 && <br />}
           </React.Fragment>
         ))}
       </p>

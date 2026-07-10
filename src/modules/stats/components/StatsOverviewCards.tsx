@@ -17,10 +17,10 @@ interface StatsOverviewCardsProps {
 }
 
 export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
-  const avgLatency = stats.query_count > 0 ? stats.query_latency / stats.query_count : 0;
+  const averageLatency = stats.query_count > 0 ? stats.query_latency / stats.query_count : 0;
   const queriesPerFrame = (stats.query_count / stats.current_frame_no).toFixed(1);
   const writeReadRatio = ((stats.rows_written / stats.rows_read) * 100).toFixed(1);
-  const isLatencyGood = avgLatency < 500;
+  const isLatencyGood = averageLatency < 500;
   const hasHighActivity = stats.query_count > 10000;
 
   return (
@@ -51,7 +51,7 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
         <CardHeader>
           <CardDescription>Average Latency</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {formatLatency(avgLatency)}
+            {formatLatency(averageLatency)}
           </CardTitle>
           <CardAction>
             <Badge variant={isLatencyGood ? 'default' : 'destructive'}>

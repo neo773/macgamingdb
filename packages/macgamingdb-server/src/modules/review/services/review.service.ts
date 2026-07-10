@@ -74,8 +74,8 @@ export class ReviewService {
 
     let aggregatedPerformance: PerformanceRating | null = null;
     if (isNonEmptyArray(reviews)) {
-      const avgScore = calculateAveragePerformance(reviews);
-      aggregatedPerformance = scoreToRating(avgScore);
+      const averageScore = calculateAveragePerformance(reviews);
+      aggregatedPerformance = scoreToRating(averageScore);
     }
 
     await this.db
@@ -176,9 +176,11 @@ export class ReviewService {
       }
 
       for (const family of Object.keys(groupedConfigs)) {
-        groupedConfigs[family].sort((a, b) => {
-          if (a.identifier === input.selectedConfigIdentifier) return -1;
-          if (b.identifier === input.selectedConfigIdentifier) return 1;
+        groupedConfigs[family].sort((firstConfig, secondConfig) => {
+          if (firstConfig.identifier === input.selectedConfigIdentifier)
+            return -1;
+          if (secondConfig.identifier === input.selectedConfigIdentifier)
+            return 1;
           return 0;
         });
       }

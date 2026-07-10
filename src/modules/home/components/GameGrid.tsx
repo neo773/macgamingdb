@@ -23,8 +23,8 @@ export function GameGrid({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {Array(6)
           .fill(null)
-          .map((_, i) => (
-            <GameCardSkeleton key={`skeleton-${i}`} />
+          .map((_, index) => (
+            <GameCardSkeleton key={`skeleton-${index}`} />
           ))}
       </div>
     );
@@ -83,7 +83,9 @@ export function GameGrid({
       {isFetchingNextPage &&
         Array(6)
           .fill(null)
-          .map((_, i) => <GameCardSkeleton key={`loading-more-${i}`} />)}
+          .map((_, index) => (
+            <GameCardSkeleton key={`loading-more-${index}`} />
+          ))}
     </div>
   );
 }

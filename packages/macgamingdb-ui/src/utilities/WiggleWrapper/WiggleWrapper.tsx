@@ -48,17 +48,17 @@ export function WiggleWrapper({
     <div
       className={`relative ${className ?? ''}`}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={(e) => {
-        if (isTargetInRadixPortal(e.relatedTarget)) return;
+      onMouseLeave={(event) => {
+        if (isTargetInRadixPortal(event.relatedTarget)) return;
         setIsHovered(false);
       }}
-      onFocusCapture={(e) => {
-        if (isInteractingWithField(e.currentTarget)) {
+      onFocusCapture={(event) => {
+        if (isInteractingWithField(event.currentTarget)) {
           setIsFieldFocused(true);
         }
       }}
-      onBlurCapture={(e) => {
-        if (isTargetInRadixPortal(e.relatedTarget)) return;
+      onBlurCapture={(event) => {
+        if (isTargetInRadixPortal(event.relatedTarget)) return;
         setIsFieldFocused(false);
       }}
       style={{

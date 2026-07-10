@@ -204,7 +204,9 @@ export class EveryMacScraperService {
         }
       });
 
-      ramConfigurations.sort((a, b) => a - b);
+      ramConfigurations.sort(
+        (firstRamSize, secondRamSize) => firstRamSize - secondRamSize,
+      );
 
       return ramConfigurations;
     } catch (error) {
@@ -244,9 +246,9 @@ export class EveryMacScraperService {
       }
 
       if (cells.length >= 2 && cells.length % 2 === 0) {
-        for (let i = 0; i < cells.length; i += 2) {
-          const key = cells[i].textContent?.trim().toLowerCase();
-          const value = cells[i + 1].textContent?.trim();
+        for (let cellIndex = 0; cellIndex < cells.length; cellIndex += 2) {
+          const key = cells[cellIndex].textContent?.trim().toLowerCase();
+          const value = cells[cellIndex + 1].textContent?.trim();
           if (key && value) {
             data[key] = value;
           }

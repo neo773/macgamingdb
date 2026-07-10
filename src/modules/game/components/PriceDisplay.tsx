@@ -31,7 +31,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
   if (!currentRetail && !currentKeyshops && !historicalRetail) return null;
 
   const symbol = currencySymbol(currency);
-  const fmt = (v: string) => `${symbol}${v}`;
+  const formatPrice = (price: string) => `${symbol}${price}`;
   const bestCurrent = currentRetail ?? currentKeyshops;
   const bestHistorical = historicalRetail ?? historicalKeyshops;
 
@@ -39,7 +39,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
     if (!bestCurrent) return null;
     return (
       <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-sm px-1.5 py-0.5 text-[10px] text-green-400 border border-gray-700/50 font-mono font-semibold">
-        {fmt(bestCurrent)}
+        {formatPrice(bestCurrent)}
       </span>
     );
   }
@@ -72,7 +72,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <Store className="size-3.5 text-gray-500" />
                   Official Stores
                 </span>
-                <span className="font-medium text-white">{fmt(currentRetail)}</span>
+                <span className="font-medium text-white">{formatPrice(currentRetail)}</span>
               </div>
             )}
 
@@ -82,7 +82,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <KeyRound className="size-3.5 text-gray-500" />
                   Keyshops
                 </span>
-                <span className="font-medium text-white">{fmt(currentKeyshops)}</span>
+                <span className="font-medium text-white">{formatPrice(currentKeyshops)}</span>
               </div>
             )}
 
@@ -92,7 +92,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <TrendingDown className="size-3.5 text-gray-500" />
                   Historical Low
                 </span>
-                <span className="font-medium text-white">{fmt(bestHistorical)}</span>
+                <span className="font-medium text-white">{formatPrice(bestHistorical)}</span>
               </div>
             )}
           </div>

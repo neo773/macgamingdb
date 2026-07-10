@@ -100,19 +100,19 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const isSubmitting = createReviewMutation.isPending;
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = event.target;
+    setFormData((previousFormData) => ({ ...previousFormData, [name]: value }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((previousFormData) => ({ ...previousFormData, [name]: value }));
   };
 
   const handlePlayMethodSelect = (method: PlayMethod) => {
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previousFormData) => ({
+      ...previousFormData,
       playMethod: method,
       softwareVersion: defaultSoftwareVersion(method),
     }));
@@ -126,8 +126,8 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
 
   const handleMacConfigSelect = (config: MacConfig) => {
     setUserSelectedConfig(config);
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previousFormData) => ({
+      ...previousFormData,
       macConfigIdentifier: config.identifier,
     }));
     updatePreference('macConfigIdentifier', config.identifier);
@@ -135,7 +135,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handleScreenshotsChange = (screenshots: string[]) => {
-    setFormData((prev) => ({ ...prev, screenshots }));
+    setFormData((previousFormData) => ({ ...previousFormData, screenshots }));
   };
 
   const handleSoftwareVersionChange = (value: string) => {
@@ -151,8 +151,8 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     setCustomVersionValue('');
   };
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (event?: React.FormEvent) => {
+    if (event) event.preventDefault();
 
     if (!formData.playMethod || !formData.performance || !formData.macConfigIdentifier) {
       setError('Please fill in all required fields.');

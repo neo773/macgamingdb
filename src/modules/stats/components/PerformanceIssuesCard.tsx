@@ -33,7 +33,7 @@ export function PerformanceIssuesCard({ stats }: PerformanceIssuesCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm">Worst latency</span>
           <Badge variant="destructive">
-            {Math.max(...stats.slowest_queries.map((q) => q.elapsed_ms))}ms
+            {Math.max(...stats.slowest_queries.map((query) => query.elapsed_ms))}ms
           </Badge>
         </div>
       </CardContent>

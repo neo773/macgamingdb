@@ -63,7 +63,7 @@ export function SoftwareVersionSelect({
           <Input
             type="text"
             value={customVersionValue}
-            onChange={(e) => onCustomVersionChange(e.target.value)}
+            onChange={(event) => onCustomVersionChange(event.target.value)}
             placeholder={playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'}
             className="flex-1"
           />

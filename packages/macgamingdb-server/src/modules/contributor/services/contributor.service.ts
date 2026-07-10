@@ -40,7 +40,8 @@ export class ContributorService {
         orderBy: desc(gameReviews.createdAt),
       });
 
-      const uniqueGamesCount = new Set(reviews.map((r) => r.gameId)).size;
+      const uniqueGamesCount = new Set(reviews.map((review) => review.gameId))
+        .size;
 
       return {
         id: contributor.id,

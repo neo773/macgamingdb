@@ -125,9 +125,9 @@ export function ContributorsClient({
         {isFetchingNextPage &&
           Array(6)
             .fill(null)
-            .map((_, i) => (
+            .map((_, index) => (
               <Card
-                key={`skeleton-${i}`}
+                key={`skeleton-${index}`}
                 className="bg-black/30 border border-white/10"
               >
                 <CardContent className="px-6">

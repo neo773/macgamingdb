@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { differenceInMinutes } from 'date-fns';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
 import { isNonEmptyArray } from '@sniptt/guards';
@@ -26,16 +27,19 @@ import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { LibraryErrorToastEffect } from '@/modules/library/components/LibraryErrorToastEffect';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
+// formatDistanceToNowStrict cannot reproduce this exact copy ("45d ago", not
+// "2 months ago"), so the unit cascade stays and only the diff uses date-fns.
 function formatRelative(iso: string | null): string {
   if (!iso) return 'never';
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.round(diff / 60000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
-  const h = Math.round(m / 60);
-  if (h < 24) return `${h}h ago`;
-  const d = Math.round(h / 24);
-  return `${d}d ago`;
+  const minutes = differenceInMinutes(new Date(), new Date(iso), {
+    roundingMethod: 'round',
+  });
+  if (minutes < 1) return 'just now';
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.round(hours / 24);
+  return `${days}d ago`;
 }
 
 export function LibraryClient() {
@@ -52,9 +56,10 @@ export function LibraryClient() {
   const handleResync = () => {
     const id = toast.loading('Syncing your Steam library...');
     sync.mutate(undefined, {
-      onSuccess: (res) => toast.success(`Synced ${res.count} games`, { id }),
-      onError: (err) => {
-        if (err.message === STEAM_LIBRARY_PRIVATE_CODE) {
+      onSuccess: (result) =>
+        toast.success(`Synced ${result.count} games`, { id }),
+      onError: (error) => {
+        if (error.message === STEAM_LIBRARY_PRIVATE_CODE) {
           toast.error('Set your Steam library to public and try again.', {
             id,
           });

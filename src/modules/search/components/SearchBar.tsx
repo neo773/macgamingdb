@@ -15,7 +15,7 @@ export function SearchBar({ value, onChange, isLoading = false }: SearchBarProps
         <input
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           placeholder="Search for a game..."
           className="bg-input/30 w-full h-14 px-6 pr-12 rounded-full border-2 focus:outline-none focus:ring-2 focus:border-0 focus:ring-blue-400 border-input/70 text-lg backdrop-blur-sm  transition-all duration-200"
         />

@@ -23,12 +23,13 @@ export default async function StatsPage() {
   const stats = JSON.parse(readFileSync('/app/stats.json', 'utf-8')) as Stats;
 
   const queryAnalysis = stats.top_queries.reduce(
-    (acc, query) => {
+    (analysisByIntent, query) => {
       const intent = getQueryIntent(query.query);
-      if (!acc[intent]) acc[intent] = { count: 0, totalRows: 0 };
-      acc[intent].count++;
-      acc[intent].totalRows += query.rows_read;
-      return acc;
+      if (!analysisByIntent[intent])
+        analysisByIntent[intent] = { count: 0, totalRows: 0 };
+      analysisByIntent[intent].count++;
+      analysisByIntent[intent].totalRows += query.rows_read;
+      return analysisByIntent;
     },
     {} as Record<string, QueryAnalysis>,
   );
