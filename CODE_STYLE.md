@@ -10,9 +10,20 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - One export per file; file name matches the export. Named exports only — no default exports (Next-required files excepted: `page.tsx`, `layout.tsx`, `route.ts`, `sitemap.ts`, `mdx-components.tsx`).
 - Multi-arg functions take a single destructured object param.
 - Early returns, no else-after-return, no nested ternaries. `const` over `let`. No mutation of inputs.
-- No abbreviations, ever. Booleans read `isX`/`hasX`. One term per concept codebase-wide.
-- Comments: almost none. Only single-line `//` for genuinely counter-intuitive behavior. Magic numbers become named constants. Debt gets `// TODO:`.
+- No `as unknown as`. Avoid `unknown` — validate untrusted input with zod (`parseXOrThrow` naming), then trust the type.
+- Prefer `undefined` over `null`; one nullish convention per boundary. Return `[]`, never `null`, for empty collections.
+- `Pick<>`/`Omit<>` to narrow params to what's needed. Don't pass an entity plus its id; don't pass derivable data.
+- Types declared above the function; exported types in their own file; don't export what's only used locally. Generics get descriptive names (`TData`, not `T`).
+- Prefer `map`/`filter`/`reduce` over manual loops when it stays clear. Files < 300 lines (services < 500) — split when growing.
+- `isDefined()`-style helpers over manual `!== null && !== undefined`. No `=== true`, no `Boolean()` casts.
+- Always `await` promises — no fire-and-forget.
+- No abbreviations, ever. Booleans read `isX`/`hasX`. One term per concept codebase-wide. Pluralize collections, singular for one entity. `generate` for creating values; never `get` for something that mutates. No `v2` suffixes or leaked internal qualifiers.
+- Reserved words: `guard` = NestJS guard only, `Input` = API input schemas, plain argument types are `XParams`, `Context` = React context only, `Props` = component props only.
+- Comments: almost none. Only single-line `//` for genuinely counter-intuitive behavior. No JSDoc blocks. Magic numbers become named constants. Debt gets `// TODO:` with an owner.
 - Types derive from the API contract (`RouterOutputs`, zod `z.infer`) — never hand-redeclared.
+- Errors: functions that throw are suffixed `...OrThrow`. No silent failures, no swallowed errors, no returning `undefined` where a throw is right.
+- Prettier: 2-space, single quotes, trailing commas, semicolons, print width 80.
+- Tests: AAA structure, names read "should [behavior] when [condition]", test data factories `createTestX(overrides)`. Run scoped to the file under work, not the whole suite.
 
 ## Backend (`packages/macgamingdb-server`)
 
@@ -23,9 +34,13 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - External vendors live behind `drivers/<vendor>/` with a common contract; orchestrators inject each vendor service explicitly and dispatch with an exhaustive `switch` (throwing default).
 - No stateful module-scope singletons — caches, clients, rate limiters are instance fields on injectable services.
 - Services throw domain exceptions extending `CustomException` (`<domain>.exception.ts` with a string-literal code union) — never `TRPCError`, never bare `Error`. Mapping to transport errors happens in the tRPC middleware layer.
-- Routers are thin: zod input/output + openapi meta + delegate to a service.
+- Routers are thin: zod input/output + openapi meta + delegate to a service. No business logic in routers, no transport concerns in services.
+- DTO per output, named after what it represents; return the narrowest DTO, never expose internal fields. Row shape ≠ DTO — separate types.
+- Validation and behavior live in the owning service, not scattered at call sites.
+- Auth on every protected procedure; allow-list over deny-list; no PII in logs.
+- Exceptions carry a `userFriendlyMessage` separate from the technical message when they surface to users.
 - CLI/backfill work = nest-commander `.command.ts` under the domain's `commands/`, always with `--dry-run`.
-- Unit tests on utils only, colocated `__tests__/*.spec.ts`.
+- Unit tests on utils only, colocated `__tests__/*.spec.ts`; services get exercised through API integration tests, and bug fixes include a regression test.
 
 ## Frontend (`src/`, `packages/macgamingdb-ui`)
 
@@ -38,10 +53,15 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - No `useMemo`/`useCallback`/`memo` without a measured performance need.
 - Derive, don't store: keep the id in state, derive the object. Server state belongs to the react-query cache — never copied into local state.
 - No umbrella hooks bundling unrelated state + callbacks. No prop-drilling callbacks through 2+ levels.
-- Props type suffixed `Props`, destructured in the signature. Callback props `onX`, implementations `handleX`.
-- Never declare a component inside another component.
+- Props type suffixed `Props`, destructured in the signature. Callback props `onX`, implementations `handleX`. Props down, events up.
+- Prefer a string prop over `children` when the component renders text. Avoid `forwardRef` unless genuinely required.
+- Never declare a component inside another component. Components small and focused (< 300 lines) — compose, don't grow monoliths.
+- Action hooks don't subscribe to state: a hook exposing a callback reads current values inside the callback at call time, so callers don't re-render on state change.
+- Extract complex logic from components into hooks, and pure logic from hooks into utils (utils never receive clients — pass data).
+- Prefer batch/many operations over per-item mutation loops. Prefer targeted cache updates (`setQueryData`/keyed invalidation) over blanket `invalidateQueries` where it matters.
 - No imperative DOM manipulation (`createElement`, `innerHTML`) — state-driven rendering only.
-- Tailwind for styling; extend a component with a prop/variant instead of re-styling it from outside.
+- Tailwind for styling; extend a component with a prop/variant instead of re-styling it from outside. External styling may touch margins only — padding belongs to the component. No fixed widths on modals/dropdowns — content drives size. Z-index local to the caller, no global hierarchy.
+- Component tests: behavior, not implementation — Testing Library, query by role/label/text (never test-ids), `user-event`, `findBy` for async.
 
 ## Stack decisions (settled — don't relitigate)
 
