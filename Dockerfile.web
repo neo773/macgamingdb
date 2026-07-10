@@ -12,6 +12,8 @@ WORKDIR /app
 COPY --from=deps /app ./
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# Baked into the routes manifest at build time; matches the compose service name.
+ENV INTERNAL_API_URL=http://api:4000
 RUN node node_modules/typescript/bin/tsc -p packages/macgamingdb-shared/tsconfig.json \
   && node node_modules/typescript/bin/tsc -p packages/macgamingdb-emails/tsconfig.build.json \
   && node node_modules/next/dist/bin/next build
