@@ -1,0 +1,38 @@
+docker-compose.yml
+  s_9ebfe402b13a9b::t_1f5e7aa53f3b2a 1-60
+packages/macgamingdb-server/src/command/command.module.ts
+  s_9ebfe402b13a9b::t_fec64a8dbd5094 7-8,13,17
+packages/macgamingdb-server/src/modules/game/commands/backfill-game-slugs.command.ts
+  s_9ebfe402b13a9b::t_caab71da399798 3,16-18,27-34
+scripts/test-production-migration.ts
+  s_9ebfe402b13a9b::t_feed159fb99fa0 1-76
+Dockerfile.web
+  s_9ebfe402b13a9b::t_f7074dc962d3d3 1-24
+Dockerfile.api
+  s_9ebfe402b13a9b::t_881ef4c5200de9 1-13
+  s_9ebfe402b13a9b::t_891b7fb35defea 14
+package.json
+  s_9ebfe402b13a9b::t_0735ed750351e0 31-33
+packages/macgamingdb-server/src/modules/game/services/game-slug-backfill.service.ts
+  s_9ebfe402b13a9b::t_9741289a3483d3 1-71
+packages/macgamingdb-server/src/database/commands/migrate-database.command.ts
+  s_9ebfe402b13a9b::t_2e3a8ed139d6db 1-189
+.gitignore
+  s_9ebfe402b13a9b::t_5d2447bcfdeda6 56-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fc77b9ad6da0cf9fb54452eb2a97db3afbcceae3",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
