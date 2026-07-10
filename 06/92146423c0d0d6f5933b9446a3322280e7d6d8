@@ -1,0 +1,722 @@
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/file-storage.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-22
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-supported-regions.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-25
+packages/macgamingdb-server/dist/engine/core-modules/page-revalidation/page-revalidation.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-22
+packages/macgamingdb-server/dist/modules/game/utils/extract-release-year.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_14d4052da49c1c 8-9
+packages/macgamingdb-server/dist/modules/mac-config/exceptions/mac-config.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/mac-config/types/mac-specification.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/contributor/routers/contributor.router.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-68
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/services/ggdeals-api-client.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-40
+packages/macgamingdb-server/dist/engine/core-modules/auth/better-auth-client.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-170
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-config-row.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-12
+packages/macgamingdb-server/dist/modules/review/dtos/mutation-result.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-prices-endpoint.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-emails/dist/tailwind.config.d.ts
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-15
+packages/macgamingdb-server/dist/modules/review/dtos/my-reviews.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/command/main.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-12
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/to-library-entry-row.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-16
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/token-refresh-margin-ms.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/review/utils/format-rating-label.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-25
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/utils/generate-screenshot-key.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-10
+packages/macgamingdb-server/dist/modules/review/commands/backfill-review-counts.command.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-95
+packages/macgamingdb-server/dist/modules/library/drivers/steam/types/steam-owned-game.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/engine/core-modules/auth/auth.const.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/game/services/game-materialization.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-187
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-openid.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-28
+packages/macgamingdb-server/dist/modules/review/utils/score-to-rating.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-18
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-issuer.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-library-insert-chunk-size.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/library/dtos/ok-result.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/schema/index.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-54
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/services/everymac-scraper.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-245
+packages/macgamingdb-shared/dist/utils/isDefined.d.ts
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1
+Dockerfile.api
+  s_9ebfe402b13a9b::t_a2c7f0353b8daa 1,10-12,14-23,26
+packages/macgamingdb-server/dist/modules/game/dtos/sitemap-entry.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-10
+packages/macgamingdb-server/src/modules/mac-config/commands/populate-mac-configs.command.ts
+  s_9ebfe402b13a9b::t_98e6fac5b8ec70 1,17
+packages/macgamingdb-server/dist/modules/game/types/game-search-result.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/database/types.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/dtos/game-by-id.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-32
+packages/macgamingdb-server/dist/modules/game/types/game-source.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/rate-limit-interval-ms.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/library/dtos/library-link-url.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/mac-config/utils/get-chipset-combinations.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-27
+packages/macgamingdb-server/dist/modules/library/dtos/library-entry.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-15
+packages/macgamingdb-server/dist/modules/library/routers/library.router.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-133
+packages/macgamingdb-server/dist/database/schema.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-232
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-ttl.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/engine/api/write-openapi-document.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-31
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-specification.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-16
+packages/macgamingdb-server/dist/database/commands/migrate-database.command.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-132
+packages/macgamingdb-server/dist/engine/exceptions/custom.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-13
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/escape-igdb-query-value.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-6
+packages/macgamingdb-server/dist/modules/library/dtos/library-sync-result.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/dist/modules/library/library.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-32
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/external-game-source-steam.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/modules/game/drivers/steam/services/steam-game-source.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-35
+packages/macgamingdb-server/dist/main.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-34
+packages/macgamingdb-emails/dist/emails/magic-link.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-33
+packages/macgamingdb-server/dist/modules/game/utils/rank-game-search-results-by-relevance.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-17
+packages/macgamingdb-server/dist/modules/traffic/services/traffic.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-59
+packages/macgamingdb-server/dist/modules/review/dtos/game-review.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-26
+packages/macgamingdb-emails/package.json
+  s_9ebfe402b13a9b::t_b1ce451a6882ec 6,8-9,13-14
+  s_9ebfe402b13a9b::t_17f47aae9d0a38 7
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/utils/resolve-gg-deals-region.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/game/drivers/steam/types/steam-app-data.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/app.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-42
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/services/igdb-game-source.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-60
+packages/macgamingdb-server/dist/modules/review/utils/calculate-translation-layer-stats.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-18
+packages/macgamingdb-server/dist/modules/game/routers/game.router.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-194
+packages/macgamingdb-server/dist/modules/game/services/game.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-358
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-website-category-official.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/game/utils/dedupe-game-search-results-by-name-and-year.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-23
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-library-sync.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-63
+packages/macgamingdb-server/dist/modules/game/dtos/games-page.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-server/dist/modules/game/game.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-37
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/utils/is-gg-deals-region.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/modules/traffic/exceptions/traffic.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/review/utils/calculate-average-performance.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-19
+packages/macgamingdb-server/dist/modules/review/routers/review.router.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-222
+packages/macgamingdb-emails/tsconfig.build.json
+  s_9ebfe402b13a9b::t_cb1409aeb97dd7 1-16
+packages/macgamingdb-server/tsconfig.build.json
+  s_9ebfe402b13a9b::t_4eda6bed522126 16-24
+  s_9ebfe402b13a9b::t_2580f015925bd4 4-5
+  s_9ebfe402b13a9b::t_3df8dd5133b0ac 1-3,6-15
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/twitch-token-url.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/library/exceptions/library.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/verify-state-token-user-id.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/mac-ram-limits.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-91
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor-review.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-28
+packages/macgamingdb-server/dist/engine/api/trpc/exception-mapping.middleware.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-25
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributors-page.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-api-base-url.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/library/drivers/steam/exceptions/steam-library-private.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-12
+packages/macgamingdb-server/dist/@generated/server.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-195
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/searchable-igdb-game-types.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/modules/game/utils/slugify-game-name.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-library-private-code.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/game/dtos/game-prices.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-18
+packages/macgamingdb-server/dist/modules/review/review.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-24
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-web-api.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-41
+packages/macgamingdb-emails/dist/tailwind.config.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-18
+packages/macgamingdb-server/dist/modules/review/dtos/create-review-result.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-game-price.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/engine/core-modules/page-revalidation/page-revalidation.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-41
+packages/macgamingdb-server/dist/modules/game/types/game-ref.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/pricing/pricing.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-api-response.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/drivers/steam/types/steam-game-search-object.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/services/game-slug-backfill.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-76
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/issue-state-token.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-16
+packages/macgamingdb-server/dist/modules/review/services/review.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-342
+packages/macgamingdb-server/dist/modules/game/services/game-search.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-95
+packages/macgamingdb-server/dist/engine/api/trpc/app.context.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-23
+packages/macgamingdb-server/dist/modules/game/commands/backfill-game-slugs.command.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-50
+packages/macgamingdb-server/dist/modules/review/dtos/game-review-with-mac-config.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/dist/modules/review/dtos/game-stats.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-16
+packages/macgamingdb-server/dist/modules/review/dtos/play-method-with-other.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-shared/dist/utils/isDefined.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-6
+packages/macgamingdb-server/dist/modules/game/types/normalized-game-details.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/utils/parse-game-ref.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/engine/core-modules/scraper/services/web-scraper.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-56
+packages/macgamingdb-server/dist/command/command.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-33
+packages/macgamingdb-server/dist/modules/contributor/exceptions/contributor.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-api-base-url.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/everymac-family-urls.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/constants/r2-public-url.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/database/drizzle.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-54
+packages/macgamingdb-server/dist/modules/mac-config/commands/populate-mac-configs.command.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-134
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-algorithm.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/game/dtos/game-list-item.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/modules/library/dtos/library-status.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-server/dist/modules/game/exceptions/game.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/mac-config/utils/parse-mac-specification.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/modules/game/dtos/cover-art.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/modules.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-30
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/get-game-by-steam-id.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/modules/game/interfaces/game-source-driver.interface.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/mac-config/utils/convert-mac-config-identifier-to-new-format.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-17
+packages/macgamingdb-server/dist/engine/api/trpc/auth.middleware.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-51
+packages/macgamingdb-emails/dist/emails/magic-link.d.ts
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-9
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/normalize-igdb-game-details.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-66
+packages/macgamingdb-server/dist/engine/utils/get-region.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-31
+packages/macgamingdb-server/dist/modules/game/utils/generate-unique-game-slug.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-29
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/verify-state-token.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-7
+packages/macgamingdb-server/dist/modules/contributor/contributor.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/modules/mac-config/mac-config.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-23
+packages/macgamingdb-server/dist/modules/review/exceptions/review.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-server/dist/modules/review/commands/backfill-aggregated-performance.command.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-102
+package.json
+  s_9ebfe402b13a9b::t_9c628fb628983d 13,19-24,32-34
+packages/macgamingdb-server/dist/modules/traffic/routers/traffic.router.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-64
+packages/macgamingdb-shared/package.json
+  s_9ebfe402b13a9b::t_c0723843fcad00 6-12
+packages/macgamingdb-server/dist/engine/core-modules/logger/create-logger.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-40
+packages/macgamingdb-server/dist/modules/game/dtos/game-search-result.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/engine/core-modules/scraper/constants/oxylabs-api-endpoint.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+scripts/test-production-migration.ts
+  s_9ebfe402b13a9b::t_01f602c4035f63 23-24
+packages/macgamingdb-server/dist/modules/review/dtos/my-review.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-server/dist/modules/contributor/services/contributor.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-153
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/normalize-steam-game-details.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-22
+Dockerfile.web
+  s_9ebfe402b13a9b::t_c59343790c185a 1,10-12,15-17,19,28
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-game-fields.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-30
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-config.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-12
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/search-steam.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-43
+packages/macgamingdb-server/src/database/commands/migrate-database.command.ts
+  s_9ebfe402b13a9b::t_b3b3ac00092765 17
+  s_9ebfe402b13a9b::t_e88d0f563f1622 112-119
+  s_9ebfe402b13a9b::t_98e6fac5b8ec70 6-7
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/types/igdb-game-data.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/get-steam-app-id-from-igdb.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-11
+packages/macgamingdb-server/dist/database/database.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-28
+packages/macgamingdb-server/dist/modules/pricing/exceptions/pricing.exception.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-8
+packages/macgamingdb-shared/tsconfig.json
+  s_9ebfe402b13a9b::t_e6776c710a3667 3-5,11,13
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/igdb-image-url.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-6
+packages/macgamingdb-server/dist/modules/library/drivers/steam/types/steam-sync-result.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-13
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/get-app-origin.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-13
+packages/macgamingdb-server/dist/modules/game/dtos/rating-counts.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/get-state-token-key.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-12
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-region.type.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-3
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-default-region.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/engine/api/trpc/map-custom-exception-to-trpc-error.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-42
+packages/macgamingdb-server/dist/modules/game/constants/game-sources.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/services/file-storage.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-50
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/everymac-request-delay-ms.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/review/dtos/upload-url.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-10
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/macbook-neo-specifications.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-18
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor-detail.dto.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/modules/library/services/library.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-141
+packages/macgamingdb-server/dist/database/constants/drizzle-client.constant.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-5
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/services/igdb-api-client.service.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-142
+packages/macgamingdb-server/dist/engine/core-modules/scraper/scraper.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/utils/extract-key-from-url.util.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-14
+packages/macgamingdb-server/dist/modules/traffic/traffic.module.js
+  s_9ebfe402b13a9b::t_14d4052da49c1c 1-21
+packages/macgamingdb-server/dist/@generated/server.js.map
+  s_9ebfe402b13a9b::t_67f64304d3fd3c 1
+packages/macgamingdb-server/dist/app.module.js.map
+  s_9ebfe402b13a9b::t_8656b03139b998 1
+packages/macgamingdb-server/dist/command/command.module.js.map
+  s_9ebfe402b13a9b::t_3a24a4840e9a6e 1
+packages/macgamingdb-server/dist/command/main.js.map
+  s_9ebfe402b13a9b::t_a2aed687789fb1 1
+packages/macgamingdb-server/dist/database/commands/migrate-database.command.js.map
+  s_9ebfe402b13a9b::t_d6fa2576c21737 1
+packages/macgamingdb-server/dist/database/constants/drizzle-client.constant.js.map
+  s_9ebfe402b13a9b::t_2dcd8c8879c028 1
+packages/macgamingdb-server/dist/database/database.module.js.map
+  s_9ebfe402b13a9b::t_81a07f442e1f17 1
+packages/macgamingdb-server/dist/database/drizzle.js.map
+  s_9ebfe402b13a9b::t_a8b92d70bcb006 1
+packages/macgamingdb-server/dist/database/schema.js.map
+  s_9ebfe402b13a9b::t_5dd5e33f82f7a0 1
+packages/macgamingdb-server/dist/database/types.js.map
+  s_9ebfe402b13a9b::t_1c03cc7d5bf31b 1
+packages/macgamingdb-server/dist/engine/api/trpc/app.context.js.map
+  s_9ebfe402b13a9b::t_d7114bb7c8c30f 1
+packages/macgamingdb-server/dist/engine/api/trpc/auth.middleware.js.map
+  s_9ebfe402b13a9b::t_6f8b99a77897f0 1
+packages/macgamingdb-server/dist/engine/api/trpc/exception-mapping.middleware.js.map
+  s_9ebfe402b13a9b::t_ab176d84470139 1
+packages/macgamingdb-server/dist/engine/api/trpc/map-custom-exception-to-trpc-error.util.js.map
+  s_9ebfe402b13a9b::t_43efa27c4d6100 1
+packages/macgamingdb-server/dist/engine/api/write-openapi-document.js.map
+  s_9ebfe402b13a9b::t_e6a7f6fc8537be 1
+packages/macgamingdb-server/dist/engine/core-modules/auth/auth.const.js.map
+  s_9ebfe402b13a9b::t_3462dcab852ea0 1
+packages/macgamingdb-server/dist/engine/core-modules/auth/better-auth-client.util.js.map
+  s_9ebfe402b13a9b::t_c864c274c4002c 1
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/constants/r2-public-url.constant.js.map
+  s_9ebfe402b13a9b::t_eed7a8d4f0347f 1
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/file-storage.module.js.map
+  s_9ebfe402b13a9b::t_68df0b21075160 1
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/services/file-storage.service.js.map
+  s_9ebfe402b13a9b::t_9c4c2319f1a437 1
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/utils/extract-key-from-url.util.js.map
+  s_9ebfe402b13a9b::t_9fc42baef12743 1
+packages/macgamingdb-server/dist/engine/core-modules/file-storage/utils/generate-screenshot-key.util.js.map
+  s_9ebfe402b13a9b::t_e8ab44f54669c7 1
+packages/macgamingdb-server/dist/engine/core-modules/logger/create-logger.util.js.map
+  s_9ebfe402b13a9b::t_97296dc2a8a8f2 1
+packages/macgamingdb-server/dist/engine/core-modules/page-revalidation/page-revalidation.module.js.map
+  s_9ebfe402b13a9b::t_471c6bbf7e5f54 1
+packages/macgamingdb-server/dist/engine/core-modules/page-revalidation/page-revalidation.service.js.map
+  s_9ebfe402b13a9b::t_35019b81d2930e 1
+packages/macgamingdb-server/dist/engine/core-modules/scraper/constants/oxylabs-api-endpoint.constant.js.map
+  s_9ebfe402b13a9b::t_94a60b668e2a1e 1
+packages/macgamingdb-server/dist/engine/core-modules/scraper/scraper.module.js.map
+  s_9ebfe402b13a9b::t_8256e772cf8966 1
+packages/macgamingdb-server/dist/engine/core-modules/scraper/services/web-scraper.service.js.map
+  s_9ebfe402b13a9b::t_2eb2f8151f41e4 1
+packages/macgamingdb-server/dist/engine/exceptions/custom.exception.js.map
+  s_9ebfe402b13a9b::t_24a79132d2fb0a 1
+packages/macgamingdb-server/dist/engine/utils/get-region.util.js.map
+  s_9ebfe402b13a9b::t_6d5cdc71ff939b 1
+packages/macgamingdb-server/dist/main.js.map
+  s_9ebfe402b13a9b::t_81e04083e6bcb2 1
+packages/macgamingdb-server/dist/modules/contributor/contributor.module.js.map
+  s_9ebfe402b13a9b::t_40880bb658ac10 1
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor-detail.dto.js.map
+  s_9ebfe402b13a9b::t_b118fece48a59e 1
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor-review.dto.js.map
+  s_9ebfe402b13a9b::t_663e79823e20d2 1
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributor.dto.js.map
+  s_9ebfe402b13a9b::t_0f6b4d1057968f 1
+packages/macgamingdb-server/dist/modules/contributor/dtos/contributors-page.dto.js.map
+  s_9ebfe402b13a9b::t_ea3489dc7f4365 1
+packages/macgamingdb-server/dist/modules/contributor/exceptions/contributor.exception.js.map
+  s_9ebfe402b13a9b::t_f55ba5d36e778f 1
+packages/macgamingdb-server/dist/modules/contributor/routers/contributor.router.js.map
+  s_9ebfe402b13a9b::t_e08ebdc7ec9c4b 1
+packages/macgamingdb-server/dist/modules/contributor/services/contributor.service.js.map
+  s_9ebfe402b13a9b::t_4f649432a07d70 1
+packages/macgamingdb-server/dist/modules/game/commands/backfill-game-slugs.command.js.map
+  s_9ebfe402b13a9b::t_8a5800211501b2 1
+packages/macgamingdb-server/dist/modules/game/constants/game-sources.constant.js.map
+  s_9ebfe402b13a9b::t_d77877c18d74a3 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/external-game-source-steam.constant.js.map
+  s_9ebfe402b13a9b::t_d0a9b518628167 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-api-base-url.constant.js.map
+  s_9ebfe402b13a9b::t_6de5bca52d2b66 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-game-fields.constant.js.map
+  s_9ebfe402b13a9b::t_3369b1c181f7e5 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/igdb-website-category-official.constant.js.map
+  s_9ebfe402b13a9b::t_555c5e815f0a94 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/rate-limit-interval-ms.constant.js.map
+  s_9ebfe402b13a9b::t_f0be8b10df07ff 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/searchable-igdb-game-types.constant.js.map
+  s_9ebfe402b13a9b::t_f5ff5ce93160f0 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/token-refresh-margin-ms.constant.js.map
+  s_9ebfe402b13a9b::t_06db0acfddd50f 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/constants/twitch-token-url.constant.js.map
+  s_9ebfe402b13a9b::t_4c86281b60929f 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/services/igdb-api-client.service.js.map
+  s_9ebfe402b13a9b::t_e922bc8ab5cdf5 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/services/igdb-game-source.service.js.map
+  s_9ebfe402b13a9b::t_908445c8dbfb02 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/types/igdb-game-data.type.js.map
+  s_9ebfe402b13a9b::t_376d6b126bd042 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/escape-igdb-query-value.util.js.map
+  s_9ebfe402b13a9b::t_030c499e06593f 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/get-steam-app-id-from-igdb.util.js.map
+  s_9ebfe402b13a9b::t_cc2a15fed7af7a 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/igdb-image-url.util.js.map
+  s_9ebfe402b13a9b::t_2a6cb1f218fefe 1
+packages/macgamingdb-server/dist/modules/game/drivers/igdb/utils/normalize-igdb-game-details.util.js.map
+  s_9ebfe402b13a9b::t_6012fa160a6ec8 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/services/steam-game-source.service.js.map
+  s_9ebfe402b13a9b::t_70bc7449b3349a 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/types/steam-app-data.type.js.map
+  s_9ebfe402b13a9b::t_2911c357c935eb 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/types/steam-game-search-object.type.js.map
+  s_9ebfe402b13a9b::t_f4bea845a27e4a 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/get-game-by-steam-id.util.js.map
+  s_9ebfe402b13a9b::t_a35d3a3591fdcf 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/normalize-steam-game-details.util.js.map
+  s_9ebfe402b13a9b::t_3094304001042b 1
+packages/macgamingdb-server/dist/modules/game/drivers/steam/utils/search-steam.util.js.map
+  s_9ebfe402b13a9b::t_a79d2b2bd66c99 1
+packages/macgamingdb-server/dist/modules/game/dtos/cover-art.dto.js.map
+  s_9ebfe402b13a9b::t_a49357657f1023 1
+packages/macgamingdb-server/dist/modules/game/dtos/game-by-id.dto.js.map
+  s_9ebfe402b13a9b::t_e70554096cac1c 1
+packages/macgamingdb-server/dist/modules/game/dtos/game-list-item.dto.js.map
+  s_9ebfe402b13a9b::t_1c3d92aadbda6a 1
+packages/macgamingdb-server/dist/modules/game/dtos/game-prices.dto.js.map
+  s_9ebfe402b13a9b::t_14d4f411582122 1
+packages/macgamingdb-server/dist/modules/game/dtos/game-search-result.dto.js.map
+  s_9ebfe402b13a9b::t_c0cd7043e891fd 1
+packages/macgamingdb-server/dist/modules/game/dtos/games-page.dto.js.map
+  s_9ebfe402b13a9b::t_a4ef7cb3265649 1
+packages/macgamingdb-server/dist/modules/game/dtos/rating-counts.dto.js.map
+  s_9ebfe402b13a9b::t_1361857ea24796 1
+packages/macgamingdb-server/dist/modules/game/dtos/sitemap-entry.dto.js.map
+  s_9ebfe402b13a9b::t_7349af05aba1f1 1
+packages/macgamingdb-server/dist/modules/game/exceptions/game.exception.js.map
+  s_9ebfe402b13a9b::t_b3e2dc97241242 1
+packages/macgamingdb-server/dist/modules/game/game.module.js.map
+  s_9ebfe402b13a9b::t_8ce9b129dfd51e 1
+packages/macgamingdb-server/dist/modules/game/interfaces/game-source-driver.interface.js.map
+  s_9ebfe402b13a9b::t_76f1358f0ca002 1
+packages/macgamingdb-server/dist/modules/game/routers/game.router.js.map
+  s_9ebfe402b13a9b::t_51569c785839a0 1
+packages/macgamingdb-server/dist/modules/game/services/game-materialization.service.js.map
+  s_9ebfe402b13a9b::t_827300e6ae20d0 1
+packages/macgamingdb-server/dist/modules/game/services/game-search.service.js.map
+  s_9ebfe402b13a9b::t_3c51148f0f24ca 1
+packages/macgamingdb-server/dist/modules/game/services/game-slug-backfill.service.js.map
+  s_9ebfe402b13a9b::t_48a05903f730e0 1
+packages/macgamingdb-server/dist/modules/game/services/game.service.js.map
+  s_9ebfe402b13a9b::t_b097d76419231e 1
+packages/macgamingdb-server/dist/modules/game/types/game-ref.type.js.map
+  s_9ebfe402b13a9b::t_549b05dcb98ae3 1
+packages/macgamingdb-server/dist/modules/game/types/game-search-result.type.js.map
+  s_9ebfe402b13a9b::t_5b01a2339d2dfc 1
+packages/macgamingdb-server/dist/modules/game/types/game-source.type.js.map
+  s_9ebfe402b13a9b::t_6a9f580008e6a8 1
+packages/macgamingdb-server/dist/modules/game/types/normalized-game-details.type.js.map
+  s_9ebfe402b13a9b::t_991b70c9889324 1
+packages/macgamingdb-server/dist/modules/game/utils/dedupe-game-search-results-by-name-and-year.util.js.map
+  s_9ebfe402b13a9b::t_5755fde3b4b718 1
+packages/macgamingdb-server/dist/modules/game/utils/extract-release-year.util.js.map
+  s_9ebfe402b13a9b::t_f9806bfc7cad49 1
+packages/macgamingdb-server/dist/modules/game/utils/generate-unique-game-slug.util.js.map
+  s_9ebfe402b13a9b::t_294d512ccfb5a1 1
+packages/macgamingdb-server/dist/modules/game/utils/parse-game-ref.util.js.map
+  s_9ebfe402b13a9b::t_c18faa64455e2f 1
+packages/macgamingdb-server/dist/modules/game/utils/rank-game-search-results-by-relevance.util.js.map
+  s_9ebfe402b13a9b::t_9e9e5585014102 1
+packages/macgamingdb-server/dist/modules/game/utils/slugify-game-name.util.js.map
+  s_9ebfe402b13a9b::t_8cd958db06d5f4 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-algorithm.constant.js.map
+  s_9ebfe402b13a9b::t_afc50af14faf8c 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-issuer.constant.js.map
+  s_9ebfe402b13a9b::t_ca3cc299200faa 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/state-token-ttl.constant.js.map
+  s_9ebfe402b13a9b::t_72f33badaf0f3c 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-api-base-url.constant.js.map
+  s_9ebfe402b13a9b::t_c8a73506b64c36 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-library-insert-chunk-size.constant.js.map
+  s_9ebfe402b13a9b::t_e5dab74f7e356b 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/constants/steam-library-private-code.constant.js.map
+  s_9ebfe402b13a9b::t_a5f9ad877a39fb 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/exceptions/steam-library-private.exception.js.map
+  s_9ebfe402b13a9b::t_0d9aaf24baec6c 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-library-sync.service.js.map
+  s_9ebfe402b13a9b::t_0fa51cbe525f83 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-openid.service.js.map
+  s_9ebfe402b13a9b::t_1b38f2847baac3 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/services/steam-web-api.service.js.map
+  s_9ebfe402b13a9b::t_583baf83bc8c79 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/types/steam-owned-game.type.js.map
+  s_9ebfe402b13a9b::t_151b742e347a15 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/types/steam-sync-result.type.js.map
+  s_9ebfe402b13a9b::t_aa8b88cfb06ecc 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/get-app-origin.util.js.map
+  s_9ebfe402b13a9b::t_2dbfcdcce916c7 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/get-state-token-key.util.js.map
+  s_9ebfe402b13a9b::t_649751905c9fa2 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/issue-state-token.util.js.map
+  s_9ebfe402b13a9b::t_b4bacacf6b7f5e 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/to-library-entry-row.util.js.map
+  s_9ebfe402b13a9b::t_a50ea0a7d61585 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/verify-state-token-user-id.util.js.map
+  s_9ebfe402b13a9b::t_45decd9f8c1b1f 1
+packages/macgamingdb-server/dist/modules/library/drivers/steam/utils/verify-state-token.util.js.map
+  s_9ebfe402b13a9b::t_99e071889a2737 1
+packages/macgamingdb-server/dist/modules/library/dtos/library-entry.dto.js.map
+  s_9ebfe402b13a9b::t_a4e59fdda3b858 1
+packages/macgamingdb-server/dist/modules/library/dtos/library-link-url.dto.js.map
+  s_9ebfe402b13a9b::t_ec074fb2eab762 1
+packages/macgamingdb-server/dist/modules/library/dtos/library-status.dto.js.map
+  s_9ebfe402b13a9b::t_48ffcd8d72d949 1
+packages/macgamingdb-server/dist/modules/library/dtos/library-sync-result.dto.js.map
+  s_9ebfe402b13a9b::t_481c9069662c7c 1
+packages/macgamingdb-server/dist/modules/library/dtos/ok-result.dto.js.map
+  s_9ebfe402b13a9b::t_0c2d2b7af54abf 1
+packages/macgamingdb-server/dist/modules/library/exceptions/library.exception.js.map
+  s_9ebfe402b13a9b::t_7e6ac7cb12fcb3 1
+packages/macgamingdb-server/dist/modules/library/library.module.js.map
+  s_9ebfe402b13a9b::t_23d9da21386be8 1
+packages/macgamingdb-server/dist/modules/library/routers/library.router.js.map
+  s_9ebfe402b13a9b::t_68804f0d2ba89e 1
+packages/macgamingdb-server/dist/modules/library/services/library.service.js.map
+  s_9ebfe402b13a9b::t_df36e06a51d73d 1
+packages/macgamingdb-server/dist/modules/mac-config/commands/populate-mac-configs.command.js.map
+  s_9ebfe402b13a9b::t_43d7075ba134cc 1
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/everymac-family-urls.constant.js.map
+  s_9ebfe402b13a9b::t_5a9f71a464e53c 1
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/everymac-request-delay-ms.constant.js.map
+  s_9ebfe402b13a9b::t_bc0de28317072e 1
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/mac-ram-limits.constant.js.map
+  s_9ebfe402b13a9b::t_047ba5b6aeeaf3 1
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/constants/macbook-neo-specifications.constant.js.map
+  s_9ebfe402b13a9b::t_38275d1bb74128 1
+packages/macgamingdb-server/dist/modules/mac-config/drivers/everymac/services/everymac-scraper.service.js.map
+  s_9ebfe402b13a9b::t_e017223d3f4ccc 1
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-config-row.dto.js.map
+  s_9ebfe402b13a9b::t_e0a7ebb3bb65d7 1
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-config.dto.js.map
+  s_9ebfe402b13a9b::t_739d68916d9993 1
+packages/macgamingdb-server/dist/modules/mac-config/dtos/mac-specification.dto.js.map
+  s_9ebfe402b13a9b::t_da4461d7c1da24 1
+packages/macgamingdb-server/dist/modules/mac-config/exceptions/mac-config.exception.js.map
+  s_9ebfe402b13a9b::t_f12bf3bc80e78a 1
+packages/macgamingdb-server/dist/modules/mac-config/mac-config.module.js.map
+  s_9ebfe402b13a9b::t_32f85f1465266f 1
+packages/macgamingdb-server/dist/modules/mac-config/types/mac-specification.type.js.map
+  s_9ebfe402b13a9b::t_b0677868ccec24 1
+packages/macgamingdb-server/dist/modules/mac-config/utils/convert-mac-config-identifier-to-new-format.util.js.map
+  s_9ebfe402b13a9b::t_c1f1e1d8293540 1
+packages/macgamingdb-server/dist/modules/mac-config/utils/get-chipset-combinations.util.js.map
+  s_9ebfe402b13a9b::t_9f30b3eef610cf 1
+packages/macgamingdb-server/dist/modules/mac-config/utils/parse-mac-specification.util.js.map
+  s_9ebfe402b13a9b::t_934c268308d8cc 1
+packages/macgamingdb-server/dist/modules/modules.module.js.map
+  s_9ebfe402b13a9b::t_6598a707a18675 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-default-region.constant.js.map
+  s_9ebfe402b13a9b::t_3a296246b5496c 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-prices-endpoint.constant.js.map
+  s_9ebfe402b13a9b::t_d269cf205839b7 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/constants/gg-deals-supported-regions.constant.js.map
+  s_9ebfe402b13a9b::t_2d4afb28115b5f 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/services/ggdeals-api-client.service.js.map
+  s_9ebfe402b13a9b::t_7ba5c43a1481e6 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-api-response.type.js.map
+  s_9ebfe402b13a9b::t_6aefc8f49ed1a7 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-game-price.type.js.map
+  s_9ebfe402b13a9b::t_a3fdf137d15430 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/types/ggdeals-region.type.js.map
+  s_9ebfe402b13a9b::t_680da28182b76d 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/utils/is-gg-deals-region.util.js.map
+  s_9ebfe402b13a9b::t_2e8ce35cd7512b 1
+packages/macgamingdb-server/dist/modules/pricing/drivers/ggdeals/utils/resolve-gg-deals-region.util.js.map
+  s_9ebfe402b13a9b::t_a6e3b54e4369fc 1
+packages/macgamingdb-server/dist/modules/pricing/exceptions/pricing.exception.js.map
+  s_9ebfe402b13a9b::t_861303c396023f 1
+packages/macgamingdb-server/dist/modules/pricing/pricing.module.js.map
+  s_9ebfe402b13a9b::t_2fffc739494c3f 1
+packages/macgamingdb-server/dist/modules/review/commands/backfill-aggregated-performance.command.js.map
+  s_9ebfe402b13a9b::t_d41a0ec5b1bf9b 1
+packages/macgamingdb-server/dist/modules/review/commands/backfill-review-counts.command.js.map
+  s_9ebfe402b13a9b::t_454d72970cc87b 1
+packages/macgamingdb-server/dist/modules/review/dtos/create-review-result.dto.js.map
+  s_9ebfe402b13a9b::t_50eee36afecd33 1
+packages/macgamingdb-server/dist/modules/review/dtos/game-review-with-mac-config.dto.js.map
+  s_9ebfe402b13a9b::t_04a746c9acedf8 1
+packages/macgamingdb-server/dist/modules/review/dtos/game-review.dto.js.map
+  s_9ebfe402b13a9b::t_7aaceea305673e 1
+packages/macgamingdb-server/dist/modules/review/dtos/game-stats.dto.js.map
+  s_9ebfe402b13a9b::t_e84eebf6bdf8d1 1
+packages/macgamingdb-server/dist/modules/review/dtos/mutation-result.dto.js.map
+  s_9ebfe402b13a9b::t_895e8e7de71111 1
+packages/macgamingdb-server/dist/modules/review/dtos/my-review.dto.js.map
+  s_9ebfe402b13a9b::t_0dd7f9f8cdaf85 1
+packages/macgamingdb-server/dist/modules/review/dtos/my-reviews.dto.js.map
+  s_9ebfe402b13a9b::t_f670c03c6be45d 1
+packages/macgamingdb-server/dist/modules/review/dtos/play-method-with-other.dto.js.map
+  s_9ebfe402b13a9b::t_ea0b7638900022 1
+packages/macgamingdb-server/dist/modules/review/dtos/upload-url.dto.js.map
+  s_9ebfe402b13a9b::t_234d5fc53818e3 1
+packages/macgamingdb-server/dist/modules/review/exceptions/review.exception.js.map
+  s_9ebfe402b13a9b::t_f16e25105467a0 1
+packages/macgamingdb-server/dist/modules/review/review.module.js.map
+  s_9ebfe402b13a9b::t_bcb3c236d0439a 1
+packages/macgamingdb-server/dist/modules/review/routers/review.router.js.map
+  s_9ebfe402b13a9b::t_642a061673e40c 1
+packages/macgamingdb-server/dist/modules/review/services/review.service.js.map
+  s_9ebfe402b13a9b::t_bb914e24a63b26 1
+packages/macgamingdb-server/dist/modules/review/utils/calculate-average-performance.util.js.map
+  s_9ebfe402b13a9b::t_494e3035668222 1
+packages/macgamingdb-server/dist/modules/review/utils/calculate-translation-layer-stats.util.js.map
+  s_9ebfe402b13a9b::t_edfbce7f1e89f1 1
+packages/macgamingdb-server/dist/modules/review/utils/format-rating-label.util.js.map
+  s_9ebfe402b13a9b::t_9ef6489f3b7e2c 1
+packages/macgamingdb-server/dist/modules/review/utils/score-to-rating.util.js.map
+  s_9ebfe402b13a9b::t_87ce900aff13e1 1
+packages/macgamingdb-server/dist/modules/traffic/exceptions/traffic.exception.js.map
+  s_9ebfe402b13a9b::t_baf98bc5324c78 1
+packages/macgamingdb-server/dist/modules/traffic/routers/traffic.router.js.map
+  s_9ebfe402b13a9b::t_bd39a2aba19b5c 1
+packages/macgamingdb-server/dist/modules/traffic/services/traffic.service.js.map
+  s_9ebfe402b13a9b::t_0e8994f416d837 1
+packages/macgamingdb-server/dist/modules/traffic/traffic.module.js.map
+  s_9ebfe402b13a9b::t_a405ee8254b147 1
+packages/macgamingdb-server/dist/schema/index.js.map
+  s_9ebfe402b13a9b::t_8d64b80478560b 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0692146423c0d0d6f5933b9446a3322280e7d6d8",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
