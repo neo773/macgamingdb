@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { differenceInMinutes } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
 import { isNonEmptyArray } from '@sniptt/guards';
@@ -27,19 +27,9 @@ import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { LibraryErrorToastEffect } from '@/modules/library/components/LibraryErrorToastEffect';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
-// formatDistanceToNowStrict cannot reproduce this exact copy ("45d ago", not
-// "2 months ago"), so the unit cascade stays and only the diff uses date-fns.
 function formatRelative(iso: string | null): string {
   if (!iso) return 'never';
-  const minutes = differenceInMinutes(new Date(), new Date(iso), {
-    roundingMethod: 'round',
-  });
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.round(hours / 24);
-  return `${days}d ago`;
+  return formatDistanceToNow(new Date(iso), { addSuffix: true });
 }
 
 export function LibraryClient() {
