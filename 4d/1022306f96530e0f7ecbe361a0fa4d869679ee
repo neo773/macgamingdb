@@ -1,0 +1,109 @@
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_9ebfe402b13a9b::t_50eb894e6edb99 77-78
+  s_9ebfe402b13a9b::t_eeacd1e38c1284 179-183
+src/app/api/connections/steam/app-callback/route.ts
+  s_9ebfe402b13a9b::t_41153cccb040be 31-32
+  s_9ebfe402b13a9b::t_742c719ba62607 45
+packages/macgamingdb-server/src/modules/review/commands/backfill-aggregated-performance.command.ts
+  s_9ebfe402b13a9b::t_b3b20106f4446a 52-53
+src/modules/review/hooks/useCreateReview.ts
+  s_9ebfe402b13a9b::t_1c77dd0dda0163 103,105-106,110,114-115,129-130,138
+  s_9ebfe402b13a9b::t_c53797a68c1f1c 154-155
+src/modules/stats/utils/formatBytes.ts
+  s_9ebfe402b13a9b::t_da8c4c031c9a7c 3,5-10
+packages/macgamingdb-server/src/modules/library/services/library.service.ts
+  s_9ebfe402b13a9b::t_f24392cf351d75 120
+  s_9ebfe402b13a9b::t_ea668962727a2f 143,145-149
+  s_9ebfe402b13a9b::t_cad6af139e4a27 88-89,95
+  s_9ebfe402b13a9b::t_ffa565cfa8d252 156-162
+src/modules/review/components/CreateReviewForm/SoftwareVersionSelect.tsx
+  s_9ebfe402b13a9b::t_fd674b7da85337 66
+packages/macgamingdb-ui/src/utilities/WiggleWrapper/WiggleWrapper.tsx
+  s_9ebfe402b13a9b::t_f781e93640c59a 51-52,55-56,60-61
+src/modules/review/components/CreateReviewForm/PerformanceFields.tsx
+  s_9ebfe402b13a9b::t_9973e00e9f5978 25
+src/modules/search/components/SearchBar.tsx
+  s_9ebfe402b13a9b::t_89ac6caed75825 18
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_9ebfe402b13a9b::t_14ead3df1ba4c3 359,361-367
+src/app/blog/page.tsx
+  s_9ebfe402b13a9b::t_ae171f7a2ebfe5 42-45
+src/modules/review/components/SelectMacConfiguration.tsx
+  s_9ebfe402b13a9b::t_3829bfff3b22da 57-58
+  s_9ebfe402b13a9b::t_c3bcd842d8dc70 277
+  s_9ebfe402b13a9b::t_45a1798b051071 173-174
+  s_9ebfe402b13a9b::t_4c02b5d539a902 66-67
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_9ebfe402b13a9b::t_5401d33c883ed3 43-44
+src/app/api/connections/steam/callback/route.ts
+  s_9ebfe402b13a9b::t_aea65074cdd72c 73
+  s_9ebfe402b13a9b::t_fbcca619dde64a 86,89-90,98-99,102
+  s_9ebfe402b13a9b::t_721ff1c541b5f6 61
+src/app/api/auth/[...all]/route.ts
+  s_9ebfe402b13a9b::t_c4fe0b51be36d1 5,8,11,14
+src/modules/auth/components/AuthPrompt.tsx
+  s_9ebfe402b13a9b::t_8056cdd5b19d24 57,59
+  s_9ebfe402b13a9b::t_7ff7458a257afa 111-112
+src/modules/review/components/ExpandableReviewNote.tsx
+  s_9ebfe402b13a9b::t_f4757337b3062b 38-39,41
+src/modules/home/components/GameGrid.tsx
+  s_9ebfe402b13a9b::t_390ddbf9e6b678 26-27
+  s_9ebfe402b13a9b::t_f7e0498fff4dc7 86-88
+src/modules/library/components/LibraryErrorToastEffect.tsx
+  s_9ebfe402b13a9b::t_68a44db34ff5f0 12-14,19-20
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-library-sync.service.ts
+  s_9ebfe402b13a9b::t_96f5bd92f9d94d 45-46
+  s_9ebfe402b13a9b::t_ce731c0dcf7a06 60,65
+src/modules/stats/components/PerformanceIssuesCard.tsx
+  s_9ebfe402b13a9b::t_71d8607d6981e1 36
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/services/everymac-scraper.service.ts
+  s_9ebfe402b13a9b::t_efa024ec17260f 207-209
+  s_9ebfe402b13a9b::t_0443e9bae4971c 249-251
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_9ebfe402b13a9b::t_b15ad3c8358465 158-159
+  s_9ebfe402b13a9b::t_1674b2c2264d43 173-177
+  s_9ebfe402b13a9b::t_4be17f0ab89d35 190-192
+src/app/contributors/client.tsx
+  s_9ebfe402b13a9b::t_63e3d581dabcee 128,130
+src/app/stats/page.tsx
+  s_9ebfe402b13a9b::t_460c1b17b9b4a9 26,28-32
+src/modules/stats/components/StatsOverviewCards.tsx
+  s_9ebfe402b13a9b::t_f70d8b8c196721 20,23,54
+src/app/library/client.tsx
+  s_9ebfe402b13a9b::t_5af7fd4307b62a 37-42
+  s_9ebfe402b13a9b::t_42afefb9feea27 59-62
+  s_9ebfe402b13a9b::t_4fbb618066e48c 30-31,34-36
+  s_9ebfe402b13a9b::t_c2b0448ee68347 5
+packages/macgamingdb-server/src/modules/review/utils/calculate-average-performance.util.ts
+  s_9ebfe402b13a9b::t_d0cfa3156bf474 18-19
+src/modules/review/components/ScreenshotDisplay.tsx
+  s_9ebfe402b13a9b::t_c5db687a166e6e 64-65
+src/app/profile/client.tsx
+  s_9ebfe402b13a9b::t_f0adf1fba65030 172
+  s_9ebfe402b13a9b::t_0a7066622a3b8c 107
+src/modules/game/components/PriceDisplay.tsx
+  s_9ebfe402b13a9b::t_56a2e530bf8cf3 42,75,85,95
+  s_9ebfe402b13a9b::t_73f0fcdbd59697 34
+packages/macgamingdb-ui/src/display/UserAvatar/UserAvatar.tsx
+  s_9ebfe402b13a9b::t_02fbbf7a815119 14-15
+src/modules/trpc/trpc.ts
+  s_9ebfe402b13a9b::t_e0bfd8fd13b41f 9-11
+src/modules/home/hooks/useGameSearch.ts
+  s_9ebfe402b13a9b::t_25b42a05bad522 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4d1022306f96530e0f7ecbe361a0fa4d869679ee",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
