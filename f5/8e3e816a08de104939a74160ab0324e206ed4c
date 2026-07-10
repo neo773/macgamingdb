@@ -1,0 +1,97 @@
+src/modules/review/components/ReviewCard.tsx
+  s_9ebfe402b13a9b::t_15d1d413806c33 33-48,55
+packages/macgamingdb-server/src/@generated/server.ts
+  s_9ebfe402b13a9b::t_2fb4520e84eda1 23,25,83-85
+  s_9ebfe402b13a9b::t_91297c54fe8669 86
+package.json
+  s_9ebfe402b13a9b::t_25cdb7f5a5e0f2 17-22
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_9ebfe402b13a9b::t_b19891419abb18 79-80,84
+  s_9ebfe402b13a9b::t_d43e954fcd8690 28,31,34
+src/modules/review/hooks/useReviewDraft.ts
+  s_9ebfe402b13a9b::t_644533e1776abc 9,11
+  s_9ebfe402b13a9b::t_9ab7a2f1f02c2a 34
+packages/macgamingdb-server/src/command/main.ts
+  s_9ebfe402b13a9b::t_2cf068d9cff78c 1-11
+packages/macgamingdb-server/src/modules/game/dtos/sitemap-entry.dto.ts
+  s_9ebfe402b13a9b::t_0e9756c2ded9ce 1-7
+src/lib/trpc/server.ts
+  s_9ebfe402b13a9b::t_e817322017bc1f 4
+  s_9ebfe402b13a9b::t_f8d1713ad13929 25-45
+packages/macgamingdb-server/src/modules/review/commands/backfill-aggregated-performance.command.ts
+  s_9ebfe402b13a9b::t_4ba2bce0fcfba2 1-101
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_9ebfe402b13a9b::t_c06540508a5328 62-63
+src/app/my-reviews/client.tsx
+  s_9ebfe402b13a9b::t_8a507ba0414974 21
+  s_9ebfe402b13a9b::t_cca56e1c67724f 10
+packages/macgamingdb-server/src/modules/review/commands/backfill-review-counts.command.ts
+  s_9ebfe402b13a9b::t_3f83d6c4f7de1e 1-103
+packages/macgamingdb-server/src/modules/mac-config/exceptions/mac-config.exception.ts
+  s_9ebfe402b13a9b::t_1bdaba0a436c27 1-7
+packages/macgamingdb-server/src/modules/mac-config/utils/convert-mac-config-identifier-to-new-format.util.ts
+  s_9ebfe402b13a9b::t_8d53f33da4f987 1-28
+packages/macgamingdb-server/src/modules/mac-config/commands/populate-mac-configs.command.ts
+  s_9ebfe402b13a9b::t_a7b53ca6e336d6 1-149
+src/lib/auth/server.ts
+  s_9ebfe402b13a9b::t_d3aa8a7ec83517 1-13
+src/app/sitemap.ts
+  s_9ebfe402b13a9b::t_e61b5488f84e1a 2,7,10,12-14
+src/app/my-reviews/page.tsx
+  s_9ebfe402b13a9b::t_e247aeaa7caa24 1-2,8,14-15
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_9ebfe402b13a9b::t_7a95c4a618a7b0 450-467
+  s_9ebfe402b13a9b::t_ccc783edca3601 2-11
+packages/macgamingdb-server/src/command/command.module.ts
+  s_9ebfe402b13a9b::t_6734d369986ba1 1-16
+packages/macgamingdb-server/src/modules/game/routers/game.router.ts
+  s_9ebfe402b13a9b::t_114e67ce1f6134 114-123
+  s_9ebfe402b13a9b::t_306cfcb16f62f7 20
+  s_9ebfe402b13a9b::t_1e1b69f215eb07 113
+packages/macgamingdb-server/src/modules/mac-config/mac-config.module.ts
+  s_9ebfe402b13a9b::t_4c2e6f01aa200e 1-10
+packages/macgamingdb-server/src/modules/game/commands/backfill-game-slugs.command.ts
+  s_9ebfe402b13a9b::t_26d6163985d495 1-97
+src/app/contributors/[id]/page.tsx
+  s_9ebfe402b13a9b::t_6896a186e789f4 2,14,29,31-38,40-42
+  s_9ebfe402b13a9b::t_3524ed23873ea4 91-92,96,98
+src/app/library/page.tsx
+  s_9ebfe402b13a9b::t_b90e2f0771c544 2,8
+src/app/profile/page.tsx
+  s_9ebfe402b13a9b::t_657484798da878 2,8
+packages/macgamingdb-server/src/engine/core-modules/scraper/scraper.module.ts
+  s_9ebfe402b13a9b::t_8330a7514d4480 1-8
+packages/macgamingdb-server/src/modules/contributor/dtos/contributor-review.dto.ts
+  s_9ebfe402b13a9b::t_33240f63989456 22-23
+  s_9ebfe402b13a9b::t_af067969e4619b 3
+packages/macgamingdb-server/src/modules/mac-config/utils/__tests__/convert-mac-config-identifier-to-new-format.util.spec.ts
+  s_9ebfe402b13a9b::t_31dc001845244d 1-45
+bun.lock
+  s_61a2bcb1fdf469::t_b5edcbd0b4399e 124,584-585,594-595,654-655,1264-1265,1302-1303,1628-1629,1654-1655,1716-1717,1850-1851,2022-2023,2200-2201,2216,2650-2651,2670-2671,2764-2765,2784-2785,3028-3029,3260-3261,3442,3602-3603,3660-3663,3792-3793,3850-3851,3864-3865,3916-3917,3926-3927,4022-4023,4032-4033,4102-4103,4376-4377,4464-4465,4476-4477,4534-4535,4700-4701
+packages/macgamingdb-server/package.json
+  s_61a2bcb1fdf469::t_9672f37373a94d 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f58e3e816a08de104939a74160ab0324e206ed4c",
+  "prompts": {},
+  "sessions": {
+    "s_61a2bcb1fdf469": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a8623d4fc1ac4cf1d",
+        "model": "unknown"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    },
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
