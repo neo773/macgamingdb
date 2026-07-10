@@ -3,18 +3,16 @@ import Script from 'next/script';
 import { type Metadata } from 'next';
 import { permanentRedirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import { createServerHelpers } from '@/lib/trpc/server';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import { Container } from 'macgamingdb-ui/layout/Container';
-import { generateGameJsonLd } from '@/lib/utils/jsonLd';
-import {
-  GameDetailHeader,
-  GameInfoCard,
-  GameStatsCard,
-  ExperienceReportsSection,
-  GamePageError,
-} from '@/modules/game/components';
+import { generateGameJsonLd } from '@/modules/game/utils/generateGameJsonLd';
+import { GameDetailHeader } from '@/modules/game/components/GameDetailHeader';
+import { GameInfoCard } from '@/modules/game/components/GameInfoCard';
+import { GameStatsCard } from '@/modules/game/components/GameStatsCard';
+import { ExperienceReportsSection } from '@/modules/game/components/ExperienceReportsSection';
+import { GamePageError } from '@/modules/game/components/GamePageError';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations

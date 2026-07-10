@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from 'macgamingdb-ui/display/Table';
-import { formatNumber } from '@/lib/utils/format';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
 import { getQueryIntent } from '../utils/getQueryIntent';
-import { type TopQueriesItem } from '../types';
+import { type TopQueriesItem } from '../types/TopQueriesItem';
 
 interface ResourceIntensiveTableProps {
   queries: TopQueriesItem[];

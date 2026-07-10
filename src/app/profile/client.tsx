@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import { Container } from 'macgamingdb-ui/layout/Container';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
@@ -20,7 +20,7 @@ import {
   DialogFooter,
   DialogClose,
 } from 'macgamingdb-ui/feedback/Dialog';
-import { authClient } from '@/lib/auth/auth-client';
+import { authClient } from '@/modules/auth/authClient';
 
 interface ProfileUser {
   id: string;
@@ -29,7 +29,7 @@ interface ProfileUser {
   image: string | null;
 }
 
-export default function ProfileClient({ user }: { user: ProfileUser }) {
+export function ProfileClient({ user }: { user: ProfileUser }) {
   const router = useRouter();
   const [name, setName] = useState(user.name);
   const [isSaving, setIsSaving] = useState(false);

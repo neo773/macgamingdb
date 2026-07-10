@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-import { trpc, type RouterOutputs } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { trackEvent } from '@/lib/analytics/umami';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 
 type GameSearchResults = RouterOutputs['game']['search'];
 
@@ -17,7 +18,7 @@ type SearchBarProps = {
   ) => void;
 };
 
-export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
+export function SearchBar({ onResultsChange }: SearchBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

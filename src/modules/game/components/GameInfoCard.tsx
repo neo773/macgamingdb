@@ -1,5 +1,5 @@
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
-import ExpandableDescription from '@/modules/review/components/ExpandableDescription';
+import { ExpandableDescription } from '@/modules/review/components/ExpandableDescription';
 
 interface GameInfoCardProps {
   description: string;

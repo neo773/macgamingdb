@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from '@/lib/auth/server';
-import LibraryClient from './client';
+import { getServerSession } from '@/modules/auth/utils/getServerSession';
+import { LibraryClient } from './client';
 
 export const dynamic = 'force-dynamic';
 

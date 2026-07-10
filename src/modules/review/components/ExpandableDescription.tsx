@@ -7,7 +7,7 @@ interface ExpandableDescriptionProps {
   description: string;
 }
 
-export default function ExpandableDescription({
+export function ExpandableDescription({
   description,
 }: ExpandableDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);

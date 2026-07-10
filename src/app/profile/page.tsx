@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { getServerSession } from '@/lib/auth/server';
-import ProfileClient from './client';
+import { getServerSession } from '@/modules/auth/utils/getServerSession';
+import { ProfileClient } from './client';
 
 export const dynamic = 'force-dynamic';
 

@@ -14,7 +14,7 @@ import {
   PerformanceEnum,
   GraphicsSettingsEnum,
 } from 'macgamingdb-server/schema';
-import { transformPerformanceRating } from '../../utils';
+import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
 interface PerformanceFieldsProps {
   performance: Performance;

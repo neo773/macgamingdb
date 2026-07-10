@@ -1,10 +1,10 @@
 'use client';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import ScreenshotDisplay from './ScreenshotDisplay';
+import { ScreenshotDisplay } from './ScreenshotDisplay';
 import React from 'react';
 import { cn } from 'macgamingdb-ui/utilities/cn';
 
-const ExpandableReviewNote = ({
+export const ExpandableReviewNote = ({
   notes,
   screenshots,
 }: {
@@ -65,4 +65,3 @@ const ExpandableReviewNote = ({
     </div>
   );
 };
-export default ExpandableReviewNote;

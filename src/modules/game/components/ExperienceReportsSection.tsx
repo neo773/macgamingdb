@@ -1,6 +1,6 @@
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
-import CreateReviewDialog from '@/modules/review/components/CreateReviewDialog';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
+import { CreateReviewDialog } from '@/modules/review/components/CreateReviewDialog';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
 import { type GameReview, type MacConfig } from 'macgamingdb-server/drizzle/types';
 
@@ -32,7 +32,7 @@ export function ExperienceReportsSection({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
           {reviews.map((review) => (
-            <GameReviewCard review={review} key={review.id} />
+            <ReviewCard review={review} key={review.id} />
           ))}
         </div>
       ) : (

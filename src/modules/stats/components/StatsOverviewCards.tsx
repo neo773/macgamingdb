@@ -7,8 +7,10 @@ import {
   CardTitle,
 } from 'macgamingdb-ui/display/Card';
 import { Badge } from 'macgamingdb-ui/display/Badge';
-import { formatNumber, formatBytes, formatLatency } from '@/lib/utils/format';
-import { type Stats } from '../types';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
+import { formatBytes } from '@/modules/stats/utils/formatBytes';
+import { formatLatency } from '@/modules/stats/utils/formatLatency';
+import { type Stats } from '../types/Stats';
 
 interface StatsOverviewCardsProps {
   stats: Stats;

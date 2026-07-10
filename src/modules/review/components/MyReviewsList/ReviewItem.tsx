@@ -14,10 +14,10 @@ import {
 } from 'macgamingdb-ui/input/Select';
 import { WiggleWrapper } from 'macgamingdb-ui/utilities/WiggleWrapper';
 import { Save, X } from 'lucide-react';
-import { useReviewDraft } from '@/modules/review/hooks';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
-import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
-import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
+import { useReviewDraft } from '@/modules/review/hooks/useReviewDraft';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
+import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
+import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
 import { type SteamAppData } from 'macgamingdb-server/modules/game/drivers/steam/types/steam-app-data';
 import {
   PerformanceEnum,
@@ -25,8 +25,8 @@ import {
   SOFTWARE_VERSIONS,
   type Performance,
 } from 'macgamingdb-server/schema';
-import { type RouterOutputs } from '@/lib/trpc/provider';
-import { transformPerformanceRating } from '../../utils';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
+import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
 type MyReview = RouterOutputs['review']['listMine'][number];
 
@@ -69,7 +69,7 @@ export function ReviewItem({
           <X size={16} className="text-white" />
         </button>
       )}
-      <GameReviewCard
+      <ReviewCard
         review={review}
         className="pt-0"
         header={

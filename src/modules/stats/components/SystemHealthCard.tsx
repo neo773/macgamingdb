@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from 'macgamingdb-ui/display/Card';
-import { type Stats } from '../types';
+import { type Stats } from '../types/Stats';
 
 interface SystemHealthCardProps {
   stats: Stats;

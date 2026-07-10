@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
 import { X, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from 'macgamingdb-ui/display/Card';
@@ -9,7 +9,7 @@ import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { Badge } from 'macgamingdb-ui/display/Badge';
 
-export default function TrafficSourceWidget() {
+export function TrafficSourceBanner() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSource, setSelectedSource] = useState('');

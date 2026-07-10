@@ -1,6 +1,6 @@
-import { getServerSession } from '@/lib/auth/server';
-import { createServerHelpersWithAuth } from '@/lib/trpc/server';
-import MyReviewsClient from './client';
+import { getServerSession } from '@/modules/auth/utils/getServerSession';
+import { createServerHelpersWithAuth } from '@/modules/trpc/utils/createServerHelpersWithAuth';
+import { MyReviewsClient } from './client';
 
 export const dynamic = 'force-dynamic';
 

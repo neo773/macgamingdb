@@ -18,7 +18,7 @@ interface ScreenshotDisplayProps {
   className?: string;
 }
 
-export default function ScreenshotDisplay({
+export function ScreenshotDisplay({
   screenshots,
 }: ScreenshotDisplayProps) {
   const [open, setOpen] = useState(false);

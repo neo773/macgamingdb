@@ -2,7 +2,7 @@
 
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
-import { type RouterOutputs } from '@/lib/trpc/provider';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 interface GameGridProps {
   isLoading: boolean;

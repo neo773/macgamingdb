@@ -11,7 +11,7 @@ import {
 import { Button } from 'macgamingdb-ui/input/Button';
 import { PlusIcon } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import CreateReviewForm from './CreateReviewForm';
+import { CreateReviewForm } from './CreateReviewForm/CreateReviewForm';
 import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
 
 type AddReviewDialogProps = {
@@ -19,7 +19,7 @@ type AddReviewDialogProps = {
   gameName: string;
 };
 
-export default function CreateReviewDialog({
+export function CreateReviewDialog({
   gameId,
   gameName,
 }: AddReviewDialogProps) {

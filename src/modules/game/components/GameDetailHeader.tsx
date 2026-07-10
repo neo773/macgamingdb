@@ -1,4 +1,4 @@
-import { type RouterOutputs } from '@/lib/trpc/provider';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 interface GameDetailHeaderProps {
   game: RouterOutputs['game']['getById']['game'];

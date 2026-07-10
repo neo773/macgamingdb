@@ -3,7 +3,7 @@ import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { X, Upload } from 'lucide-react';
 import { toast } from 'sonner';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 
 interface ScreenshotData {
   file: File;
@@ -18,7 +18,7 @@ interface ScreenshotUploadProps {
   className?: string;
 }
 
-export default function ScreenshotUpload({
+export function ScreenshotUpload({
   gameId,
   onScreenshotsChange,
   maxFiles = 3,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { type RouterOutputs } from '@/lib/trpc/provider';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 type GameSearchResults = RouterOutputs['game']['search'];
 

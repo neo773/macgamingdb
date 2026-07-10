@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
-import { triggerConfettiSideCannons } from '@/lib/utils/confetti';
-import { trackEvent } from '@/lib/analytics/umami';
+import { triggerConfettiSideCannons } from '@/modules/review/utils/triggerConfettiSideCannons';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 import { useFormPreferences } from '@/modules/review/hooks/useFormPreferences';
 import {
   type PlayMethod,
@@ -16,7 +16,7 @@ import {
   GraphicsSettingsEnum,
   SOFTWARE_VERSIONS,
 } from 'macgamingdb-server/schema';
-import { type ReviewFormData } from '../types';
+import { type ReviewFormData } from '../types/ReviewFormData';
 
 interface MacConfig {
   identifier: string;

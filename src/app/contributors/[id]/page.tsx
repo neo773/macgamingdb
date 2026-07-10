@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation';
 import { TRPCClientError } from '@trpc/client';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
-import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
+import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
+import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
 
 import { formatDistance } from 'date-fns';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { Container } from 'macgamingdb-ui/layout/Container';
-import { createServerHelpers } from '@/lib/trpc/server';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
@@ -80,7 +80,7 @@ export default async function ContributorPage({
               {contributorReviews.map((review) => {
                 return (
                   <div key={review.id}>
-                    <GameReviewCard
+                    <ReviewCard
                       review={review}
                       className="pt-0"
                       header={

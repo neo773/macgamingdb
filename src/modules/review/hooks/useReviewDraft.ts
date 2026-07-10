@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { type inferRouterInputs } from '@trpc/server';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
 import { type AppRouter } from 'macgamingdb-server/generated';
-import { type RouterOutputs } from '@/lib/trpc/provider';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 type MyReview = RouterOutputs['review']['listMine'][number];
 

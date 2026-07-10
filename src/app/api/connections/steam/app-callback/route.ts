@@ -10,7 +10,7 @@ import { verifyStateTokenUserId } from 'macgamingdb-server/modules/library/drive
 import { SteamLibraryPrivateError } from 'macgamingdb-server/modules/library/drivers/steam/exceptions/steam-library-private.exception';
 import { SteamLibrarySyncService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-library-sync.service';
 import { SteamWebApiService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-web-api.service';
-import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
+import { getAppOrigin } from '@/modules/library/steam-connection/utils/getAppOrigin';
 
 export const dynamic = 'force-dynamic';
 

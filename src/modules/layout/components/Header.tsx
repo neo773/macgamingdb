@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Account from '@/components/Account/Account';
+import { Account } from '@/modules/auth/components/Account';
 import { Map, Menu, Trophy, X, Heart, Github, Star, Settings, LogOut, Library } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 import { DonationDialog } from './DonationDialog';
-import { authClient } from '@/lib/auth/auth-client';
+import { authClient } from '@/modules/auth/authClient';
 
-const Header = () => {
+export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const { data: session } = authClient.useSession();
@@ -163,5 +163,3 @@ const Header = () => {
     </div>
   );
 };
-
-export default Header;

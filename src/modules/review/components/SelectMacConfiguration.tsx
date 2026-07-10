@@ -20,8 +20,9 @@ import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
 import type { inferRouterOutputs } from '@trpc/server';
 
 import { type AppRouter } from 'macgamingdb-server/generated';
-import { trpc } from '@/lib/trpc/provider';
-import { getDeviceIcon, getHumanReadableFamily } from '@/modules/review/utils';
+import { trpc } from '@/modules/trpc/trpc';
+import { getDeviceIcon } from '@/modules/review/utils/getDeviceIcon';
+import { getHumanReadableFamily } from '@/modules/review/utils/getHumanReadableFamily';
 
 export type MacConfig =
   inferRouterOutputs<AppRouter>['review']['getMacConfigs'][number];
@@ -284,7 +285,7 @@ const SearchBar = memo(
   )
 );
 
-export default function SelectMacConfiguration({
+export function SelectMacConfiguration({
   selectedConfigIdentifier,
   onSelect,
   onBack,

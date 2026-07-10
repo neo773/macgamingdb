@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { toast } from 'sonner';
-import { authClient } from '@/lib/auth/auth-client';
-import { trackEvent } from '@/lib/analytics/umami';
+import { authClient } from '@/modules/auth/authClient';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 import { SignInWithApple } from './SignInWithApple';
 
 interface AuthPromptProps {
@@ -15,7 +15,7 @@ interface AuthPromptProps {
   onMagicLinkSent?: () => void;
 }
 
-export default function AuthPrompt({
+export function AuthPrompt({
   promptMessage = 'Sign in to leave a review and help the community.',
   className,
   magicLinkSent: externalMagicLinkSent,

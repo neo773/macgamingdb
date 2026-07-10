@@ -1,7 +1,7 @@
 import React from 'react';
 import { ButtonFilter } from 'macgamingdb-ui/input/ButtonFilter';
 import { PerformanceEnum } from 'macgamingdb-server/schema';
-import { type PerformanceFilter as PerformanceFilterType } from '@/lib/constants';
+import { type PerformanceFilter as PerformanceFilterType } from '@/modules/search/types/PerformanceFilter';
 import { type PerformanceLabel } from 'macgamingdb-server/modules/review/utils/format-rating-label';
 
 interface PerformanceFilterProps {

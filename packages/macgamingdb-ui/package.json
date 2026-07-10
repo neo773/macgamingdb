@@ -24,6 +24,7 @@
     "./feedback/Drawer": "./src/feedback/Drawer/Drawer.tsx",
     "./feedback/Popover": "./src/feedback/Popover/Popover.tsx",
     "./feedback/Toaster": "./src/feedback/Toaster/Toaster.tsx",
+    "./feedback/Confetti": "./src/feedback/Confetti/Confetti.tsx",
     "./layout/Container": "./src/layout/Container/Container.tsx",
     "./layout/Accordion": "./src/layout/Accordion/Accordion.tsx",
     "./layout/ScrollArea": "./src/layout/ScrollArea/ScrollArea.tsx",

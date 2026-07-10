@@ -1,6 +1,7 @@
 'use client';
 
-import { type PerformanceFilter, type PlayMethodFilter } from '@/lib/constants';
+import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
+import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 import { ChipsetFilter as ChipsetFilterComponent } from '@/modules/search/components/filters/ChipsetFilter';
 import { PlayMethodFilter as PlayMethodFilterComponent } from '@/modules/search/components/filters/PlayMethodFilter';
 import { PerformanceFilter as PerformanceFilterComponent } from '@/modules/search/components/filters/PerformanceFilter';

@@ -6,8 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
 import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/modules/library/drivers/steam/constants/steam-library-private-code.constant';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import { Container } from 'macgamingdb-ui/layout/Container';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
@@ -20,9 +20,9 @@ import {
   DialogFooter,
   DialogClose,
 } from 'macgamingdb-ui/feedback/Dialog';
-import { trpc } from '@/lib/trpc/provider';
-import { trackEvent } from '@/lib/analytics/umami';
-import { FLOW_ERROR } from '@/lib/steam-openid/flowError';
+import { trpc } from '@/modules/trpc/trpc';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
+import { FLOW_ERROR } from '@/modules/library/steam-connection/constants/FLOW_ERROR';
 import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
@@ -38,7 +38,7 @@ function formatRelative(iso: string | null): string {
   return `${d}d ago`;
 }
 
-export default function LibraryClient() {
+export function LibraryClient() {
   const searchParams = useSearchParams();
   const [unlinkOpen, setUnlinkOpen] = useState(false);
 

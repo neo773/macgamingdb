@@ -1,14 +1,13 @@
 import { type Metadata } from 'next';
-import { type Stats, type QueryAnalysis } from '@/modules/stats/types';
+import { type Stats } from '@/modules/stats/types/Stats';
+import { type QueryAnalysis } from '@/modules/stats/types/QueryAnalysis';
 import { getQueryIntent } from '@/modules/stats/utils/getQueryIntent';
-import {
-  StatsOverviewCards,
-  QueryPatternsCard,
-  PerformanceIssuesCard,
-  SystemHealthCard,
-  ResourceIntensiveTable,
-  SlowestQueriesTable,
-} from '@/modules/stats/components';
+import { StatsOverviewCards } from '@/modules/stats/components/StatsOverviewCards';
+import { QueryPatternsCard } from '@/modules/stats/components/QueryPatternsCard';
+import { PerformanceIssuesCard } from '@/modules/stats/components/PerformanceIssuesCard';
+import { SystemHealthCard } from '@/modules/stats/components/SystemHealthCard';
+import { ResourceIntensiveTable } from '@/modules/stats/components/ResourceIntensiveTable';
+import { SlowestQueriesTable } from '@/modules/stats/components/SlowestQueriesTable';
 import { readFileSync } from 'fs';
 
 export const dynamic = 'force-dynamic';

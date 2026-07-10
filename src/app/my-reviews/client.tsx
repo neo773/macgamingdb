@@ -2,20 +2,18 @@
 
 import Link from 'next/link';
 import { Button } from 'macgamingdb-ui/input/Button';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { ChevronLeft, Edit2 } from 'lucide-react';
 import { Container } from 'macgamingdb-ui/layout/Container';
-import { type RouterOutputs } from '@/lib/trpc/provider';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
-import { useMyReviews } from '@/modules/review/hooks';
-import {
-  DeleteConfirmDialog,
-  ReviewItem,
-} from '@/modules/review/components/MyReviewsList';
+import { useMyReviews } from '@/modules/review/hooks/useMyReviews';
+import { DeleteConfirmDialog } from '@/modules/review/components/MyReviewsList/DeleteConfirmDialog';
+import { ReviewItem } from '@/modules/review/components/MyReviewsList/ReviewItem';
 
-export default function MyReviewsClient({
+export function MyReviewsClient({
   userReviews,
 }: {
   userReviews: RouterOutputs['review']['listMine'];

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { formatDistance } from 'date-fns';
 import { UserAvatar } from 'macgamingdb-ui/display/UserAvatar';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
@@ -14,7 +14,7 @@ import { type AppRouter } from 'macgamingdb-server/generated';
 type ContributorsData =
   inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];
 
-export default function ContributorsClient({
+export function ContributorsClient({
   contributorsData,
 }: {
   contributorsData: ContributorsData;

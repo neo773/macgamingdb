@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { createServerHelpers } from '@/lib/trpc/server';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 
 export const revalidate = 3600; // 1 hour
 

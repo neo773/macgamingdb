@@ -2,25 +2,25 @@
 
 import { useRef, useEffect } from 'react';
 import Script from 'next/script';
-import { trpc } from '@/lib/trpc/provider';
-import SearchBar from '@/modules/search/components/SearchBar';
-import { type inferRouterOutputs } from '@trpc/server';
-import { type AppRouter } from 'macgamingdb-server/generated';
-import { homeJsonLd, faqJsonLd } from '@/lib/utils/jsonLd';
-import { useHomeFilters, useGameSearch } from '@/modules/home/hooks';
-import { HomeFilters, GameGrid } from '@/modules/home/components';
+import { trpc } from '@/modules/trpc/trpc';
+import { SearchBar } from '@/modules/search/components/SearchBar';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
+import { homeJsonLd } from '@/modules/home/utils/homeJsonLd';
+import { faqJsonLd } from '@/modules/home/utils/faqJsonLd';
+import { useHomeFilters } from '@/modules/home/hooks/useHomeFilters';
+import { useGameSearch } from '@/modules/home/hooks/useGameSearch';
+import { HomeFilters } from '@/modules/home/components/HomeFilters';
+import { GameGrid } from '@/modules/home/components/GameGrid';
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-
-type GamesPage = RouterOutput['game']['getGames'] & {
-  ratingCounts: RouterOutput['game']['getFilterCounts'];
+type GamesPage = RouterOutputs['game']['getGames'] & {
+  ratingCounts: RouterOutputs['game']['getFilterCounts'];
 };
 
-interface HomeClientProps {
+type HomeClientProps = {
   GamesPage: GamesPage;
-}
+};
 
-export default function HomeClient({ GamesPage }: HomeClientProps) {
+export function HomeClient({ GamesPage }: HomeClientProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const {

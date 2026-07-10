@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
-import Footer from '@/modules/layout/components/Footer';
-import Header from '@/modules/layout/components/Header';
-import HomeClient from './home-client';
-import { createServerHelpers } from '@/lib/trpc/server';
-import { createFilterConfig } from '@/lib/constants';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
+import { HomeClient } from './home-client';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
+import { createFilterConfig } from '@/modules/search/utils/createFilterConfig';
 import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const revalidate = 3600; // 1 hour

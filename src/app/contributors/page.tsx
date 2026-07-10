@@ -1,7 +1,7 @@
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { createServerHelpers } from '@/lib/trpc/server';
-import ContributorsClient from './client';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
+import { ContributorsClient } from './client';
 import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const dynamic = 'force-dynamic';

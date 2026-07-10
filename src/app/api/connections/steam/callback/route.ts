@@ -11,10 +11,11 @@ import { SteamOpenIdService } from 'macgamingdb-server/modules/library/drivers/s
 import { SteamLibraryPrivateError } from 'macgamingdb-server/modules/library/drivers/steam/exceptions/steam-library-private.exception';
 import { SteamLibrarySyncService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-library-sync.service';
 import { SteamWebApiService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-web-api.service';
-import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
-import { STATE_COOKIE_NAME } from '@/lib/steam-openid/stateCookieName';
-import { FLOW_ERROR, type FlowError } from '@/lib/steam-openid/flowError';
-import { verifyStateToken } from '@/lib/steam-openid/stateToken';
+import { getAppOrigin } from '@/modules/library/steam-connection/utils/getAppOrigin';
+import { STATE_COOKIE_NAME } from '@/modules/library/steam-connection/constants/STATE_COOKIE_NAME';
+import { FLOW_ERROR } from '@/modules/library/steam-connection/constants/FLOW_ERROR';
+import { type FlowError } from '@/modules/library/steam-connection/types/FlowError';
+import { verifyStateToken } from '@/modules/library/steam-connection/utils/verifyStateToken';
 
 export const dynamic = 'force-dynamic';
 

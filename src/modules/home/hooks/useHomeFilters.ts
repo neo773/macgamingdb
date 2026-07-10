@@ -2,15 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import {
-  SearchURLParamsKeys,
-  type PerformanceFilter,
-  createFilterConfig,
-  type PlayMethodFilter,
-  DEFAULT_PERFORMANCE_FILTER,
-  DEFAULT_CHIPSET_FILTER,
-  DEFAULT_PLAY_METHOD_FILTER,
-} from '@/lib/constants';
+import { SearchURLParamsKeys } from '@/modules/search/constants/SearchURLParamsKeys';
+import { DEFAULT_PERFORMANCE_FILTER } from '@/modules/search/constants/DEFAULT_PERFORMANCE_FILTER';
+import { DEFAULT_CHIPSET_FILTER } from '@/modules/search/constants/DEFAULT_CHIPSET_FILTER';
+import { DEFAULT_PLAY_METHOD_FILTER } from '@/modules/search/constants/DEFAULT_PLAY_METHOD_FILTER';
+import { createFilterConfig } from '@/modules/search/utils/createFilterConfig';
+import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
+import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 import { getGroupedChipsetCombinations } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
 import { PlayMethodEnum } from 'macgamingdb-server/schema';
 

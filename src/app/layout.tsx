@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist } from 'next/font/google';
-import { TRPCProvider } from '@/lib/trpc/provider';
+import { TRPCProvider } from '@/modules/trpc/components/TRPCProvider';
 import { Toaster } from 'macgamingdb-ui/feedback/Toaster';
 import Script from 'next/script';
 import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
