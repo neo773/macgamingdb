@@ -6,7 +6,7 @@ import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 import { createFilterConfig } from '@/modules/search/utils/createFilterConfig';
 import { Container } from 'macgamingdb-ui/layout/Container';
 
-export const revalidate = 3600; // 1 hour
+export const dynamic = 'force-dynamic';
 
 const Home = async () => {
   const defaultFilterConfig = createFilterConfig(

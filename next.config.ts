@@ -1,7 +1,7 @@
 import createMDX from "@next/mdx";
 
 const nextConfig = {
-  serverExternalPackages: ['@libsql/client'],
+  serverExternalPackages: ['@libsql/client', '@nestjs/common', 'reflect-metadata'],
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   output: 'standalone' as const,
   // Pinned because a package.json above the repo makes Turbopack infer the
