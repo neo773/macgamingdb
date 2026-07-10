@@ -1,73 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
-import { trpc } from '@/lib/trpc/provider';
-import { useDebounce, useDebouncedCallback } from 'use-debounce';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
-import { trackEvent } from '@/lib/analytics/umami';
-
 type SearchBarProps = {
-  onResultsChange?: (
-    results: SteamGameSearchObject[] | null,
-    isLoading: boolean,
-  ) => void;
+  value: string;
+  onChange: (value: string) => void;
+  isLoading?: boolean;
 };
 
-export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [debouncedQuery] = useDebounce(query, 300);
-
-  const { data, isLoading } = trpc.game.search.useQuery(
-    { query: debouncedQuery },
-    {
-      enabled: debouncedQuery.trim().length > 0,
-      placeholderData: (prev) => prev,
-    },
-  );
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    const currentQ = params.get('q') || '';
-
-    if (debouncedQuery === currentQ) return;
-
-    if (debouncedQuery) {
-      params.set('q', debouncedQuery);
-    } else {
-      params.delete('q');
-    }
-
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [debouncedQuery, pathname, router, searchParams]);
-
-  useEffect(() => {
-    if (onResultsChange) {
-      const results = debouncedQuery.trim() === '' ? null : data || null;
-      onResultsChange(results, isLoading);
-    }
-  }, [data, debouncedQuery, isLoading, onResultsChange]);
-
-  const trackSearch = useDebouncedCallback(() => {
-    trackEvent({ name: 'search-performed' });
-  }, 300);
-
+export const SearchBar = ({
+  value,
+  onChange,
+  isLoading = false,
+}: SearchBarProps) => {
   return (
     <div className="relative w-full max-w-4xl">
       <div className="relative">
         <input
           type="text"
-          value={query}
-          onChange={(e) => {
-            const next = e.target.value;
-            setQuery(next);
-            if (next.trim().length > 0) trackSearch();
-          }}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
           placeholder="Search for a game..."
           className="bg-input/30 w-full h-14 px-6 pr-12 rounded-full border-2 focus:outline-none focus:ring-2 focus:border-0 focus:ring-blue-400 border-input/70 text-lg backdrop-blur-sm  transition-all duration-200"
         />
@@ -100,4 +52,4 @@ export default function SearchBar({ onResultsChange }: SearchBarProps = {}) {
       </div>
     </div>
   );
-}
+};

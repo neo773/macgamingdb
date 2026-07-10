@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from 'macgamingdb-ui/input/Button';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
+} from 'macgamingdb-ui/feedback/Dialog';
 
 interface DeleteConfirmDialogProps {
   isOpen: boolean;
@@ -17,12 +17,12 @@ interface DeleteConfirmDialogProps {
   onConfirm: () => void;
 }
 
-export function DeleteConfirmDialog({
+export const DeleteConfirmDialog = ({
   isOpen,
   isDeleting,
   onClose,
   onConfirm,
-}: DeleteConfirmDialogProps) {
+}: DeleteConfirmDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
@@ -44,4 +44,4 @@ export function DeleteConfirmDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

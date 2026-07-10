@@ -1,0 +1,1 @@
+export const IGDB_WEBSITE_CATEGORY_OFFICIAL = 1;

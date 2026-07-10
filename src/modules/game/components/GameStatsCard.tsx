@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 
 interface GameStats {
   totalReviews: number;
@@ -15,10 +15,12 @@ interface GameStatsCardProps {
   stats: GameStats | null;
 }
 
-export function GameStatsCard({ stats }: GameStatsCardProps) {
+export const GameStatsCard = ({ stats }: GameStatsCardProps) => {
   return (
     <div>
-      <h1 className="text-2xl text-white font-semibold">Mac Performance Stats</h1>
+      <h1 className="text-2xl text-white font-semibold">
+        Mac Performance Stats
+      </h1>
       <Card className="shadow-lg mb-8 mt-4 bg-primary-gradient">
         <CardContent>
           {stats ? (
@@ -27,33 +29,47 @@ export function GameStatsCard({ stats }: GameStatsCardProps) {
                 <h3 className="text-lg font-medium mb-2 text-gray-300">
                   Experience Reports
                 </h3>
-                <p className="text-3xl font-bold text-white">{stats.totalReviews}</p>
+                <p className="text-3xl font-bold text-white">
+                  {stats.totalReviews}
+                </p>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg font-medium mb-2 text-gray-300">Play Methods</h3>
+                <h3 className="text-lg font-medium mb-2 text-gray-300">
+                  Play Methods
+                </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between text-gray-300">
                     <span>Native</span>
-                    <span className="font-medium text-white">{stats.methods.native}</span>
+                    <span className="font-medium text-white">
+                      {stats.methods.native}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-300">
                     <span>CrossOver</span>
-                    <span className="font-medium text-white">{stats.methods.crossover}</span>
+                    <span className="font-medium text-white">
+                      {stats.methods.crossover}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-300">
                     <span>Parallels</span>
-                    <span className="font-medium text-white">{stats.methods.parallels}</span>
+                    <span className="font-medium text-white">
+                      {stats.methods.parallels}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-300">
                     <span>Other</span>
-                    <span className="font-medium text-white">{stats.methods.other}</span>
+                    <span className="font-medium text-white">
+                      {stats.methods.other}
+                    </span>
                   </div>
                 </div>
               </div>
 
               <div className="mb-4">
-                <h3 className="text-lg font-medium mb-2 text-gray-300">Average Rating</h3>
+                <h3 className="text-lg font-medium mb-2 text-gray-300">
+                  Average Rating
+                </h3>
                 <div className="flex items-center">
                   <div className="w-full bg-gray-700 rounded-full h-2.5 mr-2">
                     <div
@@ -76,4 +92,4 @@ export function GameStatsCard({ stats }: GameStatsCardProps) {
       </Card>
     </div>
   );
-}
+};

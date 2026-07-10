@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Container } from 'macgamingdb-ui/layout/Container';
 
-export function GamePageError() {
+export const GamePageError = () => {
   return (
     <div className="min-h-dvh flex flex-col bg-black">
       <Header />
@@ -26,8 +26,8 @@ export function GamePageError() {
               Game Information Temporarily Unavailable
             </h1>
             <p className="text-gray-300 mb-4">
-              We're having trouble loading the information for this game. This could be
-              due to:
+              We're having trouble loading the information for this game. This
+              could be due to:
             </p>
             <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
               <li>Temporary Steam API unavailability</li>
@@ -47,4 +47,4 @@ export function GamePageError() {
       <Footer />
     </div>
   );
-}
+};

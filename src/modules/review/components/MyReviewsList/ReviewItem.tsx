@@ -2,45 +2,46 @@
 
 import Link from 'next/link';
 import { formatDistance } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
+import { Textarea } from 'macgamingdb-ui/input/Textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { WiggleWrapper } from '@/components/ui/wiggle-wrapper';
+} from 'macgamingdb-ui/input/Select';
+import { WiggleWrapper } from 'macgamingdb-ui/utilities/WiggleWrapper';
 import { Save, X } from 'lucide-react';
-import { useReviewDraft } from '@/modules/review/hooks';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
-import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
-import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
+import { useReviewDraft } from '@/modules/review/hooks/useReviewDraft';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
+import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
+import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
+import { type SteamAppData } from 'macgamingdb-server/modules/game/drivers/steam/types/steam-app-data';
 import {
   PerformanceEnum,
   PlayMethodEnum,
   SOFTWARE_VERSIONS,
   type Performance,
-} from '@macgamingdb/server/schema';
-import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
-import { transformPerformanceRating } from '../../utils';
+} from 'macgamingdb-server/schema';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
+import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
-type ReviewWithGame = GameReview & { game: Game };
+type MyReview = RouterOutputs['review']['listMine'][number];
 
 interface ReviewItemProps {
-  review: ReviewWithGame;
+  review: MyReview;
   isEditing: boolean;
   onRequestDelete: () => void;
 }
 
-export function ReviewItem({
+export const ReviewItem = ({
   review,
   isEditing,
   onRequestDelete,
-}: ReviewItemProps) {
+}: ReviewItemProps) => {
   const { draft, updateDraftField, hasUnsavedChanges, saveChanges, isSaving } =
     useReviewDraft(review);
 
@@ -54,7 +55,6 @@ export function ReviewItem({
       : SOFTWARE_VERSIONS.PARALLELS
     : [];
 
-  const gameDetails = JSON.parse(review.game.details ?? '{}') as SteamAppData;
   const screenshots = review.screenshots
     ? (JSON.parse(review.screenshots) as string[])
     : null;
@@ -70,19 +70,19 @@ export function ReviewItem({
           <X size={16} className="text-white" />
         </button>
       )}
-      <GameReviewCard
+      <ReviewCard
         review={review}
         className="pt-0"
         header={
           <div className="aspect-[460/215] relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
             <img
-              src={gameDetails.header_image}
-              alt={review.game.id}
+              src={review.gameHeaderImage ?? undefined}
+              alt={review.gameName ?? review.gameId}
               className="w-full h-full object-none"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-              <Link href={`/games/${review.gameId}`}></Link>
+              <Link href={`/games/${review.gameSlug ?? review.gameId}`}></Link>
               <div className="text-sm text-gray-300 mt-1">
                 Reviewed{' '}
                 {formatDistance(new Date(review.createdAt), new Date(), {
@@ -155,8 +155,8 @@ export function ReviewItem({
                   <Input
                     type="number"
                     value={draft.fps ?? ''}
-                    onChange={(e) => {
-                      const parsed = parseInt(e.target.value, 10);
+                    onChange={(event) => {
+                      const parsed = parseInt(event.target.value, 10);
                       updateDraftField('fps', isNaN(parsed) ? null : parsed);
                     }}
                     placeholder="e.g. 60"
@@ -170,8 +170,8 @@ export function ReviewItem({
                   <Input
                     type="text"
                     value={draft.resolution ?? ''}
-                    onChange={(e) =>
-                      updateDraftField('resolution', e.target.value || null)
+                    onChange={(event) =>
+                      updateDraftField('resolution', event.target.value || null)
                     }
                     placeholder="e.g. 1920x1080"
                   />
@@ -184,7 +184,9 @@ export function ReviewItem({
                 </h4>
                 <Textarea
                   value={draft.notes}
-                  onChange={(e) => updateDraftField('notes', e.target.value)}
+                  onChange={(event) =>
+                    updateDraftField('notes', event.target.value)
+                  }
                   className="bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 caret-blue-500 ring ring-blue-500"
                   placeholder="Add your thoughts about this game..."
                 />
@@ -218,7 +220,7 @@ export function ReviewItem({
                 </div>
               )}
 
-              {!review.notes && screenshots && screenshots.length > 0 && (
+              {!review.notes && isNonEmptyArray(screenshots) && (
                 <div className="border-t border-white/15 pt-3 mt-2">
                   <h4 className="text-sm font-medium text-gray-300">
                     Screenshots:
@@ -232,4 +234,4 @@ export function ReviewItem({
       />
     </WiggleWrapper>
   );
-}
+};

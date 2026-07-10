@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
-import { triggerConfettiSideCannons } from '@/lib/utils/confetti';
-import { trackEvent } from '@/lib/analytics/umami';
+import { triggerConfettiSideCannons } from '@/modules/review/utils/triggerConfettiSideCannons';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 import { useFormPreferences } from '@/modules/review/hooks/useFormPreferences';
 import {
   type PlayMethod,
@@ -15,8 +15,8 @@ import {
   PerformanceEnum,
   GraphicsSettingsEnum,
   SOFTWARE_VERSIONS,
-} from '@macgamingdb/server/schema';
-import { type ReviewFormData } from '../types';
+} from 'macgamingdb-server/schema';
+import { type ReviewFormData } from '../types/ReviewFormData';
 
 interface MacConfig {
   identifier: string;
@@ -36,26 +36,41 @@ interface UseCreateReviewOptions {
   onOpenChange: (open: boolean) => void;
 }
 
-export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions) {
+const defaultSoftwareVersion = (playMethod: PlayMethod): string => {
+  if (playMethod === 'CROSSOVER') return SOFTWARE_VERSIONS.CROSSOVER[0];
+  if (playMethod === 'PARALLELS') return SOFTWARE_VERSIONS.PARALLELS[0];
+  return '';
+};
+
+export const useCreateReview = ({
+  gameId,
+  onOpenChange,
+}: UseCreateReviewOptions) => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState('');
-  const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>('form');
-  const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>(
+    'form',
+  );
+  const [userSelectedConfig, setUserSelectedConfig] =
+    useState<MacConfig | null>(null);
 
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
+
+  const initialPlayMethod = preferences.playMethod ?? PlayMethodEnum.options[1];
 
   const [formData, setFormData] = useState<ReviewFormData>({
     fps: '',
     resolution: '',
     notes: '',
     screenshots: [],
-    softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-    playMethod: preferences.playMethod ?? PlayMethodEnum.options[1],
-    translationLayer: preferences.translationLayer ?? TranslationLayerEnum.options[0],
+    softwareVersion: defaultSoftwareVersion(initialPlayMethod),
+    playMethod: initialPlayMethod,
+    translationLayer:
+      preferences.translationLayer ?? TranslationLayerEnum.options[0],
     performance: PerformanceEnum.options[1],
     graphicsSettings: GraphicsSettingsEnum.options[1],
     macConfigIdentifier: preferences.macConfigIdentifier || '',
@@ -67,35 +82,10 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
       enabled: !!preferences.macConfigIdentifier,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
-  useEffect(() => {
-    if (savedMacConfig) {
-      setSelectedConfig(savedMacConfig);
-    }
-  }, [savedMacConfig]);
-
-  useEffect(() => {
-    if (formData.playMethod) {
-      if (formData.playMethod === 'CROSSOVER') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-        }));
-      } else if (formData.playMethod === 'PARALLELS') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.PARALLELS[0],
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: '',
-        }));
-      }
-    }
-  }, [formData.playMethod]);
+  const selectedConfig = userSelectedConfig ?? savedMacConfig ?? null;
 
   const createReviewMutation = trpc.review.create.useMutation({
     onSuccess: () => {
@@ -117,18 +107,24 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const isSubmitting = createReviewMutation.isPending;
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = event.target;
+    setFormData((previousFormData) => ({ ...previousFormData, [name]: value }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((previousFormData) => ({ ...previousFormData, [name]: value }));
   };
 
   const handlePlayMethodSelect = (method: PlayMethod) => {
-    setFormData((prev) => ({ ...prev, playMethod: method }));
+    setFormData((previousFormData) => ({
+      ...previousFormData,
+      playMethod: method,
+      softwareVersion: defaultSoftwareVersion(method),
+    }));
     updatePreference('playMethod', method);
   };
 
@@ -138,9 +134,9 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handleMacConfigSelect = (config: MacConfig) => {
-    setSelectedConfig(config);
-    setFormData((prev) => ({
-      ...prev,
+    setUserSelectedConfig(config);
+    setFormData((previousFormData) => ({
+      ...previousFormData,
       macConfigIdentifier: config.identifier,
     }));
     updatePreference('macConfigIdentifier', config.identifier);
@@ -148,7 +144,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handleScreenshotsChange = (screenshots: string[]) => {
-    setFormData((prev) => ({ ...prev, screenshots }));
+    setFormData((previousFormData) => ({ ...previousFormData, screenshots }));
   };
 
   const handleSoftwareVersionChange = (value: string) => {
@@ -164,24 +160,32 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     setCustomVersionValue('');
   };
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (event?: React.FormEvent) => {
+    if (event) event.preventDefault();
 
-    if (!formData.playMethod || !formData.performance || !formData.macConfigIdentifier) {
+    if (
+      !formData.playMethod ||
+      !formData.performance ||
+      !formData.macConfigIdentifier
+    ) {
       setError('Please fill in all required fields.');
       return;
     }
 
     setError(null);
 
-    const finalSoftwareVersion = customVersion ? customVersionValue : formData.softwareVersion;
+    const finalSoftwareVersion = customVersion
+      ? customVersionValue
+      : formData.softwareVersion;
 
     try {
       await createReviewMutation.mutateAsync({
         gameId: gameId as string,
         playMethod: formData.playMethod,
         translationLayer:
-          formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null,
+          formData.playMethod === 'CROSSOVER'
+            ? formData.translationLayer
+            : null,
         performance: formData.performance,
         fps: formData.fps ? parseInt(formData.fps) : null,
         graphicsSettings: formData.graphicsSettings,
@@ -220,4 +224,4 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     handleCustomVersionCancel,
     handleSubmit,
   };
-}
+};

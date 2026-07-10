@@ -1,24 +1,23 @@
 /**
  * Generates openapi.json from the tRPC router's OpenAPI-annotated procedures.
  *
+ * Boots the NestJS AppModule and reads the runtime appRouter from nestjs-trpc's
+ * AppRouterHost. The Nest bootstrapping lives inside the server package (where
+ * its runtime dependencies resolve); this script only drives it.
+ *
  * Usage: bun run scripts/generate-openapi.ts [output-path]
  * Default output: ./openapi.json
  */
-import { writeFileSync } from 'node:fs';
-import { generateOpenApiDocument } from 'trpc-to-openapi';
-import { appRouter } from '../packages/server/src/routers/_app';
+import { writeOpenApiDocumentFile } from 'macgamingdb-server/engine/api/write-openapi-document';
 
 const outputPath = process.argv[2] ?? 'openapi.json';
 
-const openApiDocument = generateOpenApiDocument(appRouter, {
-  title: 'MacGamingDB API',
-  description: 'REST API for MacGamingDB — Mac gaming performance reports.',
-  version: '1.0.0',
-  baseUrl: 'https://macgamingdb.app/api/rest',
-  tags: ['games', 'reviews', 'mac-configs', 'contributors'],
-});
-
-writeFileSync(outputPath, JSON.stringify(openApiDocument, null, 2));
-
-const pathCount = Object.keys(openApiDocument.paths ?? {}).length;
-console.log(`Wrote ${outputPath} (${pathCount} paths)`);
+void writeOpenApiDocumentFile({ outputPath })
+  .then((pathCount) => {
+    console.log(`Wrote ${outputPath} (${pathCount} paths)`);
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

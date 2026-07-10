@@ -1,8 +1,8 @@
 'use client';
 
 import { Plus } from 'lucide-react';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
-import { formatRatingLabel } from '@macgamingdb/server/utils/formatRatingLabel';
+import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
+import { formatRatingLabel } from 'macgamingdb-server/modules/review/utils/format-rating-label';
 import { GameCard } from '@/modules/game/components/GameCard';
 
 const PERF_BADGE: Record<PerformanceRating, string> = {
@@ -14,12 +14,12 @@ const PERF_BADGE: Record<PerformanceRating, string> = {
   UNPLAYABLE: 'text-red-300 border-red-400/30',
 };
 
-function formatPlaytime(minutes: number): string | null {
+const formatPlaytime = (minutes: number): string | null => {
   if (minutes <= 0) return null;
   if (minutes < 60) return `${minutes}m`;
   const hours = Math.round(minutes / 60);
   return `${hours}h`;
-}
+};
 
 export interface LibraryGameCardProps {
   appId: string;
@@ -28,24 +28,32 @@ export interface LibraryGameCardProps {
   playtimeMinutes: number;
 }
 
-export function LibraryGameCard({
+export const LibraryGameCard = ({
   appId,
   name,
   rating,
   playtimeMinutes,
-}: LibraryGameCardProps) {
+}: LibraryGameCardProps) => {
   const playtime = formatPlaytime(playtimeMinutes);
 
   const unrated = !rating;
 
   return (
     <div className="relative group">
-      <div className={unrated ? 'opacity-50 grayscale transition-opacity duration-200 group-hover:opacity-70' : ''}>
+      <div
+        className={
+          unrated
+            ? 'opacity-50 grayscale transition-opacity duration-200 group-hover:opacity-70'
+            : ''
+        }
+      >
         <GameCard
           game={{
-            objectID: appId,
+            ref: appId,
+            slug: null,
             name: name ?? `App ${appId}`,
-            url: '',
+            coverImage: `https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg`,
+            releaseYear: null,
             performanceRating: rating ?? undefined,
           }}
         />
@@ -81,4 +89,4 @@ export function LibraryGameCard({
       </div>
     </div>
   );
-}
+};

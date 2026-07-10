@@ -1,37 +1,57 @@
 'use client';
 
 import { Store, KeyRound, TrendingDown } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { trpc } from '@/lib/trpc/provider';
-import { trackEvent } from '@/lib/analytics/umami';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
+import { trpc } from '@/modules/trpc/trpc';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
-  USD: '$', EUR: '€', GBP: '£', JPY: '¥', CAD: 'CA$', AUD: 'A$',
-  BRL: 'R$', PLN: 'zł', RUB: '₽', TRY: '₺', INR: '₹', CNY: '¥',
-  KRW: '₩', CHF: 'CHF', SEK: 'kr', NOK: 'kr', DKK: 'kr', MXN: 'MX$',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  JPY: '¥',
+  CAD: 'CA$',
+  AUD: 'A$',
+  BRL: 'R$',
+  PLN: 'zł',
+  RUB: '₽',
+  TRY: '₺',
+  INR: '₹',
+  CNY: '¥',
+  KRW: '₩',
+  CHF: 'CHF',
+  SEK: 'kr',
+  NOK: 'kr',
+  DKK: 'kr',
+  MXN: 'MX$',
 };
 
-function currencySymbol(code: string) {
+const currencySymbol = (code: string) => {
   return CURRENCY_SYMBOLS[code] ?? code + ' ';
-}
+};
 
 interface PriceDisplayProps {
   gameId: string;
   compact?: boolean;
 }
 
-export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
+export const PriceDisplay = ({ gameId, compact }: PriceDisplayProps) => {
   const { data: priceData } = trpc.game.getPrices.useQuery({ gameId });
 
   if (!priceData) return null;
 
-  const { currentRetail, currentKeyshops, historicalRetail, historicalKeyshops, currency } =
-    priceData.prices;
+  const {
+    currentRetail,
+    currentKeyshops,
+    historicalRetail,
+    historicalKeyshops,
+    currency,
+  } = priceData.prices;
 
   if (!currentRetail && !currentKeyshops && !historicalRetail) return null;
 
   const symbol = currencySymbol(currency);
-  const fmt = (v: string) => `${symbol}${v}`;
+  const formatPrice = (price: string) => `${symbol}${price}`;
   const bestCurrent = currentRetail ?? currentKeyshops;
   const bestHistorical = historicalRetail ?? historicalKeyshops;
 
@@ -39,7 +59,7 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
     if (!bestCurrent) return null;
     return (
       <span className="inline-flex items-center rounded-full bg-black/60 backdrop-blur-sm px-1.5 py-0.5 text-[10px] text-green-400 border border-gray-700/50 font-mono font-semibold">
-        {fmt(bestCurrent)}
+        {formatPrice(bestCurrent)}
       </span>
     );
   }
@@ -52,7 +72,9 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
           href={priceData.url}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackEvent({ name: 'ggdeals-click', data: { gameId } })}
+          onClick={() =>
+            trackEvent({ name: 'ggdeals-click', data: { gameId } })
+          }
           className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-gray-400 hover:border-white/20 hover:bg-white/10 hover:text-gray-300 transition-all"
         >
           <img
@@ -72,7 +94,9 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <Store className="size-3.5 text-gray-500" />
                   Official Stores
                 </span>
-                <span className="font-medium text-white">{fmt(currentRetail)}</span>
+                <span className="font-medium text-white">
+                  {formatPrice(currentRetail)}
+                </span>
               </div>
             )}
 
@@ -82,7 +106,9 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <KeyRound className="size-3.5 text-gray-500" />
                   Keyshops
                 </span>
-                <span className="font-medium text-white">{fmt(currentKeyshops)}</span>
+                <span className="font-medium text-white">
+                  {formatPrice(currentKeyshops)}
+                </span>
               </div>
             )}
 
@@ -92,7 +118,9 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
                   <TrendingDown className="size-3.5 text-gray-500" />
                   Historical Low
                 </span>
-                <span className="font-medium text-white">{fmt(bestHistorical)}</span>
+                <span className="font-medium text-white">
+                  {formatPrice(bestHistorical)}
+                </span>
               </div>
             )}
           </div>
@@ -100,4 +128,4 @@ export function PriceDisplay({ gameId, compact }: PriceDisplayProps) {
       </Card>
     </div>
   );
-}
+};

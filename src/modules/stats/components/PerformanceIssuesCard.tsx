@@ -1,13 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { formatNumber } from '@/lib/utils/format';
-import { type Stats } from '../types';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
+import { type Stats } from '../types/Stats';
 
 interface PerformanceIssuesCardProps {
   stats: Stats;
 }
 
-export function PerformanceIssuesCard({ stats }: PerformanceIssuesCardProps) {
+export const PerformanceIssuesCard = ({
+  stats,
+}: PerformanceIssuesCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -19,7 +26,9 @@ export function PerformanceIssuesCard({ stats }: PerformanceIssuesCardProps) {
             Slow queries (&gt;{stats.slowest_query_threshold}ms)
           </span>
           <Badge
-            variant={stats.slowest_queries.length > 5 ? 'destructive' : 'secondary'}
+            variant={
+              stats.slowest_queries.length > 5 ? 'destructive' : 'secondary'
+            }
           >
             {stats.slowest_queries.length}
           </Badge>
@@ -33,10 +42,13 @@ export function PerformanceIssuesCard({ stats }: PerformanceIssuesCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm">Worst latency</span>
           <Badge variant="destructive">
-            {Math.max(...stats.slowest_queries.map((q) => q.elapsed_ms))}ms
+            {Math.max(
+              ...stats.slowest_queries.map((query) => query.elapsed_ms),
+            )}
+            ms
           </Badge>
         </div>
       </CardContent>
     </Card>
   );
-}
+};

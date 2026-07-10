@@ -1,13 +1,14 @@
-import ExpandableReviewNote from './ExpandableReviewNote';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
+import { ExpandableReviewNote } from './ExpandableReviewNote';
 import React from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { isNonEmptyString } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { Card, CardHeader, CardContent } from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
 import clsx from 'clsx';
-import ScreenshotDisplay from './ScreenshotDisplay';
-import { type MacSpecification } from '@macgamingdb/server/scraper/EveryMacScraper';
-import { type Performance } from '@macgamingdb/server/schema';
-import { getHumanReadableFamily } from '@/modules/review/utils';
+import { ScreenshotDisplay } from './ScreenshotDisplay';
+import { type MacSpecification } from 'macgamingdb-server/modules/mac-config/types/mac-specification.type';
+import { type Performance } from 'macgamingdb-server/schema';
+import { getHumanReadableFamily } from '@/modules/review/utils/getHumanReadableFamily';
 
 const getPerformanceColor = (performance: Performance) => {
   const colors: Record<Performance, string> = {
@@ -31,13 +32,29 @@ const formatMethodName = (method: string) => {
   return formats[method] || method;
 };
 
-const GameReviewCard = ({
+type ReviewCardData = {
+  id: string;
+  playMethod: string;
+  softwareVersion: string | null;
+  translationLayer: string | null;
+  performance: Performance;
+  chipset: string;
+  chipsetVariant: string;
+  graphicsSettings: string | null;
+  fps: number | null;
+  resolution: string | null;
+  notes: string | null;
+  screenshots: string | null;
+  macConfig?: { metadata: string } | null;
+};
+
+export const ReviewCard = ({
   review,
   header,
   customReviewNote,
   className,
 }: {
-  review: GameReview & { macConfig?: MacConfig | null };
+  review: ReviewCardData;
   header?: React.ReactNode;
   customReviewNote?: React.ReactNode;
   className?: string;
@@ -178,9 +195,8 @@ const GameReviewCard = ({
                 />
               </div>
             )}
-            {review.notes === null &&
-              review.screenshots &&
-              review.screenshots.length > 0 && (
+            {!isDefined(review.notes) &&
+              isNonEmptyString(review.screenshots) && (
                 <div className="border-t border-white/15 pt-3 mt-2">
                   <h4 className="text-sm font-medium text-gray-300">
                     Screenshots:
@@ -200,5 +216,3 @@ const GameReviewCard = ({
     </Card>
   );
 };
-
-export default GameReviewCard;

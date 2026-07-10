@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import React, { useState } from 'react';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import { toast } from 'sonner';
-import { authClient } from '@/lib/auth/auth-client';
-import { trackEvent } from '@/lib/analytics/umami';
+import { authClient } from '@/modules/auth/authClient';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 import { SignInWithApple } from './SignInWithApple';
 
 interface AuthPromptProps {
@@ -15,26 +15,21 @@ interface AuthPromptProps {
   onMagicLinkSent?: () => void;
 }
 
-export default function AuthPrompt({
+export const AuthPrompt = ({
   promptMessage = 'Sign in to leave a review and help the community.',
   className,
   magicLinkSent: externalMagicLinkSent,
   onMagicLinkSent,
-}: AuthPromptProps) {
+}: AuthPromptProps) => {
   const { useSession } = authClient;
   const { data: session, isPending } = useSession();
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [internalMagicLinkSent, setInternalMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
-
-  useEffect(() => {
-    containerRef.current?.focus();
-  }, []);
 
   const handleLogin = async () => {
     if (!email || !email.includes('@')) {
@@ -59,9 +54,9 @@ export default function AuthPrompt({
         setInternalMagicLinkSent(true);
       }
       toast('Check your email for a sign-in link.');
-    } catch (err) {
+    } catch (caughtError) {
       setError('Something went wrong. Please try again.');
-      console.error(err);
+      console.error(caughtError);
     } finally {
       setIsLoggingIn(false);
     }
@@ -75,11 +70,21 @@ export default function AuthPrompt({
   }
 
   const formContent = (
-    <div ref={containerRef} tabIndex={-1} className={className}>
+    <div autoFocus tabIndex={-1} className={className}>
       {magicLinkSent ? (
         <div className="text-center py-2">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-300">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-neutral-300"
+            >
               <rect width="20" height="16" x="2" y="4" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
             </svg>
@@ -88,7 +93,8 @@ export default function AuthPrompt({
             Check your email
           </h3>
           <p className="text-sm text-neutral-400 leading-relaxed">
-            We sent a sign-in link to<br />
+            We sent a sign-in link to
+            <br />
             <span className="text-neutral-300">{email}</span>
           </p>
         </div>
@@ -113,8 +119,8 @@ export default function AuthPrompt({
             <Input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              onChange={(event) => setEmail(event.target.value)}
+              onKeyDown={(event) => event.key === 'Enter' && handleLogin()}
               placeholder="you@email.com"
               required
               autoFocus={false}
@@ -135,7 +141,9 @@ export default function AuthPrompt({
 
           <div className="flex items-center gap-3 my-5">
             <div className="h-px flex-1 bg-neutral-700" />
-            <span className="text-xs text-neutral-500 uppercase tracking-wide">or</span>
+            <span className="text-xs text-neutral-500 uppercase tracking-wide">
+              or
+            </span>
             <div className="h-px flex-1 bg-neutral-700" />
           </div>
 
@@ -164,4 +172,4 @@ export default function AuthPrompt({
       </div>
     </div>
   );
-}
+};

@@ -1,5 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
 import {
   Table,
   TableBody,
@@ -7,20 +12,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { formatNumber } from '@/lib/utils/format';
+} from 'macgamingdb-ui/display/Table';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
 import { getQueryIntent } from '../utils/getQueryIntent';
-import { type TopQueriesItem } from '../types';
+import { type TopQueriesItem } from '../types/TopQueriesItem';
 
 interface ResourceIntensiveTableProps {
   queries: TopQueriesItem[];
   threshold: number;
 }
 
-export function ResourceIntensiveTable({
+export const ResourceIntensiveTable = ({
   queries,
   threshold,
-}: ResourceIntensiveTableProps) {
+}: ResourceIntensiveTableProps) => {
   return (
     <Card>
       <CardHeader>
@@ -46,7 +51,9 @@ export function ResourceIntensiveTable({
               return (
                 <TableRow key={index}>
                   <TableCell>
-                    <Badge variant="outline">{getQueryIntent(query.query)}</Badge>
+                    <Badge variant="outline">
+                      {getQueryIntent(query.query)}
+                    </Badge>
                   </TableCell>
                   <TableCell className="max-w-md">
                     <code className="text-xs bg-muted px-2 py-1 rounded truncate block">
@@ -57,10 +64,16 @@ export function ResourceIntensiveTable({
                     {formatNumber(query.rows_read)}
                   </TableCell>
                   <TableCell className="text-right font-mono text-sm">
-                    {query.rows_written > 0 ? formatNumber(query.rows_written) : '—'}
+                    {query.rows_written > 0
+                      ? formatNumber(query.rows_written)
+                      : '—'}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Badge variant={totalImpact > 400000 ? 'destructive' : 'secondary'}>
+                    <Badge
+                      variant={
+                        totalImpact > 400000 ? 'destructive' : 'secondary'
+                      }
+                    >
                       {formatNumber(totalImpact)}
                     </Badge>
                   </TableCell>
@@ -72,4 +85,4 @@ export function ResourceIntensiveTable({
       </CardContent>
     </Card>
   );
-}
+};

@@ -1,40 +1,36 @@
 'use client';
 import React, { useState, useMemo } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { Dialog, DialogContent } from 'macgamingdb-ui/feedback/Dialog';
 
 const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
 
-function toPublicUrl(url: string): string {
+const toPublicUrl = (url: string): string => {
   try {
     const key = new URL(url).pathname.substring(1);
     return `${R2_PUBLIC_URL}/${key}`;
   } catch {
     return url;
   }
-}
+};
 
 interface ScreenshotDisplayProps {
   screenshots: string[];
   className?: string;
 }
 
-export default function ScreenshotDisplay({
-  screenshots,
-}: ScreenshotDisplayProps) {
+export const ScreenshotDisplay = ({ screenshots }: ScreenshotDisplayProps) => {
   const [open, setOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
-  const publicUrls = useMemo(
-    () => screenshots.map(toPublicUrl),
-    [screenshots]
-  );
+  const publicUrls = useMemo(() => screenshots.map(toPublicUrl), [screenshots]);
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index);
     setOpen(true);
   };
 
-  if (screenshots.length === 0) return null;
+  if (!isNonEmptyArray(screenshots)) return null;
 
   return (
     <div className="pt-2">
@@ -60,8 +56,8 @@ export default function ScreenshotDisplay({
               alt={`Screenshot ${index + 1}`}
               className="w-full h-full object-cover cursor-pointer"
               onClick={() => handleImageClick(index)}
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
+              onError={(event) => {
+                (event.target as HTMLImageElement).style.display = 'none';
               }}
             />
           </div>
@@ -75,4 +71,4 @@ export default function ScreenshotDisplay({
       )}
     </div>
   );
-}
+};

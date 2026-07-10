@@ -5,20 +5,27 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { formatNumber, formatBytes, formatLatency } from '@/lib/utils/format';
-import { type Stats } from '../types';
+} from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
+import { formatBytes } from '@/modules/stats/utils/formatBytes';
+import { formatLatency } from '@/modules/stats/utils/formatLatency';
+import { type Stats } from '../types/Stats';
 
 interface StatsOverviewCardsProps {
   stats: Stats;
 }
 
-export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
-  const avgLatency = stats.query_count > 0 ? stats.query_latency / stats.query_count : 0;
-  const queriesPerFrame = (stats.query_count / stats.current_frame_no).toFixed(1);
-  const writeReadRatio = ((stats.rows_written / stats.rows_read) * 100).toFixed(1);
-  const isLatencyGood = avgLatency < 500;
+export const StatsOverviewCards = ({ stats }: StatsOverviewCardsProps) => {
+  const averageLatency =
+    stats.query_count > 0 ? stats.query_latency / stats.query_count : 0;
+  const queriesPerFrame = (stats.query_count / stats.current_frame_no).toFixed(
+    1,
+  );
+  const writeReadRatio = ((stats.rows_written / stats.rows_read) * 100).toFixed(
+    1,
+  );
+  const isLatencyGood = averageLatency < 500;
   const hasHighActivity = stats.query_count > 10000;
 
   return (
@@ -49,7 +56,7 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
         <CardHeader>
           <CardDescription>Average Latency</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {formatLatency(avgLatency)}
+            {formatLatency(averageLatency)}
           </CardTitle>
           <CardAction>
             <Badge variant={isLatencyGood ? 'default' : 'destructive'}>
@@ -78,9 +85,12 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">Read-heavy workload</div>
+          <div className="line-clamp-1 flex gap-2 font-medium">
+            Read-heavy workload
+          </div>
           <div className="text-muted-foreground">
-            {formatNumber(stats.rows_read)} read, {formatNumber(stats.rows_written)} written
+            {formatNumber(stats.rows_read)} read,{' '}
+            {formatNumber(stats.rows_written)} written
           </div>
         </CardFooter>
       </Card>
@@ -93,7 +103,9 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
           </CardTitle>
           <CardAction>
             <Badge
-              variant={stats.write_requests_delegated > 0 ? 'outline' : 'secondary'}
+              variant={
+                stats.write_requests_delegated > 0 ? 'outline' : 'secondary'
+              }
             >
               {stats.write_requests_delegated > 0 ? 'Delegated' : 'Direct'}
             </Badge>
@@ -101,7 +113,9 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {stats.write_requests_delegated > 0 ? 'Using delegation' : 'Direct writes'}
+            {stats.write_requests_delegated > 0
+              ? 'Using delegation'
+              : 'Direct writes'}
           </div>
           <div className="text-muted-foreground">
             {stats.write_requests_delegated > 0
@@ -112,4 +126,4 @@ export function StatsOverviewCards({ stats }: StatsOverviewCardsProps) {
       </Card>
     </div>
   );
-}
+};

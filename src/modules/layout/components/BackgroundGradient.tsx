@@ -1,6 +1,6 @@
 'use client';
 
-export function BackgroundGradient() {
+export const BackgroundGradient = () => {
   return (
     <div className="hidden md:block fixed inset-0 w-full h-full z-0 pointer-events-none overflow-hidden grayscale-100">
       <div
@@ -38,4 +38,4 @@ export function BackgroundGradient() {
       />
     </div>
   );
-}
+};

@@ -2,8 +2,8 @@
 
 import React, { useState, useMemo, memo } from 'react';
 import { motion } from 'motion/react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Check,
   ChevronDown,
@@ -14,14 +14,16 @@ import {
   MemoryStick,
   Search,
 } from 'lucide-react';
-import { cn } from '@/components/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { cn } from 'macgamingdb-ui/utilities/cn';
+import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
+import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
-import { trpc } from '@/lib/trpc/provider';
-import { getDeviceIcon, getHumanReadableFamily } from '@/modules/review/utils';
+import { type AppRouter } from 'macgamingdb-server/generated';
+import { trpc } from '@/modules/trpc/trpc';
+import { getDeviceIcon } from '@/modules/review/utils/getDeviceIcon';
+import { getHumanReadableFamily } from '@/modules/review/utils/getHumanReadableFamily';
 
 export type MacConfig =
   inferRouterOutputs<AppRouter>['review']['getMacConfigs'][number];
@@ -52,8 +54,8 @@ const MacConfigGroupSkeleton = memo(() => (
   <div className="py-3">
     <Skeleton className="h-4 w-24 mb-3" />
     <div className="grid gap-3">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <MacConfigSkeleton key={i} />
+      {Array.from({ length: 3 }).map((_, index) => (
+        <MacConfigSkeleton key={index} />
       ))}
     </div>
   </div>
@@ -61,8 +63,8 @@ const MacConfigGroupSkeleton = memo(() => (
 
 const LoadingState = memo(() => (
   <div className="space-y-6">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <MacConfigGroupSkeleton key={i} />
+    {Array.from({ length: 3 }).map((_, index) => (
+      <MacConfigGroupSkeleton key={index} />
     ))}
   </div>
 ));
@@ -95,7 +97,7 @@ const MacConfigGuide = memo(() => {
             <ChevronDown
               className={cn(
                 'h-3 w-3 transition-transform group-hover:scale-110',
-                isExpanded && 'rotate-180'
+                isExpanded && 'rotate-180',
               )}
             />
           </button>
@@ -158,7 +160,7 @@ const MacConfigCard = memo(
       onClick={() => onSelect(config)}
       className={cn(
         'w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500',
-        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border'
+        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border',
       )}
     >
       <div className="flex items-center gap-4">
@@ -168,8 +170,8 @@ const MacConfigCard = memo(
             src={getDeviceIcon(config.metadata.family)}
             alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
             className="w-12 h-12 object-contain opacity-80"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
             }}
           />
         </div>
@@ -203,7 +205,7 @@ const MacConfigCard = memo(
         {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
       </div>
     </button>
-  )
+  ),
 );
 
 interface MacConfigGroupProps {
@@ -235,7 +237,7 @@ const MacConfigGroup = memo(
         ))}
       </div>
     </div>
-  )
+  ),
 );
 
 interface HeaderProps {
@@ -272,7 +274,7 @@ const SearchBar = memo(
       <Input
         placeholder="Search Mac models, chipsets..."
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className="pl-10 rounded-full"
       />
       {isSearching && (
@@ -281,14 +283,14 @@ const SearchBar = memo(
         </div>
       )}
     </div>
-  )
+  ),
 );
 
-export default function SelectMacConfiguration({
+export const SelectMacConfiguration = ({
   selectedConfigIdentifier,
   onSelect,
   onBack,
-}: SelectMacConfigurationProps) {
+}: SelectMacConfigurationProps) => {
   const [macConfigSearch, setMacConfigSearch] = useState('');
 
   const {
@@ -303,7 +305,7 @@ export default function SelectMacConfiguration({
     {
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
   const groupedConfigs = useMemo(() => {
@@ -324,11 +326,11 @@ export default function SelectMacConfiguration({
   };
 
   const renderContent = () => {
-    if (macConfigsLoading && macConfigs.length === 0) {
+    if (macConfigsLoading && !isNonEmptyArray(macConfigs)) {
       return <LoadingState />;
     }
 
-    if (macConfigs.length === 0 && !macConfigsLoading) {
+    if (!isNonEmptyArray(macConfigs) && !macConfigsLoading) {
       return <NoResultsState />;
     }
 
@@ -363,7 +365,7 @@ export default function SelectMacConfiguration({
       <SearchBar
         value={macConfigSearch}
         onChange={setMacConfigSearch}
-        isSearching={macConfigsFetching && macConfigs.length > 0}
+        isSearching={macConfigsFetching && isNonEmptyArray(macConfigs)}
       />
       <hr />
       <ScrollArea className="flex-1 min-h-0">
@@ -373,4 +375,4 @@ export default function SelectMacConfiguration({
       </ScrollArea>
     </motion.div>
   );
-}
+};

@@ -1,15 +1,16 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { and, eq } from 'drizzle-orm';
-import { createDrizzleClient } from '@macgamingdb/server/database';
+import { createDrizzleClient } from 'macgamingdb-server/database';
 import {
   LibraryProvider,
   userExternalAccounts,
-} from '@macgamingdb/server/drizzle/schema';
-import { verifySteamOpenIdResponse } from '@macgamingdb/server/services/steam-openid';
-import { verifyStateTokenUserId } from '@macgamingdb/server/services/steam-openid-state';
-import { SteamLibraryPrivateError } from '@macgamingdb/server/services/steam-api';
-import { syncSteamLibraryForUser } from '@macgamingdb/server/services/steam-library';
-import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
+} from 'macgamingdb-server/drizzle/schema';
+import { SteamOpenIdService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-openid.service';
+import { verifyStateTokenUserId } from 'macgamingdb-server/modules/library/drivers/steam/utils/verify-state-token-user-id.util';
+import { SteamLibraryPrivateError } from 'macgamingdb-server/modules/library/drivers/steam/exceptions/steam-library-private.exception';
+import { SteamLibrarySyncService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-library-sync.service';
+import { SteamWebApiService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-web-api.service';
+import { getAppOrigin } from '@/modules/library/steam-connection/utils/getAppOrigin';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,27 +21,30 @@ export const dynamic = 'force-dynamic';
 
 const APP_REDIRECT_SCHEME = 'macgamingdb://steam-link';
 
-function appRedirect(status: 'ok' | 'error', error?: string) {
+const appRedirect = (status: 'ok' | 'error', error?: string) => {
   const url = new URL(APP_REDIRECT_SCHEME);
   url.searchParams.set('status', status);
   if (error) url.searchParams.set('error', error);
   return NextResponse.redirect(url);
-}
+};
 
-export async function GET(req: NextRequest) {
-  const state = req.nextUrl.searchParams.get('state');
+export const GET = async (request: NextRequest) => {
+  const state = request.nextUrl.searchParams.get('state');
   if (!state) {
     return appRedirect('error', 'state-missing');
   }
 
-  const userId = await verifyStateTokenUserId(state);
+  const userId = await verifyStateTokenUserId({ token: state });
   if (!userId) {
     return appRedirect('error', 'state-invalid');
   }
 
   let steamId: string;
   try {
-    steamId = await verifySteamOpenIdResponse(req.url, `${getAppOrigin()}/`);
+    steamId = await new SteamOpenIdService().verifyResponse({
+      callbackUrl: request.url,
+      realm: `${getAppOrigin()}/`,
+    });
   } catch (error) {
     console.error('Steam OpenID verification failed (app flow):', error);
     return appRedirect('error', 'openid-failed');
@@ -69,7 +73,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    await syncSteamLibraryForUser(db, userId);
+    await new SteamLibrarySyncService(
+      db,
+      new SteamWebApiService(),
+    ).syncLibraryForUser({ userId });
   } catch (error) {
     if (error instanceof SteamLibraryPrivateError) {
       return appRedirect('error', 'library-private');
@@ -79,4 +86,4 @@ export async function GET(req: NextRequest) {
   }
 
   return appRedirect('ok');
-}
+};

@@ -1,28 +1,26 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
 import Script from 'next/script';
-import { trpc } from '@/lib/trpc/provider';
-import SearchBar from '@/modules/search/components/SearchBar';
-import { type inferRouterOutputs } from '@trpc/server';
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
-import { homeJsonLd, faqJsonLd } from '@/lib/utils/jsonLd';
-import { useHomeFilters, useGameSearch } from '@/modules/home/hooks';
-import { HomeFilters, GameGrid } from '@/modules/home/components';
+import { trpc } from '@/modules/trpc/trpc';
+import { SearchBar } from '@/modules/search/components/SearchBar';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
+import { homeJsonLd } from '@/modules/home/utils/homeJsonLd';
+import { faqJsonLd } from '@/modules/home/utils/faqJsonLd';
+import { useHomeFilters } from '@/modules/home/hooks/useHomeFilters';
+import { useGameSearch } from '@/modules/home/hooks/useGameSearch';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { HomeFilters } from '@/modules/home/components/HomeFilters';
+import { GameGrid } from '@/modules/home/components/GameGrid';
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-
-type GamesPage = RouterOutput['game']['getGames'] & {
-  ratingCounts: RouterOutput['game']['getFilterCounts'];
+type GamesPage = RouterOutputs['game']['getGames'] & {
+  ratingCounts: RouterOutputs['game']['getFilterCounts'];
 };
 
-interface HomeClientProps {
+type HomeClientProps = {
   GamesPage: GamesPage;
-}
+};
 
-export default function HomeClient({ GamesPage }: HomeClientProps) {
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
+export const HomeClient = ({ GamesPage }: HomeClientProps) => {
   const {
     performanceFilter,
     chipsetFilter,
@@ -38,11 +36,12 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
   } = useHomeFilters();
 
   const {
+    query,
     searchResults,
     isSearchLoading,
     isSearchMode,
-    handleSearchResultsChange,
-  } = useGameSearch();
+    handleQueryChange,
+  } = useGameSearch({ onClear: resetFilters });
 
   const initialGamesData = isDefaultFilter
     ? { pages: [GamesPage], pageParams: [undefined] }
@@ -61,12 +60,14 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
       enabled: !isSearchMode,
       staleTime: 30000,
       initialData: initialGamesData,
-    }
+    },
   );
 
   const filterCountsInput = {
     ...(filterConfig.chipset && { chipset: filterConfig.chipset }),
-    ...(filterConfig.chipsetVariant && { chipsetVariant: filterConfig.chipsetVariant }),
+    ...(filterConfig.chipsetVariant && {
+      chipsetVariant: filterConfig.chipsetVariant,
+    }),
     ...(filterConfig.playMethod && { playMethod: filterConfig.playMethod }),
   };
 
@@ -75,37 +76,15 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
     {
       staleTime: 30000,
       initialData: isDefaultFilter ? GamesPage.ratingCounts : undefined,
-    }
+    },
   );
 
-  useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isSearchMode || isFetchingNextPage)
-      return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(loadMoreRef.current);
-
-    return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSearchMode]);
-
-  const handleSearchChange = (
-    results: Parameters<typeof handleSearchResultsChange>[0],
-    isLoading: boolean
-  ) => {
-    handleSearchResultsChange(results, isLoading);
-
-    if (results === null && searchResults !== null) {
-      resetFilters();
-    }
-  };
+  const loadMoreRef = useInfiniteScroll<HTMLDivElement>({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    enabled: !isSearchMode,
+  });
 
   const allFilteredGames = gamesData?.pages.flatMap((page) => page.games) || [];
 
@@ -123,7 +102,11 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
       />
 
       <div className="flex justify-center md:px-8 md:p-0 mb-8">
-        <SearchBar onResultsChange={handleSearchChange} />
+        <SearchBar
+          value={query}
+          onChange={handleQueryChange}
+          isLoading={isSearchLoading}
+        />
       </div>
 
       {!searchResults && (
@@ -155,4 +138,4 @@ export default function HomeClient({ GamesPage }: HomeClientProps) {
       )}
     </>
   );
-}
+};

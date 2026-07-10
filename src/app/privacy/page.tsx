@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'How MacGamingDB collects, uses, and protects your data.',
 };
 
-export default function PrivacyPolicyPage() {
+const PrivacyPolicyPage = () => {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 text-gray-200">
       <h1 className="text-3xl font-bold text-white">Privacy Policy</h1>
@@ -45,7 +45,9 @@ export default function PrivacyPolicyPage() {
             How we use your data
           </h2>
           <ul className="mt-3 list-disc space-y-2 pl-6">
-            <li>To operate the service: showing reviews, stats, and your library.</li>
+            <li>
+              To operate the service: showing reviews, stats, and your library.
+            </li>
             <li>To attribute your reviews to your account.</li>
             <li>To send sign-in verification codes by email.</li>
           </ul>
@@ -57,7 +59,9 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-white">Data retention and deletion</h2>
+          <h2 className="text-xl font-semibold text-white">
+            Data retention and deletion
+          </h2>
           <p className="mt-3">
             You can delete individual reviews at any time from the app or
             website. Deleting your account removes your account data and all
@@ -70,7 +74,10 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold text-white">Contact</h2>
           <p className="mt-3">
             Questions about this policy:{' '}
-            <a className="text-blue-400 underline" href="mailto:support@macgamingdb.app">
+            <a
+              className="text-blue-400 underline"
+              href="mailto:support@macgamingdb.app"
+            >
               support@macgamingdb.app
             </a>
           </p>
@@ -78,4 +85,6 @@ export default function PrivacyPolicyPage() {
       </section>
     </main>
   );
-}
+};
+
+export default PrivacyPolicyPage;

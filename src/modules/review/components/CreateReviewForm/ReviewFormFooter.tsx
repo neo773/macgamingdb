@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { DialogClose, DialogFooter } from 'macgamingdb-ui/feedback/Dialog';
 
 interface ReviewFormFooterProps {
   isDrawer: boolean;
@@ -10,18 +10,23 @@ interface ReviewFormFooterProps {
   onClose: () => void;
 }
 
-export function ReviewFormFooter({
+export const ReviewFormFooter = ({
   isDrawer,
   isSubmitting,
   success,
   onClose,
-}: ReviewFormFooterProps) {
+}: ReviewFormFooterProps) => {
   const Footer = isDrawer ? 'div' : DialogFooter;
 
   if (isDrawer) {
     return (
       <div className="mt-auto flex flex-col gap-2 p-4">
-        <Button type="submit" disabled={isSubmitting || success} size="lg" className="w-full">
+        <Button
+          type="submit"
+          disabled={isSubmitting || success}
+          size="lg"
+          className="w-full"
+        >
           {isSubmitting ? 'Submitting...' : 'Submit Review'}
         </Button>
         <Button
@@ -41,7 +46,12 @@ export function ReviewFormFooter({
   return (
     <Footer>
       <DialogClose asChild>
-        <Button variant="secondary" type="button" size="lg" disabled={isSubmitting}>
+        <Button
+          variant="secondary"
+          type="button"
+          size="lg"
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
       </DialogClose>
@@ -50,4 +60,4 @@ export function ReviewFormFooter({
       </Button>
     </Footer>
   );
-}
+};

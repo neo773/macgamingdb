@@ -1,20 +1,20 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from 'macgamingdb-ui/input/Select';
 import {
   type Performance,
   type GraphicsSettings,
   PerformanceEnum,
   GraphicsSettingsEnum,
-} from '@macgamingdb/server/schema';
-import { transformPerformanceRating } from '../../utils';
+} from 'macgamingdb-server/schema';
+import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
 interface PerformanceFieldsProps {
   performance: Performance;
@@ -22,7 +22,7 @@ interface PerformanceFieldsProps {
   graphicsSettings: GraphicsSettings;
   resolution: string;
   onSelectChange: (name: string, value: string) => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const GRAPHICS_LABELS: Record<string, string> = {
@@ -32,14 +32,14 @@ const GRAPHICS_LABELS: Record<string, string> = {
   LOW: 'Low',
 };
 
-export function PerformanceFields({
+export const PerformanceFields = ({
   performance,
   fps,
   graphicsSettings,
   resolution,
   onSelectChange,
   onInputChange,
-}: PerformanceFieldsProps) {
+}: PerformanceFieldsProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -93,7 +93,9 @@ export function PerformanceFields({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Resolution (optional)</label>
+        <label className="block text-sm font-medium">
+          Resolution (optional)
+        </label>
         <Input
           type="text"
           name="resolution"
@@ -104,4 +106,4 @@ export function PerformanceFields({
       </div>
     </>
   );
-}
+};

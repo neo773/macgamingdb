@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1774715332493,
+      "tag": "0000_lucky_rhodey",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1774715340162,
+      "tag": "0001_stale_living_lightning",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1777657674541,
+      "tag": "0002_right_wendell_rand",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1777657751206,
+      "tag": "0003_talented_ravenous",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1783633524337,
+      "tag": "0004_curly_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1783639565251,
+      "tag": "0005_flippant_lionheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1783639634379,
+      "tag": "0006_slow_meggan",
+      "breakpoints": true
+    }
+  ]
+}

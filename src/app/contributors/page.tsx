@@ -1,12 +1,12 @@
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { createServerHelpers } from '@/lib/trpc/server';
-import ContributorsClient from './client';
-import { Container } from '@/components/ui/container';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
+import { ContributorsClient } from './client';
+import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ContributorsPage() {
+const ContributorsPage = async () => {
   const helpers = await createServerHelpers();
 
   const contributorsData = await helpers.contributor.getTopContributors.fetch({
@@ -32,4 +32,6 @@ export default async function ContributorsPage() {
       <Footer />
     </div>
   );
-}
+};
+
+export default ContributorsPage;

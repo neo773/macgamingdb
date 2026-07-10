@@ -1,13 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { formatNumber } from '@/lib/utils/format';
-import { type QueryAnalysis } from '../types';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from 'macgamingdb-ui/display/Card';
+import { Badge } from 'macgamingdb-ui/display/Badge';
+import { formatNumber } from '@/modules/stats/utils/formatNumber';
+import { type QueryAnalysis } from '../types/QueryAnalysis';
 
 interface QueryPatternsCardProps {
   queryAnalysis: Record<string, QueryAnalysis>;
 }
 
-export function QueryPatternsCard({ queryAnalysis }: QueryPatternsCardProps) {
+export const QueryPatternsCard = ({
+  queryAnalysis,
+}: QueryPatternsCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -20,12 +27,16 @@ export function QueryPatternsCard({ queryAnalysis }: QueryPatternsCardProps) {
             <div key={type} className="flex items-center justify-between">
               <div>
                 <p className="font-medium">{type}</p>
-                <p className="text-sm text-muted-foreground">{data.count} queries</p>
+                <p className="text-sm text-muted-foreground">
+                  {data.count} queries
+                </p>
               </div>
-              <Badge variant="outline">{formatNumber(data.totalRows)} rows</Badge>
+              <Badge variant="outline">
+                {formatNumber(data.totalRows)} rows
+              </Badge>
             </div>
           ))}
       </CardContent>
     </Card>
   );
-}
+};

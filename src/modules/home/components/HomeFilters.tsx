@@ -1,11 +1,12 @@
 'use client';
 
-import { type PerformanceFilter, type PlayMethodFilter } from '@/lib/constants';
+import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
+import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 import { ChipsetFilter as ChipsetFilterComponent } from '@/modules/search/components/filters/ChipsetFilter';
 import { PlayMethodFilter as PlayMethodFilterComponent } from '@/modules/search/components/filters/PlayMethodFilter';
 import { PerformanceFilter as PerformanceFilterComponent } from '@/modules/search/components/filters/PerformanceFilter';
-import { formatRatingLabel } from '@macgamingdb/server/utils/formatRatingLabel';
-import type { ChipsetGroup } from '@macgamingdb/server/utils/getChipsetCombinations';
+import { formatRatingLabel } from 'macgamingdb-server/modules/review/utils/format-rating-label';
+import type { ChipsetGroup } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
 
 interface HomeFiltersProps {
   chipsetFilter: string;
@@ -19,7 +20,7 @@ interface HomeFiltersProps {
   onPerformanceChange: (filter: PerformanceFilter) => void;
 }
 
-export function HomeFilters({
+export const HomeFilters = ({
   chipsetFilter,
   playMethodFilter,
   performanceFilter,
@@ -29,7 +30,7 @@ export function HomeFilters({
   onChipsetChange,
   onPlayMethodChange,
   onPerformanceChange,
-}: HomeFiltersProps) {
+}: HomeFiltersProps) => {
   return (
     <div className="mb-6">
       <div className="overflow-x-auto pb-2">
@@ -56,4 +57,4 @@ export function HomeFilters({
       </div>
     </div>
   );
-}
+};

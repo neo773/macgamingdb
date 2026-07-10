@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { type inferRouterInputs } from '@trpc/server';
-import { trpc } from '@/lib/trpc/provider';
+import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
-import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
+import { type AppRouter } from 'macgamingdb-server/generated';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
-type ReviewWithGame = GameReview & { game: Game };
+type MyReview = RouterOutputs['review']['listMine'][number];
 
 type UpdateReviewInput = inferRouterInputs<AppRouter>['review']['updateReview'];
 
@@ -22,16 +22,16 @@ const EDITABLE_REVIEW_FIELDS: readonly (keyof ReviewDraft)[] = [
   'softwareVersion',
 ];
 
-function draftMatchesOriginal(
+const draftMatchesOriginal = (
   draft: ReviewDraft,
   original: ReviewDraft,
-): boolean {
+): boolean => {
   return EDITABLE_REVIEW_FIELDS.every(
     (field) => draft[field] === original[field],
   );
-}
+};
 
-export function useReviewDraft(review: ReviewWithGame) {
+export const useReviewDraft = (review: MyReview) => {
   const router = useRouter();
 
   const originalDraft: ReviewDraft = {
@@ -70,5 +70,11 @@ export function useReviewDraft(review: ReviewWithGame) {
     });
   };
 
-  return { draft, updateDraftField, hasUnsavedChanges, saveChanges, isSaving: saveMutation.isPending };
-}
+  return {
+    draft,
+    updateDraftField,
+    hasUnsavedChanges,
+    saveChanges,
+    isSaving: saveMutation.isPending,
+  };
+};

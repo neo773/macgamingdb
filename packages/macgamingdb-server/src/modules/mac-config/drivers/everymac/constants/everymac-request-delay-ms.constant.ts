@@ -1,0 +1,1 @@
+export const EVERYMAC_REQUEST_DELAY_MS = 1000;

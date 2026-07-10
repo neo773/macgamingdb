@@ -1,0 +1,30 @@
+FROM oven/bun:1 AS deps
+WORKDIR /app
+COPY package.json bun.lock ./
+COPY packages/macgamingdb-server/package.json packages/macgamingdb-server/
+COPY packages/macgamingdb-shared/package.json packages/macgamingdb-shared/
+COPY packages/macgamingdb-emails/package.json packages/macgamingdb-emails/
+COPY packages/macgamingdb-ui/package.json packages/macgamingdb-ui/
+RUN bun install --frozen-lockfile
+
+FROM node:22-slim AS builder
+WORKDIR /app
+COPY --from=deps /app ./
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+# Baked into the routes manifest at build time; matches the compose service name.
+ENV INTERNAL_API_URL=http://api:4000
+RUN node node_modules/typescript/bin/tsc -p packages/macgamingdb-shared/tsconfig.json \
+  && node node_modules/typescript/bin/tsc -p packages/macgamingdb-emails/tsconfig.build.json \
+  && node node_modules/next/dist/bin/next build
+
+FROM node:22-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
+CMD ["node", "server.js"]

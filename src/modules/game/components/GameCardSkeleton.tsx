@@ -1,4 +1,4 @@
-export function GameCardSkeleton() {
+export const GameCardSkeleton = () => {
   return (
     <div className="relative">
       <div className="aspect-[460/215] rounded-xl overflow-hidden bg-gray-800 animate-pulse">
@@ -10,4 +10,4 @@ export function GameCardSkeleton() {
       </div>
     </div>
   );
-}
+};

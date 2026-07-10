@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,8 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { authClient } from '@/lib/auth/auth-client';
+} from 'macgamingdb-ui/feedback/Dialog';
+import { authClient } from '@/modules/auth/authClient';
 
 interface ProfileUser {
   id: string;
@@ -29,7 +29,7 @@ interface ProfileUser {
   image: string | null;
 }
 
-export default function ProfileClient({ user }: { user: ProfileUser }) {
+export const ProfileClient = ({ user }: { user: ProfileUser }) => {
   const router = useRouter();
   const [name, setName] = useState(user.name);
   const [isSaving, setIsSaving] = useState(false);
@@ -104,7 +104,7 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
                   </label>
                   <Input
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(event) => setName(event.target.value)}
                     placeholder="Enter your display name"
                     className="bg-gray-900/50 border-gray-700 text-white"
                   />
@@ -169,7 +169,7 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
                   </p>
                   <Input
                     value={deleteConfirm}
-                    onChange={(e) => setDeleteConfirm(e.target.value)}
+                    onChange={(event) => setDeleteConfirm(event.target.value)}
                     placeholder="DELETE"
                     className="bg-gray-900/50 border-gray-700 text-white"
                   />
@@ -195,4 +195,4 @@ export default function ProfileClient({ user }: { user: ProfileUser }) {
       <Footer />
     </div>
   );
-}
+};

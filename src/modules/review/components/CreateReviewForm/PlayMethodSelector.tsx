@@ -1,6 +1,6 @@
 'use client';
 
-import { type PlayMethod, PlayMethodEnum } from '@macgamingdb/server/schema';
+import { type PlayMethod, PlayMethodEnum } from 'macgamingdb-server/schema';
 
 interface PlayMethodSelectorProps {
   selectedMethod: PlayMethod;
@@ -13,7 +13,10 @@ const PLAY_METHOD_LABELS: Record<PlayMethod, string> = {
   PARALLELS: 'Parallels',
 };
 
-export function PlayMethodSelector({ selectedMethod, onSelect }: PlayMethodSelectorProps) {
+export const PlayMethodSelector = ({
+  selectedMethod,
+  onSelect,
+}: PlayMethodSelectorProps) => {
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium">Play Method</label>
@@ -45,4 +48,4 @@ export function PlayMethodSelector({ selectedMethod, onSelect }: PlayMethodSelec
       </div>
     </div>
   );
-}
+};

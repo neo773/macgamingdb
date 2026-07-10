@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Activity, BookOpen, Github, Map, Trophy } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 
-const Footer = () => {
+export const Footer = () => {
   return (
     <footer className="mt-auto w-full relative">
       <div className="max-w-7xl mx-auto px-8 py-12">
@@ -97,5 +97,3 @@ const Footer = () => {
     </footer>
   );
 };
-
-export default Footer;

@@ -1,15 +1,15 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { type PlayMethod, SOFTWARE_VERSIONS } from '@macgamingdb/server/schema';
+} from 'macgamingdb-ui/input/Select';
+import { type PlayMethod, SOFTWARE_VERSIONS } from 'macgamingdb-server/schema';
 
 interface SoftwareVersionSelectProps {
   playMethod: PlayMethod;
@@ -21,7 +21,7 @@ interface SoftwareVersionSelectProps {
   onCustomVersionCancel: () => void;
 }
 
-export function SoftwareVersionSelect({
+export const SoftwareVersionSelect = ({
   playMethod,
   softwareVersion,
   customVersion,
@@ -29,13 +29,15 @@ export function SoftwareVersionSelect({
   onVersionChange,
   onCustomVersionChange,
   onCustomVersionCancel,
-}: SoftwareVersionSelectProps) {
+}: SoftwareVersionSelectProps) => {
   if (playMethod !== 'CROSSOVER' && playMethod !== 'PARALLELS') {
     return <div></div>;
   }
 
   const versions =
-    playMethod === 'CROSSOVER' ? SOFTWARE_VERSIONS.CROSSOVER : SOFTWARE_VERSIONS.PARALLELS;
+    playMethod === 'CROSSOVER'
+      ? SOFTWARE_VERSIONS.CROSSOVER
+      : SOFTWARE_VERSIONS.PARALLELS;
 
   return (
     <div className="flex flex-col justify-center space-y-2">
@@ -63,15 +65,22 @@ export function SoftwareVersionSelect({
           <Input
             type="text"
             value={customVersionValue}
-            onChange={(e) => onCustomVersionChange(e.target.value)}
-            placeholder={playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'}
+            onChange={(event) => onCustomVersionChange(event.target.value)}
+            placeholder={
+              playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'
+            }
             className="flex-1"
           />
-          <Button type="button" variant="outline" size="sm" onClick={onCustomVersionCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onCustomVersionCancel}
+          >
             Cancel
           </Button>
         </div>
       )}
     </div>
   );
-}
+};

@@ -1,6 +1,6 @@
 import type { MDXComponents } from 'mdx/types';
 
-export function useMDXComponents(components: MDXComponents): MDXComponents {
+export const useMDXComponents = (components: MDXComponents): MDXComponents => {
   return {
     h1: ({ children }) => (
       <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-b from-white via-gray-100 to-gray-400 bg-clip-text text-transparent mb-6 leading-tight">
@@ -81,4 +81,4 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     td: ({ children }) => <td className="px-4 py-3">{children}</td>,
     ...components,
   };
-}
+};

@@ -1,6 +1,6 @@
 import React from 'react';
-import { SelectFilter } from '@/components/ui/select-filter';
-import { type PlayMethodFilter as PlayMethodFilterType } from '@/lib/constants';
+import { SelectFilter } from 'macgamingdb-ui/input/SelectFilter';
+import { type PlayMethodFilter as PlayMethodFilterType } from '@/modules/search/types/PlayMethodFilter';
 
 interface PlayMethodOption {
   value: string;

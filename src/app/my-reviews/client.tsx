@@ -1,25 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { ChevronLeft, Edit2 } from 'lucide-react';
-import { Container } from '@/components/ui/container';
-import { type Game, type GameReview } from '@macgamingdb/server/drizzle/types';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
-import { useMyReviews } from '@/modules/review/hooks';
-import {
-  DeleteConfirmDialog,
-  ReviewItem,
-} from '@/modules/review/components/MyReviewsList';
+import { useMyReviews } from '@/modules/review/hooks/useMyReviews';
+import { DeleteConfirmDialog } from '@/modules/review/components/MyReviewsList/DeleteConfirmDialog';
+import { ReviewItem } from '@/modules/review/components/MyReviewsList/ReviewItem';
 
-export default function MyReviewsClient({
+export const MyReviewsClient = ({
   userReviews,
 }: {
-  userReviews: (GameReview & { game: Game })[];
-}) {
+  userReviews: RouterOutputs['review']['listMine'];
+}) => {
   const {
     isEditing,
     editSessionKey,
@@ -47,7 +46,7 @@ export default function MyReviewsClient({
 
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Game Reviews</h1>
-          {userReviews.length > 0 && (
+          {isNonEmptyArray(userReviews) && (
             <Button
               variant="ghost"
               size="sm"
@@ -59,7 +58,7 @@ export default function MyReviewsClient({
           )}
         </div>
 
-        {userReviews.length === 0 ? (
+        {!isNonEmptyArray(userReviews) ? (
           <Card className="bg-primary-gradient">
             <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
               <h2 className="text-xl font-medium text-white">
@@ -93,4 +92,4 @@ export default function MyReviewsClient({
       <Footer />
     </div>
   );
-}
+};

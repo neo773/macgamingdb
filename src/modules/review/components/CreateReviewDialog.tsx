@@ -1,28 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from 'macgamingdb-ui/feedback/Dialog';
 import {
   Drawer,
   DrawerContent,
   DrawerTrigger,
   DrawerClose,
-} from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
+} from 'macgamingdb-ui/feedback/Drawer';
+import { Button } from 'macgamingdb-ui/input/Button';
 import { PlusIcon } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import CreateReviewForm from './CreateReviewForm';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { CreateReviewForm } from './CreateReviewForm/CreateReviewForm';
+import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
 
 type AddReviewDialogProps = {
   gameId: string;
   gameName: string;
 };
 
-export default function CreateReviewDialog({
+export const CreateReviewDialog = ({
   gameId,
   gameName,
-}: AddReviewDialogProps) {
+}: AddReviewDialogProps) => {
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -69,4 +73,4 @@ export default function CreateReviewDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

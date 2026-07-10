@@ -1,16 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { formatDistanceToNow } from 'date-fns';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
-import { STEAM_LIBRARY_PRIVATE_CODE } from '@macgamingdb/server/services/steam-api';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
-import { Container } from '@/components/ui/container';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/modules/library/drivers/steam/constants/steam-library-private-code.constant';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import {
   Dialog,
   DialogContent,
@@ -19,58 +20,36 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { trpc } from '@/lib/trpc/provider';
-import { trackEvent } from '@/lib/analytics/umami';
-import { FLOW_ERROR } from '@/lib/steam-openid/flowError';
+} from 'macgamingdb-ui/feedback/Dialog';
+import { trpc } from '@/modules/trpc/trpc';
+import { trackEvent } from '@/modules/analytics/utils/trackEvent';
 import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
+import { LibraryErrorToastEffect } from '@/modules/library/components/LibraryErrorToastEffect';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
-function formatRelative(iso: string | null): string {
+const formatRelative = (iso: string | null): string => {
   if (!iso) return 'never';
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.round(diff / 60000);
-  if (m < 1) return 'just now';
-  if (m < 60) return `${m}m ago`;
-  const h = Math.round(m / 60);
-  if (h < 24) return `${h}h ago`;
-  const d = Math.round(h / 24);
-  return `${d}d ago`;
-}
+  return formatDistanceToNow(new Date(iso), { addSuffix: true });
+};
 
-export default function LibraryClient() {
-  const searchParams = useSearchParams();
+export const LibraryClient = () => {
   const [unlinkOpen, setUnlinkOpen] = useState(false);
 
   const status = trpc.library.status.useQuery();
   const list = trpc.library.list.useQuery(undefined, {
-    enabled: status.data?.linked === true,
+    enabled: status.data?.linked ?? false,
   });
 
   const sync = trpc.library.sync.useMutation();
   const unlink = trpc.library.unlink.useMutation();
 
-  useEffect(() => {
-    const err = searchParams.get('error');
-    if (!err) return;
-    if (err === FLOW_ERROR.PrivateLibrary) {
-      toast.error(
-        'Could not read your Steam library. Set your library to public and try again.',
-      );
-    } else if (
-      err === FLOW_ERROR.VerifyFailed ||
-      err === FLOW_ERROR.StateMismatch
-    ) {
-      toast.error('Steam sign-in failed. Try again.');
-    }
-  }, [searchParams]);
-
   const handleResync = () => {
     const id = toast.loading('Syncing your Steam library...');
     sync.mutate(undefined, {
-      onSuccess: (res) => toast.success(`Synced ${res.count} games`, { id }),
-      onError: (err) => {
-        if (err.message === STEAM_LIBRARY_PRIVATE_CODE) {
+      onSuccess: (result) =>
+        toast.success(`Synced ${result.count} games`, { id }),
+      onError: (error) => {
+        if (error.message === STEAM_LIBRARY_PRIVATE_CODE) {
           toast.error('Set your Steam library to public and try again.', {
             id,
           });
@@ -91,11 +70,12 @@ export default function LibraryClient() {
     });
   };
 
-  const linked = status.data?.linked === true;
+  const linked = status.data?.linked ?? false;
   const games = list.data ?? [];
 
   return (
     <div className="min-h-dvh flex flex-col">
+      <LibraryErrorToastEffect />
       <Header />
       <Container>
         <div className="mb-4">
@@ -173,7 +153,7 @@ export default function LibraryClient() {
           </Card>
         ) : list.isLoading ? (
           <p className="text-gray-500 text-sm">Loading library...</p>
-        ) : games.length === 0 ? (
+        ) : !isNonEmptyArray(games) ? (
           <Card className="bg-primary-gradient max-w-lg mx-auto">
             <CardContent className="py-12 text-center text-gray-400">
               No games found in your Steam library.
@@ -220,4 +200,4 @@ export default function LibraryClient() {
       <Footer />
     </div>
   );
-}
+};

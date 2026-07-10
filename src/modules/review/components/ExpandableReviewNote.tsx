@@ -1,10 +1,10 @@
 'use client';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import ScreenshotDisplay from './ScreenshotDisplay';
+import { ScreenshotDisplay } from './ScreenshotDisplay';
 import React from 'react';
-import { cn } from '@/components/utils';
+import { cn } from 'macgamingdb-ui/utilities/cn';
 
-const ExpandableReviewNote = ({
+export const ExpandableReviewNote = ({
   notes,
   screenshots,
 }: {
@@ -12,34 +12,33 @@ const ExpandableReviewNote = ({
   screenshots?: string[];
 }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const contentRef = React.useRef<HTMLParagraphElement>(null);
   const [isContentClipped, setIsContentClipped] = React.useState(false);
 
-  React.useEffect(() => {
+  const measureRef = (node: HTMLParagraphElement | null) => {
+    if (!node) return;
+
     const checkIfClipped = () => {
-      if (contentRef.current) {
-        const isClipped =
-          contentRef.current.scrollHeight > contentRef.current.clientHeight;
-        setIsContentClipped(isClipped);
-      }
+      setIsContentClipped(node.scrollHeight > node.clientHeight);
     };
 
     checkIfClipped();
 
-    window.addEventListener('resize', checkIfClipped);
-    return () => window.removeEventListener('resize', checkIfClipped);
-  }, [notes]);
+    const observer = new ResizeObserver(checkIfClipped);
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  };
 
   return (
     <div className="bg-[#181818] p-3 rounded-lg text-sm text-white border border-[rgba(255,255,255,0.1)]">
       <p
-        ref={contentRef}
+        ref={measureRef}
         className={cn('break-words', isExpanded ? '' : 'line-clamp-3')}
       >
-        {notes.split('\n').map((line, i) => (
-          <React.Fragment key={i}>
+        {notes.split('\n').map((line, index) => (
+          <React.Fragment key={index}>
             {line}
-            {i < notes.split('\n').length - 1 && <br />}
+            {index < notes.split('\n').length - 1 && <br />}
           </React.Fragment>
         ))}
       </p>
@@ -65,4 +64,3 @@ const ExpandableReviewNote = ({
     </div>
   );
 };
-export default ExpandableReviewNote;

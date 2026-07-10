@@ -51,26 +51,39 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "objectID": {
+                      "ref": {
                         "type": "string"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "steam",
+                          "igdb"
+                        ]
                       },
                       "name": {
                         "type": "string"
                       },
-                      "url": {
-                        "type": "string"
+                      "slug": {
+                        "type": "string",
+                        "nullable": true
                       },
-                      "tagIds": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
+                      "coverImage": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "releaseYear": {
+                        "type": "number",
+                        "nullable": true
                       }
                     },
                     "required": [
-                      "objectID",
+                      "ref",
+                      "source",
                       "name",
-                      "url"
+                      "slug",
+                      "coverImage",
+                      "releaseYear"
                     ]
                   }
                 }
@@ -135,12 +148,6 @@
                   "type": "object",
                   "properties": {
                     "headerImage": {
-                      "type": "string"
-                    },
-                    "capsuleImage": {
-                      "type": "string"
-                    },
-                    "capsuleImagev5": {
                       "type": "string"
                     }
                   },
@@ -412,8 +419,20 @@
                           "id": {
                             "type": "string"
                           },
-                          "details": {
+                          "slug": {
                             "type": "string",
+                            "nullable": true
+                          },
+                          "name": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "headerImage": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "releaseYear": {
+                            "type": "number",
                             "nullable": true
                           },
                           "performanceRating": {
@@ -430,7 +449,10 @@
                         },
                         "required": [
                           "id",
-                          "details",
+                          "slug",
+                          "name",
+                          "headerImage",
+                          "releaseYear",
                           "performanceRating"
                         ]
                       }
@@ -513,8 +535,82 @@
                         "id": {
                           "type": "string"
                         },
-                        "details": {
+                        "slug": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "name": {
                           "type": "string"
+                        },
+                        "headerImage": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "descriptionHtml": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "website": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "releaseDate": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "releaseYear": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "developers": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "publishers": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "genres": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "screenshots": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "sourceLinks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source": {
+                                "type": "string",
+                                "enum": [
+                                  "steam",
+                                  "igdb"
+                                ]
+                              },
+                              "externalId": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "source",
+                              "externalId"
+                            ]
+                          }
                         },
                         "createdAt": {
                           "type": "string"
@@ -540,7 +636,23 @@
                         }
                       },
                       "required": [
-                        "details"
+                        "id",
+                        "slug",
+                        "name",
+                        "headerImage",
+                        "descriptionHtml",
+                        "website",
+                        "releaseDate",
+                        "releaseYear",
+                        "developers",
+                        "publishers",
+                        "genres",
+                        "screenshots",
+                        "sourceLinks",
+                        "createdAt",
+                        "updatedAt",
+                        "aggregatedPerformance",
+                        "reviewCount"
                       ]
                     },
                     "reviews": {
@@ -659,8 +771,7 @@
                                 "type": "string"
                               },
                               "updatedAt": {
-                                "type": "string",
-                                "nullable": true
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -1107,8 +1218,7 @@
                             "type": "string"
                           },
                           "updatedAt": {
-                            "type": "string",
-                            "nullable": true
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -1119,7 +1229,15 @@
                           "updatedAt"
                         ]
                       },
-                      "gameDetails": {
+                      "gameName": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "gameSlug": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "gameHeaderImage": {
                         "type": "string",
                         "nullable": true
                       }
@@ -1143,7 +1261,9 @@
                       "createdAt",
                       "updatedAt",
                       "macConfig",
-                      "gameDetails"
+                      "gameName",
+                      "gameSlug",
+                      "gameHeaderImage"
                     ]
                   }
                 }
@@ -2110,9 +2230,14 @@
                             "type": "string"
                           },
                           "gameName": {
-                            "type": "string"
+                            "type": "string",
+                            "nullable": true
                           },
-                          "gameDetails": {
+                          "gameSlug": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "gameHeaderImage": {
                             "type": "string",
                             "nullable": true
                           },
@@ -2198,8 +2323,7 @@
                                 "type": "string"
                               },
                               "updatedAt": {
-                                "type": "string",
-                                "nullable": true
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -2214,7 +2338,9 @@
                         "required": [
                           "id",
                           "gameId",
-                          "gameDetails",
+                          "gameName",
+                          "gameSlug",
+                          "gameHeaderImage",
                           "playMethod",
                           "softwareVersion",
                           "translationLayer",

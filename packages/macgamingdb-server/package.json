@@ -1,0 +1,52 @@
+{
+  "name": "macgamingdb-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:dev": "bun --watch src/main.ts",
+    "start": "bun src/main.ts",
+    "generate:types": "nestjs-trpc generate",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "exports": {
+    "./schema": "./src/schema/index.ts",
+    "./generated": "./src/@generated/server.ts",
+    "./engine/api/write-openapi-document": "./src/engine/api/write-openapi-document.ts",
+    "./modules/review/utils/calculate-average-performance": "./src/modules/review/utils/calculate-average-performance.util.ts",
+    "./modules/review/utils/format-rating-label": "./src/modules/review/utils/format-rating-label.util.ts",
+    "./modules/review/utils/score-to-rating": "./src/modules/review/utils/score-to-rating.util.ts",
+    "./modules/mac-config/utils/get-chipset-combinations": "./src/modules/mac-config/utils/get-chipset-combinations.util.ts",
+    "./modules/game/drivers/steam/types/steam-app-data": "./src/modules/game/drivers/steam/types/steam-app-data.type.ts",
+    "./modules/game/utils/extract-release-year": "./src/modules/game/utils/extract-release-year.util.ts",
+    "./modules/game/utils/slugify-game-name": "./src/modules/game/utils/slugify-game-name.util.ts",
+    "./modules/game/utils/generate-unique-game-slug": "./src/modules/game/utils/generate-unique-game-slug.util.ts",
+    "./auth": "./src/engine/core-modules/auth/better-auth-client.util.ts",
+    "./database": "./src/database/drizzle.ts",
+    "./database/schema": "./src/database/schema.ts",
+    "./database/types": "./src/database/types.ts",
+    "./drizzle/schema": "./src/database/schema.ts",
+    "./drizzle/types": "./src/database/types.ts",
+    "./engine/core-modules/logger/create-logger": "./src/engine/core-modules/logger/create-logger.util.ts",
+    "./modules/*": "./src/modules/*.ts",
+    "./engine/*": "./src/engine/*.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.28",
+    "@sniptt/guards": "^0.2.0",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-express": "^11.1.28",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "fuse.js": "^7.4.2",
+    "nest-commander": "^3.20.1",
+    "nestjs-trpc": "^2.12.0",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "trpc-to-openapi": "2.4.0",
+    "zod": "^3.25.0",
+    "zod-openapi": "4.2.4",
+    "macgamingdb-shared": "workspace:*"
+  }
+}

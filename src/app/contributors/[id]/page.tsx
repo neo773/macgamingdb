@@ -1,59 +1,50 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
 import { notFound } from 'next/navigation';
-import Header from '@/modules/layout/components/Header';
-import Footer from '@/modules/layout/components/Footer';
+import { TRPCClientError } from '@trpc/client';
+import { isNonEmptyArray, isNonEmptyString } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { Header } from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
-import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
+import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
+import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
 
 import { formatDistance } from 'date-fns';
-import { Card, CardContent } from '@/components/ui/card';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
-import { type SteamAppData } from '@macgamingdb/server/api/steam';
-import { Container } from '@/components/ui/container';
-import { users, gameReviews } from '@macgamingdb/server/drizzle/schema';
-import { eq, desc } from 'drizzle-orm';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
+import { Container } from 'macgamingdb-ui/layout/Container';
+import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   return [];
-}
+};
 
-export default async function ContributorPage({
+const ContributorPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
-  const db = createDrizzleClient();
-
+}) => {
   const { id: contributorId } = await params;
 
-  const contributor = await db.query.users.findFirst({
-    where: eq(users.id, contributorId),
-  });
+  const helpers = await createServerHelpers();
 
-  if (!contributor) {
-    notFound();
-  }
+  const contributor = await helpers.contributor.getById
+    .fetch({ id: contributorId })
+    .catch((error) => {
+      if (
+        error instanceof TRPCClientError &&
+        error.data?.code === 'NOT_FOUND'
+      ) {
+        notFound();
+      }
+      throw error;
+    });
 
-  const contributorReviews = await db.query.gameReviews.findMany({
-    where: eq(gameReviews.userId, contributorId),
-    with: {
-      game: true,
-      macConfig: true,
-    },
-    orderBy: desc(gameReviews.createdAt),
-  });
-
-  const contributorName = contributor
-    .email!.split('@')[0]
-    .replace(/[0-9._]/g, '');
-
-  const uniqueGamesCount = new Set(
-    contributorReviews.map((review) => review.gameId),
-  ).size;
+  const contributorName = contributor.name;
+  const contributorReviews = contributor.reviews;
+  const uniqueGamesCount = contributor.uniqueGamesCount;
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -81,7 +72,7 @@ export default async function ContributorPage({
           </div>
         </div>
         <div>
-          {contributorReviews.length === 0 ? (
+          {!isNonEmptyArray(contributorReviews) ? (
             <Card className="bg-primary-gradient">
               <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
                 <h2 className="text-xl font-medium text-white">
@@ -92,12 +83,9 @@ export default async function ContributorPage({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {contributorReviews.map((review) => {
-                const gameDetails = JSON.parse(
-                  review.game.details ?? '{}',
-                ) as SteamAppData;
                 return (
                   <div key={review.id}>
-                    <GameReviewCard
+                    <ReviewCard
                       review={review}
                       className="pt-0"
                       header={
@@ -105,14 +93,16 @@ export default async function ContributorPage({
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`${gameDetails.header_image}`}
-                            alt={`${gameDetails.name} cover art`}
+                            src={`${review.gameHeaderImage}`}
+                            alt={`${review.gameName} cover art`}
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                            <Link href={`/games/${review.gameId}`}>
+                            <Link
+                              href={`/games/${review.gameSlug ?? review.gameId}`}
+                            >
                               <h3 className="text-lg font-semibold text-white hover:text-blue-300 transition-colors">
-                                {gameDetails.name || 'Unknown Game'}
+                                {review.gameName ?? 'Unknown Game'}
                               </h3>
                             </Link>
                             <div className="text-sm text-gray-300 mt-1">
@@ -145,9 +135,8 @@ export default async function ContributorPage({
                               </div>
                             </div>
                           )}
-                          {review.notes === null &&
-                            review.screenshots &&
-                            review.screenshots.length > 0 && (
+                          {!isDefined(review.notes) &&
+                            isNonEmptyString(review.screenshots) && (
                               <div className="border-t border-white/15 pt-3 mt-2">
                                 <h4 className="text-sm font-medium text-gray-300">
                                   Screenshots:
@@ -175,4 +164,6 @@ export default async function ContributorPage({
       <Footer />
     </div>
   );
-}
+};
+
+export default ContributorPage;

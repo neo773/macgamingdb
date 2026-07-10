@@ -1,43 +1,37 @@
 'use client';
 
+import { isNonEmptyArray } from '@sniptt/guards';
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
-import { type SteamGameSearchObject } from '@macgamingdb/server/api/steam';
-import { type PerformanceRating } from '@macgamingdb/server/drizzle/types';
-
-interface GameFromDB {
-  id: string;
-  details: string | null;
-  performanceRating: string | null;
-}
+import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 interface GameGridProps {
   isLoading: boolean;
-  searchResults: SteamGameSearchObject[] | null;
-  games: GameFromDB[];
+  searchResults: RouterOutputs['game']['search'] | null;
+  games: RouterOutputs['game']['getGames']['games'];
   isFetchingNextPage: boolean;
 }
 
-export function GameGrid({
+export const GameGrid = ({
   isLoading,
   searchResults,
   games,
   isFetchingNextPage,
-}: GameGridProps) {
+}: GameGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {Array(6)
           .fill(null)
-          .map((_, i) => (
-            <GameCardSkeleton key={`skeleton-${i}`} />
+          .map((_, index) => (
+            <GameCardSkeleton key={`skeleton-${index}`} />
           ))}
       </div>
     );
   }
 
   if (searchResults) {
-    if (searchResults.length === 0) {
+    if (!isNonEmptyArray(searchResults)) {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="col-span-full text-center py-8">
@@ -52,13 +46,13 @@ export function GameGrid({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {searchResults.map((game) => (
-          <GameCard key={game.objectID} game={game} />
+          <GameCard key={game.ref} game={game} />
         ))}
       </div>
     );
   }
 
-  if (games.length === 0) {
+  if (!isNonEmptyArray(games)) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="col-span-full text-center py-8">
@@ -76,10 +70,12 @@ export function GameGrid({
         <GameCard
           key={game.id}
           game={{
-            objectID: game.id,
-            name: game.details ? JSON.parse(game.details).name : 'Unknown',
-            url: '',
-            performanceRating: (game.performanceRating ?? undefined) as PerformanceRating | undefined,
+            ref: game.id,
+            slug: game.slug,
+            name: game.name ?? 'Unknown',
+            coverImage: game.headerImage,
+            releaseYear: game.releaseYear,
+            performanceRating: game.performanceRating,
           }}
         />
       ))}
@@ -87,7 +83,9 @@ export function GameGrid({
       {isFetchingNextPage &&
         Array(6)
           .fill(null)
-          .map((_, i) => <GameCardSkeleton key={`loading-more-${i}`} />)}
+          .map((_, index) => (
+            <GameCardSkeleton key={`loading-more-${index}`} />
+          ))}
     </div>
   );
-}
+};

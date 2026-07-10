@@ -1,11 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { type Stats } from '../types';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from 'macgamingdb-ui/display/Card';
+import { type Stats } from '../types/Stats';
 
 interface SystemHealthCardProps {
   stats: Stats;
 }
 
-export function SystemHealthCard({ stats }: SystemHealthCardProps) {
+export const SystemHealthCard = ({ stats }: SystemHealthCardProps) => {
   return (
     <Card>
       <CardHeader>
@@ -28,7 +33,7 @@ export function SystemHealthCard({ stats }: SystemHealthCardProps) {
           <span className="text-sm">Avg query cost</span>
           <span className="font-medium">
             {Math.round(
-              (stats.rows_read + stats.rows_written) / stats.query_count
+              (stats.rows_read + stats.rows_written) / stats.query_count,
             )}{' '}
             rows
           </span>
@@ -36,4 +41,4 @@ export function SystemHealthCard({ stats }: SystemHealthCardProps) {
       </CardContent>
     </Card>
   );
-}
+};

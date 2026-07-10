@@ -1,14 +1,13 @@
 import { type Metadata } from 'next';
-import { type Stats, type QueryAnalysis } from '@/modules/stats/types';
+import { type Stats } from '@/modules/stats/types/Stats';
+import { type QueryAnalysis } from '@/modules/stats/types/QueryAnalysis';
 import { getQueryIntent } from '@/modules/stats/utils/getQueryIntent';
-import {
-  StatsOverviewCards,
-  QueryPatternsCard,
-  PerformanceIssuesCard,
-  SystemHealthCard,
-  ResourceIntensiveTable,
-  SlowestQueriesTable,
-} from '@/modules/stats/components';
+import { StatsOverviewCards } from '@/modules/stats/components/StatsOverviewCards';
+import { QueryPatternsCard } from '@/modules/stats/components/QueryPatternsCard';
+import { PerformanceIssuesCard } from '@/modules/stats/components/PerformanceIssuesCard';
+import { SystemHealthCard } from '@/modules/stats/components/SystemHealthCard';
+import { ResourceIntensiveTable } from '@/modules/stats/components/ResourceIntensiveTable';
+import { SlowestQueriesTable } from '@/modules/stats/components/SlowestQueriesTable';
 import { readFileSync } from 'fs';
 
 export const dynamic = 'force-dynamic';
@@ -20,16 +19,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function StatsPage() {
+const StatsPage = async () => {
   const stats = JSON.parse(readFileSync('/app/stats.json', 'utf-8')) as Stats;
 
   const queryAnalysis = stats.top_queries.reduce(
-    (acc, query) => {
+    (analysisByIntent, query) => {
       const intent = getQueryIntent(query.query);
-      if (!acc[intent]) acc[intent] = { count: 0, totalRows: 0 };
-      acc[intent].count++;
-      acc[intent].totalRows += query.rows_read;
-      return acc;
+      if (!analysisByIntent[intent])
+        analysisByIntent[intent] = { count: 0, totalRows: 0 };
+      analysisByIntent[intent].count++;
+      analysisByIntent[intent].totalRows += query.rows_read;
+      return analysisByIntent;
     },
     {} as Record<string, QueryAnalysis>,
   );
@@ -63,4 +63,6 @@ export default async function StatsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default StatsPage;

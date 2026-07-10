@@ -1,11 +1,7 @@
-import Footer from '@/modules/layout/components/Footer';
-import Header from '@/modules/layout/components/Header';
+import { Footer } from '@/modules/layout/components/Footer';
+import { Header } from '@/modules/layout/components/Header';
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const BlogLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-dvh flex flex-col">
       <Header />
@@ -23,4 +19,6 @@ export default function BlogLayout({
       <Footer />
     </div>
   );
-}
+};
+
+export default BlogLayout;

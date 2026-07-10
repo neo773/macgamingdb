@@ -1,8 +1,12 @@
-import { Card, CardContent } from '@/components/ui/card';
-import CreateReviewDialog from '@/modules/review/components/CreateReviewDialog';
-import GameReviewCard from '@/modules/review/components/ReviewCard';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
+import { CreateReviewDialog } from '@/modules/review/components/CreateReviewDialog';
+import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
-import { type GameReview, type MacConfig } from '@macgamingdb/server/drizzle/types';
+import {
+  type GameReview,
+  type MacConfig,
+} from 'macgamingdb-server/drizzle/types';
 
 type ReviewWithMacConfig = GameReview & { macConfig?: MacConfig | null };
 
@@ -13,26 +17,30 @@ interface ExperienceReportsSectionProps {
   showCrossoverAffiliate: boolean;
 }
 
-export function ExperienceReportsSection({
+export const ExperienceReportsSection = ({
   gameId,
   gameName,
   reviews,
   showCrossoverAffiliate,
-}: ExperienceReportsSectionProps) {
-  const hasReviews = reviews && reviews.length > 0;
+}: ExperienceReportsSectionProps) => {
+  const hasReviews = isNonEmptyArray(reviews);
 
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-white">Experience Reports</h2>
-        {hasReviews && <CreateReviewDialog gameId={gameId} gameName={gameName} />}
+        <h2 className="text-2xl font-semibold text-white">
+          Experience Reports
+        </h2>
+        {hasReviews && (
+          <CreateReviewDialog gameId={gameId} gameName={gameName} />
+        )}
       </div>
 
       {hasReviews ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
           {reviews.map((review) => (
-            <GameReviewCard review={review} key={review.id} />
+            <ReviewCard review={review} key={review.id} />
           ))}
         </div>
       ) : (
@@ -45,4 +53,4 @@ export function ExperienceReportsSection({
       )}
     </div>
   );
-}
+};

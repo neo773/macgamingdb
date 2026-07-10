@@ -1,17 +1,11 @@
-import { createDrizzleClient } from '@macgamingdb/server/database';
-import { headers } from 'next/headers';
-import { BetterAuthClient } from '@macgamingdb/server/auth';
 import { redirect } from 'next/navigation';
-import ProfileClient from './client';
+import { getServerSession } from '@/modules/auth/utils/getServerSession';
+import { ProfileClient } from './client';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProfilePage() {
-  const db = createDrizzleClient();
-  const auth = await BetterAuthClient(db);
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+const ProfilePage = async () => {
+  const session = await getServerSession();
 
   if (!session) {
     redirect('/');
@@ -27,4 +21,6 @@ export default async function ProfilePage() {
       }}
     />
   );
-}
+};
+
+export default ProfilePage;

@@ -1,4 +1,4 @@
-export function getQueryIntent(query: string): string {
+export const getQueryIntent = (query: string): string => {
   const upperQuery = query.toUpperCase();
   if (upperQuery.includes('SELECT COUNT')) return 'COUNT';
   if (upperQuery.includes('SELECT') && upperQuery.includes('FROM')) {
@@ -10,4 +10,4 @@ export function getQueryIntent(query: string): string {
   if (upperQuery.includes('UPDATE')) return 'UPDATE';
   if (upperQuery.includes('DELETE')) return 'DELETE';
   return 'QUERY';
-}
+};

@@ -1,26 +1,25 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { trpc } from '@/lib/trpc/provider';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { trpc } from '@/modules/trpc/trpc';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { formatDistance } from 'date-fns';
-import { UserAvatar } from '@/components/ui/user-avatar';
-import { Card, CardContent } from '@/components/ui/card';
+import { UserAvatar } from 'macgamingdb-ui/display/UserAvatar';
+import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { Trophy, Medal, Award, Star } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
 import Link from 'next/link';
 import { type inferRouterOutputs } from '@trpc/server';
-import { type AppRouter } from '@macgamingdb/server/routers/_app';
+import { type AppRouter } from 'macgamingdb-server/generated';
 
 type ContributorsData =
   inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];
 
-export default function ContributorsClient({
+export const ContributorsClient = ({
   contributorsData,
 }: {
   contributorsData: ContributorsData;
-}) {
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
+}) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     trpc.contributor.getTopContributors.useInfiniteQuery(
       {
@@ -35,21 +34,11 @@ export default function ContributorsClient({
       },
     );
 
-  useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+  const loadMoreRef = useInfiniteScroll<HTMLDivElement>({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
 
   const allContributors =
     data?.pages.flatMap((page) => page.contributors) || [];
@@ -136,9 +125,9 @@ export default function ContributorsClient({
         {isFetchingNextPage &&
           Array(6)
             .fill(null)
-            .map((_, i) => (
+            .map((_, index) => (
               <Card
-                key={`skeleton-${i}`}
+                key={`skeleton-${index}`}
                 className="bg-black/30 border border-white/10"
               >
                 <CardContent className="px-6">
@@ -168,7 +157,7 @@ export default function ContributorsClient({
       {hasNextPage && <div ref={loadMoreRef} className="h-10" />}
 
       {/* No contributors message */}
-      {allContributors.length === 0 && !isLoading && (
+      {!isNonEmptyArray(allContributors) && !isLoading && (
         <Card className="bg-primary-gradient">
           <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
             <h2 className="text-xl font-medium text-white">
@@ -183,4 +172,4 @@ export default function ContributorsClient({
       )}
     </div>
   );
-}
+};

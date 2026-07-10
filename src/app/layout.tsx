@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist } from 'next/font/google';
-import { TRPCProvider } from '@/lib/trpc/provider';
-import { Toaster } from '@/components/ui/sonner';
+import { TRPCProvider } from '@/modules/trpc/components/TRPCProvider';
+import { Toaster } from 'macgamingdb-ui/feedback/Toaster';
 import Script from 'next/script';
 import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
 import './tailwind.css';
@@ -26,11 +26,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <meta
@@ -59,4 +55,6 @@ export default function RootLayout({
       {/* <!-- End Umami Web Analytics --> */}
     </html>
   );
-}
+};
+
+export default RootLayout;

@@ -1,0 +1,17 @@
+{
+  "name": "macgamingdb-shared",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./utils/*": {
+      "types": "./src/utils/*.ts",
+      "default": "./dist/utils/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@sniptt/guards": "^0.2.0"
+  }
+}

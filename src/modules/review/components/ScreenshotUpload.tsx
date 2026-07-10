@@ -1,15 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { X, Upload } from 'lucide-react';
+import React, { useId, useState } from 'react';
+import { Button } from 'macgamingdb-ui/input/Button';
+import { Input } from 'macgamingdb-ui/input/Input';
+import { X, Upload, ImageOff } from 'lucide-react';
 import { toast } from 'sonner';
-import { trpc } from '@/lib/trpc/provider';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { trpc } from '@/modules/trpc/trpc';
 
-interface ScreenshotData {
-  file: File;
-  blobUrl: string;
-  s3Url: string;
-}
+const ALLOWED_SCREENSHOT_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+];
+
+const MAX_SCREENSHOT_BYTES = 10 * 1024 * 1024;
 
 interface ScreenshotUploadProps {
   gameId: string;
@@ -18,34 +22,29 @@ interface ScreenshotUploadProps {
   className?: string;
 }
 
-export default function ScreenshotUpload({
+export const ScreenshotUpload = ({
   gameId,
   onScreenshotsChange,
   maxFiles = 3,
   className = '',
-}: ScreenshotUploadProps) {
-  const [screenshots, setScreenshots] = useState<ScreenshotData[]>([]);
+}: ScreenshotUploadProps) => {
+  const [screenshotUrls, setScreenshotUrls] = useState<string[]>([]);
+  const [failedUrls, setFailedUrls] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputId = useId();
 
   const getUploadUrlMutation = trpc.review.getUploadUrl.useMutation();
 
-  useEffect(() => {
-    return () => {
-      screenshots.forEach((screenshot) => {
-        URL.revokeObjectURL(screenshot.blobUrl);
-      });
-    };
-  }, [screenshots]);
-
   const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const files = event.target.files;
+    const input = event.target;
+    const files = input.files;
     if (!files || files.length === 0) return;
 
-    if (screenshots.length + files.length > maxFiles) {
+    if (screenshotUrls.length + files.length > maxFiles) {
       toast.error(`Maximum ${maxFiles} screenshots allowed`);
+      input.value = '';
       return;
     }
 
@@ -53,23 +52,22 @@ export default function ScreenshotUpload({
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
-        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
-        if (!allowedTypes.includes(file.type)) {
-          throw new Error(`${file.name} is not a supported format. Use PNG, JPG, WebP, or GIF.`);
+        if (!ALLOWED_SCREENSHOT_TYPES.includes(file.type)) {
+          throw new Error(
+            `${file.name} is not a supported format. Use PNG, JPG, WebP, or GIF.`,
+          );
         }
 
-        if (file.size > 10 * 1024 * 1024) {
+        if (file.size > MAX_SCREENSHOT_BYTES) {
           throw new Error(`${file.name} is too large (max 10MB)`);
         }
-
-        const blobUrl = URL.createObjectURL(file);
 
         const { signedUrl, publicUrl } = await getUploadUrlMutation.mutateAsync(
           {
             filename: file.name,
             contentType: file.type,
             gameId,
-          }
+          },
         );
 
         const uploadResponse = await fetch(signedUrl, {
@@ -81,46 +79,41 @@ export default function ScreenshotUpload({
         });
 
         if (!uploadResponse.ok) {
-          URL.revokeObjectURL(blobUrl);
           throw new Error(`Failed to upload ${file.name}`);
         }
 
-        return {
-          file,
-          blobUrl,
-          s3Url: publicUrl,
-        };
+        return publicUrl;
       });
 
-      const uploadedScreenshots = await Promise.all(uploadPromises);
-      const newScreenshots = [...screenshots, ...uploadedScreenshots];
-      setScreenshots(newScreenshots);
+      const uploadedUrls = await Promise.all(uploadPromises);
+      const newScreenshotUrls = [...screenshotUrls, ...uploadedUrls];
+      setScreenshotUrls(newScreenshotUrls);
 
-      onScreenshotsChange(newScreenshots.map((s) => s.s3Url));
+      onScreenshotsChange(newScreenshotUrls);
       toast.success(
-        `${uploadedScreenshots.length} screenshot(s) uploaded successfully!`
+        `${uploadedUrls.length} screenshot(s) uploaded successfully!`,
       );
     } catch (error) {
       console.error('Upload error:', error);
       toast.error(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setUploading(false);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      input.value = '';
     }
   };
 
-  const removeScreenshot = (index: number) => {
-    const screenshotToRemove = screenshots[index];
-    if (screenshotToRemove) {
-      URL.revokeObjectURL(screenshotToRemove.blobUrl);
-    }
+  const handleRemoveScreenshot = (url: string) => {
+    const newScreenshotUrls = screenshotUrls.filter(
+      (screenshotUrl) => screenshotUrl !== url,
+    );
+    setScreenshotUrls(newScreenshotUrls);
+    onScreenshotsChange(newScreenshotUrls);
+  };
 
-    const newScreenshots = screenshots.filter((_, i) => i !== index);
-    setScreenshots(newScreenshots);
-    onScreenshotsChange(newScreenshots.map((s) => s.s3Url));
+  const handleImageError = (url: string) => {
+    setFailedUrls((previous) =>
+      previous.includes(url) ? previous : [...previous, url],
+    );
   };
 
   return (
@@ -130,67 +123,67 @@ export default function ScreenshotUpload({
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading || screenshots.length >= maxFiles}
-          className="flex items-center"
+          disabled={uploading || screenshotUrls.length >= maxFiles}
+          className="p-0"
+          asChild
         >
-          {uploading ? (
-            <>
-              <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
-              Uploading...
-            </>
-          ) : (
-            <>
-              <Upload className="w-4 h-4" />
-              Add Screenshots
-            </>
-          )}
+          <label
+            htmlFor={fileInputId}
+            className="flex cursor-pointer items-center px-3"
+          >
+            {uploading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Upload className="w-4 h-4" />
+                Add Screenshots
+              </>
+            )}
+          </label>
         </Button>
         <span className="text-sm text-gray-500">
-          {screenshots.length}/{maxFiles}
+          {screenshotUrls.length}/{maxFiles}
         </span>
       </div>
 
       <Input
-        ref={fileInputRef}
+        id={fileInputId}
         type="file"
         accept="image/png, image/jpeg, image/webp, image/gif"
         multiple
+        disabled={uploading || screenshotUrls.length >= maxFiles}
         onChange={handleFileSelect}
         className="hidden"
       />
 
-      {screenshots.length > 0 && (
+      {isNonEmptyArray(screenshotUrls) && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {screenshots.map((screenshot, index) => (
-            <div key={index} className="relative group">
+          {screenshotUrls.map((url, index) => (
+            <div key={url} className="relative group">
               <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={screenshot.blobUrl}
-                  alt={`Screenshot ${index + 1}`}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      const fallback = document.createElement('div');
-                      fallback.className =
-                        'w-full h-full flex items-center justify-center text-gray-400';
-                      fallback.innerHTML =
-                        '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>';
-                      parent.appendChild(fallback);
-                    }
-                  }}
-                />
+                {failedUrls.includes(url) ? (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <ImageOff className="w-8 h-8" />
+                  </div>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={url}
+                    alt={`Screenshot ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={() => handleImageError(url)}
+                  />
+                )}
               </div>
               <Button
                 type="button"
                 variant="destructive"
                 size="sm"
                 className="absolute top-1 right-1 w-6 h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => removeScreenshot(index)}
+                onClick={() => handleRemoveScreenshot(url)}
               >
                 <X className="w-3 h-3" />
               </Button>
@@ -200,4 +193,4 @@ export default function ScreenshotUpload({
       )}
     </div>
   );
-}
+};
