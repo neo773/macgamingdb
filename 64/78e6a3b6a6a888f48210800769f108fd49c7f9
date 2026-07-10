@@ -1,0 +1,424 @@
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-library-insert-chunk-size.constant.ts
+  s_9ebfe402b13a9b::t_bd1ba7b70662c9 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-openid.service.ts
+  s_9ebfe402b13a9b::t_f21f80ac4c1fa6 1,4-14,16-25
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/rate-limit-interval-ms.constant.ts
+  s_9ebfe402b13a9b::t_a8febbe42503a5 1
+packages/macgamingdb-server/src/modules/review/utils/format-rating-label.util.ts
+  s_9ebfe402b13a9b::t_79fc1a0d69dfef 1-24
+packages/macgamingdb-server/src/modules/mac-config/utils/get-chipset-combinations.util.ts
+  s_9ebfe402b13a9b::t_5cc0a95324b48f 1-36
+packages/macgamingdb-server/src/modules/game/drivers/igdb/services/igdb-api-client.service.ts
+  s_9ebfe402b13a9b::t_91eed557983a4f 1-220
+packages/macgamingdb-server/src/modules/game/services/game-search.service.ts
+  s_9ebfe402b13a9b::t_73fe5e856a8fdc 1-99
+packages/macgamingdb-server/src/modules/game/drivers/steam/types/steam-game-search-object.type.ts
+  s_9ebfe402b13a9b::t_8c769366d5f7d6 1-7
+.env.example
+  s_9ebfe402b13a9b::t_f690d7fd165c3d 46-48
+src/app/api/connections/steam/callback/route.ts
+  s_9ebfe402b13a9b::t_b6279afa127872 84-87
+  s_9ebfe402b13a9b::t_96fe036dbc8f7f 10-13
+  s_9ebfe402b13a9b::t_805bb532868312 96
+  s_9ebfe402b13a9b::t_e774226c52144d 77
+packages/macgamingdb-server/src/modules/review/utils/calculate-translation-layer-stats.util.ts
+  s_9ebfe402b13a9b::t_0e368c5dbe8a3d 1-18
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/searchable-igdb-game-types.constant.ts
+  s_9ebfe402b13a9b::t_7ecc0f2be205e8 1-3
+packages/macgamingdb-server/src/modules/game/constants/game-sources.constant.ts
+  s_9ebfe402b13a9b::t_37d6f6f994800d 1
+packages/macgamingdb-server/src/modules/game/dtos/cover-art.dto.ts
+  s_9ebfe402b13a9b::t_081df39be61a27 1-5
+packages/macgamingdb-server/src/modules/game/utils/__tests__/slugify-game-name.util.spec.ts
+  s_9ebfe402b13a9b::t_dab444c0f9c753 1-42
+packages/macgamingdb-server/src/modules/review/dtos/game-stats.dto.ts
+  s_9ebfe402b13a9b::t_a0fefd4e940168 1-16
+packages/macgamingdb-server/src/modules/library/dtos/ok-result.dto.ts
+  s_9ebfe402b13a9b::t_0fe0e8927cf774 1-5
+packages/macgamingdb-server/src/modules/review/dtos/mutation-result.dto.ts
+  s_9ebfe402b13a9b::t_1527124c9cb7b2 1-6
+packages/macgamingdb-server/src/modules/mac-config/types/mac-specification.type.ts
+  s_9ebfe402b13a9b::t_bffe779b8c65f8 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-library-private-code.constant.ts
+  s_9ebfe402b13a9b::t_2f74e29a94a0d9 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/types/steam-owned-game.type.ts
+  s_9ebfe402b13a9b::t_75c362382c6844 1-7
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/get-state-token-key.util.ts
+  s_9ebfe402b13a9b::t_6bee500c9465ce 1,7
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/everymac-request-delay-ms.constant.ts
+  s_9ebfe402b13a9b::t_0491e6474367de 1
+packages/macgamingdb-server/src/modules/game/utils/__tests__/extract-release-year.util.spec.ts
+  s_9ebfe402b13a9b::t_dd943687fa7a83 1-26
+packages/macgamingdb-server/src/modules/game/dtos/game-list-item.dto.ts
+  s_9ebfe402b13a9b::t_b64e3c9675e80d 1-11
+packages/macgamingdb-server/src/modules/game/drivers/steam/utils/normalize-steam-game-details.util.ts
+  s_9ebfe402b13a9b::t_eae0f8d197b8fe 1-24
+packages/macgamingdb-server/src/modules/mac-config/dtos/mac-specification.dto.ts
+  s_9ebfe402b13a9b::t_3ceb7df2dbc509 14-15
+  s_9ebfe402b13a9b::t_89776fd4a86d57 1-13
+packages/macgamingdb-server/src/modules/game/types/game-source.type.ts
+  s_9ebfe402b13a9b::t_5b436555ec36e1 1-3
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/igdb-game-fields.constant.ts
+  s_9ebfe402b13a9b::t_52843ec0d332d1 1-26
+packages/macgamingdb-server/src/modules/contributor/dtos/contributors-page.dto.ts
+  s_9ebfe402b13a9b::t_2bd50135e11058 1-8
+packages/macgamingdb-server/src/modules/game/exceptions/game.exception.ts
+  s_9ebfe402b13a9b::t_ff340fec63f316 7-10
+packages/macgamingdb-server/src/modules/review/dtos/upload-url.dto.ts
+  s_9ebfe402b13a9b::t_561d8eb44d6475 1-7
+packages/macgamingdb-server/src/modules/game/dtos/game-prices.dto.ts
+  s_9ebfe402b13a9b::t_2b8102c3d9f6e4 1-15
+packages/macgamingdb-server/src/modules/review/utils/__tests__/score-to-rating.util.spec.ts
+  s_9ebfe402b13a9b::t_f8a3b446ccb324 1-34
+packages/macgamingdb-server/src/modules/game/drivers/igdb/services/igdb-game-source.service.ts
+  s_9ebfe402b13a9b::t_66ed07b6b0a976 1-59
+packages/macgamingdb-server/src/modules/game/services/game-materialization.service.ts
+  s_9ebfe402b13a9b::t_d91ce530e1435e 6
+  s_9ebfe402b13a9b::t_cb106177372a9e 1-5,7-225
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/to-library-entry-row.util.ts
+  s_9ebfe402b13a9b::t_c992ab8fe735c0 2-23
+  s_9ebfe402b13a9b::t_cc7eb6e3b9a240 1
+packages/macgamingdb-server/src/modules/game/drivers/steam/types/steam-app-data.type.ts
+  s_9ebfe402b13a9b::t_a17d0d5e64f737 1-159
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/issue-state-token.util.ts
+  s_9ebfe402b13a9b::t_4a4ab123cd9752 1-17
+packages/macgamingdb-server/src/modules/review/utils/__tests__/format-rating-label.util.spec.ts
+  s_9ebfe402b13a9b::t_b24240a4968f60 1-32
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/igdb-website-category-official.constant.ts
+  s_9ebfe402b13a9b::t_eda2df1e77b71c 1
+packages/macgamingdb-server/src/engine/core-modules/logger/create-logger.util.ts
+  s_9ebfe402b13a9b::t_b201823db867d8 1-42
+packages/macgamingdb-server/src/engine/core-modules/file-storage/file-storage.module.ts
+  s_9ebfe402b13a9b::t_908e6b47fa25e9 1-9
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/normalize-igdb-game-details.util.ts
+  s_9ebfe402b13a9b::t_9a86aa3adbbddc 1-79
+packages/macgamingdb-server/src/engine/core-modules/file-storage/constants/r2-public-url.constant.ts
+  s_9ebfe402b13a9b::t_48a701155188f6 1
+packages/macgamingdb-server/src/modules/library/services/library.service.ts
+  s_9ebfe402b13a9b::t_0028805982148b 49-53,58,63-66
+  s_9ebfe402b13a9b::t_1210c913a1475a 13-18
+  s_9ebfe402b13a9b::t_2a7e6559e28dbb 85
+  s_9ebfe402b13a9b::t_5e8ef30c8b2023 12
+src/app/api/connections/steam/start/route.ts
+  s_9ebfe402b13a9b::t_b1aec9056c3be3 5
+  s_9ebfe402b13a9b::t_cc3e1f80610d60 39-42
+  s_9ebfe402b13a9b::t_d37795789d4b16 25
+packages/macgamingdb-server/src/modules/review/utils/__tests__/calculate-average-performance.util.spec.ts
+  s_9ebfe402b13a9b::t_5080425a3203e2 1-42
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/state-token-ttl.constant.ts
+  s_9ebfe402b13a9b::t_6a5922510dd179 1
+packages/macgamingdb-server/src/engine/utils/get-region.util.ts
+  s_9ebfe402b13a9b::t_f9a4aa131fce04 1-30
+packages/macgamingdb-server/src/modules/game/routers/game.router.ts
+  s_9ebfe402b13a9b::t_59b3f3d8b5e92e 14-19
+  s_9ebfe402b13a9b::t_6a493fffbdf679 20-21
+packages/macgamingdb-server/src/modules/library/dtos/library-link-url.dto.ts
+  s_9ebfe402b13a9b::t_ba6a9021b51153 1-5
+packages/macgamingdb-server/src/modules/review/dtos/play-method-with-other.dto.ts
+  s_9ebfe402b13a9b::t_af1c23777e1eac 1-8
+packages/macgamingdb-server/src/modules/game/drivers/steam/services/steam-game-source.service.ts
+  s_9ebfe402b13a9b::t_cbf57ce4258f33 1-40
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/token-refresh-margin-ms.constant.ts
+  s_9ebfe402b13a9b::t_e6f83d62512fce 1
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/external-game-source-steam.constant.ts
+  s_9ebfe402b13a9b::t_01c253e608a79f 1-3
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/state-token-issuer.constant.ts
+  s_9ebfe402b13a9b::t_fb802eafb11f99 1
+src/modules/home/components/HomeFilters.tsx
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 7-8
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/everymac-family-urls.constant.ts
+  s_9ebfe402b13a9b::t_b0555a5ed3bd9e 1-16
+packages/macgamingdb-server/src/modules/game/utils/__tests__/generate-unique-game-slug.util.spec.ts
+  s_9ebfe402b13a9b::t_de8221b973db06 1-67
+packages/macgamingdb-server/src/engine/core-modules/scraper/services/web-scraper.service.ts
+  s_9ebfe402b13a9b::t_cd803ea26df87a 1-4,8,21-22,24-32,34,38,42
+packages/macgamingdb-server/src/modules/review/dtos/my-reviews.dto.ts
+  s_9ebfe402b13a9b::t_fe1632869876e5 1-4
+src/lib/steam-openid/stateToken.ts
+  s_9ebfe402b13a9b::t_3f23b9a35a7364 1-3
+packages/macgamingdb-server/src/modules/mac-config/dtos/mac-config-row.dto.ts
+  s_9ebfe402b13a9b::t_2f4913497f4bfe 1-9
+packages/macgamingdb-server/src/modules/mac-config/dtos/mac-config.dto.ts
+  s_9ebfe402b13a9b::t_14877d597435f5 1-9
+packages/macgamingdb-server/src/modules/game/utils/dedupe-game-search-results-by-name-and-year.util.ts
+  s_9ebfe402b13a9b::t_1d37ea8e5d804b 1-34
+packages/macgamingdb-server/src/modules/mac-config/utils/parse-mac-specification.util.ts
+  s_9ebfe402b13a9b::t_db562651dd5f5a 1-7
+src/modules/library/components/LibraryGameCard.tsx
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 5
+src/modules/search/components/filters/ChipsetFilter.tsx
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 16
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_9ebfe402b13a9b::t_d800f0910dddfc 21
+packages/macgamingdb-server/src/modules/game/types/game-search-result.type.ts
+  s_9ebfe402b13a9b::t_91d622254de8e4 1-4
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/services/ggdeals-api-client.service.ts
+  s_9ebfe402b13a9b::t_af0f6698dece0d 2
+  s_9ebfe402b13a9b::t_7f924444f0f8ef 20-42
+  s_9ebfe402b13a9b::t_3b767b5961104e 1,3-19,43-49
+packages/macgamingdb-server/src/modules/game/drivers/steam/utils/search-steam.util.ts
+  s_9ebfe402b13a9b::t_282dfb29af0632 1-52
+packages/macgamingdb-server/src/modules/review/dtos/game-review.dto.ts
+  s_9ebfe402b13a9b::t_ebff9a96dca5d1 1-28
+packages/macgamingdb-server/src/modules/review/dtos/my-review.dto.ts
+  s_9ebfe402b13a9b::t_c14d6ed1ea0c03 1-8
+packages/macgamingdb-server/src/modules/review/dtos/create-review-result.dto.ts
+  s_9ebfe402b13a9b::t_78fa7689688412 1-6
+packages/macgamingdb-server/src/modules/game/dtos/game-by-id.dto.ts
+  s_9ebfe402b13a9b::t_4c79c78de4d38b 2-5
+packages/macgamingdb-server/src/modules/game/types/normalized-game-details.type.ts
+  s_9ebfe402b13a9b::t_63eb860dc580bc 1-15
+packages/macgamingdb-server/src/modules/game/drivers/igdb/types/igdb-game-data.type.ts
+  s_9ebfe402b13a9b::t_7b5db637d57226 1-44
+packages/macgamingdb-server/src/modules/contributor/dtos/contributor-detail.dto.ts
+  s_9ebfe402b13a9b::t_35c06a8f40ec26 1-11
+packages/macgamingdb-server/src/modules/contributor/dtos/contributor-review.dto.ts
+  s_9ebfe402b13a9b::t_c4639fe8384e30 1-27
+packages/macgamingdb-server/src/engine/api/write-openapi-document.ts
+  s_9ebfe402b13a9b::t_fbbbfab26a27b3 1-37
+packages/macgamingdb-server/src/modules/review/review.module.ts
+  s_9ebfe402b13a9b::t_7ec2b0af33d461 3,8
+scripts/backfill-game-slugs.ts
+  s_9ebfe402b13a9b::t_015bbcc0012309 42-43
+  s_9ebfe402b13a9b::t_a09d4616f295fe 4
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 2
+packages/macgamingdb-server/src/modules/pricing/pricing.module.ts
+  s_9ebfe402b13a9b::t_772d2669be6433 1-8
+packages/macgamingdb-server/src/modules/pricing/exceptions/pricing.exception.ts
+  s_9ebfe402b13a9b::t_b827c43da3b10b 1-7
+packages/macgamingdb-server/src/modules/game/types/game-ref.type.ts
+  s_9ebfe402b13a9b::t_204b2fd5b45482 1-6
+src/app/library/client.tsx
+  s_9ebfe402b13a9b::t_1f7d1a28044325 8
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/services/everymac-scraper.service.ts
+  s_9ebfe402b13a9b::t_81b7a8743dc406 1,3-14,28-29,31-32,35,50,61,281-283,287,303-305,309
+packages/macgamingdb-server/src/engine/core-modules/file-storage/services/file-storage.service.ts
+  s_9ebfe402b13a9b::t_cdf7a92bb2050f 1-13,16-18,21,23-32,34,36-45,47,50-57,59,62-64
+  s_9ebfe402b13a9b::t_b4c37bbb1a60d9 14-15
+  s_9ebfe402b13a9b::t_9d726d6aa6ac6d 19-20
+  s_9ebfe402b13a9b::t_901ad19c519309 22
+  s_9ebfe402b13a9b::t_a4309222ad925c 33
+  s_9ebfe402b13a9b::t_20460b7d1ea30c 35
+  s_9ebfe402b13a9b::t_4c79a89b720c27 46
+  s_9ebfe402b13a9b::t_5e6e535f64d4a5 48-49
+  s_9ebfe402b13a9b::t_85fde54b4a6be1 58
+  s_9ebfe402b13a9b::t_45d3e0c1afe835 60-61
+  s_9ebfe402b13a9b::t_0f8b89f924383f 65
+packages/macgamingdb-server/src/modules/game/utils/generate-unique-game-slug.util.ts
+  s_9ebfe402b13a9b::t_340172b66736d2 1-40
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/igdb-image-url.util.ts
+  s_9ebfe402b13a9b::t_2b5ceb5c09178b 1-14
+packages/macgamingdb-server/src/modules/review/utils/calculate-average-performance.util.ts
+  s_9ebfe402b13a9b::t_9a453ba410ee62 1-18,20-23
+  s_9ebfe402b13a9b::t_76bec75d29ad80 19
+packages/macgamingdb-server/src/modules/game/drivers/steam/utils/get-game-by-steam-id.util.ts
+  s_9ebfe402b13a9b::t_f51dc91b99fc10 1-28
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/igdb-api-base-url.constant.ts
+  s_9ebfe402b13a9b::t_3560f3c4d84141 1
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/escape-igdb-query-value.util.ts
+  s_9ebfe402b13a9b::t_c1507ade170d92 1-2
+packages/macgamingdb-server/src/modules/contributor/routers/contributor.router.ts
+  s_9ebfe402b13a9b::t_a985df66046af7 4-5
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-library-sync.service.ts
+  s_9ebfe402b13a9b::t_f22c8c46d9792d 1,3-4,10-13,15-20,22,24-35,37-43,45-53,55-63,66-69,71-72
+  s_9ebfe402b13a9b::t_d7c8cb49537c6b 9
+packages/macgamingdb-server/src/modules/review/utils/score-to-rating.util.ts
+  s_9ebfe402b13a9b::t_347fd2597d93f7 1-10
+packages/macgamingdb-server/src/modules/library/drivers/steam/types/steam-sync-result.type.ts
+  s_9ebfe402b13a9b::t_03e9e2c610b160 1-4
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_9ebfe402b13a9b::t_e6640aa76bbdf6 388-391
+  s_9ebfe402b13a9b::t_79fbe2c9ab54c5 433-435
+  s_9ebfe402b13a9b::t_d2398d486be3c6 69,73-75
+  s_9ebfe402b13a9b::t_e73a0d7eac9f5e 44-47,50
+  s_9ebfe402b13a9b::t_71d3ed80a9ae1d 432
+  s_9ebfe402b13a9b::t_4e396aec22ec5f 16,18-19
+  s_9ebfe402b13a9b::t_e5ed05ca851bd9 14-15,17
+  s_9ebfe402b13a9b::t_2ca830f34b3048 313-315,320-323
+  s_9ebfe402b13a9b::t_f2704364384646 415-417
+  s_9ebfe402b13a9b::t_1b4447e1323c34 48-49
+  s_9ebfe402b13a9b::t_3341aaac5adb9f 20-21
+  s_9ebfe402b13a9b::t_b7b5b80b5fb6dd 12
+scripts/migrate-to-0-5-rating-scale.ts
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 2,4
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_9ebfe402b13a9b::t_5711268f069ee1 64
+  s_9ebfe402b13a9b::t_e9ddc935d357cb 63
+  s_9ebfe402b13a9b::t_7f92d9d58f59a4 245-249,251-255
+  s_9ebfe402b13a9b::t_2fd43171a43f2a 262-264,269-272
+  s_9ebfe402b13a9b::t_df6f687e9d9f32 136
+  s_9ebfe402b13a9b::t_49d9b2b36aa820 288
+  s_9ebfe402b13a9b::t_d43623fe795089 14,17-19
+  s_9ebfe402b13a9b::t_a93c382fdf29aa 15-16
+  s_9ebfe402b13a9b::t_4b47b1ee82c947 20-21
+  s_9ebfe402b13a9b::t_043942f3f7a3c7 216
+packages/macgamingdb-server/src/modules/library/dtos/library-sync-result.dto.ts
+  s_9ebfe402b13a9b::t_e697bc18f71c1a 1-6
+packages/macgamingdb-server/src/engine/core-modules/file-storage/utils/generate-screenshot-key.util.ts
+  s_9ebfe402b13a9b::t_dd57128d70cbcd 1-11,15
+packages/macgamingdb-server/src/modules/library/drivers/steam/exceptions/steam-library-private.exception.ts
+  s_9ebfe402b13a9b::t_69a7d996ce25e2 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/verify-state-token.util.ts
+  s_9ebfe402b13a9b::t_7b22e8bec2b96c 1-10
+src/modules/search/components/filters/PerformanceFilter.tsx
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 5
+packages/macgamingdb-server/src/modules/game/dtos/game-search-result.dto.ts
+  s_9ebfe402b13a9b::t_78636a0fb0b64f 1-11
+packages/macgamingdb-server/src/app.module.ts
+  s_9ebfe402b13a9b::t_033290cbe46543 8
+  s_9ebfe402b13a9b::t_40e42bb72650b0 15
+packages/macgamingdb-server/src/engine/core-modules/file-storage/utils/extract-key-from-url.util.ts
+  s_9ebfe402b13a9b::t_91302e1ba74514 1-8
+packages/macgamingdb-server/src/modules/review/routers/review.router.ts
+  s_9ebfe402b13a9b::t_4c014c2fef4378 16-20
+src/app/api/connections/steam/app-callback/route.ts
+  s_9ebfe402b13a9b::t_0ac4331d848a6c 44-47
+  s_9ebfe402b13a9b::t_281da27d79025f 8-12
+  s_9ebfe402b13a9b::t_d7f0254e4ef6e8 37
+  s_9ebfe402b13a9b::t_fe5f3f3439fe83 76
+packages/macgamingdb-server/src/@generated/server.ts
+  s_9ebfe402b13a9b::t_8646ceec5b3368 17-36
+scripts/populate-aggregated-performance.ts
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 2-4
+packages/macgamingdb-server/src/modules/game/utils/rank-game-search-results-by-relevance.util.ts
+  s_9ebfe402b13a9b::t_9eb690e1bb0c7a 1-18
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/macbook-neo-specifications.constant.ts
+  s_9ebfe402b13a9b::t_2fb6e2f9786c66 1-16
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/get-app-origin.util.ts
+  s_9ebfe402b13a9b::t_03a49504ac8f37 1-8
+packages/macgamingdb-server/src/modules/library/library.module.ts
+  s_9ebfe402b13a9b::t_d2157d31cc138e 5-7,10-17
+packages/macgamingdb-server/src/modules/review/dtos/game-review-with-mac-config.dto.ts
+  s_9ebfe402b13a9b::t_1d993f2d0b99ff 1-6
+packages/macgamingdb-server/src/modules/game/game.module.ts
+  s_9ebfe402b13a9b::t_6f4bdf83d08385 2
+  s_9ebfe402b13a9b::t_f7508b59b8554a 12
+  s_9ebfe402b13a9b::t_33eda9e3dca3a5 4-8,13-22
+src/modules/review/components/ReviewCard.tsx
+  s_9ebfe402b13a9b::t_1f7d1a28044325 8
+scripts/populate-mac-configs.ts
+  s_9ebfe402b13a9b::t_c593c5bc17d427 11-16,19-20
+  s_9ebfe402b13a9b::t_1d62e09ca080fd 25-26
+  s_9ebfe402b13a9b::t_1f7d1a28044325 2-3,29
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 4
+  s_9ebfe402b13a9b::t_8646ceec5b3368 17-18
+packages/macgamingdb-server/src/modules/contributor/dtos/contributor.dto.ts
+  s_9ebfe402b13a9b::t_2c0e6f42754545 1-10
+packages/macgamingdb-server/src/modules/game/interfaces/game-source-driver.interface.ts
+  s_9ebfe402b13a9b::t_0aee505954fb23 1-9
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_fe93122ed83187 14-17
+  s_9ebfe402b13a9b::t_d7d41e8726e479 19-21
+  s_9ebfe402b13a9b::t_e35e20cdc30018 24-27
+  s_9ebfe402b13a9b::t_40e86c0e96be24 28-30
+  s_9ebfe402b13a9b::t_2702a694f58016 18
+  s_9ebfe402b13a9b::t_9fbfda119b22e0 13
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/verify-state-token-user-id.util.ts
+  s_9ebfe402b13a9b::t_30116cc125016d 1-20
+packages/macgamingdb-server/src/modules/game/dtos/rating-counts.dto.ts
+  s_9ebfe402b13a9b::t_53d4b5f7388cf5 1-11
+scripts/add-review-count.ts
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 2
+src/modules/home/hooks/useHomeFilters.ts
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 14
+packages/macgamingdb-server/src/engine/core-modules/scraper/constants/oxylabs-api-endpoint.constant.ts
+  s_9ebfe402b13a9b::t_8144b04b60769e 1
+packages/macgamingdb-server/src/modules/library/dtos/library-entry.dto.ts
+  s_9ebfe402b13a9b::t_fc40b5ef71f326 1-12
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/mac-ram-limits.constant.ts
+  s_9ebfe402b13a9b::t_dcb90c82b22981 1,3,8,93
+packages/macgamingdb-server/src/database/schema.ts
+  s_9ebfe402b13a9b::t_694740c464fe65 4
+packages/macgamingdb-server/src/modules/game/dtos/games-page.dto.ts
+  s_9ebfe402b13a9b::t_b2fb635746db1a 1-8
+scripts/migration-utils/convert-mac-config-identifier-new-format.ts
+  s_9ebfe402b13a9b::t_1f7d1a28044325 1
+scripts/generate-openapi.ts
+  s_9ebfe402b13a9b::t_9b28afe0c7f1da 7,20-23
+  s_9ebfe402b13a9b::t_047b2519d17c69 4-6,11,15-19
+packages/macgamingdb-server/src/modules/game/drivers/igdb/constants/twitch-token-url.constant.ts
+  s_9ebfe402b13a9b::t_0ac1dbf50b9594 1
+packages/macgamingdb-server/src/modules/game/utils/extract-release-year.util.ts
+  s_9ebfe402b13a9b::t_32df8d92172d6a 1-6
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/state-token-algorithm.constant.ts
+  s_9ebfe402b13a9b::t_63f62a0bd08fbf 1
+scripts/migrate-to-new-mac-config-identifier.ts
+  s_9ebfe402b13a9b::t_b938bd4e6262ea 2
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-web-api.service.ts
+  s_9ebfe402b13a9b::t_ce7c64be3cc88c 1-36,38-45
+  s_9ebfe402b13a9b::t_db1d84f4110b23 37
+packages/macgamingdb-server/src/modules/library/dtos/library-status.dto.ts
+  s_9ebfe402b13a9b::t_44c9f162e12e0f 1-8
+packages/macgamingdb-server/src/modules/game/utils/parse-game-ref.util.ts
+  s_9ebfe402b13a9b::t_3fefc2c6d9f316 1-20
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/get-steam-app-id-from-igdb.util.ts
+  s_9ebfe402b13a9b::t_f883bcba28fd2a 1-12
+packages/macgamingdb-server/src/modules/library/routers/library.router.ts
+  s_9ebfe402b13a9b::t_fbb0497ac31a5f 6-10
+packages/macgamingdb-server/src/modules/mac-config/utils/__tests__/get-chipset-combinations.util.spec.ts
+  s_9ebfe402b13a9b::t_015d208c47b10d 1-41
+packages/macgamingdb-server/src/modules/game/utils/slugify-game-name.util.ts
+  s_9ebfe402b13a9b::t_d80383b242542a 1-17
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-api-base-url.constant.ts
+  s_9ebfe402b13a9b::t_af8fc1e77d938e 1
+packages/macgamingdb-server/src/database/drizzle.ts
+  s_9ebfe402b13a9b::t_efd63c6d2de9de 4
+packages/macgamingdb-server/src/engine/core-modules/auth/better-auth-client.util.ts
+  s_9ebfe402b13a9b::t_d71acee0245670 14
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_9ebfe402b13a9b::t_9fd5e91eac75be 5
+src/app/contributors/client.tsx
+  s_9ebfe402b13a9b::t_02a8071ab57e57 12
+src/app/home-client.tsx
+  s_9ebfe402b13a9b::t_27a9a44101719b 8
+src/modules/review/components/SelectMacConfiguration.tsx
+  s_9ebfe402b13a9b::t_5578f99806d994 22
+src/modules/review/hooks/useReviewDraft.ts
+  s_9ebfe402b13a9b::t_42699e0f3e8d65 8
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/constants/gg-deals-default-region.constant.ts
+  s_73ec884bff702d::t_5984c67e439299 1-3
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/constants/gg-deals-prices-endpoint.constant.ts
+  s_73ec884bff702d::t_365b448c514c47 1-2
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/constants/gg-deals-supported-regions.constant.ts
+  s_73ec884bff702d::t_01000b5c6fabe2 1-21
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/types/ggdeals-api-response.type.ts
+  s_73ec884bff702d::t_0868d683e8a10b 1-6
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/types/ggdeals-region.type.ts
+  s_2247a5338b15f4::t_d032ca94b61660 1-3
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/utils/is-gg-deals-region.util.ts
+  s_73ec884bff702d::t_b71780816e7a44 1-5
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/utils/resolve-gg-deals-region.util.ts
+  s_73ec884bff702d::t_a60ca5b0bd7057 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "6478e6a3b6a6a888f48210800769f108fd49c7f9",
+  "prompts": {},
+  "sessions": {
+    "s_2247a5338b15f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a73de6800939e2fdf",
+        "model": "unknown"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    },
+    "s_73ec884bff702d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a56a429c95d05ff2f",
+        "model": "unknown"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    },
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
