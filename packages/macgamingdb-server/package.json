@@ -44,6 +44,7 @@
     "rxjs": "^7.8.2",
     "trpc-to-openapi": "2.4.0",
     "zod": "^3.25.0",
-    "zod-openapi": "4.2.4"
+    "zod-openapi": "4.2.4",
+    "macgamingdb-shared": "workspace:*"
   }
 }

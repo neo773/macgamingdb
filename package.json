@@ -5,7 +5,8 @@
   "workspaces": [
     "packages/macgamingdb-emails",
     "packages/macgamingdb-server",
-    "packages/macgamingdb-ui"
+    "packages/macgamingdb-ui",
+    "packages/macgamingdb-shared"
   ],
   "scripts": {
     "dev": "next dev --turbopack",
@@ -84,7 +85,8 @@
     "ua-parser-js": "^2.0.3",
     "use-debounce": "^10.0.5",
     "zod": "^3.25.0",
-    "zod-openapi": "4.2.4"
+    "zod-openapi": "4.2.4",
+    "macgamingdb-shared": "workspace:*"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250420.0",

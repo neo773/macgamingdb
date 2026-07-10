@@ -15,7 +15,8 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - `Pick<>`/`Omit<>` to narrow params to what's needed. Don't pass an entity plus its id; don't pass derivable data.
 - Types declared above the function; exported types in their own file; don't export what's only used locally. Generics get descriptive names (`TData`, not `T`).
 - Prefer `map`/`filter`/`reduce` over manual loops when it stays clear. Files < 300 lines (services < 500) — split when growing.
-- `isDefined()`-style helpers over manual `!== null && !== undefined`. No `=== true`, no `Boolean()` casts.
+- Nullish/emptiness checks use guards, never manual expressions: `isDefined()` from `macgamingdb-shared/utils/isDefined` instead of `!== null && !== undefined`; `isNonEmptyString`/`isNonEmptyArray` and friends from `@sniptt/guards`. No `=== true`, no `Boolean()` casts.
+- Code shared by frontend and backend lives in `packages/macgamingdb-shared` — pure types + utils, no framework imports.
 - Always `await` promises — no fire-and-forget.
 - No abbreviations, ever. Booleans read `isX`/`hasX`. One term per concept codebase-wide. Pluralize collections, singular for one entity. `generate` for creating values; never `get` for something that mutates. No `v2` suffixes or leaked internal qualifiers.
 - Reserved words: `guard` = NestJS guard only, `Input` = API input schemas, plain argument types are `XParams`, `Context` = React context only, `Props` = component props only.

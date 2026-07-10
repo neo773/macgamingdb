@@ -43,6 +43,7 @@
         "lucide-react": "^0.532.0",
         "macgamingdb-emails": "workspace:*",
         "macgamingdb-server": "workspace:*",
+        "macgamingdb-shared": "workspace:*",
         "macgamingdb-ui": "workspace:*",
         "motion": "^12.23.11",
         "next": "^16.1.1",
@@ -107,6 +108,7 @@
         "@types/express": "^5.0.6",
         "express": "^5.2.1",
         "fuse.js": "^7.4.2",
+        "macgamingdb-shared": "workspace:*",
         "nest-commander": "^3.20.1",
         "nestjs-trpc": "^2.12.0",
         "pino": "^9.6.0",
@@ -116,6 +118,13 @@
         "trpc-to-openapi": "2.4.0",
         "zod": "^3.25.0",
         "zod-openapi": "4.2.4",
+      },
+    },
+    "packages/macgamingdb-shared": {
+      "name": "macgamingdb-shared",
+      "version": "1.0.0",
+      "dependencies": {
+        "@sniptt/guards": "^0.2.0",
       },
     },
     "packages/macgamingdb-ui": {
@@ -1174,6 +1183,8 @@
     "@smithy/util-waiter": ["@smithy/util-waiter@4.2.7", "", { "dependencies": { "@smithy/abort-controller": "^4.2.7", "@smithy/types": "^4.11.0", "tslib": "^2.6.2" } }, "sha512-vHJFXi9b7kUEpHWUCY3Twl+9NPOZvQ0SAi+Ewtn48mbiJk4JY9MZmKQjGB4SCvVb9WPiSphZJYY6RIbs+grrzw=="],
 
     "@smithy/uuid": ["@smithy/uuid@1.1.0", "", { "dependencies": { "tslib": "^2.6.2" } }, "sha512-4aUIteuyxtBUhVdiQqcDhKFitwfd9hqoSDYY2KRXiWtgoWJ9Bmise+KfEPDiVHWeJepvF8xJO9/9+WDIciMFFw=="],
+
+    "@sniptt/guards": ["@sniptt/guards@0.2.0", "", {}, "sha512-QNxknl5YcrxpLtP99iEvNEJRlfXtIfpkvcEWHJKD6bHUr93dsH6OZGUF6reVBddKs1ps44lndSMoDK2Dz0n6ZQ=="],
 
     "@socket.io/component-emitter": ["@socket.io/component-emitter@3.1.2", "", {}, "sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA=="],
 
@@ -2462,6 +2473,8 @@
     "macgamingdb-emails": ["macgamingdb-emails@workspace:packages/macgamingdb-emails"],
 
     "macgamingdb-server": ["macgamingdb-server@workspace:packages/macgamingdb-server"],
+
+    "macgamingdb-shared": ["macgamingdb-shared@workspace:packages/macgamingdb-shared"],
 
     "macgamingdb-ui": ["macgamingdb-ui@workspace:packages/macgamingdb-ui"],
 

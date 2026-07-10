@@ -1,0 +1,12 @@
+{
+  "name": "macgamingdb-shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./utils/*": "./src/utils/*.ts"
+  },
+  "dependencies": {
+    "@sniptt/guards": "^0.2.0"
+  }
+}
