@@ -1,0 +1,31 @@
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_b18bd3647c2158 47-48
+package.json
+  s_9ebfe402b13a9b::t_b18bd3647c2158 8-9,88-89
+CODE_STYLE.md
+  s_9ebfe402b13a9b::t_9ef1c0c447f3c4 18-19
+packages/macgamingdb-shared/src/utils/isDefined.ts
+  s_9ebfe402b13a9b::t_c93f98f8872fc9 1-5
+packages/macgamingdb-shared/package.json
+  s_9ebfe402b13a9b::t_f1119752165633 1-12
+packages/macgamingdb-shared/tsconfig.json
+  s_9ebfe402b13a9b::t_f1119752165633 1-16
+bun.lock
+  s_9ebfe402b13a9b::t_e1a2469c62ccc1 46,111,123-129,1187-1188,2477-2478
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "041d65c591636ba7a33c942f4d105b5ee90b98ae",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
