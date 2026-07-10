@@ -9,6 +9,13 @@ const nextConfig = {
   turbopack: {
     root: import.meta.dirname,
   },
+  async rewrites() {
+    const apiServerUrl = process.env.INTERNAL_API_URL ?? 'http://localhost:4000';
+    return [
+      { source: '/api/trpc/:path*', destination: `${apiServerUrl}/trpc/:path*` },
+      { source: '/api/rest/:path*', destination: `${apiServerUrl}/rest/:path*` },
+    ];
+  },
 };
 
 const withMDX = createMDX({

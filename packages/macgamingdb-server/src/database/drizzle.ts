@@ -7,7 +7,7 @@ export function createDrizzleClient() {
   const client = createClient({
     url:
       process.env.LIBSQL_DATABASE_URL ??
-      'file:' + path.join(process.cwd(), 'packages', 'server', 'prisma', 'dev.db'),
+      'file:' + path.join(process.cwd(), 'packages', 'macgamingdb-server', 'prisma', 'dev.db'),
     authToken: process.env.LIBSQL_DATABASE_TOKEN || undefined,
   });
 

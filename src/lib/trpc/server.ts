@@ -1,17 +1,23 @@
 import { createServerSideHelpers } from '@trpc/react-query/server';
-import { appRouter } from 'macgamingdb-server/routers/_app';
-import { createTRPCContext } from 'macgamingdb-server/trpc';
+import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import { type AppRouter } from 'macgamingdb-server/generated';
 import superjson from 'superjson';
+import { getUrl } from '@/lib/trpc/utils';
 
 /**
- * Creates server-side helpers to use tRPC procedures inside server components.
+ * Creates server-side helpers to call the API server from server components.
  * Does not forward request headers — only suitable for public procedures.
  * Auth-protected queries should go through the tRPC client (browser-side).
  */
 export const createServerHelpers = async () => {
   return createServerSideHelpers({
-    router: appRouter,
-    ctx: await createTRPCContext(),
-    transformer: superjson,
+    client: createTRPCClient<AppRouter>({
+      links: [
+        httpBatchLink({
+          url: getUrl(),
+          transformer: superjson,
+        }),
+      ],
+    }),
   });
 };

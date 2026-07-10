@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { type OpenApiMeta } from 'trpc-to-openapi';
 import superjson from 'superjson';
-import { BetterAuthClient } from '../auth/auth';
+import { BetterAuthClient } from '../engine/core-modules/auth/better-auth-client.util';
 import { createDrizzleClient, type DrizzleDB } from '../database/drizzle';
 import { type User } from 'better-auth';
 

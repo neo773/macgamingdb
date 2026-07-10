@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:server": "bun --env-file=.env.local --watch packages/macgamingdb-server/src/main.ts",
     "db:push": "bunx drizzle-kit push",
     "db:push:prod": "NODE_ENV=production bunx --env-file=.env.prod drizzle-kit push",
     "db:generate": "bunx drizzle-kit generate",
