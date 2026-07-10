@@ -3,13 +3,14 @@
     "target": "ES2021",
     "module": "CommonJS",
     "moduleResolution": "node",
+    "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "."
   },
-  "include": ["src"],
+  "include": ["emails"],
   "exclude": ["node_modules", "dist"]
 }

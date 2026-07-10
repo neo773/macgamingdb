@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./magic-link": "./emails/magic-link.tsx",
+    "./magic-link": {
+      "types": "./dist/emails/magic-link.d.ts",
+      "default": "./dist/emails/magic-link.js"
+    },
     "./tailwind-config": "./tailwind.config.ts"
   },
   "scripts": {
-    "build": "email build",
+    "build": "tsc -p tsconfig.build.json",
+    "build:preview": "email build",
     "dev": "email dev",
     "export": "email export"
   },

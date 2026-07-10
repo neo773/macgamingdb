@@ -20,8 +20,8 @@ const testDatabasePath = path.join(
 
 const runMigrateCommand = (label: string): string => {
   const result = spawnSync(
-    'bun',
-    ['packages/macgamingdb-server/src/command/main.ts', 'migrate-database'],
+    'node',
+    ['packages/macgamingdb-server/dist/command/main.js', 'migrate-database'],
     {
       cwd: repoRoot,
       env: {

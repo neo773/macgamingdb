@@ -3,6 +3,8 @@ import { Command, CommandRunner, Option } from 'nest-commander';
 import { migrate } from 'drizzle-orm/libsql/migrator';
 import { sql } from 'drizzle-orm';
 import path from 'node:path';
+import { readFileSync } from 'node:fs';
+import { z } from 'zod';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../constants/drizzle-client.constant';
 import { type DrizzleDB } from '../drizzle';
@@ -12,7 +14,7 @@ import { GameSlugBackfillService } from '../../modules/game/services/game-slug-b
 const logger = createLogger('MigrateDatabase');
 
 const MIGRATIONS_FOLDER = path.join(
-  import.meta.dirname,
+  __dirname,
   '..',
   '..',
   '..',
@@ -107,9 +109,14 @@ export class MigrateDatabaseCommand extends CommandRunner {
       sql`SELECT hash FROM __drizzle_migrations`,
     );
     const appliedCount = journalEntries.length;
-    const journal = (await import(
-      path.join(MIGRATIONS_FOLDER, 'meta', '_journal.json')
-    )) as { entries: Array<{ tag: string }> };
+    const journalSchema = z.object({
+      entries: z.array(z.object({ tag: z.string() })),
+    });
+    const journal = journalSchema.parse(
+      JSON.parse(
+        readFileSync(path.join(MIGRATIONS_FOLDER, 'meta', '_journal.json'), 'utf-8'),
+      ),
+    );
     return journal.entries.slice(appliedCount).map((entry) => entry.tag);
   }
 

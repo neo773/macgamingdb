@@ -5,7 +5,8 @@
   "scripts": {
     "start:dev": "bun --watch src/main.ts",
     "start": "bun src/main.ts",
-    "generate:types": "nestjs-trpc generate"
+    "generate:types": "nestjs-trpc generate",
+    "build": "tsc -p tsconfig.build.json"
   },
   "exports": {
     "./schema": "./src/schema/index.ts",

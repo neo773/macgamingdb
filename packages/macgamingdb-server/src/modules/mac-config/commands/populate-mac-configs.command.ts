@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'node:url';
+
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { Inject } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { convertMacConfigIdentifierToNewFormat } from '../utils/convert-mac-conf
 const logger = createLogger('PopulateMacConfigs');
 
 const SEED_PATH = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
+  __dirname,
   '..',
   '..',
   '..',
