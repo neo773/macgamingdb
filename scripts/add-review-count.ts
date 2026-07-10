@@ -1,5 +1,5 @@
 import { createDrizzleClient } from 'macgamingdb-server/database';
-import { createLogger } from 'macgamingdb-server/utils/logger';
+import { createLogger } from 'macgamingdb-server/engine/core-modules/logger/create-logger';
 import { config } from 'dotenv';
 import { games, gameReviews } from 'macgamingdb-server/drizzle/schema';
 import { eq, count } from 'drizzle-orm';

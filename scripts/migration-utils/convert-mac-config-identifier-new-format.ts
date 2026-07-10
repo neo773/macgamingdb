@@ -1,4 +1,4 @@
-import { type MacSpecification } from 'macgamingdb-server/scraper/EveryMacScraper';
+import { type MacSpecification } from 'macgamingdb-server/modules/mac-config/types/mac-specification.type';
 
 export type OldMacConfig = {
   identifier: string;

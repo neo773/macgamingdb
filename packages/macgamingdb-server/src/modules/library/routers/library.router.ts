@@ -3,13 +3,11 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { Ctx, Mutation, Query, Router, UseMiddlewares } from 'nestjs-trpc';
 import { AuthMiddleware } from '../../../engine/api/trpc/auth.middleware';
-import {
-  LibraryEntrySchema,
-  LibraryLinkUrlSchema,
-  LibraryStatusSchema,
-  LibrarySyncResultSchema,
-  OkResultSchema,
-} from '../../../schema/openapi';
+import { LibraryEntrySchema } from '../dtos/library-entry.dto';
+import { LibraryLinkUrlSchema } from '../dtos/library-link-url.dto';
+import { LibraryStatusSchema } from '../dtos/library-status.dto';
+import { LibrarySyncResultSchema } from '../dtos/library-sync-result.dto';
+import { OkResultSchema } from '../dtos/ok-result.dto';
 import { LibraryService } from '../services/library.service';
 
 type SessionContext = { user?: { user?: { id?: string } } | null };

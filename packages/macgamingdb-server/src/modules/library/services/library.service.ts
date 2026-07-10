@@ -9,17 +9,13 @@ import {
   userExternalAccounts,
   userLibraryEntries,
   type PerformanceRating,
-} from '../../../drizzle/schema';
-import {
-  STEAM_LIBRARY_PRIVATE_CODE,
-  SteamLibraryPrivateError,
-} from '../../../services/steam-api';
-import { syncSteamLibraryForUser } from '../../../services/steam-library';
-import { buildSteamOpenIdRedirectUrl } from '../../../services/steam-openid';
-import {
-  getAppOrigin,
-  issueStateToken,
-} from '../../../services/steam-openid-state';
+} from '../../../database/schema';
+import { STEAM_LIBRARY_PRIVATE_CODE } from '../drivers/steam/constants/steam-library-private-code.constant';
+import { SteamLibraryPrivateError } from '../drivers/steam/exceptions/steam-library-private.exception';
+import { SteamLibrarySyncService } from '../drivers/steam/services/steam-library-sync.service';
+import { SteamOpenIdService } from '../drivers/steam/services/steam-openid.service';
+import { getAppOrigin } from '../drivers/steam/utils/get-app-origin.util';
+import { issueStateToken } from '../drivers/steam/utils/issue-state-token.util';
 import { LibraryException } from '../exceptions/library.exception';
 
 const PERFORMANCE_RANK: Record<PerformanceRating, number> = {
@@ -50,17 +46,24 @@ const steamEntriesWhere = (userId: string) =>
 
 @Injectable()
 export class LibraryService {
-  constructor(@Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB) {}
+  constructor(
+    @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
+    private readonly steamLibrarySyncService: SteamLibrarySyncService,
+    private readonly steamOpenIdService: SteamOpenIdService,
+  ) {}
 
   async linkStartUrl(userId: string) {
     const origin = getAppOrigin();
 
-    const state = await issueStateToken(userId);
+    const state = await issueStateToken({ userId });
     const returnTo = new URL('/api/connections/steam/app-callback', origin);
     returnTo.searchParams.set('state', state);
 
     return {
-      url: buildSteamOpenIdRedirectUrl(returnTo.toString(), `${origin}/`),
+      url: this.steamOpenIdService.buildRedirectUrl({
+        returnTo: returnTo.toString(),
+        realm: `${origin}/`,
+      }),
     };
   }
 
@@ -79,7 +82,7 @@ export class LibraryService {
 
   async sync(userId: string) {
     try {
-      return await syncSteamLibraryForUser(this.db, userId);
+      return await this.steamLibrarySyncService.syncLibraryForUser({ userId });
     } catch (err) {
       if (err instanceof SteamLibraryPrivateError) {
         throw new LibraryException(

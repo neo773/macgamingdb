@@ -1,5 +1,5 @@
 import { createDrizzleClient } from 'macgamingdb-server/database';
-import { createLogger } from 'macgamingdb-server/utils/logger';
+import { createLogger } from 'macgamingdb-server/engine/core-modules/logger/create-logger';
 import { config } from 'dotenv';
 import { convertMacConfigIdentifierToNewFormat } from './migration-utils/convert-mac-config-identifier-new-format';
 import { macConfigs } from 'macgamingdb-server/drizzle/schema';

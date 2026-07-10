@@ -1,6 +1,3 @@
-// Moved into the server package so the iOS link flow can share it.
-export {
-  issueStateToken,
-  verifyStateToken,
-  verifyStateTokenUserId,
-} from 'macgamingdb-server/services/steam-openid-state';
+export { issueStateToken } from 'macgamingdb-server/modules/library/drivers/steam/utils/issue-state-token.util';
+export { verifyStateToken } from 'macgamingdb-server/modules/library/drivers/steam/utils/verify-state-token.util';
+export { verifyStateTokenUserId } from 'macgamingdb-server/modules/library/drivers/steam/utils/verify-state-token-user-id.util';

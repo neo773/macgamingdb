@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DEFAULT_CHIPSET_FILTER } from '@/lib/constants';
-import type { ChipsetGroup } from 'macgamingdb-server/utils/getChipsetCombinations';
+import type { ChipsetGroup } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
 
 const ALL_CHIPSETS_LABEL = 'All Chipsets';
 

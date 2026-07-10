@@ -5,7 +5,7 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import clsx from 'clsx';
 import ScreenshotDisplay from './ScreenshotDisplay';
-import { type MacSpecification } from 'macgamingdb-server/scraper/EveryMacScraper';
+import { type MacSpecification } from 'macgamingdb-server/modules/mac-config/types/mac-specification.type';
 import { type Performance } from 'macgamingdb-server/schema';
 import { getHumanReadableFamily } from '@/modules/review/utils';
 

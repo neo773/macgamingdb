@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
-import { formatRatingLabel } from 'macgamingdb-server/utils/formatRatingLabel';
+import { formatRatingLabel } from 'macgamingdb-server/modules/review/utils/format-rating-label';
 import { GameCard } from '@/modules/game/components/GameCard';
 
 const PERF_BADGE: Record<PerformanceRating, string> = {

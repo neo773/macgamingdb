@@ -1,7 +1,7 @@
 import { createDrizzleClient } from 'macgamingdb-server/database';
-import { createLogger } from 'macgamingdb-server/utils/logger';
+import { createLogger } from 'macgamingdb-server/engine/core-modules/logger/create-logger';
 import { games } from 'macgamingdb-server/drizzle/schema';
-import { generateUniqueGameSlug } from 'macgamingdb-server/utils/generateUniqueGameSlug';
+import { generateUniqueGameSlug } from 'macgamingdb-server/modules/game/utils/generate-unique-game-slug';
 import { config } from 'dotenv';
 import { and, eq, isNull, isNotNull } from 'drizzle-orm';
 
@@ -39,7 +39,8 @@ async function backfillGameSlugs() {
   let updatedCount = 0;
 
   for (const game of gamesToProcess) {
-    const slug = await generateUniqueGameSlug(game.name ?? '', {
+    const slug = await generateUniqueGameSlug({
+      name: game.name ?? '',
       releaseYear: game.releaseYear ?? undefined,
       fallbackId: game.id,
       isTaken,

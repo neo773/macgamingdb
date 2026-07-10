@@ -11,7 +11,7 @@ import {
   MacGamingDBMagicLinkEmailText,
 } from 'macgamingdb-emails/magic-link';
 import { type DrizzleDB } from '../../../database/drizzle';
-import * as schema from '../../../drizzle/schema';
+import * as schema from '../../../database/schema';
 import { REVIEW_ACCOUNT_EMAIL, REVIEW_ACCOUNT_OTP } from './auth.const';
 
 async function generateAppleClientSecret(): Promise<string> {

@@ -18,7 +18,7 @@ import { useReviewDraft } from '@/modules/review/hooks';
 import GameReviewCard from '@/modules/review/components/ReviewCard';
 import ExpandableReviewNote from '@/modules/review/components/ExpandableReviewNote';
 import ScreenshotDisplay from '@/modules/review/components/ScreenshotDisplay';
-import { type SteamAppData } from 'macgamingdb-server/api/steam';
+import { type SteamAppData } from 'macgamingdb-server/modules/game/drivers/steam/types/steam-app-data';
 import {
   PerformanceEnum,
   PlayMethodEnum,

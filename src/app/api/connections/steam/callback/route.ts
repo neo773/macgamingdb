@@ -7,9 +7,10 @@ import {
   LibraryProvider,
   userExternalAccounts,
 } from 'macgamingdb-server/drizzle/schema';
-import { verifySteamOpenIdResponse } from 'macgamingdb-server/services/steam-openid';
-import { SteamLibraryPrivateError } from 'macgamingdb-server/services/steam-api';
-import { syncSteamLibraryForUser } from 'macgamingdb-server/services/steam-library';
+import { SteamOpenIdService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-openid.service';
+import { SteamLibraryPrivateError } from 'macgamingdb-server/modules/library/drivers/steam/exceptions/steam-library-private.exception';
+import { SteamLibrarySyncService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-library-sync.service';
+import { SteamWebApiService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-web-api.service';
 import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
 import { STATE_COOKIE_NAME } from '@/lib/steam-openid/stateCookieName';
 import { FLOW_ERROR, type FlowError } from '@/lib/steam-openid/flowError';
@@ -73,14 +74,17 @@ export async function GET(req: NextRequest) {
     !cookieState ||
     !queryState ||
     cookieState !== queryState ||
-    !(await verifyStateToken(cookieState, userId))
+    !(await verifyStateToken({ token: cookieState, expectedUserId: userId }))
   ) {
     return libraryRedirect(FLOW_ERROR.StateMismatch);
   }
 
   let steamId: string;
   try {
-    steamId = await verifySteamOpenIdResponse(req.nextUrl.toString(), `${origin}/`);
+    steamId = await new SteamOpenIdService().verifyResponse({
+      callbackUrl: req.nextUrl.toString(),
+      realm: `${origin}/`,
+    });
   } catch (err) {
     console.error('Steam OpenID verify failed:', err instanceof Error ? err.message : 'unknown');
     return libraryRedirect(FLOW_ERROR.VerifyFailed);
@@ -89,7 +93,7 @@ export async function GET(req: NextRequest) {
   await upsertSteamLink(db, userId, steamId);
 
   try {
-    await syncSteamLibraryForUser(db, userId);
+    await new SteamLibrarySyncService(db, new SteamWebApiService()).syncLibraryForUser({ userId });
   } catch (err) {
     if (err instanceof SteamLibraryPrivateError) {
       return libraryRedirect(FLOW_ERROR.PrivateLibrary);

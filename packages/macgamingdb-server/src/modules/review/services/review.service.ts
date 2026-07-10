@@ -11,18 +11,14 @@ import {
   type PerformanceRating,
   type PlayMethod,
   type TranslationLayer,
-} from '../../../drizzle/schema';
-import {
-  generateScreenshotKey,
-  getPublicUrl,
-  getUploadSignedUrl,
-} from '../../../services/s3';
-import { type MacSpecification } from '../../../scraper/EveryMacScraper';
-import { calculateAveragePerformance } from '../../../utils/calculateAveragePerformance';
-import { scoreToRating } from '../../../utils/scoreToRating';
-import { resolveGame } from '../../../gameSources/resolveGame';
-import { materializeGame } from '../../../gameSources/materializeGame';
-import { parseGameRef } from '../../../gameSources/parseGameRef';
+} from '../../../database/schema';
+import { FileStorageService } from '../../../engine/core-modules/file-storage/services/file-storage.service';
+import { generateScreenshotKey } from '../../../engine/core-modules/file-storage/utils/generate-screenshot-key.util';
+import { parseMacSpecificationOrThrow } from '../../mac-config/utils/parse-mac-specification.util';
+import { calculateAveragePerformance } from '../utils/calculate-average-performance.util';
+import { scoreToRating } from '../utils/score-to-rating.util';
+import { parseGameRef } from '../../game/utils/parse-game-ref.util';
+import { GameMaterializationService } from '../../game/services/game-materialization.service';
 import { ReviewException } from '../exceptions/review.exception';
 import { PageRevalidationService } from '../../../engine/core-modules/page-revalidation/page-revalidation.service';
 
@@ -64,6 +60,8 @@ export class ReviewService {
   constructor(
     @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
     private readonly pageRevalidationService: PageRevalidationService,
+    private readonly fileStorageService: FileStorageService,
+    private readonly gameMaterializationService: GameMaterializationService,
   ) {}
 
   private async updateGameAggregatedPerformance(gameId: string): Promise<void> {
@@ -135,7 +133,7 @@ export class ReviewService {
         .orderBy(macConfigs.identifier);
 
       let configs = allMacConfigs.map((config) => {
-        const metadata = JSON.parse(config.metadata) as MacSpecification;
+        const metadata = parseMacSpecificationOrThrow(config.metadata);
         return {
           id: config.id,
           identifier: config.identifier,
@@ -215,7 +213,7 @@ export class ReviewService {
         return null;
       }
 
-      const metadata = JSON.parse(macConfig.metadata) as MacSpecification;
+      const metadata = parseMacSpecificationOrThrow(macConfig.metadata);
       return {
         id: macConfig.id,
         identifier: macConfig.identifier,
@@ -244,26 +242,34 @@ export class ReviewService {
       );
     }
 
-    const key = generateScreenshotKey(
-      params.userId,
-      params.gameId,
-      params.filename,
-    );
+    const key = generateScreenshotKey({
+      userId: params.userId,
+      gameId: params.gameId,
+      filename: params.filename,
+    });
 
-    const signedUrl = await getUploadSignedUrl(key, params.contentType);
-    const publicUrl = getPublicUrl(key);
+    const signedUrl = await this.fileStorageService.getUploadSignedUrl({
+      key,
+      contentType: params.contentType,
+    });
+    const publicUrl = this.fileStorageService.getPublicUrl(key);
 
     return { signedUrl, publicUrl, key };
   }
 
   async create(params: CreateReviewParams) {
     try {
-      let game = await resolveGame(this.db, params.gameId);
+      let game = await this.gameMaterializationService.resolveGame({
+        identifier: params.gameId,
+      });
 
       if (!game) {
         const ref = parseGameRef(params.gameId);
         game = ref
-          ? await materializeGame(this.db, ref.source, ref.externalId)
+          ? await this.gameMaterializationService.materializeGame({
+              source: ref.source,
+              externalId: ref.externalId,
+            })
           : null;
       }
 
@@ -279,9 +285,7 @@ export class ReviewService {
         throw new ReviewException('Mac config not found', 'MAC_CONFIG_NOT_FOUND');
       }
 
-      const macConfigMetadata = JSON.parse(
-        macConfig.metadata,
-      ) as MacSpecification;
+      const macConfigMetadata = parseMacSpecificationOrThrow(macConfig.metadata);
       const hasScreenshots =
         params.screenshots && params.screenshots.length > 0;
 

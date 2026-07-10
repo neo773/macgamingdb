@@ -11,16 +11,14 @@ import {
   type ChipsetVariant,
   type PlayMethod,
 } from '../../../schema';
-import {
-  CoverArtSchema,
-  GameByIdSchema,
-  GamePricesSchema,
-  GamesPageSchema,
-  GameSearchResultSchema,
-  RatingCountsSchema,
-} from '../../../schema/openapi';
-import { type PerformanceRating } from '../../../drizzle/schema';
-import { getRegion } from '../../../utils/getRegion';
+import { CoverArtSchema } from '../dtos/cover-art.dto';
+import { GameByIdSchema } from '../dtos/game-by-id.dto';
+import { GamePricesSchema } from '../dtos/game-prices.dto';
+import { GamesPageSchema } from '../dtos/games-page.dto';
+import { GameSearchResultSchema } from '../dtos/game-search-result.dto';
+import { RatingCountsSchema } from '../dtos/rating-counts.dto';
+import { type PerformanceRating } from '../../../database/schema';
+import { getRegion } from '../../../engine/utils/get-region.util';
 import { GameService } from '../services/game.service';
 
 const toHeaders = (request: Request): Headers => {

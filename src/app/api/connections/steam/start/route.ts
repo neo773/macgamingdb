@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers, cookies } from 'next/headers';
 import { createDrizzleClient } from 'macgamingdb-server/database';
 import { BetterAuthClient } from 'macgamingdb-server/auth';
-import { buildSteamOpenIdRedirectUrl } from 'macgamingdb-server/services/steam-openid';
+import { SteamOpenIdService } from 'macgamingdb-server/modules/library/drivers/steam/services/steam-openid.service';
 import { getAppOrigin } from '@/lib/steam-openid/appOrigin';
 import { CALLBACK_PATH } from '@/lib/steam-openid/callbackPath';
 import { STATE_COOKIE_NAME } from '@/lib/steam-openid/stateCookieName';
@@ -22,7 +22,7 @@ export async function GET() {
     return NextResponse.redirect(`${origin}/`);
   }
 
-  const state = await issueStateToken(session.user.id);
+  const state = await issueStateToken({ userId: session.user.id });
   const cookieStore = await cookies();
   cookieStore.set(STATE_COOKIE_NAME, state, {
     httpOnly: true,
@@ -36,6 +36,9 @@ export async function GET() {
   returnTo.searchParams.set('state', state);
 
   return NextResponse.redirect(
-    buildSteamOpenIdRedirectUrl(returnTo.toString(), `${origin}/`),
+    new SteamOpenIdService().buildRedirectUrl({
+      returnTo: returnTo.toString(),
+      realm: `${origin}/`,
+    }),
   );
 }

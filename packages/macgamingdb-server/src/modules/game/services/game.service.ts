@@ -9,16 +9,16 @@ import {
   type ChipsetVariant,
   type PerformanceRating,
   type PlayMethod,
-} from '../../../drizzle/schema';
+} from '../../../database/schema';
 import { CHIPSET_VARIANTS, type Chipset } from '../../../schema';
-import { searchGames } from '../../../gameSources/searchGames';
-import { resolveGame } from '../../../gameSources/resolveGame';
-import { materializeGame } from '../../../gameSources/materializeGame';
-import { parseGameRef } from '../../../gameSources/parseGameRef';
-import { getGamePrices } from '../../../api/ggdeals';
-import { extractKeyFromUrl, getViewSignedUrl } from '../../../services/s3';
-import { calculateAveragePerformance } from '../../../utils/calculateAveragePerformance';
-import { calculateTranslationLayerStats } from '../../../utils/calculateTranslationLayerStats';
+import { FileStorageService } from '../../../engine/core-modules/file-storage/services/file-storage.service';
+import { extractKeyFromUrl } from '../../../engine/core-modules/file-storage/utils/extract-key-from-url.util';
+import { parseGameRef } from '../utils/parse-game-ref.util';
+import { GgDealsApiClientService } from '../../pricing/drivers/ggdeals/services/ggdeals-api-client.service';
+import { GameSearchService } from './game-search.service';
+import { GameMaterializationService } from './game-materialization.service';
+import { calculateAveragePerformance } from '../../review/utils/calculate-average-performance.util';
+import { calculateTranslationLayerStats } from '../../review/utils/calculate-translation-layer-stats.util';
 import { GameException } from '../exceptions/game.exception';
 
 type RatingCounts = Record<PerformanceRating | 'ALL', number>;
@@ -41,7 +41,13 @@ const createEmptyCounts = (): RatingCounts => ({
 
 @Injectable()
 export class GameService {
-  constructor(@Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB) {}
+  constructor(
+    @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
+    private readonly gameSearchService: GameSearchService,
+    private readonly gameMaterializationService: GameMaterializationService,
+    private readonly ggDealsApiClientService: GgDealsApiClientService,
+    private readonly fileStorageService: FileStorageService,
+  ) {}
 
   assertValidChipsetVariant(input: {
     chipset?: Chipset;
@@ -60,11 +66,13 @@ export class GameService {
   }
 
   async search(query: string) {
-    return searchGames(this.db, query);
+    return this.gameSearchService.search({ query });
   }
 
   async getCoverArt(gameId: string) {
-    const game = await resolveGame(this.db, gameId);
+    const game = await this.gameMaterializationService.resolveGame({
+      identifier: gameId,
+    });
 
     if (!game?.headerImage) {
       throw new GameException(
@@ -302,12 +310,17 @@ export class GameService {
 
   async getById(id: string) {
     try {
-      let game = await resolveGame(this.db, id);
+      let game = await this.gameMaterializationService.resolveGame({
+        identifier: id,
+      });
 
       if (!game?.name) {
         const ref = parseGameRef(id);
         if (ref) {
-          game = await materializeGame(this.db, ref.source, ref.externalId);
+          game = await this.gameMaterializationService.materializeGame({
+            source: ref.source,
+            externalId: ref.externalId,
+          });
         }
       }
 
@@ -372,7 +385,10 @@ export class GameService {
           }
 
           try {
-            const signedUrl = await getViewSignedUrl(key, 3600);
+            const signedUrl = await this.fileStorageService.getViewSignedUrl({
+              key,
+              expiresIn: 3600,
+            });
             return { original: url, signed: signedUrl };
           } catch (error) {
             console.warn(
@@ -396,7 +412,9 @@ export class GameService {
 
   async getPrices({ gameId, region }: { gameId: string; region: string }) {
     try {
-      const game = await resolveGame(this.db, gameId);
+      const game = await this.gameMaterializationService.resolveGame({
+        identifier: gameId,
+      });
       if (!game) {
         return null;
       }
@@ -411,7 +429,10 @@ export class GameService {
         return null;
       }
 
-      const data = await getGamePrices(steamLink.externalId, region);
+      const data = await this.ggDealsApiClientService.getGamePrices({
+        steamAppId: steamLink.externalId,
+        country: region,
+      });
       return data ?? null;
     } catch {
       return null;

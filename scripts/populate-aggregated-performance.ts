@@ -1,7 +1,7 @@
 import { createDrizzleClient } from 'macgamingdb-server/database';
-import { calculateAveragePerformance } from 'macgamingdb-server/utils/calculateAveragePerformance';
-import { scoreToRating } from 'macgamingdb-server/utils/scoreToRating';
-import { createLogger } from 'macgamingdb-server/utils/logger';
+import { calculateAveragePerformance } from 'macgamingdb-server/modules/review/utils/calculate-average-performance';
+import { scoreToRating } from 'macgamingdb-server/modules/review/utils/score-to-rating';
+import { createLogger } from 'macgamingdb-server/engine/core-modules/logger/create-logger';
 import { config } from 'dotenv';
 import { games, gameReviews } from 'macgamingdb-server/drizzle/schema';
 import { eq, count, isNotNull } from 'drizzle-orm';

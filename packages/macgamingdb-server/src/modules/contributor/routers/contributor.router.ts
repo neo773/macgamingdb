@@ -1,10 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { z } from 'zod';
 import { Input, Query, Router } from 'nestjs-trpc';
-import {
-  ContributorDetailSchema,
-  ContributorsPageSchema,
-} from '../../../schema/openapi';
+import { ContributorDetailSchema } from '../dtos/contributor-detail.dto';
+import { ContributorsPageSchema } from '../dtos/contributors-page.dto';
 import { ContributorService } from '../services/contributor.service';
 
 @Router({ alias: 'contributor' })

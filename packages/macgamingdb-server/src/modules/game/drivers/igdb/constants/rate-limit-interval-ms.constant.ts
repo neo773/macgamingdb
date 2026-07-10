@@ -1,0 +1,1 @@
+export const RATE_LIMIT_INTERVAL_MS = 300;

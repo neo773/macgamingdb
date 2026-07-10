@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { count, desc, eq, inArray } from 'drizzle-orm';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
-import { gameReviews, users } from '../../../drizzle/schema';
+import { gameReviews, users } from '../../../database/schema';
 import { ContributorException } from '../exceptions/contributor.exception';
 
 const toISODateString = (value: string | number): string =>

@@ -13,13 +13,11 @@ import {
   type PlayMethod,
   type TranslationLayer,
 } from '../../../schema';
-import {
-  CreateReviewResultSchema,
-  MacConfigSchema,
-  MutationResultSchema,
-  MyReviewsSchema,
-  UploadUrlSchema,
-} from '../../../schema/openapi';
+import { MacConfigSchema } from '../../mac-config/dtos/mac-config.dto';
+import { CreateReviewResultSchema } from '../dtos/create-review-result.dto';
+import { MutationResultSchema } from '../dtos/mutation-result.dto';
+import { MyReviewsSchema } from '../dtos/my-reviews.dto';
+import { UploadUrlSchema } from '../dtos/upload-url.dto';
 import { ReviewService } from '../services/review.service';
 
 type SessionContext = { user?: { user?: { id?: string } } | null };

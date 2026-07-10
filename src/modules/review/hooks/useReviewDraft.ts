@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { type inferRouterInputs } from '@trpc/server';
 import { trpc } from '@/lib/trpc/provider';
 import { toast } from 'sonner';
-import { type AppRouter } from 'macgamingdb-server/routers/_app';
+import { type AppRouter } from 'macgamingdb-server/generated';
 import { type Game, type GameReview } from 'macgamingdb-server/drizzle/types';
 
 type ReviewWithGame = GameReview & { game: Game };
