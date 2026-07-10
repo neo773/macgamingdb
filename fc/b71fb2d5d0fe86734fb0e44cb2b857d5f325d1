@@ -1,0 +1,20 @@
+src/app/library/client.tsx
+  s_9ebfe402b13a9b::t_9e89e1b8e735fd 32
+  s_9ebfe402b13a9b::t_35b4bd3bf766c8 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fcb71fb2d5d0fe86734fb0e44cb2b857d5f325d1",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
