@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
 import { trpc } from '@/modules/trpc/trpc';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { formatDistance } from 'date-fns';
 import { UserAvatar } from 'macgamingdb-ui/display/UserAvatar';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
@@ -19,8 +19,6 @@ export function ContributorsClient({
 }: {
   contributorsData: ContributorsData;
 }) {
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     trpc.contributor.getTopContributors.useInfiniteQuery(
       {
@@ -35,21 +33,11 @@ export function ContributorsClient({
       },
     );
 
-  useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+  const loadMoreRef = useInfiniteScroll<HTMLDivElement>({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
 
   const allContributors =
     data?.pages.flatMap((page) => page.contributors) || [];

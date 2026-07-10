@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
 import Script from 'next/script';
 import { trpc } from '@/modules/trpc/trpc';
 import { SearchBar } from '@/modules/search/components/SearchBar';
@@ -9,6 +8,7 @@ import { homeJsonLd } from '@/modules/home/utils/homeJsonLd';
 import { faqJsonLd } from '@/modules/home/utils/faqJsonLd';
 import { useHomeFilters } from '@/modules/home/hooks/useHomeFilters';
 import { useGameSearch } from '@/modules/home/hooks/useGameSearch';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { HomeFilters } from '@/modules/home/components/HomeFilters';
 import { GameGrid } from '@/modules/home/components/GameGrid';
 
@@ -21,8 +21,6 @@ type HomeClientProps = {
 };
 
 export function HomeClient({ GamesPage }: HomeClientProps) {
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
   const {
     performanceFilter,
     chipsetFilter,
@@ -38,11 +36,12 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
   } = useHomeFilters();
 
   const {
+    query,
     searchResults,
     isSearchLoading,
     isSearchMode,
-    handleSearchResultsChange,
-  } = useGameSearch();
+    handleQueryChange,
+  } = useGameSearch({ onClear: resetFilters });
 
   const initialGamesData = isDefaultFilter
     ? { pages: [GamesPage], pageParams: [undefined] }
@@ -78,34 +77,12 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
     }
   );
 
-  useEffect(() => {
-    if (!loadMoreRef.current || !hasNextPage || isSearchMode || isFetchingNextPage)
-      return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(loadMoreRef.current);
-
-    return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage, isSearchMode]);
-
-  const handleSearchChange = (
-    results: Parameters<typeof handleSearchResultsChange>[0],
-    isLoading: boolean
-  ) => {
-    handleSearchResultsChange(results, isLoading);
-
-    if (results === null && searchResults !== null) {
-      resetFilters();
-    }
-  };
+  const loadMoreRef = useInfiniteScroll<HTMLDivElement>({
+    hasNextPage: !!hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    enabled: !isSearchMode,
+  });
 
   const allFilteredGames = gamesData?.pages.flatMap((page) => page.games) || [];
 
@@ -123,7 +100,11 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
       />
 
       <div className="flex justify-center md:px-8 md:p-0 mb-8">
-        <SearchBar onResultsChange={handleSearchChange} />
+        <SearchBar
+          value={query}
+          onChange={handleQueryChange}
+          isLoading={isSearchLoading}
+        />
       </div>
 
       {!searchResults && (

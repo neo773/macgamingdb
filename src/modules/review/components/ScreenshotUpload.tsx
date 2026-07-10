@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { X, Upload } from 'lucide-react';
@@ -28,15 +28,19 @@ export function ScreenshotUpload({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const getUploadUrlMutation = trpc.review.getUploadUrl.useMutation();
+  const screenshotsRef = useRef<ScreenshotData[]>([]);
+  screenshotsRef.current = screenshots;
 
-  useEffect(() => {
+  const revokeOnUnmount = useRef((node: HTMLDivElement | null) => {
+    if (!node) return;
     return () => {
-      screenshots.forEach((screenshot) => {
+      screenshotsRef.current.forEach((screenshot) => {
         URL.revokeObjectURL(screenshot.blobUrl);
       });
     };
-  }, [screenshots]);
+  }).current;
+
+  const getUploadUrlMutation = trpc.review.getUploadUrl.useMutation();
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -124,7 +128,7 @@ export function ScreenshotUpload({
   };
 
   return (
-    <div className={`flex flex-row gap-x-4 ${className}`}>
+    <div ref={revokeOnUnmount} className={`flex flex-row gap-x-4 ${className}`}>
       <div className="flex flex-row items-center gap-x-2">
         <Button
           type="button"

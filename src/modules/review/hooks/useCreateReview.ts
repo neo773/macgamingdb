@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
@@ -36,6 +36,12 @@ interface UseCreateReviewOptions {
   onOpenChange: (open: boolean) => void;
 }
 
+function defaultSoftwareVersion(playMethod: PlayMethod): string {
+  if (playMethod === 'CROSSOVER') return SOFTWARE_VERSIONS.CROSSOVER[0];
+  if (playMethod === 'PARALLELS') return SOFTWARE_VERSIONS.PARALLELS[0];
+  return '';
+}
+
 export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -43,18 +49,20 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState('');
   const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>('form');
-  const [selectedConfig, setSelectedConfig] = useState<MacConfig | null>(null);
+  const [userSelectedConfig, setUserSelectedConfig] = useState<MacConfig | null>(null);
 
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
+
+  const initialPlayMethod = preferences.playMethod ?? PlayMethodEnum.options[1];
 
   const [formData, setFormData] = useState<ReviewFormData>({
     fps: '',
     resolution: '',
     notes: '',
     screenshots: [],
-    softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-    playMethod: preferences.playMethod ?? PlayMethodEnum.options[1],
+    softwareVersion: defaultSoftwareVersion(initialPlayMethod),
+    playMethod: initialPlayMethod,
     translationLayer: preferences.translationLayer ?? TranslationLayerEnum.options[0],
     performance: PerformanceEnum.options[1],
     graphicsSettings: GraphicsSettingsEnum.options[1],
@@ -70,32 +78,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     }
   );
 
-  useEffect(() => {
-    if (savedMacConfig) {
-      setSelectedConfig(savedMacConfig);
-    }
-  }, [savedMacConfig]);
-
-  useEffect(() => {
-    if (formData.playMethod) {
-      if (formData.playMethod === 'CROSSOVER') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.CROSSOVER[0],
-        }));
-      } else if (formData.playMethod === 'PARALLELS') {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: SOFTWARE_VERSIONS.PARALLELS[0],
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          softwareVersion: '',
-        }));
-      }
-    }
-  }, [formData.playMethod]);
+  const selectedConfig = userSelectedConfig ?? savedMacConfig ?? null;
 
   const createReviewMutation = trpc.review.create.useMutation({
     onSuccess: () => {
@@ -128,7 +111,11 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handlePlayMethodSelect = (method: PlayMethod) => {
-    setFormData((prev) => ({ ...prev, playMethod: method }));
+    setFormData((prev) => ({
+      ...prev,
+      playMethod: method,
+      softwareVersion: defaultSoftwareVersion(method),
+    }));
     updatePreference('playMethod', method);
   };
 
@@ -138,7 +125,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   };
 
   const handleMacConfigSelect = (config: MacConfig) => {
-    setSelectedConfig(config);
+    setUserSelectedConfig(config);
     setFormData((prev) => ({
       ...prev,
       macConfigIdentifier: config.identifier,

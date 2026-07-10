@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from 'macgamingdb-ui/input/Button';
 
 interface ExpandableDescriptionProps {
@@ -12,14 +12,21 @@ export function ExpandableDescription({
 }: ExpandableDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTooLong, setIsTooLong] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      const fullContent = contentRef.current;
-      setIsTooLong(fullContent.scrollHeight > 150);
-    }
-  }, [description]);
+  const measureRef = (node: HTMLDivElement | null) => {
+    if (!node) return;
+
+    const checkTooLong = () => {
+      setIsTooLong(node.scrollHeight > 150);
+    };
+
+    checkTooLong();
+
+    const observer = new ResizeObserver(checkTooLong);
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  };
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -32,7 +39,7 @@ export function ExpandableDescription({
         style={{ transition: 'max-height 0.3s ease-in-out' }}
       >
         <div
-          ref={contentRef}
+          ref={measureRef}
           dangerouslySetInnerHTML={{ __html: description }}
           className="game-description"
         />

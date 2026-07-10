@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
 import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/modules/library/drivers/steam/constants/steam-library-private-code.constant';
@@ -22,8 +21,8 @@ import {
 } from 'macgamingdb-ui/feedback/Dialog';
 import { trpc } from '@/modules/trpc/trpc';
 import { trackEvent } from '@/modules/analytics/utils/trackEvent';
-import { FLOW_ERROR } from '@/modules/library/steam-connection/constants/FLOW_ERROR';
 import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
+import { LibraryErrorToastEffect } from '@/modules/library/components/LibraryErrorToastEffect';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
 function formatRelative(iso: string | null): string {
@@ -39,7 +38,6 @@ function formatRelative(iso: string | null): string {
 }
 
 export function LibraryClient() {
-  const searchParams = useSearchParams();
   const [unlinkOpen, setUnlinkOpen] = useState(false);
 
   const status = trpc.library.status.useQuery();
@@ -49,21 +47,6 @@ export function LibraryClient() {
 
   const sync = trpc.library.sync.useMutation();
   const unlink = trpc.library.unlink.useMutation();
-
-  useEffect(() => {
-    const err = searchParams.get('error');
-    if (!err) return;
-    if (err === FLOW_ERROR.PrivateLibrary) {
-      toast.error(
-        'Could not read your Steam library. Set your library to public and try again.',
-      );
-    } else if (
-      err === FLOW_ERROR.VerifyFailed ||
-      err === FLOW_ERROR.StateMismatch
-    ) {
-      toast.error('Steam sign-in failed. Try again.');
-    }
-  }, [searchParams]);
 
   const handleResync = () => {
     const id = toast.loading('Syncing your Steam library...');
@@ -96,6 +79,7 @@ export function LibraryClient() {
 
   return (
     <div className="min-h-dvh flex flex-col">
+      <LibraryErrorToastEffect />
       <Header />
       <Container>
         <div className="mb-4">

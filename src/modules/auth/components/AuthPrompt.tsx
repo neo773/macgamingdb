@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { toast } from 'sonner';
@@ -24,17 +24,12 @@ export function AuthPrompt({
   const { useSession } = authClient;
   const { data: session, isPending } = useSession();
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [internalMagicLinkSent, setInternalMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const magicLinkSent = externalMagicLinkSent ?? internalMagicLinkSent;
-
-  useEffect(() => {
-    containerRef.current?.focus();
-  }, []);
 
   const handleLogin = async () => {
     if (!email || !email.includes('@')) {
@@ -75,7 +70,7 @@ export function AuthPrompt({
   }
 
   const formContent = (
-    <div ref={containerRef} tabIndex={-1} className={className}>
+    <div autoFocus tabIndex={-1} className={className}>
       {magicLinkSent ? (
         <div className="text-center py-2">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
