@@ -1,0 +1,132 @@
+packages/macgamingdb-server/src/modules/modules.module.ts
+  s_9ebfe402b13a9b::t_82902990fab6dd 1-17
+packages/macgamingdb-server/src/engine/api/trpc/auth.middleware.ts
+  s_9ebfe402b13a9b::t_3f2471b397a9c5 1-41
+packages/macgamingdb-server/src/modules/traffic/exceptions/traffic.exception.ts
+  s_9ebfe402b13a9b::t_1c977848b2a2fa 1-5
+packages/macgamingdb-server/src/engine/api/trpc/map-custom-exception-to-trpc-error.util.ts
+  s_9ebfe402b13a9b::t_a7be10a3eec9a1 1-42
+packages/macgamingdb-server/src/modules/game/game.module.ts
+  s_9ebfe402b13a9b::t_30bc674c51d702 1-8
+packages/macgamingdb-server/src/modules/game/routers/game.router.ts
+  s_9ebfe402b13a9b::t_f18c42dd1b3a0d 1-155
+src/lib/trpc/provider.tsx
+  s_9ebfe402b13a9b::t_b4a623fecae61a 8
+next.config.ts
+  s_9ebfe402b13a9b::t_2cd0fff2a4d6f6 12-18
+.env.example
+  s_9ebfe402b13a9b::t_54eb3644ab15eb 34-40
+src/lib/trpc/utils.ts
+  s_9ebfe402b13a9b::t_db1a9153f47ca2 6
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_9ebfe402b13a9b::t_b9aba8605a1056 257
+  s_9ebfe402b13a9b::t_b0dfd4c10d97ab 182,187
+  s_9ebfe402b13a9b::t_022eeb90ceba88 13
+  s_9ebfe402b13a9b::t_5f2cc6ebdf6ffe 1-12,14-26,28-46,48-52,54-135,137,139-145,147-160,163,165-181,183-186,188-256,258-420
+  s_9ebfe402b13a9b::t_b3790bd8a3e994 27
+  s_9ebfe402b13a9b::t_f1ff5a2bb634c7 161-162,164
+  s_9ebfe402b13a9b::t_c3dcc5254cd772 47,53
+  s_9ebfe402b13a9b::t_da794036f7a879 136,138,146
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_ce54e5f9dabaa6 55-56
+  s_9ebfe402b13a9b::t_9326cc8ec7795e 14
+  s_9ebfe402b13a9b::t_e65d8a28fd1cdb 5-9
+  s_9ebfe402b13a9b::t_331fde0ec4a872 38
+  s_9ebfe402b13a9b::t_f72960ba41366e 52-54,58,61-62
+packages/macgamingdb-server/src/database/constants/drizzle-client.constant.ts
+  s_9ebfe402b13a9b::t_0709b1e4272d21 1
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_9ebfe402b13a9b::t_e2cd575a66da5a 1-154
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_9ebfe402b13a9b::t_d21ac2953d8762 10
+  s_9ebfe402b13a9b::t_edfb88aee7f855 43
+  s_9ebfe402b13a9b::t_f6f6046481afcb 64-67
+  s_9ebfe402b13a9b::t_7282f392ed3e19 426-429
+  s_9ebfe402b13a9b::t_cb7dce3e1c0414 1-9,11-26,28-42,44-63,68-259,325-380,389-425,430-432
+  s_9ebfe402b13a9b::t_f36729b7965d82 27
+  s_9ebfe402b13a9b::t_bbf5106d7bcb2d 317-320
+  s_9ebfe402b13a9b::t_079879906dfb14 381-388
+  s_9ebfe402b13a9b::t_07b5562cc78a09 260-316,321-324
+packages/macgamingdb-server/src/modules/traffic/services/traffic.service.ts
+  s_9ebfe402b13a9b::t_416ab824e8c5ba 1-57
+packages/macgamingdb-server/tsconfig.json
+  s_9ebfe402b13a9b::t_25661189eb2f64 8-9
+packages/macgamingdb-server/src/engine/core-modules/page-revalidation/page-revalidation.service.ts
+  s_9ebfe402b13a9b::t_6b3a390f4ad87a 1-30
+packages/macgamingdb-server/src/engine/core-modules/page-revalidation/page-revalidation.module.ts
+  s_9ebfe402b13a9b::t_b6373e4f988c7b 1-9
+packages/macgamingdb-server/src/app.module.ts
+  s_9ebfe402b13a9b::t_beaecc164d2e64 1-6,8-12,14-24
+  s_9ebfe402b13a9b::t_c99a587251b9bd 7,13
+packages/macgamingdb-server/src/trpc/index.ts
+  s_9ebfe402b13a9b::t_55ffa96d7f099d 4
+src/app/api/revalidate/route.ts
+  s_9ebfe402b13a9b::t_52f590a006cd90 1-16
+packages/macgamingdb-server/src/modules/contributor/exceptions/contributor.exception.ts
+  s_9ebfe402b13a9b::t_1017a605037a2c 1-7
+packages/macgamingdb-server/src/modules/review/review.module.ts
+  s_9ebfe402b13a9b::t_7e597444abcd20 1-9
+packages/macgamingdb-server/src/modules/contributor/contributor.module.ts
+  s_9ebfe402b13a9b::t_143f6195084a4c 1-8
+packages/macgamingdb-server/src/modules/library/exceptions/library.exception.ts
+  s_9ebfe402b13a9b::t_fdccd7e6923a20 1-5
+packages/macgamingdb-server/src/@generated/server.ts
+  s_9ebfe402b13a9b::t_f56b8305a057bd 1-180
+packages/macgamingdb-server/src/modules/review/exceptions/review.exception.ts
+  s_9ebfe402b13a9b::t_59c251d457ea67 1-12
+package.json
+  s_9ebfe402b13a9b::t_1a0bddd7c7c48f 11
+packages/macgamingdb-server/src/modules/traffic/routers/traffic.router.ts
+  s_9ebfe402b13a9b::t_45b142ea989ee5 1-42
+packages/macgamingdb-server/src/modules/traffic/traffic.module.ts
+  s_9ebfe402b13a9b::t_3a0535655e0d5e 1-8
+packages/macgamingdb-server/src/engine/api/trpc/app.context.ts
+  s_9ebfe402b13a9b::t_7f9b2977d03145 1-12
+packages/macgamingdb-server/src/modules/contributor/routers/contributor.router.ts
+  s_9ebfe402b13a9b::t_65cfe6b990033d 1-43
+packages/macgamingdb-server/src/engine/core-modules/auth/better-auth-client.util.ts
+  s_9ebfe402b13a9b::t_d81079d41afcaa 1-148
+packages/macgamingdb-server/src/engine/api/trpc/exception-mapping.middleware.ts
+  s_9ebfe402b13a9b::t_9f2506583040b9 1-18
+packages/macgamingdb-server/src/modules/review/routers/review.router.ts
+  s_9ebfe402b13a9b::t_bb5ca0c9cafc79 1-208
+packages/macgamingdb-server/src/modules/library/routers/library.router.ts
+  s_9ebfe402b13a9b::t_3c7d4ca631fda1 1-93
+packages/macgamingdb-server/src/engine/exceptions/custom.exception.ts
+  s_9ebfe402b13a9b::t_5dfe5c844b278c 1-10
+packages/macgamingdb-server/src/modules/library/services/library.service.ts
+  s_9ebfe402b13a9b::t_0f5b407eb77497 1-156
+packages/macgamingdb-server/src/main.ts
+  s_9ebfe402b13a9b::t_51dd86087a06ed 2,4,10-24,29
+  s_9ebfe402b13a9b::t_6ce2b6b20b54c7 1,3,5-9,25-28,30-38
+src/lib/trpc/server.ts
+  s_9ebfe402b13a9b::t_eff18fb4736ff2 2-3,5,8,14-21
+packages/macgamingdb-server/src/database/database.module.ts
+  s_9ebfe402b13a9b::t_32aec055f94989 3
+  s_9ebfe402b13a9b::t_b895c2eaa2cc39 1-2,4-15
+packages/macgamingdb-server/src/database/drizzle.ts
+  s_9ebfe402b13a9b::t_7bb051ad768f6f 10
+packages/macgamingdb-server/src/modules/game/exceptions/game.exception.ts
+  s_9ebfe402b13a9b::t_8426c47b3f7844 6
+  s_9ebfe402b13a9b::t_32593d5961c3da 1-5,7-9
+packages/macgamingdb-server/src/modules/library/library.module.ts
+  s_9ebfe402b13a9b::t_daf548282b145c 1-9
+bun.lock
+  s_9ebfe402b13a9b::t_f5327b731d7baf 118-122,124,127-128,431-432,717-718,731-736,1197-1200,1219-1220,1227-1228,1245-1248,1255-1256,1279-1282,1287-1290,1421,1449-1450,1551-1552,1579-1580,1675-1676,1683-1686,1693-1694,1699,1961-1962,2005-2006,2011,2033-2034,2041,2183-2184,2245-2246,2289-2290,2397-2398,2483,2487-2488,2625-2626,2641,2647-2648,2753-2754,2837-2838,2925-2926,2995-2996,2999-3000,3027,3035,3139-3140,3177-3178,3241-3242,3267,3277-3278,3291-3294,3547-3548,3565-3566,3707-3708,3737-3740,3743-3744,3747-3750,3789-3794,3809-3810,3817-3818,3825-3828,3931-3932,3969-3970,4047-4050,4077,4299-4302,4315-4318,4375,4377,4391-4394,4399-4408,4457-4458,4467-4470,4489,4491,4493,4621-4622,4633-4634,4657-4660,4663-4666,4673-4674,4681-4682,4711-4712
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "78fcd8831bc5c7afd33c0ab4e790964d35f0b8de",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
