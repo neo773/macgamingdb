@@ -26,10 +26,17 @@ services:
       - APPLE_APP_BUNDLE_IDENTIFIER=${APPLE_APP_BUNDLE_IDENTIFIER}
       - STEAM_OPENID_REALM=${STEAM_OPENID_REALM}
     healthcheck:
-      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:4000/rest/mac-configs > /dev/null || exit 1']
-      interval: 30s
-      timeout: 5s
-      retries: 3
+      test:
+        [
+          'CMD',
+          'bun',
+          '-e',
+          'const response = await fetch("http://127.0.0.1:4000/rest/mac-configs"); if (!response.ok) process.exit(1);',
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 1200s
 
   web:
     build:
