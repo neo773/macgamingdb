@@ -1,5 +1,6 @@
 import { parseHTML } from 'linkedom';
 import { z } from 'zod';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { extractReleaseYear } from '../../../utils/extract-release-year.util';
 import type { SteamGameSearchObject } from '../types/steam-game-search-object.type';
 
@@ -41,10 +42,7 @@ export const searchSteam = async (
           ),
         };
       })
-      .filter(
-        (searchObject): searchObject is SteamGameSearchObject =>
-          searchObject !== null,
-      );
+      .filter(isDefined);
   } catch (error) {
     console.error('Error scraping Steam search results:', error);
     throw error;

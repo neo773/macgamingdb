@@ -1,3 +1,5 @@
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+
 import { extractReleaseYear } from '../../../utils/extract-release-year.util';
 import type { NormalizedGameDetails } from '../../../types/normalized-game-details.type';
 import type { SteamAppData } from '../types/steam-app-data.type';
@@ -17,8 +19,7 @@ export const normalizeSteamGameDetails = (
   screenshots: (data.screenshots ?? []).map(
     (screenshot) => screenshot.path_full,
   ),
-  externalIds:
-    data.steam_appid !== undefined && data.steam_appid !== null
-      ? { steam: String(data.steam_appid) }
-      : {},
+  externalIds: isDefined(data.steam_appid)
+    ? { steam: String(data.steam_appid) }
+    : {},
 });

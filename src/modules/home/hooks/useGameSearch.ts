@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { isNonEmptyString } from '@sniptt/guards';
 import { useDebounce, useDebouncedCallback } from 'use-debounce';
 import { trpc } from '@/modules/trpc/trpc';
 import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
@@ -23,7 +24,7 @@ export function useGameSearch({ onClear }: UseGameSearchOptions = {}) {
   const { data, isLoading } = trpc.game.search.useQuery(
     { query: debouncedQuery },
     {
-      enabled: debouncedQuery.trim().length > 0,
+      enabled: isNonEmptyString(debouncedQuery.trim()),
       placeholderData: (prev) => prev,
     },
   );
@@ -43,19 +44,22 @@ export function useGameSearch({ onClear }: UseGameSearchOptions = {}) {
   }, 300);
 
   const handleQueryChange = (value: string) => {
-    const wasActive = query.trim().length > 0;
+    const wasActive = isNonEmptyString(query.trim());
     setQuery(value);
     syncUrl(value);
 
-    if (value.trim().length > 0) {
+    if (isNonEmptyString(value.trim())) {
       trackSearch();
     } else if (wasActive) {
       onClear?.();
     }
   };
 
-  const searchResults: GameSearchResults | null =
-    debouncedQuery.trim() === '' ? null : data || null;
+  const searchResults: GameSearchResults | null = !isNonEmptyString(
+    debouncedQuery.trim(),
+  )
+    ? null
+    : data || null;
   const isSearchMode = !!searchResults;
 
   return {

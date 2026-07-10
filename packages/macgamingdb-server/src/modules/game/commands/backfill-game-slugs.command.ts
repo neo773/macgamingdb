@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { and, eq, isNull, isNotNull } from 'drizzle-orm';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { games } from '../../../database/schema';
@@ -50,7 +51,7 @@ export class BackfillGameSlugsCommand extends CommandRunner {
         .from(games)
         .where(eq(games.slug, slug))
         .limit(1);
-      return existing !== undefined;
+      return isDefined(existing);
     };
 
     let updatedCount = 0;

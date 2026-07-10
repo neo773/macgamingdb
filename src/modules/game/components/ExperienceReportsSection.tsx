@@ -1,3 +1,4 @@
+import { isNonEmptyArray } from '@sniptt/guards';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { CreateReviewDialog } from '@/modules/review/components/CreateReviewDialog';
 import { ReviewCard } from '@/modules/review/components/ReviewCard';
@@ -19,7 +20,7 @@ export function ExperienceReportsSection({
   reviews,
   showCrossoverAffiliate,
 }: ExperienceReportsSectionProps) {
-  const hasReviews = reviews && reviews.length > 0;
+  const hasReviews = isNonEmptyArray(reviews);
 
   return (
     <div className="mb-6">

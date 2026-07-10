@@ -1,3 +1,4 @@
+import { isNonEmptyArray } from '@sniptt/guards';
 import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 
 interface GameDetailHeaderProps {
@@ -22,7 +23,7 @@ export function GameDetailHeader({ game }: GameDetailHeaderProps) {
         )}
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <h1 className="text-4xl font-bold text-white mb-2">{game.name}</h1>
-          {game.publishers && game.publishers.length > 0 && (
+          {isNonEmptyArray(game.publishers) && (
             <p className="text-gray-300">Publisher: {game.publishers.join(', ')}</p>
           )}
         </div>

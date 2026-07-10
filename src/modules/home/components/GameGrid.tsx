@@ -1,5 +1,6 @@
 'use client';
 
+import { isNonEmptyArray } from '@sniptt/guards';
 import { GameCard } from '@/modules/game/components/GameCard';
 import { GameCardSkeleton } from '@/modules/game/components/GameCardSkeleton';
 import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
@@ -30,7 +31,7 @@ export function GameGrid({
   }
 
   if (searchResults) {
-    if (searchResults.length === 0) {
+    if (!isNonEmptyArray(searchResults)) {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div className="col-span-full text-center py-8">
@@ -51,7 +52,7 @@ export function GameGrid({
     );
   }
 
-  if (games.length === 0) {
+  if (!isNonEmptyArray(games)) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="col-span-full text-center py-8">

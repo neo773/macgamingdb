@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { games, gameAliases, gameSourceLinks } from '../../../database/schema';
@@ -218,7 +219,7 @@ export class GameMaterializationService {
           .from(games)
           .where(eq(games.slug, candidate))
           .limit(1);
-        return row !== undefined;
+        return isDefined(row);
       },
     });
   }

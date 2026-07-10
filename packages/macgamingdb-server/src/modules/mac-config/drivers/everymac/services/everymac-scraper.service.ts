@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DOMParser } from 'linkedom';
+import { isNonEmptyArray, isNonEmptyString } from '@sniptt/guards';
 import {
   ChipsetVariant,
   ChipsetVariantEnum,
@@ -137,7 +138,7 @@ export class EveryMacScraperService {
       year: tableData.year || 0,
     };
 
-    if (tableData.ramConfigurations && tableData.ramConfigurations.length > 0) {
+    if (isNonEmptyArray(tableData.ramConfigurations)) {
       return tableData.ramConfigurations.map((ram) => ({
         ...baseSpec,
         ram,
@@ -260,7 +261,7 @@ export class EveryMacScraperService {
       year: this.extractNumber(data['intro.'], /(\d{4})/),
     };
 
-    if (ramConfigurations.length > 0) {
+    if (isNonEmptyArray(ramConfigurations)) {
       return {
         ...baseSpec,
         ramConfigurations,
@@ -300,8 +301,8 @@ export class EveryMacScraperService {
 
   private isValidSpecification(spec: MacSpecification): boolean {
     return (
-      spec.model.length > 0 &&
-      spec.chip.length > 0 &&
+      isNonEmptyString(spec.model) &&
+      isNonEmptyString(spec.chip) &&
       this.isValidRamConfiguration(spec)
     );
   }

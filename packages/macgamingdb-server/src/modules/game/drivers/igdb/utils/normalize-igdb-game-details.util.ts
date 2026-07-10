@@ -1,3 +1,7 @@
+import { isNonEmptyString } from '@sniptt/guards';
+
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+
 import { IGDB_WEBSITE_CATEGORY_OFFICIAL } from '../constants/igdb-website-category-official.constant';
 import type { NormalizedGameDetails } from '../../../types/normalized-game-details.type';
 import type { IgdbGameData } from '../types/igdb-game-data.type';
@@ -14,14 +18,14 @@ const escapeHtml = (value: string): string =>
 
 // IGDB summaries are plain text with double-newline paragraph breaks.
 const igdbSummaryToHtml = (summary: string | undefined): string | null => {
-  if (summary === undefined || summary.trim() === '') {
+  if (!isDefined(summary) || !isNonEmptyString(summary.trim())) {
     return null;
   }
 
   return summary
     .split(/\n\n+/)
     .map((paragraph) => paragraph.trim())
-    .filter((paragraph) => paragraph !== '')
+    .filter((paragraph) => isNonEmptyString(paragraph))
     .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
     .join('');
 };
@@ -29,7 +33,7 @@ const igdbSummaryToHtml = (summary: string | undefined): string | null => {
 const formatIgdbReleaseDate = (
   firstReleaseDate: number | undefined,
 ): string | null => {
-  if (firstReleaseDate === undefined) {
+  if (!isDefined(firstReleaseDate)) {
     return null;
   }
 
@@ -63,17 +67,16 @@ export const normalizeIgdbGameDetails = (
         (website) => website.category === IGDB_WEBSITE_CATEGORY_OFFICIAL,
       )?.url ?? null,
     releaseDate: formatIgdbReleaseDate(data.first_release_date),
-    releaseYear:
-      data.first_release_date !== undefined
-        ? new Date(data.first_release_date * 1000).getUTCFullYear()
-        : null,
+    releaseYear: isDefined(data.first_release_date)
+      ? new Date(data.first_release_date * 1000).getUTCFullYear()
+      : null,
     genres: (data.genres ?? []).map((genre) => genre.name),
     screenshots: (data.screenshots ?? []).map((screenshot) =>
       igdbImageUrl({ imageId: screenshot.image_id, size: 't_screenshot_big' }),
     ),
     externalIds: {
       igdb: String(data.id),
-      ...(steamAppId !== null && { steam: steamAppId }),
+      ...(isDefined(steamAppId) && { steam: steamAppId }),
     },
   };
 };

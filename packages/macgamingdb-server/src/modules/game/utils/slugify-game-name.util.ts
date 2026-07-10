@@ -1,3 +1,5 @@
+import { isNonEmptyString } from '@sniptt/guards';
+
 export const slugifyGameName = (name: string): string => {
   const slug = name
     // Removed before NFKD because normalization expands them into letters (™ → "tm").
@@ -9,7 +11,7 @@ export const slugifyGameName = (name: string): string => {
     .replace(/^-+|-+$/g, '');
 
   // Purely numeric slugs would collide with Steam appIDs in the /games/{id} namespace.
-  if (slug === '' || /^[0-9]+$/.test(slug)) {
+  if (!isNonEmptyString(slug) || /^[0-9]+$/.test(slug)) {
     return '';
   }
 

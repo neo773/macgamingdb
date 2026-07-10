@@ -17,6 +17,8 @@ import React, {
   useRef,
 } from 'react';
 
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+
 import { Button } from 'macgamingdb-ui/input/Button';
 
 type Api = {
@@ -46,7 +48,7 @@ const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
 
   const canvasRef = useCallback(
     (node: HTMLCanvasElement) => {
-      if (node !== null) {
+      if (isDefined(node)) {
         if (instanceRef.current) return;
         instanceRef.current = confetti.create(node, {
           ...globalOptions,

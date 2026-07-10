@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { STEAM_API_BASE_URL } from '../constants/steam-api-base-url.constant';
 import { SteamLibraryPrivateError } from '../exceptions/steam-library-private.exception';
 import { type SteamOwnedGame } from '../types/steam-owned-game.type';
@@ -36,7 +37,7 @@ export class SteamWebApiService {
 
     const json: GetOwnedGamesResponse = await response.json();
 
-    if (!json.response || json.response.game_count === undefined) {
+    if (!json.response || !isDefined(json.response.game_count)) {
       throw new SteamLibraryPrivateError();
     }
 

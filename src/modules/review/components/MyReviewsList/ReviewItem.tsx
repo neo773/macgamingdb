@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { formatDistance } from 'date-fns';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { Textarea } from 'macgamingdb-ui/input/Textarea';
@@ -217,7 +218,7 @@ export function ReviewItem({
                 </div>
               )}
 
-              {!review.notes && screenshots && screenshots.length > 0 && (
+              {!review.notes && isNonEmptyArray(screenshots) && (
                 <div className="border-t border-white/15 pt-3 mt-2">
                   <h4 className="text-sm font-medium text-gray-300">
                     Screenshots:

@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { desc, eq, sql } from 'drizzle-orm';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
@@ -71,7 +73,7 @@ export class ReviewService {
       .where(eq(gameReviews.gameId, gameId));
 
     let aggregatedPerformance: PerformanceRating | null = null;
-    if (reviews.length > 0) {
+    if (isNonEmptyArray(reviews)) {
       const avgScore = calculateAveragePerformance(reviews);
       aggregatedPerformance = scoreToRating(avgScore);
     }
@@ -286,8 +288,7 @@ export class ReviewService {
       }
 
       const macConfigMetadata = parseMacSpecificationOrThrow(macConfig.metadata);
-      const hasScreenshots =
-        params.screenshots && params.screenshots.length > 0;
+      const hasScreenshots = isNonEmptyArray(params.screenshots);
 
       const [review] = await this.db
         .insert(gameReviews)
@@ -350,7 +351,7 @@ export class ReviewService {
       notes: params.notes.trim() || null,
     };
 
-    if (params.performance !== undefined) {
+    if (isDefined(params.performance)) {
       updateData.performance = params.performance;
     }
 
@@ -376,7 +377,7 @@ export class ReviewService {
       .where(eq(gameReviews.id, params.reviewId));
 
     if (
-      params.performance !== undefined &&
+      isDefined(params.performance) &&
       params.performance !== review.performance
     ) {
       await this.updateGameAggregatedPerformance(review.gameId);

@@ -3,6 +3,7 @@ import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
 import { X, Upload, ImageOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { trpc } from '@/modules/trpc/trpc';
 
 const ALLOWED_SCREENSHOT_TYPES = [
@@ -158,7 +159,7 @@ export function ScreenshotUpload({
         className="hidden"
       />
 
-      {screenshotUrls.length > 0 && (
+      {isNonEmptyArray(screenshotUrls) && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {screenshotUrls.map((url, index) => (
             <div key={url} className="relative group">

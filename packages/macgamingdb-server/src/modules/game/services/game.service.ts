@@ -9,6 +9,8 @@ import {
   max,
   type SQL,
 } from 'drizzle-orm';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
@@ -163,7 +165,7 @@ export class GameService {
       ...(playMethod !== 'ALL' && { playMethod }),
     };
 
-    const hasFilters = Object.keys(reviewFilter).length > 0;
+    const hasFilters = isNonEmptyArray(Object.keys(reviewFilter));
 
     if (hasFilters) {
       return this.getFilteredCounts(reviewFilter);
@@ -218,7 +220,7 @@ export class GameService {
 
         const gameIds = gamesForIds.map((game) => game.id);
 
-        if (gameIds.length === 0) {
+        if (!isNonEmptyArray(gameIds)) {
           return {
             games: [],
             hasNextPage: false,
@@ -246,7 +248,7 @@ export class GameService {
               aggregatedPerformance: NonNullable<
                 typeof game.aggregatedPerformance
               >;
-            } => game.aggregatedPerformance !== null,
+            } => isDefined(game.aggregatedPerformance),
           )
           .map((game) => ({
             id: game.id,
@@ -277,7 +279,7 @@ export class GameService {
       const matchedGames = await this.db
         .select()
         .from(games)
-        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .where(isNonEmptyArray(conditions) ? and(...conditions) : undefined)
         .orderBy(desc(games.reviewCount))
         .offset(offset)
         .limit(limit + 1);
@@ -290,7 +292,7 @@ export class GameService {
             aggregatedPerformance: NonNullable<
               typeof game.aggregatedPerformance
             >;
-          } => game.aggregatedPerformance !== null,
+          } => isDefined(game.aggregatedPerformance),
         )
         .map((game) => ({
           id: game.id,
@@ -333,7 +335,7 @@ export class GameService {
         }
       }
 
-      if (!game || game.name === null) {
+      if (!game || !isDefined(game.name)) {
         throw new GameException('Game not found', 'GAME_NOT_FOUND');
       }
 
@@ -350,7 +352,7 @@ export class GameService {
       });
 
       const reviewStats =
-        reviews.length > 0
+        isNonEmptyArray(reviews)
           ? {
               totalReviews: reviews.length,
               methods: {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { cn } from '../../utilities/cn/cn';
 import { Button } from '../Button/Button';
 
@@ -40,7 +41,7 @@ export const ButtonFilter: React.FC<ButtonFilterProps> = ({
           )}
         >
           {option.label}{' '}
-          {displayStats && displayStats[option.value] !== undefined && (
+          {displayStats && isDefined(displayStats[option.value]) && (
             <span
               className={cn(
                 'ml-1 px-2 py-0.5 rounded-md text-xs font-medium group-hover:bg-black group-hover:text-white',

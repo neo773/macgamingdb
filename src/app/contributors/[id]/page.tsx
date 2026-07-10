@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { TRPCClientError } from '@trpc/client';
+import { isNonEmptyArray, isNonEmptyString } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { Header } from '@/modules/layout/components/Header';
 import { Footer } from '@/modules/layout/components/Footer';
 import Link from 'next/link';
@@ -67,7 +69,7 @@ export default async function ContributorPage({
           </div>
         </div>
         <div>
-          {contributorReviews.length === 0 ? (
+          {!isNonEmptyArray(contributorReviews) ? (
             <Card className="bg-primary-gradient">
               <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
                 <h2 className="text-xl font-medium text-white">
@@ -128,9 +130,8 @@ export default async function ContributorPage({
                               </div>
                             </div>
                           )}
-                          {review.notes === null &&
-                            review.screenshots &&
-                            review.screenshots.length > 0 && (
+                          {!isDefined(review.notes) &&
+                            isNonEmptyString(review.screenshots) && (
                               <div className="border-t border-white/15 pt-3 mt-2">
                                 <h4 className="text-sm font-medium text-gray-300">
                                   Screenshots:

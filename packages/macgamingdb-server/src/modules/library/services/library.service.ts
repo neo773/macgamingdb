@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { and, eq, inArray } from 'drizzle-orm';
+import { isNonEmptyArray } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
@@ -30,7 +32,7 @@ const PERFORMANCE_RANK: Record<PerformanceRating, number> = {
 const UNRATED_RANK = Number.MAX_SAFE_INTEGER;
 
 const rankForRating = (rating: PerformanceRating | null): number =>
-  rating === null ? UNRATED_RANK : PERFORMANCE_RANK[rating];
+  isDefined(rating) ? PERFORMANCE_RANK[rating] : UNRATED_RANK;
 
 const steamConnectionWhere = (userId: string) =>
   and(
@@ -100,7 +102,7 @@ export class LibraryService {
       .from(userLibraryEntries)
       .where(steamEntriesWhere(userId));
 
-    if (entries.length === 0) return [];
+    if (!isNonEmptyArray(entries)) return [];
 
     const matchedGames = await this.db
       .select({
@@ -134,7 +136,7 @@ export class LibraryService {
         playtimeMinutes: entry.playtimeMinutes,
         aggregatedPerformance: rating,
         reviewCount: matched?.reviewCount ?? 0,
-        hasData: rating !== null,
+        hasData: isDefined(rating),
       };
     });
 

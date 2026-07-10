@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { inArray } from 'drizzle-orm';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { gameSourceLinks } from '../../../database/schema';
@@ -66,7 +67,7 @@ export class GameSearchService {
   private async attachKnownGames(
     items: GameSearchResult[],
   ): Promise<GameSearchResult[]> {
-    if (items.length === 0) {
+    if (!isNonEmptyArray(items)) {
       return items;
     }
 

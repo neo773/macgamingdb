@@ -1,5 +1,6 @@
 'use client';
 
+import { isNonEmptyArray } from '@sniptt/guards';
 import { trpc } from '@/modules/trpc/trpc';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { formatDistance } from 'date-fns';
@@ -156,7 +157,7 @@ export function ContributorsClient({
       {hasNextPage && <div ref={loadMoreRef} className="h-10" />}
 
       {/* No contributors message */}
-      {allContributors.length === 0 && !isLoading && (
+      {!isNonEmptyArray(allContributors) && !isLoading && (
         <Card className="bg-primary-gradient">
           <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
             <h2 className="text-xl font-medium text-white">

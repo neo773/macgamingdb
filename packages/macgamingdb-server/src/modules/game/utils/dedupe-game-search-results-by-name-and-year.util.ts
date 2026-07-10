@@ -1,3 +1,5 @@
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+
 import type { GameSearchResult } from '../types/game-search-result.type';
 
 const normalizedName = (item: GameSearchResult): string =>
@@ -22,13 +24,13 @@ export const dedupeGameSearchResultsByNameAndYear = (
 
   const deduped = [...itemsByNameAndYear.values()];
   const namesWithYear = new Set(
-    deduped.filter((item) => item.releaseYear !== null).map(normalizedName),
+    deduped.filter((item) => isDefined(item.releaseYear)).map(normalizedName),
   );
 
   // A yearless entry alongside a dated same-name entry is a duplicate record
   // of the same game, not a different game.
   return deduped.filter(
     (item) =>
-      item.releaseYear !== null || !namesWithYear.has(normalizedName(item)),
+      isDefined(item.releaseYear) || !namesWithYear.has(normalizedName(item)),
   );
 };

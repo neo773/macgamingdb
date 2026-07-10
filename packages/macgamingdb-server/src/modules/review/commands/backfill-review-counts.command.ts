@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { count, eq } from 'drizzle-orm';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { games, gameReviews } from '../../../database/schema';
@@ -54,7 +55,7 @@ export class BackfillReviewCountsCommand extends CommandRunner {
     );
     logger.log(`Games with reviews: ${gamesWithReviews.length}`);
 
-    if (gamesWithReviews.length > 0) {
+    if (isNonEmptyArray(gamesWithReviews)) {
       logger.log('Sample games with reviews:');
       gamesWithReviews.slice(0, 5).forEach((game) => {
         logger.log(

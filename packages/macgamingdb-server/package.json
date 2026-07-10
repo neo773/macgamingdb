@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.1.28",
+    "@sniptt/guards": "^0.2.0",
     "@nestjs/core": "^11.1.28",
     "@nestjs/platform-express": "^11.1.28",
     "@types/express": "^5.0.6",

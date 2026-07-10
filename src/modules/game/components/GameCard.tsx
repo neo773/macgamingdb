@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
 
@@ -41,7 +42,7 @@ export function GameCard({ game }: { game: GameCardGame }) {
       <div className="absolute bottom-0 left-0 right-0 p-4 z-20 bg-transparent">
         <div className="font-medium text-white group-hover:text-blue-400 transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
           {game.name}
-          {game.releaseYear !== null && (
+          {isDefined(game.releaseYear) && (
             <span className="ml-2 text-sm font-normal text-gray-400">
               {game.releaseYear}
             </span>

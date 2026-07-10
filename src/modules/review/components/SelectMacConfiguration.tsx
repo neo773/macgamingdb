@@ -14,6 +14,7 @@ import {
   MemoryStick,
   Search,
 } from 'lucide-react';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { cn } from 'macgamingdb-ui/utilities/cn';
 import { ScrollArea } from 'macgamingdb-ui/layout/ScrollArea';
 import { Skeleton } from 'macgamingdb-ui/display/Skeleton';
@@ -325,11 +326,11 @@ export function SelectMacConfiguration({
   };
 
   const renderContent = () => {
-    if (macConfigsLoading && macConfigs.length === 0) {
+    if (macConfigsLoading && !isNonEmptyArray(macConfigs)) {
       return <LoadingState />;
     }
 
-    if (macConfigs.length === 0 && !macConfigsLoading) {
+    if (!isNonEmptyArray(macConfigs) && !macConfigsLoading) {
       return <NoResultsState />;
     }
 
@@ -364,7 +365,7 @@ export function SelectMacConfiguration({
       <SearchBar
         value={macConfigSearch}
         onChange={setMacConfigSearch}
-        isSearching={macConfigsFetching && macConfigs.length > 0}
+        isSearching={macConfigsFetching && isNonEmptyArray(macConfigs)}
       />
       <hr />
       <ScrollArea className="flex-1 min-h-0">

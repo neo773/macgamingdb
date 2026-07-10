@@ -1,5 +1,7 @@
 import { ExpandableReviewNote } from './ExpandableReviewNote';
 import React from 'react';
+import { isNonEmptyString } from '@sniptt/guards';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { Card, CardHeader, CardContent } from 'macgamingdb-ui/display/Card';
 import { Badge } from 'macgamingdb-ui/display/Badge';
 import clsx from 'clsx';
@@ -193,9 +195,8 @@ export const ReviewCard = ({
                 />
               </div>
             )}
-            {review.notes === null &&
-              review.screenshots &&
-              review.screenshots.length > 0 && (
+            {!isDefined(review.notes) &&
+              isNonEmptyString(review.screenshots) && (
                 <div className="border-t border-white/15 pt-3 mt-2">
                   <h4 className="text-sm font-medium text-gray-300">
                     Screenshots:

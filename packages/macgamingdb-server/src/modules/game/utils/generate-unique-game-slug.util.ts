@@ -1,3 +1,7 @@
+import { isNonEmptyString } from '@sniptt/guards';
+
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+
 import { slugifyGameName } from './slugify-game-name.util';
 
 type GenerateUniqueGameSlugParams = {
@@ -17,9 +21,9 @@ export const generateUniqueGameSlug = async ({
 
   const candidates: string[] = [];
 
-  if (base !== '') {
+  if (isNonEmptyString(base)) {
     candidates.push(base);
-    if (releaseYear !== undefined) {
+    if (isDefined(releaseYear)) {
       candidates.push(`${base}-${releaseYear}`);
     }
     candidates.push(`${base}-${fallbackId}`);
@@ -28,7 +32,7 @@ export const generateUniqueGameSlug = async ({
   candidates.push(`game-${fallbackId}`);
 
   for (const candidate of candidates) {
-    if (candidate === '' || /^[0-9]+$/.test(candidate)) {
+    if (!isNonEmptyString(candidate) || /^[0-9]+$/.test(candidate)) {
       continue;
     }
     if (!(await isTaken(candidate))) {

@@ -14,6 +14,7 @@ import { GameStatsCard } from '@/modules/game/components/GameStatsCard';
 import { ExperienceReportsSection } from '@/modules/game/components/ExperienceReportsSection';
 import { GamePageError } from '@/modules/game/components/GamePageError';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
+import { isNonEmptyArray } from '@sniptt/guards';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
@@ -76,7 +77,7 @@ export default async function GamePage({
   }
 
   const identifier = game.slug ?? game.id;
-  const hasReviews = reviews && reviews.length > 0;
+  const hasReviews = isNonEmptyArray(reviews);
   const jsonLd = generateGameJsonLd(identifier, game, stats);
 
   return (

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import type { GameSourceDriver } from '../../../interfaces/game-source-driver.interface';
 import type { GameSearchResult } from '../../../types/game-search-result.type';
 import type { NormalizedGameDetails } from '../../../types/normalized-game-details.type';
@@ -26,7 +27,7 @@ export class IgdbGameSourceService implements GameSourceDriver {
     // Games with a Steam appid are canonically Steam entries; surfacing them
     // here would duplicate the Steam driver's results.
     return results
-      .filter((game) => getSteamAppIdFromIgdb(game) === null)
+      .filter((game) => !isDefined(getSteamAppIdFromIgdb(game)))
       .slice(0, limit)
       .map(
         (game): GameSearchResult => ({

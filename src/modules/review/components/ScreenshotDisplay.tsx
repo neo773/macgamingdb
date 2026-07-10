@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useMemo } from 'react';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { Dialog, DialogContent } from 'macgamingdb-ui/feedback/Dialog';
 
 const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
@@ -34,7 +35,7 @@ export function ScreenshotDisplay({
     setOpen(true);
   };
 
-  if (screenshots.length === 0) return null;
+  if (!isNonEmptyArray(screenshots)) return null;
 
   return (
     <div className="pt-2">

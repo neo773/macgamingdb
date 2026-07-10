@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 
 type WiggleWrapperProps = {
   enabled: boolean;
@@ -40,7 +41,7 @@ export function WiggleWrapper({
 
   function isTargetInRadixPortal(target: EventTarget | null): boolean {
     if (!(target instanceof HTMLElement)) return false;
-    return target.closest(RADIX_PORTAL_SELECTOR) !== null;
+    return isDefined(target.closest(RADIX_PORTAL_SELECTOR));
   }
 
   return (

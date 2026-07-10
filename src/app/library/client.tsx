@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, RefreshCw, Unlink } from 'lucide-react';
 import { toast } from 'sonner';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { STEAM_LIBRARY_PRIVATE_CODE } from 'macgamingdb-server/modules/library/drivers/steam/constants/steam-library-private-code.constant';
 import { Header } from '@/modules/layout/components/Header';
 import { Footer } from '@/modules/layout/components/Footer';
@@ -42,7 +43,7 @@ export function LibraryClient() {
 
   const status = trpc.library.status.useQuery();
   const list = trpc.library.list.useQuery(undefined, {
-    enabled: status.data?.linked === true,
+    enabled: status.data?.linked ?? false,
   });
 
   const sync = trpc.library.sync.useMutation();
@@ -74,7 +75,7 @@ export function LibraryClient() {
     });
   };
 
-  const linked = status.data?.linked === true;
+  const linked = status.data?.linked ?? false;
   const games = list.data ?? [];
 
   return (
@@ -157,7 +158,7 @@ export function LibraryClient() {
           </Card>
         ) : list.isLoading ? (
           <p className="text-gray-500 text-sm">Loading library...</p>
-        ) : games.length === 0 ? (
+        ) : !isNonEmptyArray(games) ? (
           <Card className="bg-primary-gradient max-w-lg mx-auto">
             <CardContent className="py-12 text-center text-gray-400">
               No games found in your Steam library.

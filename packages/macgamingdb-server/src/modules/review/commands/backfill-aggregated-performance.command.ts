@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { count, eq, isNotNull } from 'drizzle-orm';
+import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { games } from '../../../database/schema';
@@ -43,7 +44,7 @@ export class BackfillAggregatedPerformanceCommand extends CommandRunner {
     let skippedCount = 0;
 
     for (const game of allGames) {
-      if (game.reviews.length === 0) {
+      if (!isNonEmptyArray(game.reviews)) {
         skippedCount++;
         continue;
       }
