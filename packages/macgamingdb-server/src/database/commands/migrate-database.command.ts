@@ -1,9 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { migrate } from 'drizzle-orm/libsql/migrator';
 import { sql } from 'drizzle-orm';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../constants/drizzle-client.constant';
@@ -70,7 +70,7 @@ export class MigrateDatabaseCommand extends CommandRunner {
       return;
     }
 
-    await migrate(this.db, { migrationsFolder: MIGRATIONS_FOLDER });
+    await this.applyPendingMigrations();
     logger.log('Schema migrations applied');
 
     const { updatedCount } =
@@ -104,20 +104,61 @@ export class MigrateDatabaseCommand extends CommandRunner {
     };
   }
 
-  private async describePendingMigrations(): Promise<string[]> {
+  private readPendingJournalEntries = async () => {
     const journalEntries = await this.db.all<{ hash: string }>(
       sql`SELECT hash FROM __drizzle_migrations`,
     );
     const appliedCount = journalEntries.length;
     const journalSchema = z.object({
-      entries: z.array(z.object({ tag: z.string() })),
+      entries: z.array(z.object({ tag: z.string(), when: z.number() })),
     });
     const journal = journalSchema.parse(
       JSON.parse(
         readFileSync(path.join(MIGRATIONS_FOLDER, 'meta', '_journal.json'), 'utf-8'),
       ),
     );
-    return journal.entries.slice(appliedCount).map((entry) => entry.tag);
+    return journal.entries.slice(appliedCount);
+  };
+
+  private async describePendingMigrations(): Promise<string[]> {
+    const pendingEntries = await this.readPendingJournalEntries();
+    return pendingEntries.map((entry) => entry.tag);
+  }
+
+  // Statements run individually because sqld enforces a timeout on
+  // interactive transactions that the bulk data migration cannot fit inside.
+  private async applyPendingMigrations(): Promise<void> {
+    const pendingEntries = await this.readPendingJournalEntries();
+
+    for (const entry of pendingEntries) {
+      const migrationSql = readFileSync(
+        path.join(MIGRATIONS_FOLDER, `${entry.tag}.sql`),
+        'utf-8',
+      );
+      const statements = migrationSql
+        .split('--> statement-breakpoint')
+        .map((statement) => statement.trim())
+        .filter((statement) => statement !== '');
+
+      for (const statement of statements) {
+        try {
+          await this.db.run(sql.raw(statement));
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          if (/duplicate column|already exists|no such column|no such index/i.test(message)) {
+            logger.warn(`Skipping already-applied statement in ${entry.tag}: ${message}`);
+            continue;
+          }
+          throw error;
+        }
+      }
+
+      const migrationHash = createHash('sha256').update(migrationSql).digest('hex');
+      await this.db.run(
+        sql`INSERT INTO __drizzle_migrations (hash, created_at) VALUES (${migrationHash}, ${entry.when})`,
+      );
+      logger.log(`Applied migration ${entry.tag}`);
+    }
   }
 
   private async validateOrThrow(beforeCounts: {
