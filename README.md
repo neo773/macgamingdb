@@ -18,7 +18,7 @@ Two deployable services plus shared workspace packages. Bun is the package manag
 | `packages/macgamingdb-shared` | Pure cross-package utils (e.g. `isDefined`). |
 | `packages/macgamingdb-emails` | React Email templates (magic link). |
 
-- **Database**: SQLite via Drizzle ORM — local file in development, [sqld](https://github.com/tursodatabase/libsql) (libSQL server) in production. Game data is normalized into columns at ingestion; external identity lives in a `GameSourceLink` table, so one game can map to multiple stores.
+- **Database**: SQLite via Drizzle ORM — local file in development, [sqld](https://github.com/tursodatabase/libsql) (libSQL server) in production.
 - **Auth**: BetterAuth (magic link, Sign in with Apple, Steam OpenID account linking).
 - **Game sources**: Steam store + IGDB (Twitch client credentials). Steam is canonical when a game exists on both.
 - **Conventions**: see `CODE_STYLE.md` — hard rules, enforced.
@@ -39,13 +39,11 @@ Two deployable services plus shared workspace packages. Bun is the package manag
 - `bunx tsc --noEmit` (root and `packages/macgamingdb-server`) — typecheck
 - `bun run test` — vitest (utils only, per conventions)
 - `bun run build:api` — compile shared/emails/server packages to `dist/`
-- `bun run migrate:database` — apply pending migrations + slug backfill + invariant validation (idempotent; the API container runs this on boot)
 - `bun --bun scripts/generate-openapi.ts` — regenerate `openapi.json` for the iOS client after router/dto changes
-- `bun run test:production-migration` — rehearse the production migration against a database snapshot
 
 ### Database changes
 
-Edit `packages/macgamingdb-server/src/database/schema.ts`, then `bun run db:generate` to create a migration and `bun run db:migrate` to apply locally. Production applies migrations automatically on deploy; long data migrations must be written as individually-executable statements (sqld times out interactive transactions).
+Edit `packages/macgamingdb-server/src/database/schema.ts`, then `bun run db:generate` to create a migration and `bun run db:migrate` to apply locally. Production applies migrations automatically on deploy.
 
 ## Deployment
 
