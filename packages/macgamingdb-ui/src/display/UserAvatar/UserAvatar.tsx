@@ -9,13 +9,13 @@ const PALETTES: readonly (readonly string[])[] = [
   ['#0c4a6e', '#0369a1', '#06b6d4', '#67e8f9', '#e0f2fe'],
 ];
 
-function paletteFor(seed: string): readonly string[] {
+const paletteFor = (seed: string): readonly string[] => {
   let hash = 0;
   for (let index = 0; index < seed.length; index++) {
     hash = (hash * 31 + seed.charCodeAt(index)) | 0;
   }
   return PALETTES[Math.abs(hash) % PALETTES.length];
-}
+};
 
 type UserAvatarProps = {
   name: string;
@@ -23,7 +23,11 @@ type UserAvatarProps = {
   variant?: 'beam' | 'marble' | 'pixel' | 'sunset' | 'ring' | 'bauhaus';
 };
 
-export function UserAvatar({ name, size = 32, variant = 'beam' }: UserAvatarProps) {
+export const UserAvatar = ({
+  name,
+  size = 32,
+  variant = 'beam',
+}: UserAvatarProps) => {
   return (
     <Avatar
       size={size}
@@ -32,4 +36,4 @@ export function UserAvatar({ name, size = 32, variant = 'beam' }: UserAvatarProp
       colors={paletteFor(name) as string[]}
     />
   );
-}
+};

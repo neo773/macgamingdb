@@ -27,12 +27,12 @@ import { LibraryGameCard } from '@/modules/library/components/LibraryGameCard';
 import { LibraryErrorToastEffect } from '@/modules/library/components/LibraryErrorToastEffect';
 import { SteamIcon } from '@/modules/library/components/SteamIcon';
 
-function formatRelative(iso: string | null): string {
+const formatRelative = (iso: string | null): string => {
   if (!iso) return 'never';
   return formatDistanceToNow(new Date(iso), { addSuffix: true });
-}
+};
 
-export function LibraryClient() {
+export const LibraryClient = () => {
   const [unlinkOpen, setUnlinkOpen] = useState(false);
 
   const status = trpc.library.status.useQuery();
@@ -200,4 +200,4 @@ export function LibraryClient() {
       <Footer />
     </div>
   );
-}
+};

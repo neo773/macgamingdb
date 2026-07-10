@@ -1,8 +1,4 @@
-export default function StatsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const StatsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html>
       <body>
@@ -10,4 +6,6 @@ export default function StatsLayout({
       </body>
     </html>
   );
-}
+};
+
+export default StatsLayout;

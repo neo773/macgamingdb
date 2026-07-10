@@ -18,15 +18,15 @@ import { isNonEmptyArray } from '@sniptt/guards';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   return [];
-}
+};
 
-export async function generateMetadata({
+export const generateMetadata = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
-}): Promise<Metadata> {
+}): Promise<Metadata> => {
   const { id } = await params;
 
   try {
@@ -52,13 +52,9 @@ export async function generateMetadata({
       description: 'Details about game performance on Mac',
     };
   }
-}
+};
 
-export default async function GamePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const helpers = await createServerHelpers();
 
@@ -118,4 +114,6 @@ export default async function GamePage({
       <Footer />
     </div>
   );
-}
+};
+
+export default GamePage;

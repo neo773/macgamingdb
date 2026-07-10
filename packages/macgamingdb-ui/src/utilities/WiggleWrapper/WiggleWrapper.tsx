@@ -9,11 +9,11 @@ type WiggleWrapperProps = {
   className?: string;
 };
 
-export function WiggleWrapper({
+export const WiggleWrapper = ({
   enabled,
   children,
   className,
-}: WiggleWrapperProps) {
+}: WiggleWrapperProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFieldFocused, setIsFieldFocused] = useState(false);
 
@@ -29,7 +29,7 @@ export function WiggleWrapper({
   const INTERACTIVE_ELEMENTS_QUERY = INTERACTIVE_ELEMENT_SELECTORS.join(', ');
   const RADIX_PORTAL_SELECTOR = '[data-radix-popper-content-wrapper]';
 
-  function isInteractingWithField(container: HTMLElement): boolean {
+  const isInteractingWithField = (container: HTMLElement): boolean => {
     const activeElement = document.activeElement;
     if (!activeElement) return false;
     return (
@@ -37,12 +37,12 @@ export function WiggleWrapper({
         .querySelector(INTERACTIVE_ELEMENTS_QUERY)
         ?.contains(activeElement) ?? false
     );
-  }
+  };
 
-  function isTargetInRadixPortal(target: EventTarget | null): boolean {
+  const isTargetInRadixPortal = (target: EventTarget | null): boolean => {
     if (!(target instanceof HTMLElement)) return false;
     return isDefined(target.closest(RADIX_PORTAL_SELECTOR));
-  }
+  };
 
   return (
     <div
@@ -68,4 +68,4 @@ export function WiggleWrapper({
       {children}
     </div>
   );
-}
+};

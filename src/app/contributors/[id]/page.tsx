@@ -17,15 +17,15 @@ import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   return [];
-}
+};
 
-export default async function ContributorPage({
+const ContributorPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+}) => {
   const { id: contributorId } = await params;
 
   const helpers = await createServerHelpers();
@@ -33,7 +33,10 @@ export default async function ContributorPage({
   const contributor = await helpers.contributor.getById
     .fetch({ id: contributorId })
     .catch((error) => {
-      if (error instanceof TRPCClientError && error.data?.code === 'NOT_FOUND') {
+      if (
+        error instanceof TRPCClientError &&
+        error.data?.code === 'NOT_FOUND'
+      ) {
         notFound();
       }
       throw error;
@@ -95,7 +98,9 @@ export default async function ContributorPage({
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                            <Link href={`/games/${review.gameSlug ?? review.gameId}`}>
+                            <Link
+                              href={`/games/${review.gameSlug ?? review.gameId}`}
+                            >
                               <h3 className="text-lg font-semibold text-white hover:text-blue-300 transition-colors">
                                 {review.gameName ?? 'Unknown Game'}
                               </h3>
@@ -159,4 +164,6 @@ export default async function ContributorPage({
       <Footer />
     </div>
   );
-}
+};
+
+export default ContributorPage;

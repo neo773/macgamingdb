@@ -9,6 +9,7 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - String-literal unions over enums; model fixed sets as union + `Record<Union, T>`.
 - One export per file; file name matches the export. Named exports only — no default exports (Next-required files excepted: `page.tsx`, `layout.tsx`, `route.ts`, `sitemap.ts`, `mdx-components.tsx`).
 - Multi-arg functions take a single destructured object param.
+- Arrow functions only — no `function` declarations or expressions anywhere (components, hooks, utils, route handlers, callbacks). Class methods are the sole exception. Arrows don't hoist: declare before use.
 - Early returns, no else-after-return, no nested ternaries. `const` over `let`. No mutation of inputs.
 - No `as unknown as`. Avoid `unknown` — validate untrusted input with zod (`parseXOrThrow` naming), then trust the type.
 - Prefer `undefined` over `null`; one nullish convention per boundary. Return `[]`, never `null`, for empty collections.

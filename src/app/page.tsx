@@ -8,12 +8,17 @@ import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const revalidate = 3600; // 1 hour
 
-export default async function Home() {
-  const defaultFilterConfig = createFilterConfig(undefined, undefined, undefined);
+const Home = async () => {
+  const defaultFilterConfig = createFilterConfig(
+    undefined,
+    undefined,
+    undefined,
+  );
   const helpers = await createServerHelpers();
 
   const GamesPage = await helpers.game.getGames.fetch(defaultFilterConfig);
-  const ratingCounts = await helpers.game.getFilterCounts.fetch(defaultFilterConfig);
+  const ratingCounts =
+    await helpers.game.getFilterCounts.fetch(defaultFilterConfig);
 
   return (
     <div className="min-h-dvh flex flex-col">
@@ -49,4 +54,6 @@ export default async function Home() {
       <Footer />
     </div>
   );
-}
+};
+
+export default Home;

@@ -32,14 +32,14 @@ const GRAPHICS_LABELS: Record<string, string> = {
   LOW: 'Low',
 };
 
-export function PerformanceFields({
+export const PerformanceFields = ({
   performance,
   fps,
   graphicsSettings,
   resolution,
   onSelectChange,
   onInputChange,
-}: PerformanceFieldsProps) {
+}: PerformanceFieldsProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -93,7 +93,9 @@ export function PerformanceFields({
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Resolution (optional)</label>
+        <label className="block text-sm font-medium">
+          Resolution (optional)
+        </label>
         <Input
           type="text"
           name="resolution"
@@ -104,4 +106,4 @@ export function PerformanceFields({
       </div>
     </>
   );
-}
+};

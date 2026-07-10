@@ -14,11 +14,11 @@ import { type DrizzleDB } from '../../../database/drizzle';
 import * as schema from '../../../database/schema';
 import { REVIEW_ACCOUNT_EMAIL, REVIEW_ACCOUNT_OTP } from './auth.const';
 
-async function generateAppleClientSecret(): Promise<string> {
+const generateAppleClientSecret = async (): Promise<string> => {
   const teamId = process.env.APPLE_TEAM_ID!;
   const clientId = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID!;
   const keyId = process.env.APPLE_KEY_ID!;
-  const privateKey = (process.env.APPLE_PRIVATE_KEY!).replace(/\\n/g, '\n');
+  const privateKey = process.env.APPLE_PRIVATE_KEY!.replace(/\\n/g, '\n');
 
   const key = await importPKCS8(privateKey, 'ES256');
 
@@ -30,11 +30,18 @@ async function generateAppleClientSecret(): Promise<string> {
     .setAudience('https://appleid.apple.com')
     .setSubject(clientId)
     .sign(key);
-}
+};
 
-export const BetterAuthClient = async (db: DrizzleDB): Promise<ReturnType<typeof betterAuth>> => {
-  const appleConfigured = process.env.APPLE_TEAM_ID && process.env.APPLE_KEY_ID && process.env.APPLE_PRIVATE_KEY;
-  const appleClientSecret = appleConfigured ? await generateAppleClientSecret() : '';
+export const BetterAuthClient = async (
+  db: DrizzleDB,
+): Promise<ReturnType<typeof betterAuth>> => {
+  const appleConfigured =
+    process.env.APPLE_TEAM_ID &&
+    process.env.APPLE_KEY_ID &&
+    process.env.APPLE_PRIVATE_KEY;
+  const appleClientSecret = appleConfigured
+    ? await generateAppleClientSecret()
+    : '';
 
   return betterAuth({
     baseURL:

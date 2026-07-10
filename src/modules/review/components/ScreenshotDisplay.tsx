@@ -5,30 +5,25 @@ import { Dialog, DialogContent } from 'macgamingdb-ui/feedback/Dialog';
 
 const R2_PUBLIC_URL = 'https://cdn.macgamingdb.app';
 
-function toPublicUrl(url: string): string {
+const toPublicUrl = (url: string): string => {
   try {
     const key = new URL(url).pathname.substring(1);
     return `${R2_PUBLIC_URL}/${key}`;
   } catch {
     return url;
   }
-}
+};
 
 interface ScreenshotDisplayProps {
   screenshots: string[];
   className?: string;
 }
 
-export function ScreenshotDisplay({
-  screenshots,
-}: ScreenshotDisplayProps) {
+export const ScreenshotDisplay = ({ screenshots }: ScreenshotDisplayProps) => {
   const [open, setOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
-  const publicUrls = useMemo(
-    () => screenshots.map(toPublicUrl),
-    [screenshots]
-  );
+  const publicUrls = useMemo(() => screenshots.map(toPublicUrl), [screenshots]);
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index);
@@ -76,4 +71,4 @@ export function ScreenshotDisplay({
       )}
     </div>
   );
-}
+};

@@ -1,4 +1,4 @@
-export function formatBytes(bytes: number): string {
+export const formatBytes = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
   const bytesPerUnit = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -8,4 +8,4 @@ export function formatBytes(bytes: number): string {
     ' ' +
     sizes[unitIndex]
   );
-}
+};

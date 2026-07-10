@@ -15,7 +15,7 @@ type GameCardGame = {
   performanceRating?: PerformanceRating;
 };
 
-export function GameCard({ game }: { game: GameCardGame }) {
+export const GameCard = ({ game }: { game: GameCardGame }) => {
   const [showFallback, setShowFallback] = useState(false);
 
   return (
@@ -51,4 +51,4 @@ export function GameCard({ game }: { game: GameCardGame }) {
       </div>
     </Link>
   );
-}
+};

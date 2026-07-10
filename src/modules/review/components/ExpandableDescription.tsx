@@ -7,9 +7,9 @@ interface ExpandableDescriptionProps {
   description: string;
 }
 
-export function ExpandableDescription({
+export const ExpandableDescription = ({
   description,
-}: ExpandableDescriptionProps) {
+}: ExpandableDescriptionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTooLong, setIsTooLong] = useState(false);
 
@@ -56,4 +56,4 @@ export function ExpandableDescription({
       )}
     </div>
   );
-}
+};

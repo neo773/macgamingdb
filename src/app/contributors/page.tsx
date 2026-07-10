@@ -6,7 +6,7 @@ import { Container } from 'macgamingdb-ui/layout/Container';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ContributorsPage() {
+const ContributorsPage = async () => {
   const helpers = await createServerHelpers();
 
   const contributorsData = await helpers.contributor.getTopContributors.fetch({
@@ -32,4 +32,6 @@ export default async function ContributorsPage() {
       <Footer />
     </div>
   );
-}
+};
+
+export default ContributorsPage;

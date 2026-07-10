@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { trpc } from '@/modules/trpc/trpc';
 import { toast } from 'sonner';
 
-export function useMyReviews() {
+export const useMyReviews = () => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editSessionKey, setEditSessionKey] = useState(0);
@@ -51,4 +51,4 @@ export function useMyReviews() {
     setPendingDeleteReviewId,
     confirmDeleteReview,
   };
-}
+};

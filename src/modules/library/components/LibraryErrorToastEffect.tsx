@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { FLOW_ERROR } from '@/modules/library/steam-connection/constants/FLOW_ERROR';
 
-export function LibraryErrorToastEffect() {
+export const LibraryErrorToastEffect = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -24,4 +24,4 @@ export function LibraryErrorToastEffect() {
   }, [searchParams]);
 
   return null;
-}
+};

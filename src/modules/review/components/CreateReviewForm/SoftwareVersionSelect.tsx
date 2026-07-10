@@ -21,7 +21,7 @@ interface SoftwareVersionSelectProps {
   onCustomVersionCancel: () => void;
 }
 
-export function SoftwareVersionSelect({
+export const SoftwareVersionSelect = ({
   playMethod,
   softwareVersion,
   customVersion,
@@ -29,13 +29,15 @@ export function SoftwareVersionSelect({
   onVersionChange,
   onCustomVersionChange,
   onCustomVersionCancel,
-}: SoftwareVersionSelectProps) {
+}: SoftwareVersionSelectProps) => {
   if (playMethod !== 'CROSSOVER' && playMethod !== 'PARALLELS') {
     return <div></div>;
   }
 
   const versions =
-    playMethod === 'CROSSOVER' ? SOFTWARE_VERSIONS.CROSSOVER : SOFTWARE_VERSIONS.PARALLELS;
+    playMethod === 'CROSSOVER'
+      ? SOFTWARE_VERSIONS.CROSSOVER
+      : SOFTWARE_VERSIONS.PARALLELS;
 
   return (
     <div className="flex flex-col justify-center space-y-2">
@@ -64,14 +66,21 @@ export function SoftwareVersionSelect({
             type="text"
             value={customVersionValue}
             onChange={(event) => onCustomVersionChange(event.target.value)}
-            placeholder={playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'}
+            placeholder={
+              playMethod === 'CROSSOVER' ? 'e.g., 25.1' : 'e.g., 19.1'
+            }
             className="flex-1"
           />
-          <Button type="button" variant="outline" size="sm" onClick={onCustomVersionCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onCustomVersionCancel}
+          >
             Cancel
           </Button>
         </div>
       )}
     </div>
   );
-}
+};

@@ -8,7 +8,11 @@ type SearchBarProps = {
   isLoading?: boolean;
 };
 
-export function SearchBar({ value, onChange, isLoading = false }: SearchBarProps) {
+export const SearchBar = ({
+  value,
+  onChange,
+  isLoading = false,
+}: SearchBarProps) => {
   return (
     <div className="relative w-full max-w-4xl">
       <div className="relative">
@@ -48,4 +52,4 @@ export function SearchBar({ value, onChange, isLoading = false }: SearchBarProps
       </div>
     </div>
   );
-}
+};

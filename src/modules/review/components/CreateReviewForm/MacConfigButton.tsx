@@ -17,12 +17,12 @@ interface MacConfigButtonProps {
   getHumanReadableFamily: (family: string) => string;
 }
 
-export function MacConfigButton({
+export const MacConfigButton = ({
   selectedConfig,
   onClick,
   getDeviceIcon,
   getHumanReadableFamily,
-}: MacConfigButtonProps) {
+}: MacConfigButtonProps) => {
   return (
     <div className="space-y-2">
       <div className="flex flex-row items-center gap-2">
@@ -52,4 +52,4 @@ export function MacConfigButton({
       </Button>
     </div>
   );
-}
+};

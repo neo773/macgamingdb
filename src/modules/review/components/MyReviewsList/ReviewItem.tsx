@@ -37,11 +37,11 @@ interface ReviewItemProps {
   onRequestDelete: () => void;
 }
 
-export function ReviewItem({
+export const ReviewItem = ({
   review,
   isEditing,
   onRequestDelete,
-}: ReviewItemProps) {
+}: ReviewItemProps) => {
   const { draft, updateDraftField, hasUnsavedChanges, saveChanges, isSaving } =
     useReviewDraft(review);
 
@@ -171,10 +171,7 @@ export function ReviewItem({
                     type="text"
                     value={draft.resolution ?? ''}
                     onChange={(event) =>
-                      updateDraftField(
-                        'resolution',
-                        event.target.value || null,
-                      )
+                      updateDraftField('resolution', event.target.value || null)
                     }
                     placeholder="e.g. 1920x1080"
                   />
@@ -237,4 +234,4 @@ export function ReviewItem({
       />
     </WiggleWrapper>
   );
-}
+};

@@ -9,12 +9,12 @@ interface UseInfiniteScrollOptions {
   enabled?: boolean;
 }
 
-export function useInfiniteScroll<T extends Element>({
+export const useInfiniteScroll = <T extends Element>({
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
   enabled = true,
-}: UseInfiniteScrollOptions): RefCallback<T> {
+}: UseInfiniteScrollOptions): RefCallback<T> => {
   return (element) => {
     if (!element || !enabled || !hasNextPage || isFetchingNextPage) return;
 
@@ -31,4 +31,4 @@ export function useInfiniteScroll<T extends Element>({
 
     return () => observer.disconnect();
   };
-}
+};

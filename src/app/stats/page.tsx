@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function StatsPage() {
+const StatsPage = async () => {
   const stats = JSON.parse(readFileSync('/app/stats.json', 'utf-8')) as Stats;
 
   const queryAnalysis = stats.top_queries.reduce(
@@ -63,4 +63,6 @@ export default async function StatsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default StatsPage;

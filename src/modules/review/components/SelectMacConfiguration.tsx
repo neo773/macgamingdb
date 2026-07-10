@@ -97,7 +97,7 @@ const MacConfigGuide = memo(() => {
             <ChevronDown
               className={cn(
                 'h-3 w-3 transition-transform group-hover:scale-110',
-                isExpanded && 'rotate-180'
+                isExpanded && 'rotate-180',
               )}
             />
           </button>
@@ -160,7 +160,7 @@ const MacConfigCard = memo(
       onClick={() => onSelect(config)}
       className={cn(
         'w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500',
-        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border'
+        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border',
       )}
     >
       <div className="flex items-center gap-4">
@@ -205,7 +205,7 @@ const MacConfigCard = memo(
         {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
       </div>
     </button>
-  )
+  ),
 );
 
 interface MacConfigGroupProps {
@@ -237,7 +237,7 @@ const MacConfigGroup = memo(
         ))}
       </div>
     </div>
-  )
+  ),
 );
 
 interface HeaderProps {
@@ -283,14 +283,14 @@ const SearchBar = memo(
         </div>
       )}
     </div>
-  )
+  ),
 );
 
-export function SelectMacConfiguration({
+export const SelectMacConfiguration = ({
   selectedConfigIdentifier,
   onSelect,
   onBack,
-}: SelectMacConfigurationProps) {
+}: SelectMacConfigurationProps) => {
   const [macConfigSearch, setMacConfigSearch] = useState('');
 
   const {
@@ -305,7 +305,7 @@ export function SelectMacConfiguration({
     {
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
   const groupedConfigs = useMemo(() => {
@@ -375,4 +375,4 @@ export function SelectMacConfiguration({
       </ScrollArea>
     </motion.div>
   );
-}
+};

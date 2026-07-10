@@ -20,7 +20,7 @@ type HomeClientProps = {
   GamesPage: GamesPage;
 };
 
-export function HomeClient({ GamesPage }: HomeClientProps) {
+export const HomeClient = ({ GamesPage }: HomeClientProps) => {
   const {
     performanceFilter,
     chipsetFilter,
@@ -60,12 +60,14 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
       enabled: !isSearchMode,
       staleTime: 30000,
       initialData: initialGamesData,
-    }
+    },
   );
 
   const filterCountsInput = {
     ...(filterConfig.chipset && { chipset: filterConfig.chipset }),
-    ...(filterConfig.chipsetVariant && { chipsetVariant: filterConfig.chipsetVariant }),
+    ...(filterConfig.chipsetVariant && {
+      chipsetVariant: filterConfig.chipsetVariant,
+    }),
     ...(filterConfig.playMethod && { playMethod: filterConfig.playMethod }),
   };
 
@@ -74,7 +76,7 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
     {
       staleTime: 30000,
       initialData: isDefaultFilter ? GamesPage.ratingCounts : undefined,
-    }
+    },
   );
 
   const loadMoreRef = useInfiniteScroll<HTMLDivElement>({
@@ -136,4 +138,4 @@ export function HomeClient({ GamesPage }: HomeClientProps) {
       )}
     </>
   );
-}
+};

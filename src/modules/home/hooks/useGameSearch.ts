@@ -14,7 +14,7 @@ interface UseGameSearchOptions {
   onClear?: () => void;
 }
 
-export function useGameSearch({ onClear }: UseGameSearchOptions = {}) {
+export const useGameSearch = ({ onClear }: UseGameSearchOptions = {}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -69,4 +69,4 @@ export function useGameSearch({ onClear }: UseGameSearchOptions = {}) {
     isSearchMode,
     handleQueryChange,
   };
-}
+};

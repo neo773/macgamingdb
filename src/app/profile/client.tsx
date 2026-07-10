@@ -29,7 +29,7 @@ interface ProfileUser {
   image: string | null;
 }
 
-export function ProfileClient({ user }: { user: ProfileUser }) {
+export const ProfileClient = ({ user }: { user: ProfileUser }) => {
   const router = useRouter();
   const [name, setName] = useState(user.name);
   const [isSaving, setIsSaving] = useState(false);
@@ -195,4 +195,4 @@ export function ProfileClient({ user }: { user: ProfileUser }) {
       <Footer />
     </div>
   );
-}
+};

@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 const STATE_TTL_SECONDS = 10 * 60;
 
-export async function GET() {
+export const GET = async () => {
   const db = createDrizzleClient();
   const auth = await BetterAuthClient(db);
   const session = await auth.api.getSession({ headers: await headers() });
@@ -41,4 +41,4 @@ export async function GET() {
       realm: `${origin}/`,
     }),
   );
-}
+};

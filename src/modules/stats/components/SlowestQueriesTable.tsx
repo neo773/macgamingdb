@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from 'macgamingdb-ui/display/Card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from 'macgamingdb-ui/display/Card';
 import { Badge } from 'macgamingdb-ui/display/Badge';
 import {
   Table,
@@ -17,10 +22,10 @@ interface SlowestQueriesTableProps {
   threshold: number;
 }
 
-export function SlowestQueriesTable({
+export const SlowestQueriesTable = ({
   queries,
   threshold,
-}: SlowestQueriesTableProps) {
+}: SlowestQueriesTableProps) => {
   return (
     <Card>
       <CardHeader>
@@ -47,7 +52,9 @@ export function SlowestQueriesTable({
               return (
                 <TableRow key={index}>
                   <TableCell>
-                    <Badge variant="outline">{getQueryIntent(query.query)}</Badge>
+                    <Badge variant="outline">
+                      {getQueryIntent(query.query)}
+                    </Badge>
                   </TableCell>
                   <TableCell className="max-w-md">
                     <code className="text-xs bg-muted px-2 py-1 rounded truncate block">
@@ -55,7 +62,11 @@ export function SlowestQueriesTable({
                     </code>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Badge variant={query.elapsed_ms > 35 ? 'destructive' : 'secondary'}>
+                    <Badge
+                      variant={
+                        query.elapsed_ms > 35 ? 'destructive' : 'secondary'
+                      }
+                    >
                       {query.elapsed_ms}ms
                     </Badge>
                   </TableCell>
@@ -73,4 +84,4 @@ export function SlowestQueriesTable({
       </CardContent>
     </Card>
   );
-}
+};

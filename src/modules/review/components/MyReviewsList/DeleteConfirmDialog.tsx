@@ -17,12 +17,12 @@ interface DeleteConfirmDialogProps {
   onConfirm: () => void;
 }
 
-export function DeleteConfirmDialog({
+export const DeleteConfirmDialog = ({
   isOpen,
   isDeleting,
   onClose,
   onConfirm,
-}: DeleteConfirmDialogProps) {
+}: DeleteConfirmDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
@@ -44,4 +44,4 @@ export function DeleteConfirmDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

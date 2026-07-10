@@ -14,11 +14,11 @@ import { useMyReviews } from '@/modules/review/hooks/useMyReviews';
 import { DeleteConfirmDialog } from '@/modules/review/components/MyReviewsList/DeleteConfirmDialog';
 import { ReviewItem } from '@/modules/review/components/MyReviewsList/ReviewItem';
 
-export function MyReviewsClient({
+export const MyReviewsClient = ({
   userReviews,
 }: {
   userReviews: RouterOutputs['review']['listMine'];
-}) {
+}) => {
   const {
     isEditing,
     editSessionKey,
@@ -92,4 +92,4 @@ export function MyReviewsClient({
       <Footer />
     </div>
   );
-}
+};

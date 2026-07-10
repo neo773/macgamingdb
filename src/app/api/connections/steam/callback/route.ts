@@ -19,24 +19,24 @@ import { verifyStateToken } from '@/modules/library/steam-connection/utils/verif
 
 export const dynamic = 'force-dynamic';
 
-function libraryRedirect(error?: FlowError) {
+const libraryRedirect = (error?: FlowError) => {
   const url = new URL('/library', getAppOrigin());
   if (error) url.searchParams.set('error', error);
   return NextResponse.redirect(url);
-}
+};
 
-async function consumeStateCookie(): Promise<string | null> {
+const consumeStateCookie = async (): Promise<string | null> => {
   const store = await cookies();
   const value = store.get(STATE_COOKIE_NAME)?.value ?? null;
   store.delete(STATE_COOKIE_NAME);
   return value;
-}
+};
 
-async function upsertSteamLink(
+const upsertSteamLink = async (
   db: ReturnType<typeof createDrizzleClient>,
   userId: string,
   steamId: string,
-) {
+) => {
   const existing = await db.query.userExternalAccounts.findFirst({
     where: and(
       eq(userExternalAccounts.userId, userId),
@@ -56,9 +56,9 @@ async function upsertSteamLink(
       externalUserId: steamId,
     });
   }
-}
+};
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   const db = createDrizzleClient();
   const auth = await BetterAuthClient(db);
   const session = await auth.api.getSession({ headers: await headers() });
@@ -87,21 +87,30 @@ export async function GET(request: NextRequest) {
       realm: `${origin}/`,
     });
   } catch (error) {
-    console.error('Steam OpenID verify failed:', error instanceof Error ? error.message : 'unknown');
+    console.error(
+      'Steam OpenID verify failed:',
+      error instanceof Error ? error.message : 'unknown',
+    );
     return libraryRedirect(FLOW_ERROR.VerifyFailed);
   }
 
   await upsertSteamLink(db, userId, steamId);
 
   try {
-    await new SteamLibrarySyncService(db, new SteamWebApiService()).syncLibraryForUser({ userId });
+    await new SteamLibrarySyncService(
+      db,
+      new SteamWebApiService(),
+    ).syncLibraryForUser({ userId });
   } catch (error) {
     if (error instanceof SteamLibraryPrivateError) {
       return libraryRedirect(FLOW_ERROR.PrivateLibrary);
     }
-    console.error('Initial Steam library sync failed:', error instanceof Error ? error.message : 'unknown');
+    console.error(
+      'Initial Steam library sync failed:',
+      error instanceof Error ? error.message : 'unknown',
+    );
     return libraryRedirect(FLOW_ERROR.VerifyFailed);
   }
 
   return libraryRedirect();
-}
+};

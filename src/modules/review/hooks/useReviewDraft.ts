@@ -22,16 +22,16 @@ const EDITABLE_REVIEW_FIELDS: readonly (keyof ReviewDraft)[] = [
   'softwareVersion',
 ];
 
-function draftMatchesOriginal(
+const draftMatchesOriginal = (
   draft: ReviewDraft,
   original: ReviewDraft,
-): boolean {
+): boolean => {
   return EDITABLE_REVIEW_FIELDS.every(
     (field) => draft[field] === original[field],
   );
-}
+};
 
-export function useReviewDraft(review: MyReview) {
+export const useReviewDraft = (review: MyReview) => {
   const router = useRouter();
 
   const originalDraft: ReviewDraft = {
@@ -70,5 +70,11 @@ export function useReviewDraft(review: MyReview) {
     });
   };
 
-  return { draft, updateDraftField, hasUnsavedChanges, saveChanges, isSaving: saveMutation.isPending };
-}
+  return {
+    draft,
+    updateDraftField,
+    hasUnsavedChanges,
+    saveChanges,
+    isSaving: saveMutation.isPending,
+  };
+};

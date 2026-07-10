@@ -12,7 +12,7 @@ import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 import { getGroupedChipsetCombinations } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
 import { PlayMethodEnum } from 'macgamingdb-server/schema';
 
-export function useHomeFilters() {
+export const useHomeFilters = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -20,16 +20,16 @@ export function useHomeFilters() {
   const [performanceFilter, setPerformanceFilter] = useState<PerformanceFilter>(
     () =>
       (searchParams.get(SearchURLParamsKeys.PERFORMANCE) ||
-        DEFAULT_PERFORMANCE_FILTER) as PerformanceFilter
+        DEFAULT_PERFORMANCE_FILTER) as PerformanceFilter,
   );
   const [chipsetFilter, setChipsetFilter] = useState(
     () =>
-      searchParams.get(SearchURLParamsKeys.CHIPSET) || DEFAULT_CHIPSET_FILTER
+      searchParams.get(SearchURLParamsKeys.CHIPSET) || DEFAULT_CHIPSET_FILTER,
   );
   const [playMethodFilter, setPlayMethodFilter] = useState<PlayMethodFilter>(
     () =>
       (searchParams.get(SearchURLParamsKeys.PLAY_METHOD) ||
-        DEFAULT_PLAY_METHOD_FILTER) as PlayMethodFilter
+        DEFAULT_PLAY_METHOD_FILTER) as PlayMethodFilter,
   );
 
   const isDefaultFilter =
@@ -38,8 +38,9 @@ export function useHomeFilters() {
     playMethodFilter === DEFAULT_PLAY_METHOD_FILTER;
 
   const filterConfig = useMemo(
-    () => createFilterConfig(performanceFilter, chipsetFilter, playMethodFilter),
-    [performanceFilter, chipsetFilter, playMethodFilter]
+    () =>
+      createFilterConfig(performanceFilter, chipsetFilter, playMethodFilter),
+    [performanceFilter, chipsetFilter, playMethodFilter],
   );
 
   const chipsetGroups = useMemo(() => getGroupedChipsetCombinations(), []);
@@ -52,10 +53,14 @@ export function useHomeFilters() {
         label: method,
       })),
     ],
-    []
+    [],
   );
 
-  const syncURL = (performance: PerformanceFilter, chipset: string, playMethod: PlayMethodFilter) => {
+  const syncURL = (
+    performance: PerformanceFilter,
+    chipset: string,
+    playMethod: PlayMethodFilter,
+  ) => {
     const params = new URLSearchParams();
 
     if (performance !== DEFAULT_PERFORMANCE_FILTER) {
@@ -93,7 +98,11 @@ export function useHomeFilters() {
     setPerformanceFilter(DEFAULT_PERFORMANCE_FILTER);
     setChipsetFilter(DEFAULT_CHIPSET_FILTER);
     setPlayMethodFilter(DEFAULT_PLAY_METHOD_FILTER);
-    syncURL(DEFAULT_PERFORMANCE_FILTER, DEFAULT_CHIPSET_FILTER, DEFAULT_PLAY_METHOD_FILTER);
+    syncURL(
+      DEFAULT_PERFORMANCE_FILTER,
+      DEFAULT_CHIPSET_FILTER,
+      DEFAULT_PLAY_METHOD_FILTER,
+    );
   };
 
   return {
@@ -109,4 +118,4 @@ export function useHomeFilters() {
     handlePlayMethodChange,
     resetFilters,
   };
-}
+};

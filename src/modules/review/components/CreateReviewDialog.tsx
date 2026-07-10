@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from 'macgamingdb-ui/feedback/Dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from 'macgamingdb-ui/feedback/Dialog';
 import {
   Drawer,
   DrawerContent,
@@ -19,10 +23,10 @@ type AddReviewDialogProps = {
   gameName: string;
 };
 
-export function CreateReviewDialog({
+export const CreateReviewDialog = ({
   gameId,
   gameName,
-}: AddReviewDialogProps) {
+}: AddReviewDialogProps) => {
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -69,4 +73,4 @@ export function CreateReviewDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

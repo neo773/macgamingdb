@@ -5,11 +5,11 @@ type GameStats = {
   totalReviews: number;
 };
 
-export function generateGameJsonLd(
+export const generateGameJsonLd = (
   identifier: string,
   game: RouterOutputs['game']['getById']['game'],
-  stats: GameStats | null
-) {
+  stats: GameStats | null,
+) => {
   const steamLink = game.sourceLinks.find((link) => link.source === 'steam');
 
   return {
@@ -39,4 +39,4 @@ export function generateGameJsonLd(
         }
       : undefined,
   };
-}
+};

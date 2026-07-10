@@ -36,20 +36,26 @@ interface UseCreateReviewOptions {
   onOpenChange: (open: boolean) => void;
 }
 
-function defaultSoftwareVersion(playMethod: PlayMethod): string {
+const defaultSoftwareVersion = (playMethod: PlayMethod): string => {
   if (playMethod === 'CROSSOVER') return SOFTWARE_VERSIONS.CROSSOVER[0];
   if (playMethod === 'PARALLELS') return SOFTWARE_VERSIONS.PARALLELS[0];
   return '';
-}
+};
 
-export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions) {
+export const useCreateReview = ({
+  gameId,
+  onOpenChange,
+}: UseCreateReviewOptions) => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [customVersion, setCustomVersion] = useState(false);
   const [customVersionValue, setCustomVersionValue] = useState('');
-  const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>('form');
-  const [userSelectedConfig, setUserSelectedConfig] = useState<MacConfig | null>(null);
+  const [currentScreen, setCurrentScreen] = useState<'form' | 'mac-selection'>(
+    'form',
+  );
+  const [userSelectedConfig, setUserSelectedConfig] =
+    useState<MacConfig | null>(null);
 
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
@@ -63,7 +69,8 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     screenshots: [],
     softwareVersion: defaultSoftwareVersion(initialPlayMethod),
     playMethod: initialPlayMethod,
-    translationLayer: preferences.translationLayer ?? TranslationLayerEnum.options[0],
+    translationLayer:
+      preferences.translationLayer ?? TranslationLayerEnum.options[0],
     performance: PerformanceEnum.options[1],
     graphicsSettings: GraphicsSettingsEnum.options[1],
     macConfigIdentifier: preferences.macConfigIdentifier || '',
@@ -75,7 +82,7 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
       enabled: !!preferences.macConfigIdentifier,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60 * 5,
-    }
+    },
   );
 
   const selectedConfig = userSelectedConfig ?? savedMacConfig ?? null;
@@ -100,7 +107,9 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const isSubmitting = createReviewMutation.isPending;
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = event.target;
     setFormData((previousFormData) => ({ ...previousFormData, [name]: value }));
@@ -154,21 +163,29 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
   const handleSubmit = async (event?: React.FormEvent) => {
     if (event) event.preventDefault();
 
-    if (!formData.playMethod || !formData.performance || !formData.macConfigIdentifier) {
+    if (
+      !formData.playMethod ||
+      !formData.performance ||
+      !formData.macConfigIdentifier
+    ) {
       setError('Please fill in all required fields.');
       return;
     }
 
     setError(null);
 
-    const finalSoftwareVersion = customVersion ? customVersionValue : formData.softwareVersion;
+    const finalSoftwareVersion = customVersion
+      ? customVersionValue
+      : formData.softwareVersion;
 
     try {
       await createReviewMutation.mutateAsync({
         gameId: gameId as string,
         playMethod: formData.playMethod,
         translationLayer:
-          formData.playMethod === 'CROSSOVER' ? formData.translationLayer : null,
+          formData.playMethod === 'CROSSOVER'
+            ? formData.translationLayer
+            : null,
         performance: formData.performance,
         fps: formData.fps ? parseInt(formData.fps) : null,
         graphicsSettings: formData.graphicsSettings,
@@ -207,4 +224,4 @@ export function useCreateReview({ gameId, onOpenChange }: UseCreateReviewOptions
     handleCustomVersionCancel,
     handleSubmit,
   };
-}
+};

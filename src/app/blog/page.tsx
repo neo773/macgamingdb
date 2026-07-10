@@ -10,9 +10,9 @@ type BlogPost = {
   date: string;
   image?: string;
   imageGradient?: string;
-}
+};
 
-async function getBlogPosts(): Promise<BlogPost[]> {
+const getBlogPosts = async (): Promise<BlogPost[]> => {
   const blogDir = path.join(process.cwd(), 'src/app/blog');
   const entries = fs.readdirSync(blogDir, { withFileTypes: true });
 
@@ -43,17 +43,17 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     (firstPost, secondPost) =>
       new Date(secondPost.date).getTime() - new Date(firstPost.date).getTime(),
   );
-}
+};
 
-function formatDate(dateString: string) {
+const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-}
+};
 
-export default async function BlogIndexPage() {
+const BlogIndexPage = async () => {
   const posts = await getBlogPosts();
 
   return (
@@ -114,4 +114,6 @@ export default async function BlogIndexPage() {
       </div>
     </div>
   );
-}
+};
+
+export default BlogIndexPage;

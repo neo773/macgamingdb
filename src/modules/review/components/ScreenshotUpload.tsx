@@ -22,12 +22,12 @@ interface ScreenshotUploadProps {
   className?: string;
 }
 
-export function ScreenshotUpload({
+export const ScreenshotUpload = ({
   gameId,
   onScreenshotsChange,
   maxFiles = 3,
   className = '',
-}: ScreenshotUploadProps) {
+}: ScreenshotUploadProps) => {
   const [screenshotUrls, setScreenshotUrls] = useState<string[]>([]);
   const [failedUrls, setFailedUrls] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -193,4 +193,4 @@ export function ScreenshotUpload({
       )}
     </div>
   );
-}
+};

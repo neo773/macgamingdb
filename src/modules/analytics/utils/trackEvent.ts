@@ -17,8 +17,8 @@ type AnalyticsEvent =
   | { name: 'ggdeals-click'; data: { gameId: string } }
   | { name: 'steam-library-link-click' };
 
-export function trackEvent(event: AnalyticsEvent) {
+export const trackEvent = (event: AnalyticsEvent) => {
   if (typeof window === 'undefined') return;
   if (!window.umami) return;
   window.umami.track(event.name, 'data' in event ? event.data : undefined);
-}
+};

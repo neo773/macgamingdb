@@ -3,7 +3,7 @@ import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 
 export const revalidate = 3600; // 1 hour
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const helpers = await createServerHelpers();
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -13,4 +13,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/games/${entry.slug ?? entry.id}`,
     lastModified: new Date(entry.lastModified),
   }));
-}
+};
+
+export default sitemap;

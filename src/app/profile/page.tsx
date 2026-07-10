@@ -4,7 +4,7 @@ import { ProfileClient } from './client';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProfilePage() {
+const ProfilePage = async () => {
   const session = await getServerSession();
 
   if (!session) {
@@ -21,4 +21,6 @@ export default async function ProfilePage() {
       }}
     />
   );
-}
+};
+
+export default ProfilePage;

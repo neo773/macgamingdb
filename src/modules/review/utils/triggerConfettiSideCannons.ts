@@ -2,7 +2,7 @@ import confetti from 'canvas-confetti';
 
 const CONFETTI_COLORS = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
 
-export function triggerConfettiSideCannons() {
+export const triggerConfettiSideCannons = () => {
   confetti({
     particleCount: 100,
     angle: 60,
@@ -26,4 +26,4 @@ export function triggerConfettiSideCannons() {
     origin: { x: 1, y: 0.5 },
     colors: CONFETTI_COLORS,
   });
-}
+};

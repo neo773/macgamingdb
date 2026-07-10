@@ -3,7 +3,10 @@ import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { CreateReviewDialog } from '@/modules/review/components/CreateReviewDialog';
 import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
-import { type GameReview, type MacConfig } from 'macgamingdb-server/drizzle/types';
+import {
+  type GameReview,
+  type MacConfig,
+} from 'macgamingdb-server/drizzle/types';
 
 type ReviewWithMacConfig = GameReview & { macConfig?: MacConfig | null };
 
@@ -14,19 +17,23 @@ interface ExperienceReportsSectionProps {
   showCrossoverAffiliate: boolean;
 }
 
-export function ExperienceReportsSection({
+export const ExperienceReportsSection = ({
   gameId,
   gameName,
   reviews,
   showCrossoverAffiliate,
-}: ExperienceReportsSectionProps) {
+}: ExperienceReportsSectionProps) => {
   const hasReviews = isNonEmptyArray(reviews);
 
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-white">Experience Reports</h2>
-        {hasReviews && <CreateReviewDialog gameId={gameId} gameName={gameName} />}
+        <h2 className="text-2xl font-semibold text-white">
+          Experience Reports
+        </h2>
+        {hasReviews && (
+          <CreateReviewDialog gameId={gameId} gameName={gameName} />
+        )}
       </div>
 
       {hasReviews ? (
@@ -46,4 +53,4 @@ export function ExperienceReportsSection({
       )}
     </div>
   );
-}
+};

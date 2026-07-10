@@ -29,13 +29,13 @@ import { PerformanceFields } from './PerformanceFields';
 import { MacConfigButton } from './MacConfigButton';
 import { ReviewFormFooter } from './ReviewFormFooter';
 
-export function CreateReviewForm({
+export const CreateReviewForm = ({
   gameId,
   gameName,
   onOpenChange,
   onClose,
   isDrawer = false,
-}: ReviewFormProps) {
+}: ReviewFormProps) => {
   const {
     formData,
     error,
@@ -143,7 +143,9 @@ export function CreateReviewForm({
 
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-2">
-                <label className="block text-sm font-medium">Notes (optional)</label>
+                <label className="block text-sm font-medium">
+                  Notes (optional)
+                </label>
                 <Textarea
                   name="notes"
                   value={formData.notes}
@@ -208,4 +210,4 @@ export function CreateReviewForm({
       )}
     </div>
   );
-}
+};

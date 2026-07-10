@@ -7,11 +7,11 @@ import { type FilterConfig } from '@/modules/search/types/FilterConfig';
 import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
 import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 
-export function createFilterConfig(
+export const createFilterConfig = (
   performanceParam: string | null | undefined,
   chipsetParam: string | null | undefined,
   playMethodParam: string | null | undefined,
-): FilterConfig {
+): FilterConfig => {
   const filter = (performanceParam || 'ALL') as PerformanceFilter;
   const chipset = chipsetParam || 'all';
   const playMethod = (playMethodParam || 'ALL') as PlayMethodFilter;
@@ -35,4 +35,4 @@ export function createFilterConfig(
   }
 
   return config;
-}
+};

@@ -4,7 +4,7 @@ import { LibraryClient } from './client';
 
 export const dynamic = 'force-dynamic';
 
-export default async function LibraryPage() {
+const LibraryPage = async () => {
   const session = await getServerSession();
 
   if (!session) {
@@ -12,4 +12,6 @@ export default async function LibraryPage() {
   }
 
   return <LibraryClient />;
-}
+};
+
+export default LibraryPage;

@@ -7,7 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'macgamingdb-ui/input/Select';
-import { type TranslationLayer, TranslationLayerEnum } from 'macgamingdb-server/schema';
+import {
+  type TranslationLayer,
+  TranslationLayerEnum,
+} from 'macgamingdb-server/schema';
 
 interface TranslationLayerSelectProps {
   value: TranslationLayer;
@@ -21,7 +24,10 @@ const TRANSLATION_LAYER_LABELS: Record<string, string> = {
   NONE: 'None / Default',
 };
 
-export function TranslationLayerSelect({ value, onChange }: TranslationLayerSelectProps) {
+export const TranslationLayerSelect = ({
+  value,
+  onChange,
+}: TranslationLayerSelectProps) => {
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium">Translation Layer</label>
@@ -39,4 +45,4 @@ export function TranslationLayerSelect({ value, onChange }: TranslationLayerSele
       </Select>
     </div>
   );
-}
+};

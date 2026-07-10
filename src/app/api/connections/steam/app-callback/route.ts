@@ -21,14 +21,14 @@ export const dynamic = 'force-dynamic';
 
 const APP_REDIRECT_SCHEME = 'macgamingdb://steam-link';
 
-function appRedirect(status: 'ok' | 'error', error?: string) {
+const appRedirect = (status: 'ok' | 'error', error?: string) => {
   const url = new URL(APP_REDIRECT_SCHEME);
   url.searchParams.set('status', status);
   if (error) url.searchParams.set('error', error);
   return NextResponse.redirect(url);
-}
+};
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   const state = request.nextUrl.searchParams.get('state');
   if (!state) {
     return appRedirect('error', 'state-missing');
@@ -73,7 +73,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    await new SteamLibrarySyncService(db, new SteamWebApiService()).syncLibraryForUser({ userId });
+    await new SteamLibrarySyncService(
+      db,
+      new SteamWebApiService(),
+    ).syncLibraryForUser({ userId });
   } catch (error) {
     if (error instanceof SteamLibraryPrivateError) {
       return appRedirect('error', 'library-private');
@@ -83,4 +86,4 @@ export async function GET(request: NextRequest) {
   }
 
   return appRedirect('ok');
-}
+};

@@ -20,7 +20,7 @@ interface HomeFiltersProps {
   onPerformanceChange: (filter: PerformanceFilter) => void;
 }
 
-export function HomeFilters({
+export const HomeFilters = ({
   chipsetFilter,
   playMethodFilter,
   performanceFilter,
@@ -30,7 +30,7 @@ export function HomeFilters({
   onChipsetChange,
   onPlayMethodChange,
   onPerformanceChange,
-}: HomeFiltersProps) {
+}: HomeFiltersProps) => {
   return (
     <div className="mb-6">
       <div className="overflow-x-auto pb-2">
@@ -57,4 +57,4 @@ export function HomeFilters({
       </div>
     </div>
   );
-}
+};

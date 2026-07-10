@@ -15,11 +15,11 @@ import { type AppRouter } from 'macgamingdb-server/generated';
 type ContributorsData =
   inferRouterOutputs<AppRouter>['contributor']['getTopContributors'];
 
-export function ContributorsClient({
+export const ContributorsClient = ({
   contributorsData,
 }: {
   contributorsData: ContributorsData;
-}) {
+}) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     trpc.contributor.getTopContributors.useInfiniteQuery(
       {
@@ -172,4 +172,4 @@ export function ContributorsClient({
       )}
     </div>
   );
-}
+};

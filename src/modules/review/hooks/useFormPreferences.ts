@@ -9,7 +9,7 @@ interface FormPreferences {
 
 const STORAGE_KEY = 'macgamingdb-form-preferences';
 
-export function useFormPreferences() {
+export const useFormPreferences = () => {
   const getPreferences = useCallback((): FormPreferences => {
     if (typeof window === 'undefined') return {};
 
@@ -24,9 +24,9 @@ export function useFormPreferences() {
   const updatePreference = useCallback(
     <K extends keyof FormPreferences>(key: K, value: FormPreferences[K]) => {
       if (typeof window === 'undefined') return;
-        const current = getPreferences();
-        const updated = { ...current, [key]: value };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      const current = getPreferences();
+      const updated = { ...current, [key]: value };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     },
     [getPreferences],
   );
@@ -35,4 +35,4 @@ export function useFormPreferences() {
     getPreferences,
     updatePreference,
   };
-}
+};
