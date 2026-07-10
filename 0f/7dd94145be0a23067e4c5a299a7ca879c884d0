@@ -1,0 +1,21 @@
+CLAUDE.md
+  s_9ebfe402b13a9b::t_d9a2e0c3b08ab4 1-11
+CODE_STYLE.md
+  s_9ebfe402b13a9b::t_ad25d88b04315a 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "0f7dd94145be0a23067e4c5a299a7ca879c884d0",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
