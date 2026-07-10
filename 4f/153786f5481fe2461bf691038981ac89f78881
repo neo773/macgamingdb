@@ -1,0 +1,48 @@
+package.json
+  s_9ebfe402b13a9b::t_9c628fb628983d 13,19-24,32-34
+scripts/test-production-migration.ts
+  s_9ebfe402b13a9b::t_01f602c4035f63 23-24
+Dockerfile.api
+  s_9ebfe402b13a9b::t_a2c7f0353b8daa 1,10-12,14-23,26
+Dockerfile.web
+  s_9ebfe402b13a9b::t_c59343790c185a 1,10-12,15-17,19,28
+packages/macgamingdb-shared/package.json
+  s_9ebfe402b13a9b::t_c0723843fcad00 6-12
+packages/macgamingdb-emails/package.json
+  s_9ebfe402b13a9b::t_17f47aae9d0a38 7
+  s_9ebfe402b13a9b::t_b1ce451a6882ec 6,8-9,13-14
+packages/macgamingdb-server/src/modules/mac-config/commands/populate-mac-configs.command.ts
+  s_9ebfe402b13a9b::t_98e6fac5b8ec70 1,17
+packages/macgamingdb-server/tsconfig.build.json
+  s_9ebfe402b13a9b::t_3df8dd5133b0ac 1-3,6-15
+  s_9ebfe402b13a9b::t_2580f015925bd4 4-5
+  s_9ebfe402b13a9b::t_4eda6bed522126 16-24
+packages/macgamingdb-server/package.json
+  s_9ebfe402b13a9b::t_14d4052da49c1c 8-9
+packages/macgamingdb-emails/tsconfig.build.json
+  s_9ebfe402b13a9b::t_cb1409aeb97dd7 1-16
+packages/macgamingdb-server/src/database/commands/migrate-database.command.ts
+  s_9ebfe402b13a9b::t_b3b3ac00092765 17
+  s_9ebfe402b13a9b::t_e88d0f563f1622 112-119
+  s_9ebfe402b13a9b::t_98e6fac5b8ec70 6-7
+packages/macgamingdb-shared/tsconfig.json
+  s_9ebfe402b13a9b::t_e6776c710a3667 3-5,11,13
+.gitignore
+  s_9ebfe402b13a9b::t_36a152bf768383 58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4f153786f5481fe2461bf691038981ac89f78881",
+  "prompts": {},
+  "sessions": {
+    "s_9ebfe402b13a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a3768a5-510d-47e5-889d-e6c24991b16e",
+        "model": "claude-fable-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
