@@ -1,0 +1,14 @@
+FROM oven/bun:1 AS base
+WORKDIR /app
+
+COPY package.json bun.lock ./
+COPY packages/macgamingdb-server/package.json packages/macgamingdb-server/
+COPY packages/macgamingdb-shared/package.json packages/macgamingdb-shared/
+COPY packages/macgamingdb-emails/package.json packages/macgamingdb-emails/
+COPY packages/macgamingdb-ui/package.json packages/macgamingdb-ui/
+RUN bun install --frozen-lockfile
+
+COPY packages ./packages
+
+EXPOSE 4000
+CMD ["sh", "-c", "bun packages/macgamingdb-server/src/command/main.ts migrate-database && bun packages/macgamingdb-server/src/command/main.ts populate-mac-configs --seed && exec bun packages/macgamingdb-server/src/main.ts"]
