@@ -1,0 +1,104 @@
+packages/macgamingdb-server/src/modules/report/types/judge-review-params.type.ts
+  s_b9a89ea6b98f27::t_b49e9a4c8ddc24 1,22-23
+  s_b9a89ea6b98f27::t_7b728b6499e593 2-21
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_b9a89ea6b98f27::t_6d0506bd234d9a 94
+  s_b9a89ea6b98f27::t_74ca4a5271d38b 2
+  s_b9a89ea6b98f27::t_2a5666d0cc2b9d 35
+  s_b9a89ea6b98f27::t_e77805127f13b7 121
+openapi.json
+  s_b9a89ea6b98f27::t_d79b63fab6bc74 508-557,2333-2344,2411-2412,2946-3030,3033-3035,3037-3040,3043-3045,3047-3054
+  s_b9a89ea6b98f27::t_752f9de700fe7b 3031-3032,3036,3041-3042,3046
+.env.example
+  s_b9a89ea6b98f27::t_b12d396450ecb4 49-54
+packages/macgamingdb-server/src/modules/report/types/moderation-llm.type.ts
+  s_b9a89ea6b98f27::t_6b3ecec280a60b 1-6
+packages/macgamingdb-server/drizzle/migrations/0007_sharp_mongu.sql
+  s_b9a89ea6b98f27::t_e595d5afe37a04 1-3
+packages/macgamingdb-server/drizzle/migrations/meta/_journal.json
+  s_b9a89ea6b98f27::t_e595d5afe37a04 53-59
+packages/macgamingdb-server/src/modules/report/dtos/moderation-verdict.dto.ts
+  s_b9a89ea6b98f27::t_f332c7d0de307e 4-5
+  s_b9a89ea6b98f27::t_283aa3cced1764 1-3,6-10
+packages/macgamingdb-server/src/modules/report/dtos/report-reason.dto.ts
+  s_b9a89ea6b98f27::t_7e5fb0ae4b6f72 1-11
+packages/macgamingdb-server/src/modules/report/controllers/discord-interaction.controller.ts
+  s_b9a89ea6b98f27::t_541e083dd83d6d 5,17-18,30-34
+  s_b9a89ea6b98f27::t_c372e862f6b19e 1-4,6-16,19-29,35-56
+src/modules/game/components/ExperienceReportsSection.tsx
+  s_b9a89ea6b98f27::t_ca43b6ce130e60 11-14
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/utils/build-moderation-prompt.util.ts
+  s_b9a89ea6b98f27::t_ef2839205425a0 2-9,22,25-26,30-31
+  s_b9a89ea6b98f27::t_9fd10261277b39 1,10-21,23-24,27-29,32-61
+drizzle.config.ts
+  s_b9a89ea6b98f27::t_eb5f0a1cff2dd5 4
+packages/macgamingdb-server/src/modules/report/constants/moderation-llm.constant.ts
+  s_b9a89ea6b98f27::t_b1f252f6cd1372 1
+packages/macgamingdb-server/src/modules/report/dtos/report-result.dto.ts
+  s_b9a89ea6b98f27::t_e57c7c755a8123 1-6
+packages/macgamingdb-server/src/modules/report/constants/report-interaction-action.constant.ts
+  s_b9a89ea6b98f27::t_b437491f0ac9b4 1-7
+packages/macgamingdb-server/src/modules/report/report.module.ts
+  s_b9a89ea6b98f27::t_0abc395742dc6a 1-24
+packages/macgamingdb-server/src/modules/modules.module.ts
+  s_b9a89ea6b98f27::t_742a4a002552d1 7,16
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_b9a89ea6b98f27::t_018aea92128120 439-471
+  s_b9a89ea6b98f27::t_30904d16299882 2
+  s_b9a89ea6b98f27::t_9f007b0f3296b3 73
+packages/macgamingdb-server/src/modules/report/services/report.service.ts
+  s_b9a89ea6b98f27::t_d55108afdddd91 21-24,35-37,40,42-44,64,73,77-78,81-100,109-110,112-119
+  s_b9a89ea6b98f27::t_2433f7702fdb4e 111
+  s_b9a89ea6b98f27::t_19833ba59ccca9 1-20,25-34,38-39,41,45-63,65-72,74-76,79-80,101-108,120-142
+packages/macgamingdb-server/package.json
+  s_b9a89ea6b98f27::t_651e528623a446 37,39,42,51
+docker-compose.yml
+  s_b9a89ea6b98f27::t_9d3514fe3b8920 28-32
+packages/macgamingdb-server/src/modules/review/review.module.ts
+  s_b9a89ea6b98f27::t_be4e5257feeaa9 10
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/services/openrouter-moderation.service.ts
+  s_b9a89ea6b98f27::t_ad70c12907023f 1-110
+packages/macgamingdb-server/drizzle/migrations/meta/0007_snapshot.json
+  s_b9a89ea6b98f27::t_e595d5afe37a04 1-1135
+packages/macgamingdb-server/src/modules/report/routers/report.router.ts
+  s_b9a89ea6b98f27::t_914706d61c3b44 1-59
+packages/macgamingdb-server/src/database/schema.ts
+  s_b9a89ea6b98f27::t_190987c7ce13e7 136-138
+packages/macgamingdb-server/src/modules/report/drivers/discord/services/discord-message.service.ts
+  s_b9a89ea6b98f27::t_82bff2ed1cfe78 186
+  s_b9a89ea6b98f27::t_beb4e6b069facd 4
+  s_b9a89ea6b98f27::t_d8901f37ba0c94 179
+  s_b9a89ea6b98f27::t_5295804f5e0212 12-15
+  s_b9a89ea6b98f27::t_249593148b99c5 10,22-27,30-32,36-61,63-70,107-109,115-139,141-148,150-158,160-169,178,185,187-192
+  s_b9a89ea6b98f27::t_af4d1d165eaede 1-3,5-9,11,16-21,28-29,33-35,62,71-106,110-114,140,149,159,170-177,180-184,193-199
+packages/macgamingdb-server/src/main.ts
+  s_b9a89ea6b98f27::t_9f6dbc7fd9abfd 24-26
+packages/macgamingdb-server/src/modules/report/drivers/discord/services/discord-interaction.service.ts
+  s_b9a89ea6b98f27::t_266e059bc7e0b0 1-118
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_b9a89ea6b98f27::t_ad815d513dfdfa 9
+  s_b9a89ea6b98f27::t_8abb6a4c5b3219 349
+  s_b9a89ea6b98f27::t_56a02754b6643b 200
+  s_b9a89ea6b98f27::t_984d1a2c4a0697 467
+  s_b9a89ea6b98f27::t_1a7be3fe165def 122
+packages/macgamingdb-server/src/modules/report/exceptions/report.exception.ts
+  s_b9a89ea6b98f27::t_81dc88144f04db 1-11
+bun.lock
+  s_b9a89ea6b98f27::t_8aa2900f69d6bc 14,52-54,65,77-78,88,117,451,487,489,491,765-766,769,813-814,1045-1080,1129-1130,1293,1413-1416,1459-1464,1527-1528,1697-1698,1817-1824,1829-1830,1891,1899-1900,1933-1934,1967,2127-2128,2261-2262,2289,2315,2499,2501,2503,2505,2507,2509,2511,2513,2515,2517,2519,2521,2525-2526,2875-2876,2879-2880,2913,3021,3025,3057-3058,3143-3144,3169-3170,3273-3274,3307-3308,3337-3338,3393-3394,3399,3427-3428,3481-3482,3499-3500,3537-3545,3561-3562,3623-3624,3643-3644,3647-3650,3659,3661,3669-3670,3675,3681-3682,3709-3712,3803-3804,3823-3824,3915-3916,3919-3920,3963-3966,4043-4044,4115-4116,4119,4125-4128,4131-4132,4155-4156,4171-4172,4215-4216,4297-4298,4307-4319,4367-4368,4555-4576,4615,4621-4642,4645-4652,4685-4688,4771,4773,4775,4777,4891-4892,4915-4966
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9a0c02733a1064045d8dd3cb2f01002216bd6246",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
