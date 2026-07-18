@@ -1,7 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  schema: 'packages/macgamingdb-server/src/drizzle/schema.ts',
+  schema: 'packages/macgamingdb-server/src/database/schema.ts',
   out: 'packages/macgamingdb-server/drizzle/migrations',
   dialect: 'turso',
   dbCredentials: {

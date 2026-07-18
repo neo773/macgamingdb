@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
@@ -70,7 +70,7 @@ export class ReviewService {
     const reviews = await this.db
       .select({ performance: gameReviews.performance })
       .from(gameReviews)
-      .where(eq(gameReviews.gameId, gameId));
+      .where(and(eq(gameReviews.gameId, gameId), isNull(gameReviews.hiddenAt)));
 
     let aggregatedPerformance: PerformanceRating | null = null;
     if (isNonEmptyArray(reviews)) {
@@ -435,5 +435,38 @@ export class ReviewService {
     });
 
     return { success: true, message: 'Review deleted successfully' };
+  }
+
+  async hideReviewById(params: { reviewId: string }) {
+    const review = await this.db.query.gameReviews.findFirst({
+      where: eq(gameReviews.id, params.reviewId),
+      with: { game: true },
+    });
+
+    if (!review) {
+      throw new ReviewException('Review not found', 'REVIEW_NOT_FOUND');
+    }
+
+    if (isDefined(review.hiddenAt)) {
+      return { success: true, message: 'Review already hidden' };
+    }
+
+    await this.db
+      .update(gameReviews)
+      .set({ hiddenAt: new Date().toISOString() })
+      .where(eq(gameReviews.id, params.reviewId));
+
+    await this.db
+      .update(games)
+      .set({ reviewCount: sql`${games.reviewCount} - 1` })
+      .where(eq(games.id, review.gameId));
+
+    await this.updateGameAggregatedPerformance(review.gameId);
+
+    await this.pageRevalidationService.revalidatePaths({
+      paths: [`/games/${review.game.slug ?? review.gameId}`, '/contributors'],
+    });
+
+    return { success: true, message: 'Review hidden successfully' };
   }
 }

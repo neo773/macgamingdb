@@ -21,7 +21,9 @@ const bootstrap = async (): Promise<void> => {
     restHandler(request, response).catch(next);
   });
 
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
+    rawBody: true,
+  });
   await app.init();
 
   const appRouter = app.get(AppRouterHost).appRouter;

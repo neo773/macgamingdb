@@ -7,5 +7,6 @@ import { ReviewRouter } from './routers/review.router';
 @Module({
   imports: [GameModule],
   providers: [ReviewService, ReviewRouter, AuthMiddleware],
+  exports: [ReviewService],
 })
 export class ReviewModule {}

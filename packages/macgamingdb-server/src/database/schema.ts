@@ -133,6 +133,9 @@ export const gameReviews = sqliteTable('GameReview', {
   notes: text('notes'),
   screenshots: text('screenshots'),
   softwareVersion: text('softwareVersion'),
+  reportCount: integer('reportCount').notNull().default(0),
+  lastReportedAt: text('lastReportedAt'),
+  hiddenAt: text('hiddenAt'),
   createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updatedAt').$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
 }, (table) => [

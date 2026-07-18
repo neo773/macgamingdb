@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { count, desc, eq, inArray } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { gameReviews, users } from '../../../database/schema';
@@ -32,7 +32,7 @@ export class ContributorService {
       }
 
       const reviews = await this.db.query.gameReviews.findMany({
-        where: eq(gameReviews.userId, id),
+        where: and(eq(gameReviews.userId, id), isNull(gameReviews.hiddenAt)),
         with: {
           game: true,
           macConfig: true,
@@ -91,6 +91,7 @@ export class ContributorService {
           reviewCount: count().as('reviewCount'),
         })
         .from(gameReviews)
+        .where(isNull(gameReviews.hiddenAt))
         .groupBy(gameReviews.userId)
         .as('reviewCountSq');
 
@@ -117,7 +118,7 @@ export class ContributorService {
           const uniqueGames = await this.db
             .selectDistinct({ gameId: gameReviews.gameId })
             .from(gameReviews)
-            .where(eq(gameReviews.userId, user.id));
+            .where(and(eq(gameReviews.userId, user.id), isNull(gameReviews.hiddenAt)));
 
           return {
             id: user.id,

@@ -6,6 +6,7 @@ import {
   eq,
   inArray,
   isNotNull,
+  isNull,
   max,
   type SQL,
 } from 'drizzle-orm';
@@ -118,7 +119,7 @@ export class GameService {
   private async getFilteredCounts(
     reviewFilter: ReviewFilter,
   ): Promise<RatingCounts> {
-    const conditions: SQL[] = [];
+    const conditions: SQL[] = [isNull(gameReviews.hiddenAt)];
     if (reviewFilter.chipset)
       conditions.push(eq(gameReviews.chipset, reviewFilter.chipset));
     if (reviewFilter.chipsetVariant)
@@ -196,7 +197,7 @@ export class GameService {
       const hasChipsetOrPlayMethodFilter = chipset || playMethod !== 'ALL';
 
       if (hasChipsetOrPlayMethodFilter) {
-        const reviewConditions: SQL[] = [];
+        const reviewConditions: SQL[] = [isNull(gameReviews.hiddenAt)];
         if (performance !== 'ALL')
           reviewConditions.push(eq(gameReviews.performance, performance));
         if (chipset) reviewConditions.push(eq(gameReviews.chipset, chipset));
@@ -345,7 +346,7 @@ export class GameService {
       });
 
       const reviews = await this.db.query.gameReviews.findMany({
-        where: eq(gameReviews.gameId, game.id),
+        where: and(eq(gameReviews.gameId, game.id), isNull(gameReviews.hiddenAt)),
         with: {
           macConfig: true,
         },
@@ -463,6 +464,7 @@ export class GameService {
       })
       .from(games)
       .innerJoin(gameReviews, eq(gameReviews.gameId, games.id))
+      .where(isNull(gameReviews.hiddenAt))
       .groupBy(games.id);
 
     return rows.map((row) => ({
