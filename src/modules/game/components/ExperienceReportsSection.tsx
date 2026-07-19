@@ -10,7 +10,7 @@ import {
 
 type ReviewWithMacConfig = Omit<
   GameReview,
-  'reportCount' | 'lastReportedAt' | 'hiddenAt'
+  'reportCount' | 'lastReportedAt' | 'moderationAlertedAt' | 'hiddenAt'
 > & { macConfig?: MacConfig | null };
 
 interface ExperienceReportsSectionProps {
