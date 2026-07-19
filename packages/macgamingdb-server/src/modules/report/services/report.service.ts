@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyString } from '@sniptt/guards';
@@ -11,6 +12,10 @@ import { type ModerationLlm } from '../types/moderation-llm.type';
 import { type ModerationVerdict } from '../dtos/moderation-verdict.dto';
 import { type ReportReason } from '../dtos/report-reason.dto';
 import { DiscordMessageService } from '../drivers/discord/services/discord-message.service';
+import {
+  REPORT_SUBMITTED_EVENT,
+  type ReportSubmittedEvent,
+} from '../events/report-submitted.event';
 import { ReportException } from '../exceptions/report.exception';
 import { buildReviewUrl } from '../utils/build-review-url.util';
 
@@ -31,6 +36,7 @@ export class ReportService {
     @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
     @Inject(MODERATION_LLM) private readonly moderationLlm: ModerationLlm,
     private readonly discordMessageService: DiscordMessageService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async findReviewWithGame(reviewId: string) {
@@ -59,20 +65,33 @@ export class ReportService {
       return { success: true, message: 'Report submitted' };
     }
 
-    if (!(await this.claimAlert(params.reviewId))) {
-      return { success: true, message: 'Report submitted' };
-    }
-
-    try {
-      const verdict = await this.judgeReviewOrThrow(review, params.reason);
-      const reporterName = await this.resolveReporterName(params.reporterUserId);
-      await this.postModerationAlert(review, verdict, reporterName, params.reason);
-    } catch (error) {
-      console.error('Failed to dispatch moderation alert:', error);
-      await this.releaseAlert(params.reviewId);
+    if (await this.claimAlert(params.reviewId)) {
+      const event: ReportSubmittedEvent = {
+        reviewId: params.reviewId,
+        reporterUserId: params.reporterUserId,
+        reason: params.reason,
+      };
+      this.eventEmitter.emit(REPORT_SUBMITTED_EVENT, event);
     }
 
     return { success: true, message: 'Report submitted' };
+  }
+
+  async handleReportSubmitted(event: ReportSubmittedEvent): Promise<void> {
+    const review = await this.findReviewWithGame(event.reviewId);
+    if (!review) {
+      await this.releaseAlert(event.reviewId);
+      return;
+    }
+
+    try {
+      const verdict = await this.judgeReviewOrThrow(review, event.reason);
+      const reporterName = await this.resolveReporterName(event.reporterUserId);
+      await this.postModerationAlert(review, verdict, reporterName, event.reason);
+    } catch (error) {
+      console.error('Failed to dispatch moderation alert:', error);
+      await this.releaseAlert(event.reviewId);
+    }
   }
 
   async screenNewReview({ reviewId }: { reviewId: string }): Promise<void> {
