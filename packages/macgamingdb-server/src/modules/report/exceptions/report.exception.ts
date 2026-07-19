@@ -2,6 +2,7 @@ import { CustomException } from '../../../engine/exceptions/custom.exception';
 
 export type ReportExceptionCode =
   | 'REVIEW_NOT_FOUND'
+  | 'REPORT_TOO_MANY_REQUESTS'
   | 'MODERATION_MISCONFIGURED'
   | 'MODERATION_FAILED'
   | 'DISCORD_MISCONFIGURED'

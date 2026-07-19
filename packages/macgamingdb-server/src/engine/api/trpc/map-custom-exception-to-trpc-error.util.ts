@@ -18,6 +18,9 @@ const codeToTrpcCode = (code: string): TRPC_ERROR_CODE_KEY => {
   if (code.endsWith('_PRECONDITION_FAILED')) {
     return 'PRECONDITION_FAILED';
   }
+  if (code.endsWith('_TOO_MANY_REQUESTS')) {
+    return 'TOO_MANY_REQUESTS';
+  }
   return 'INTERNAL_SERVER_ERROR';
 };
 

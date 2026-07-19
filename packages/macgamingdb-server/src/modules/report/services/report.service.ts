@@ -30,8 +30,13 @@ type ReviewWithGame = NonNullable<
   Awaited<ReturnType<ReportService['findReviewWithGame']>>
 >;
 
+const MAX_REPORTS_PER_WINDOW = 10;
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+
 @Injectable()
 export class ReportService {
+  private readonly reportTimestampsByUser = new Map<string, number[]>();
+
   constructor(
     @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
     @Inject(MODERATION_LLM) private readonly moderationLlm: ModerationLlm,
@@ -46,7 +51,27 @@ export class ReportService {
     });
   }
 
+  private assertWithinRateLimitOrThrow(userId: string): void {
+    const now = Date.now();
+    const recent = (this.reportTimestampsByUser.get(userId) ?? []).filter(
+      (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS,
+    );
+
+    if (recent.length >= MAX_REPORTS_PER_WINDOW) {
+      throw new ReportException(
+        'Report rate limit exceeded',
+        'REPORT_TOO_MANY_REQUESTS',
+        'You are reporting too quickly. Please try again later.',
+      );
+    }
+
+    recent.push(now);
+    this.reportTimestampsByUser.set(userId, recent);
+  }
+
   async reportReview(params: ReportReviewParams) {
+    this.assertWithinRateLimitOrThrow(params.reporterUserId);
+
     const review = await this.findReviewWithGame(params.reviewId);
 
     if (!review) {
