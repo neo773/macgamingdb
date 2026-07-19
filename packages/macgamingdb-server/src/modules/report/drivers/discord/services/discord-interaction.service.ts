@@ -82,8 +82,15 @@ export class DiscordInteractionService {
     const { action, reviewId } = parseInteractionCustomId(params.customId);
 
     if (action === REPORT_INTERACTION_ACTION.REMOVE) {
-      await this.reviewService.hideReviewById({ reviewId });
-      return this.updateMessage(`🗑️ Review removed by <@${params.actorId}>`);
+      try {
+        await this.reviewService.hideReviewById({ reviewId });
+        return this.updateMessage(`🗑️ Review removed by <@${params.actorId}>`);
+      } catch (error) {
+        console.error('Failed to hide reported review:', error);
+        return this.updateMessage(
+          `⚠️ Could not remove the review (it may already be gone).`,
+        );
+      }
     }
 
     if (action === REPORT_INTERACTION_ACTION.KEEP) {
