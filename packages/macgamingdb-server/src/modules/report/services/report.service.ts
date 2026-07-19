@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyString } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
@@ -46,8 +46,6 @@ export class ReportService {
       throw new ReportException('Review not found', 'REVIEW_NOT_FOUND');
     }
 
-    const isFirstReport = review.reportCount === 0;
-
     await this.db
       .update(gameReviews)
       .set({
@@ -56,15 +54,38 @@ export class ReportService {
       })
       .where(eq(gameReviews.id, params.reviewId));
 
-    if (isDefined(review.hiddenAt) || !isFirstReport) {
+    if (isDefined(review.hiddenAt)) {
       return { success: true, message: 'Report submitted' };
     }
 
-    await this.dispatchModerationAlert({
-      review,
-      reason: params.reason,
-      reporterUserId: params.reporterUserId,
-    });
+    const [claimed] = await this.db
+      .update(gameReviews)
+      .set({ moderationAlertedAt: new Date().toISOString() })
+      .where(
+        and(
+          eq(gameReviews.id, params.reviewId),
+          isNull(gameReviews.moderationAlertedAt),
+        ),
+      )
+      .returning({ id: gameReviews.id });
+
+    if (!claimed) {
+      return { success: true, message: 'Report submitted' };
+    }
+
+    try {
+      await this.dispatchModerationAlert({
+        review,
+        reason: params.reason,
+        reporterUserId: params.reporterUserId,
+      });
+    } catch (error) {
+      console.error('Failed to dispatch moderation alert:', error);
+      await this.db
+        .update(gameReviews)
+        .set({ moderationAlertedAt: null })
+        .where(eq(gameReviews.id, params.reviewId));
+    }
 
     return { success: true, message: 'Report submitted' };
   }
@@ -76,52 +97,46 @@ export class ReportService {
   }): Promise<void> {
     const { review } = params;
 
-    try {
-      const verdict = await this.moderationLlm.judgeReview({
-        game: {
-          name: review.game.name ?? 'Unknown game',
-          developers: review.game.developers ?? undefined,
-          publishers: review.game.publishers ?? undefined,
-          genres: review.game.genres ?? undefined,
-          releaseYear: review.game.releaseYear ?? undefined,
-          website: review.game.website ?? undefined,
-        },
-        review: {
-          playMethod: review.playMethod,
-          translationLayer: review.translationLayer ?? undefined,
-          performance: review.performance,
-          fps: review.fps ?? undefined,
-          graphicsSettings: review.graphicsSettings ?? undefined,
-          resolution: review.resolution ?? undefined,
-          chipset: review.chipset,
-          chipsetVariant: review.chipsetVariant,
-          softwareVersion: review.softwareVersion ?? undefined,
-          notes: review.notes ?? undefined,
-        },
-        reportReason: params.reason,
-      });
-
-      const reporterName = await this.resolveReporterName(
-        params.reporterUserId,
-      );
-
-      await this.discordMessageService.postModerationAlert({
-        reviewId: review.id,
-        gameName: review.game.name ?? 'Unknown game',
-        gameHeaderImage: review.game.headerImage ?? undefined,
-        reviewUrl: buildReviewUrl(review.game.slug ?? review.gameId),
+    const verdict = await this.moderationLlm.judgeReview({
+      game: {
+        name: review.game.name ?? 'Unknown game',
+        developers: review.game.developers ?? undefined,
+        publishers: review.game.publishers ?? undefined,
+        genres: review.game.genres ?? undefined,
+        releaseYear: review.game.releaseYear ?? undefined,
+        website: review.game.website ?? undefined,
+      },
+      review: {
         playMethod: review.playMethod,
         translationLayer: review.translationLayer ?? undefined,
-        chipset: `${review.chipset} ${review.chipsetVariant}`,
         performance: review.performance,
-        notes: review.notes ?? '',
-        reportReason: params.reason,
-        reporterName,
-        verdict,
-      });
-    } catch (error) {
-      console.error('Failed to dispatch moderation alert:', error);
-    }
+        fps: review.fps ?? undefined,
+        graphicsSettings: review.graphicsSettings ?? undefined,
+        resolution: review.resolution ?? undefined,
+        chipset: review.chipset,
+        chipsetVariant: review.chipsetVariant,
+        softwareVersion: review.softwareVersion ?? undefined,
+        notes: review.notes ?? undefined,
+      },
+      reportReason: params.reason,
+    });
+
+    const reporterName = await this.resolveReporterName(params.reporterUserId);
+
+    await this.discordMessageService.postModerationAlert({
+      reviewId: review.id,
+      gameName: review.game.name ?? 'Unknown game',
+      gameHeaderImage: review.game.headerImage ?? undefined,
+      reviewUrl: buildReviewUrl(review.game.slug ?? review.gameId),
+      playMethod: review.playMethod,
+      translationLayer: review.translationLayer ?? undefined,
+      chipset: `${review.chipset} ${review.chipsetVariant}`,
+      performance: review.performance,
+      notes: review.notes ?? '',
+      reportReason: params.reason,
+      reporterName,
+      verdict,
+    });
   }
 
   private async resolveReporterName(userId: string): Promise<string> {
@@ -135,6 +150,7 @@ export class ReportService {
       return 'a user';
     }
 
-    return deriveDisplayNameFromEmail(email);
+    const displayName = deriveDisplayNameFromEmail(email);
+    return isNonEmptyString(displayName) ? displayName : 'a user';
   }
 }

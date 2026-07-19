@@ -33,11 +33,22 @@ export class OpenRouterModerationService implements ModerationLlm {
 
     const model = process.env.MODERATION_MODEL ?? DEFAULT_MODERATION_MODEL;
 
-    for (let attempt = 0; attempt < MODERATION_MAX_ATTEMPTS; attempt++) {
-      const content = await this.requestCompletion({ apiKey, model, params });
-      const verdict = parseModerationVerdict(content);
-      if (verdict) {
-        return verdict;
+    for (const useWebSearch of [true, false]) {
+      try {
+        for (let attempt = 0; attempt < MODERATION_MAX_ATTEMPTS; attempt++) {
+          const content = await this.requestCompletion({
+            apiKey,
+            model,
+            params,
+            useWebSearch,
+          });
+          const verdict = parseModerationVerdict(content);
+          if (verdict) {
+            return verdict;
+          }
+        }
+      } catch {
+        // Web-search request failed (plugin/billing/model) — fall back to a text-only attempt.
       }
     }
 
@@ -51,6 +62,7 @@ export class OpenRouterModerationService implements ModerationLlm {
     apiKey: string;
     model: string;
     params: JudgeReviewParams;
+    useWebSearch: boolean;
   }): Promise<string> {
     const response = await fetch(OPENROUTER_COMPLETIONS_URL, {
       method: 'POST',
@@ -63,7 +75,9 @@ export class OpenRouterModerationService implements ModerationLlm {
         temperature: 0,
         response_format: { type: 'json_object' },
         messages: buildModerationPrompt(params.params),
-        plugins: [{ id: 'web', max_results: WEB_SEARCH_MAX_RESULTS }],
+        ...(params.useWebSearch
+          ? { plugins: [{ id: 'web', max_results: WEB_SEARCH_MAX_RESULTS }] }
+          : {}),
       }),
     });
 

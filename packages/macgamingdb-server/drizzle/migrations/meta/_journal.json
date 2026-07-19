@@ -64,6 +64,13 @@
       "when": 1784491269482,
       "tag": "0008_flippant_amphibian",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1784492970934,
+      "tag": "0009_old_valeria_richards",
+      "breakpoints": true
     }
   ]
 }

@@ -135,6 +135,7 @@ export const gameReviews = sqliteTable('GameReview', {
   softwareVersion: text('softwareVersion'),
   reportCount: integer('reportCount').notNull().default(0),
   lastReportedAt: text('lastReportedAt'),
+  moderationAlertedAt: text('moderationAlertedAt'),
   hiddenAt: text('hiddenAt'),
   createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text('updatedAt').$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
