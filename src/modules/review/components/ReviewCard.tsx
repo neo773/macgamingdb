@@ -54,11 +54,13 @@ export const ReviewCard = ({
   header,
   customReviewNote,
   className,
+  showReport = true,
 }: {
   review: ReviewCardData;
   header?: React.ReactNode;
   customReviewNote?: React.ReactNode;
   className?: string;
+  showReport?: boolean;
 }) => {
   const macConfig = review.macConfig
     ? (JSON.parse(review.macConfig.metadata) as MacSpecification)
@@ -214,9 +216,11 @@ export const ReviewCard = ({
           </>
         )}
 
-        <div className="flex justify-end pt-3 mt-2 border-t border-white/15">
-          <ReportReviewDialog reviewId={review.id} />
-        </div>
+        {showReport && (
+          <div className="flex justify-end pt-2 mt-1">
+            <ReportReviewDialog reviewId={review.id} />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

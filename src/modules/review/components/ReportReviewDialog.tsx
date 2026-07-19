@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { Flag } from 'lucide-react';
 import { Button } from 'macgamingdb-ui/input/Button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from 'macgamingdb-ui/feedback/Tooltip';
 import { Textarea } from 'macgamingdb-ui/input/Textarea';
 import {
   Select,
@@ -52,14 +58,20 @@ export const ReportReviewDialog = ({ reviewId }: { reviewId: string }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <button
-          type="button"
-          className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
-        >
-          Report
-        </button>
-      </DialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              aria-label="Report review"
+              className="text-gray-400 hover:text-gray-200 transition-colors"
+            >
+              <Flag size={16} />
+            </button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Report review</TooltipContent>
+      </Tooltip>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Report this review</DialogTitle>
