@@ -1,0 +1,19 @@
+packages/macgamingdb-server/src/modules/report/utils/build-review-url.util.ts
+  s_b9a89ea6b98f27::t_3447bcb3999fac 1,4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "bcc6e8ff20412cacabfa2349ac0385a3deb60e9b",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
