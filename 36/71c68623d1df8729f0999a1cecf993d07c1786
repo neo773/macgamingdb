@@ -1,0 +1,64 @@
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/constants/openrouter-request.constant.ts
+  s_b9a89ea6b98f27::t_d59e29f21c30bd 1-5
+packages/macgamingdb-server/src/modules/report/drivers/discord/utils/build-confidence-bar.util.ts
+  s_b9a89ea6b98f27::t_6f87bb52c10b66 1-8
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/services/openrouter-moderation.service.ts
+  s_b9a89ea6b98f27::t_e5ad29199b2d0c 4,8-13,15,34,36,38,66
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/utils/parse-moderation-verdict.util.ts
+  s_b9a89ea6b98f27::t_d8e2a5695c4993 1-30
+packages/macgamingdb-server/src/modules/report/services/report.service.ts
+  s_b9a89ea6b98f27::t_75702ecfbe5587 8,14
+  s_b9a89ea6b98f27::t_4d1512dfb45207 112
+  s_b9a89ea6b98f27::t_f45241661c5855 138
+packages/macgamingdb-server/src/modules/report/utils/build-review-url.util.ts
+  s_b9a89ea6b98f27::t_13da60129a2546 1-4
+packages/macgamingdb-server/src/engine/utils/derive-display-name-from-email.util.ts
+  s_b9a89ea6b98f27::t_2c8edab00f1700 1-2
+packages/macgamingdb-server/src/modules/review/routers/review.router.ts
+  s_b9a89ea6b98f27::t_196b955c28911a 5-6
+  s_b9a89ea6b98f27::t_b4da500ec54599 47,94,136,169,190
+packages/macgamingdb-server/src/modules/report/drivers/discord/types/discord-interaction-response.type.ts
+  s_b9a89ea6b98f27::t_777d867301efc4 1-4
+packages/macgamingdb-server/src/engine/api/trpc/require-user-id.util.ts
+  s_b9a89ea6b98f27::t_12239908f07158 1-13
+packages/macgamingdb-server/src/modules/report/routers/report.router.ts
+  s_b9a89ea6b98f27::t_6372d42c4e31f8 5-6
+  s_b9a89ea6b98f27::t_fc26fd85652023 43
+packages/macgamingdb-server/src/modules/report/drivers/discord/constants/discord-message.constant.ts
+  s_b9a89ea6b98f27::t_52c4cccde504d8 1-35
+packages/macgamingdb-server/src/modules/report/drivers/discord/services/discord-interaction.service.ts
+  s_b9a89ea6b98f27::t_b6389caaeb0d32 82
+  s_b9a89ea6b98f27::t_da4a86d32fb935 12-13
+packages/macgamingdb-server/src/modules/report/drivers/discord/utils/build-moderation-alert-body.util.ts
+  s_b9a89ea6b98f27::t_ea8a36a4421cc3 1-104
+packages/macgamingdb-server/src/modules/report/drivers/discord/services/discord-message.service.ts
+  s_b9a89ea6b98f27::t_d81a40264bda65 4-6,10,29
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_b9a89ea6b98f27::t_353acce92bd6bd 6
+  s_b9a89ea6b98f27::t_63a2c17193584b 49
+  s_b9a89ea6b98f27::t_b8840c31a01170 126
+packages/macgamingdb-server/src/modules/report/drivers/discord/utils/parse-interaction-custom-id.util.ts
+  s_b9a89ea6b98f27::t_829982c5f3509f 1-14
+packages/macgamingdb-server/src/modules/report/drivers/discord/types/moderation-alert-params.type.ts
+  s_b9a89ea6b98f27::t_6fc6567c7d58f5 1-16
+packages/macgamingdb-server/src/engine/api/trpc/session-context.type.ts
+  s_b9a89ea6b98f27::t_996b80e38c9ae2 1
+packages/macgamingdb-server/src/modules/report/drivers/discord/utils/format-blockquote.util.ts
+  s_b9a89ea6b98f27::t_9f8f18af99c58b 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "3671c68623d1df8729f0999a1cecf993d07c1786",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
