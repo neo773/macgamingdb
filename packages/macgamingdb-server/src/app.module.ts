@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TRPCModule } from 'nestjs-trpc';
 import superjson from 'superjson';
 import { DatabaseModule } from './database/database.module';
@@ -10,6 +11,7 @@ import { ModulesModule } from './modules/modules.module';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     DatabaseModule,
     PageRevalidationModule,
     FileStorageModule,
