@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
@@ -8,6 +8,7 @@ import {
   games,
   gameReviews,
   macConfigs,
+  visibleGameReviews,
   type ChipsetVariant,
   type GraphicsSetting,
   type PerformanceRating,
@@ -68,9 +69,9 @@ export class ReviewService {
 
   private async updateGameAggregatedPerformance(gameId: string): Promise<void> {
     const reviews = await this.db
-      .select({ performance: gameReviews.performance })
-      .from(gameReviews)
-      .where(and(eq(gameReviews.gameId, gameId), isNull(gameReviews.hiddenAt)));
+      .select({ performance: visibleGameReviews.performance })
+      .from(visibleGameReviews)
+      .where(eq(visibleGameReviews.gameId, gameId));
 
     let aggregatedPerformance: PerformanceRating | null = null;
     if (isNonEmptyArray(reviews)) {

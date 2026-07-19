@@ -1,5 +1,5 @@
-import { sqliteTable, text, integer, index, uniqueIndex, primaryKey } from 'drizzle-orm/sqlite-core';
-import { relations } from 'drizzle-orm';
+import { sqliteTable, sqliteView, text, integer, index, uniqueIndex, primaryKey } from 'drizzle-orm/sqlite-core';
+import { relations, isNull } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
 import type { GameSource } from '../modules/game/types/game-source.type';
 
@@ -146,6 +146,10 @@ export const gameReviews = sqliteTable('GameReview', {
   index('GameReview_macConfigId_idx').on(table.macConfigId),
   index('GameReview_filter_game_covering_idx').on(table.chipset, table.chipsetVariant, table.playMethod, table.performance, table.gameId),
 ]);
+
+export const visibleGameReviews = sqliteView('VisibleGameReview').as((qb) =>
+  qb.select().from(gameReviews).where(isNull(gameReviews.hiddenAt)),
+);
 
 export const sessions = sqliteTable('session', {
   id: text('id').primaryKey(),

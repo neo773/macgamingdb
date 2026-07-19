@@ -57,6 +57,13 @@
       "when": 1784411223173,
       "tag": "0007_sharp_mongu",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1784491269482,
+      "tag": "0008_flippant_amphibian",
+      "breakpoints": true
     }
   ]
 }

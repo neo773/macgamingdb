@@ -1,8 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, count, desc, eq, inArray, isNull } from 'drizzle-orm';
+import { count, desc, eq, inArray } from 'drizzle-orm';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
-import { gameReviews, users } from '../../../database/schema';
+import {
+  games,
+  macConfigs,
+  users,
+  visibleGameReviews,
+} from '../../../database/schema';
 import { deriveDisplayNameFromEmail } from '../../../engine/utils/derive-display-name-from-email.util';
 import { ContributorException } from '../exceptions/contributor.exception';
 
@@ -32,14 +37,19 @@ export class ContributorService {
         );
       }
 
-      const reviews = await this.db.query.gameReviews.findMany({
-        where: and(eq(gameReviews.userId, id), isNull(gameReviews.hiddenAt)),
-        with: {
-          game: true,
-          macConfig: true,
-        },
-        orderBy: desc(gameReviews.createdAt),
-      });
+      const reviewRows = await this.db
+        .select()
+        .from(visibleGameReviews)
+        .innerJoin(games, eq(visibleGameReviews.gameId, games.id))
+        .leftJoin(macConfigs, eq(visibleGameReviews.macConfigId, macConfigs.id))
+        .where(eq(visibleGameReviews.userId, id))
+        .orderBy(desc(visibleGameReviews.createdAt));
+
+      const reviews = reviewRows.map((row) => ({
+        ...row.VisibleGameReview,
+        game: row.Game,
+        macConfig: row.MacConfig,
+      }));
 
       const uniqueGamesCount = new Set(reviews.map((review) => review.gameId))
         .size;
@@ -88,12 +98,11 @@ export class ContributorService {
 
       const reviewCountSq = this.db
         .select({
-          userId: gameReviews.userId,
+          userId: visibleGameReviews.userId,
           reviewCount: count().as('reviewCount'),
         })
-        .from(gameReviews)
-        .where(isNull(gameReviews.hiddenAt))
-        .groupBy(gameReviews.userId)
+        .from(visibleGameReviews)
+        .groupBy(visibleGameReviews.userId)
         .as('reviewCountSq');
 
       const userReviewCounts = await this.db
@@ -117,9 +126,9 @@ export class ContributorService {
       const contributors = await Promise.all(
         pageRows.map(async (user) => {
           const uniqueGames = await this.db
-            .selectDistinct({ gameId: gameReviews.gameId })
-            .from(gameReviews)
-            .where(and(eq(gameReviews.userId, user.id), isNull(gameReviews.hiddenAt)));
+            .selectDistinct({ gameId: visibleGameReviews.gameId })
+            .from(visibleGameReviews)
+            .where(eq(visibleGameReviews.userId, user.id));
 
           return {
             id: user.id,
@@ -135,8 +144,8 @@ export class ContributorService {
       const nextCursor = hasMore ? offset + limit : null;
 
       const usersWithReviews = this.db
-        .selectDistinct({ userId: gameReviews.userId })
-        .from(gameReviews);
+        .selectDistinct({ userId: visibleGameReviews.userId })
+        .from(visibleGameReviews);
 
       const [totalResult] = await this.db
         .select({ count: count() })
