@@ -16,7 +16,7 @@ const SYSTEM_PROMPT = [
   '- playMethod NATIVE means the game ships a real macOS / Apple Silicon build. NATIVE for a game with no native Mac version is almost certainly false.',
   '- Translation layers (DXVK, DXMT, D3D_METAL) only run a WINDOWS build under CrossOver / Parallels / Wine. NATIVE combined with a translation layer is contradictory.',
   '- Impossible hardware/performance claims (e.g. absurd or negative fps) are inaccurate.',
-  '- Do NOT assume a game is Windows-only from memory — new Mac ports ship constantly. Use web search to confirm whether the game has a genuine native macOS / Apple Silicon build before judging any NATIVE claim.',
+  '- Do NOT assume a game is Windows-only from memory — new Mac ports ship constantly. Web search results about the game are provided below; rely on them to judge whether a genuine native macOS / Apple Silicon build exists before judging any NATIVE claim. If the results are empty or inconclusive, prefer "uncertain" over guessing.',
   '',
   'Judge only clear problems. Genuine but terse, opinionated, or low-detail reports are OK.',
   'Respond with a single JSON object and nothing else, matching exactly:',
@@ -29,8 +29,13 @@ const formatList = (values?: string[]): string | undefined =>
 
 export const buildModerationPrompt = (
   params: JudgeReviewParams,
+  webContext: string[],
 ): ModerationMessage[] => {
   const { game, review } = params;
+
+  const webSection = isNonEmptyArray(webContext)
+    ? ['', 'WEB SEARCH RESULTS', ...webContext.map((snippet) => `- ${snippet}`)]
+    : ['', 'WEB SEARCH RESULTS', '(no results found)'];
 
   const lines = [
     'GAME',
@@ -52,6 +57,7 @@ export const buildModerationPrompt = (
     review.softwareVersion && `Software version: ${review.softwareVersion}`,
     params.reportReason && `Reported as: ${params.reportReason}`,
     `Notes: ${review.notes ?? '(none)'}`,
+    ...webSection,
   ].filter((line): line is string => typeof line === 'string');
 
   return [
