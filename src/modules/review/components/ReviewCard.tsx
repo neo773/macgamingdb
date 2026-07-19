@@ -6,6 +6,7 @@ import { Card, CardHeader, CardContent } from 'macgamingdb-ui/display/Card';
 import { Badge } from 'macgamingdb-ui/display/Badge';
 import clsx from 'clsx';
 import { ScreenshotDisplay } from './ScreenshotDisplay';
+import { ReportReviewDialog } from './ReportReviewDialog';
 import { type MacSpecification } from 'macgamingdb-server/modules/mac-config/types/mac-specification.type';
 import { type Performance } from 'macgamingdb-server/schema';
 import { getHumanReadableFamily } from '@/modules/review/utils/getHumanReadableFamily';
@@ -212,6 +213,10 @@ export const ReviewCard = ({
               )}
           </>
         )}
+
+        <div className="flex justify-end pt-3 mt-2 border-t border-white/15">
+          <ReportReviewDialog reviewId={review.id} />
+        </div>
       </CardContent>
     </Card>
   );
