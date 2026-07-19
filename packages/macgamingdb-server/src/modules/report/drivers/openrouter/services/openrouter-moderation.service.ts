@@ -14,6 +14,7 @@ const OPENROUTER_COMPLETIONS_URL =
   'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_MODEL = 'anthropic/claude-3.5-sonnet';
 const MAX_ATTEMPTS = 2;
+const WEB_MAX_RESULTS = 3;
 
 const completionResponseSchema = z.object({
   choices: z
@@ -73,6 +74,7 @@ export class OpenRouterModerationService implements ModerationLlm {
         temperature: 0,
         response_format: { type: 'json_object' },
         messages: buildModerationPrompt(params.params),
+        plugins: [{ id: 'web', max_results: WEB_MAX_RESULTS }],
       }),
     });
 
