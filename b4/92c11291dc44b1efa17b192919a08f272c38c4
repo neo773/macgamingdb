@@ -1,0 +1,33 @@
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/services/openrouter-moderation.service.ts
+  s_b9a89ea6b98f27::t_ae60d7259a039a 8,25-26,37-39,41-50,64,76
+docker-compose.yml
+  s_b9a89ea6b98f27::t_f821f2ced69a9b 30
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/utils/build-moderation-prompt.util.ts
+  s_b9a89ea6b98f27::t_5dc2f91d53f65f 60
+  s_b9a89ea6b98f27::t_3dcf8050eaaf6a 19
+  s_b9a89ea6b98f27::t_3072f366b5a58a 32,36-38
+  s_b9a89ea6b98f27::t_25ce403dee728e 39
+packages/macgamingdb-server/src/modules/report/drivers/exa/services/exa-search.service.ts
+  s_b9a89ea6b98f27::t_a06ec578e7608d 1-59
+packages/macgamingdb-server/src/modules/report/report.module.ts
+  s_b9a89ea6b98f27::t_e27d18c4fc8392 8
+  s_b9a89ea6b98f27::t_a3afc6459750c9 24
+.env.example
+  s_b9a89ea6b98f27::t_3bdb1a37ddc225 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b492c11291dc44b1efa17b192919a08f272c38c4",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
