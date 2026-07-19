@@ -1,0 +1,3 @@
+ALTER TABLE `GameReview` ADD `moderationAlertedAt` text;--> statement-breakpoint
+DROP VIEW `VisibleGameReview`;--> statement-breakpoint
+CREATE VIEW `VisibleGameReview` AS select "id", "gameId", "userId", "playMethod", "translationLayer", "performance", "fps", "graphicsSettings", "resolution", "chipset", "chipsetVariant", "macConfigId", "notes", "screenshots", "softwareVersion", "reportCount", "lastReportedAt", "moderationAlertedAt", "hiddenAt", "createdAt", "updatedAt" from "GameReview" where "GameReview"."hiddenAt" is null;

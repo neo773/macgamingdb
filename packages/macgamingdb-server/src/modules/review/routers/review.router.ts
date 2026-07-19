@@ -1,8 +1,9 @@
 import { Inject } from '@nestjs/common';
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { Ctx, Input, Mutation, Query, Router, UseMiddlewares } from 'nestjs-trpc';
 import { AuthMiddleware } from '../../../engine/api/trpc/auth.middleware';
+import { requireUserIdOrThrow } from '../../../engine/api/trpc/require-user-id.util';
+import { type SessionContext } from '../../../engine/api/trpc/session-context.type';
 import {
   GraphicsSettingsEnum,
   PerformanceEnum,
@@ -19,19 +20,6 @@ import { MutationResultSchema } from '../dtos/mutation-result.dto';
 import { MyReviewsSchema } from '../dtos/my-reviews.dto';
 import { UploadUrlSchema } from '../dtos/upload-url.dto';
 import { ReviewService } from '../services/review.service';
-
-type SessionContext = { user?: { user?: { id?: string } } | null };
-
-const requireUserId = (ctx: SessionContext): string => {
-  const userId = ctx.user?.user?.id;
-  if (!userId) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'Missing authorization',
-    });
-  }
-  return userId;
-};
 
 @Router({ alias: 'review' })
 export class ReviewRouter {
@@ -56,7 +44,7 @@ export class ReviewRouter {
     },
   })
   async listMine(@Ctx() ctx: SessionContext) {
-    return this.reviewService.listMine(requireUserId(ctx));
+    return this.reviewService.listMine(requireUserIdOrThrow(ctx));
   }
 
   @Query({
@@ -103,7 +91,7 @@ export class ReviewRouter {
     @Ctx() ctx: SessionContext,
   ) {
     return this.reviewService.getUploadUrl({
-      userId: requireUserId(ctx),
+      userId: requireUserIdOrThrow(ctx),
       ...input,
     });
   }
@@ -145,7 +133,7 @@ export class ReviewRouter {
     },
     @Ctx() ctx: SessionContext,
   ) {
-    return this.reviewService.create({ userId: requireUserId(ctx), ...input });
+    return this.reviewService.create({ userId: requireUserIdOrThrow(ctx), ...input });
   }
 
   @UseMiddlewares(AuthMiddleware)
@@ -178,7 +166,7 @@ export class ReviewRouter {
     @Ctx() ctx: SessionContext,
   ) {
     return this.reviewService.updateReview({
-      userId: requireUserId(ctx),
+      userId: requireUserIdOrThrow(ctx),
       ...input,
     });
   }
@@ -199,7 +187,7 @@ export class ReviewRouter {
     @Ctx() ctx: SessionContext,
   ) {
     return this.reviewService.deleteReview({
-      userId: requireUserId(ctx),
+      userId: requireUserIdOrThrow(ctx),
       ...input,
     });
   }

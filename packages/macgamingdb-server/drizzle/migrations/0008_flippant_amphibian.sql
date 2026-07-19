@@ -1,0 +1,1 @@
+CREATE VIEW `VisibleGameReview` AS select "id", "gameId", "userId", "playMethod", "translationLayer", "performance", "fps", "graphicsSettings", "resolution", "chipset", "chipsetVariant", "macConfigId", "notes", "screenshots", "softwareVersion", "reportCount", "lastReportedAt", "hiddenAt", "createdAt", "updatedAt" from "GameReview" where "GameReview"."hiddenAt" is null;

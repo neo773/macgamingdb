@@ -8,7 +8,10 @@ import {
   type MacConfig,
 } from 'macgamingdb-server/drizzle/types';
 
-type ReviewWithMacConfig = GameReview & { macConfig?: MacConfig | null };
+type ReviewWithMacConfig = Omit<
+  GameReview,
+  'reportCount' | 'lastReportedAt' | 'hiddenAt'
+> & { macConfig?: MacConfig | null };
 
 interface ExperienceReportsSectionProps {
   gameId: string;

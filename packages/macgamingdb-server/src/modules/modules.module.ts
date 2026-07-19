@@ -4,6 +4,7 @@ import { ReviewModule } from './review/review.module';
 import { ContributorModule } from './contributor/contributor.module';
 import { LibraryModule } from './library/library.module';
 import { TrafficModule } from './traffic/traffic.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TrafficModule } from './traffic/traffic.module';
     ContributorModule,
     LibraryModule,
     TrafficModule,
+    ReportModule,
   ],
 })
 export class ModulesModule {}

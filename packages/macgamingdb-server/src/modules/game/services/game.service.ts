@@ -15,8 +15,9 @@ import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.const
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
   games,
-  gameReviews,
   gameSourceLinks,
+  macConfigs,
+  visibleGameReviews,
   type ChipsetVariant,
   type PerformanceRating,
   type PlayMethod,
@@ -120,19 +121,21 @@ export class GameService {
   ): Promise<RatingCounts> {
     const conditions: SQL[] = [];
     if (reviewFilter.chipset)
-      conditions.push(eq(gameReviews.chipset, reviewFilter.chipset));
+      conditions.push(eq(visibleGameReviews.chipset, reviewFilter.chipset));
     if (reviewFilter.chipsetVariant)
-      conditions.push(eq(gameReviews.chipsetVariant, reviewFilter.chipsetVariant));
+      conditions.push(
+        eq(visibleGameReviews.chipsetVariant, reviewFilter.chipsetVariant),
+      );
     if (reviewFilter.playMethod)
-      conditions.push(eq(gameReviews.playMethod, reviewFilter.playMethod));
+      conditions.push(eq(visibleGameReviews.playMethod, reviewFilter.playMethod));
 
     const pairs = await this.db
       .select({
-        gameId: gameReviews.gameId,
-        performance: gameReviews.performance,
+        gameId: visibleGameReviews.gameId,
+        performance: visibleGameReviews.performance,
       })
-      .from(gameReviews)
-      .where(and(...conditions));
+      .from(visibleGameReviews)
+      .where(isNonEmptyArray(conditions) ? and(...conditions) : undefined);
 
     const result = createEmptyCounts();
     const seen = new Map<PerformanceRating, Set<string>>();
@@ -198,17 +201,20 @@ export class GameService {
       if (hasChipsetOrPlayMethodFilter) {
         const reviewConditions: SQL[] = [];
         if (performance !== 'ALL')
-          reviewConditions.push(eq(gameReviews.performance, performance));
-        if (chipset) reviewConditions.push(eq(gameReviews.chipset, chipset));
+          reviewConditions.push(eq(visibleGameReviews.performance, performance));
+        if (chipset)
+          reviewConditions.push(eq(visibleGameReviews.chipset, chipset));
         if (chipset && chipsetVariant)
-          reviewConditions.push(eq(gameReviews.chipsetVariant, chipsetVariant));
+          reviewConditions.push(
+            eq(visibleGameReviews.chipsetVariant, chipsetVariant),
+          );
         if (playMethod !== 'ALL')
-          reviewConditions.push(eq(gameReviews.playMethod, playMethod));
+          reviewConditions.push(eq(visibleGameReviews.playMethod, playMethod));
 
         const matchingGameIds = this.db
-          .selectDistinct({ gameId: gameReviews.gameId })
-          .from(gameReviews)
-          .where(and(...reviewConditions));
+          .selectDistinct({ gameId: visibleGameReviews.gameId })
+          .from(visibleGameReviews)
+          .where(isNonEmptyArray(reviewConditions) ? and(...reviewConditions) : undefined);
 
         const gamesForIds = await this.db
           .select({ id: games.id })
@@ -344,12 +350,16 @@ export class GameService {
         columns: { source: true, externalId: true },
       });
 
-      const reviews = await this.db.query.gameReviews.findMany({
-        where: eq(gameReviews.gameId, game.id),
-        with: {
-          macConfig: true,
-        },
-      });
+      const reviewRows = await this.db
+        .select()
+        .from(visibleGameReviews)
+        .leftJoin(macConfigs, eq(visibleGameReviews.macConfigId, macConfigs.id))
+        .where(eq(visibleGameReviews.gameId, game.id));
+
+      const reviews = reviewRows.map((row) => ({
+        ...row.VisibleGameReview,
+        macConfig: row.MacConfig,
+      }));
 
       const reviewStats =
         isNonEmptyArray(reviews)
@@ -459,10 +469,13 @@ export class GameService {
       .select({
         id: games.id,
         slug: games.slug,
-        lastModified: max(gameReviews.updatedAt),
+        lastModified: max(visibleGameReviews.updatedAt),
       })
       .from(games)
-      .innerJoin(gameReviews, eq(gameReviews.gameId, games.id))
+      .innerJoin(
+        visibleGameReviews,
+        eq(visibleGameReviews.gameId, games.id),
+      )
       .groupBy(games.id);
 
     return rows.map((row) => ({
