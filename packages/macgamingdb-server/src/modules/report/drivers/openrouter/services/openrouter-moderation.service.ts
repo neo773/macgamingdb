@@ -5,11 +5,11 @@ import { type ModerationVerdict } from '../../../dtos/moderation-verdict.dto';
 import { ReportException } from '../../../exceptions/report.exception';
 import { type JudgeReviewParams } from '../../../types/judge-review-params.type';
 import { type ModerationLlm } from '../../../types/moderation-llm.type';
+import { ExaSearchService } from '../../exa/services/exa-search.service';
 import {
   DEFAULT_MODERATION_MODEL,
   MODERATION_MAX_ATTEMPTS,
   OPENROUTER_COMPLETIONS_URL,
-  WEB_SEARCH_MAX_RESULTS,
 } from '../constants/openrouter-request.constant';
 import { buildModerationPrompt } from '../utils/build-moderation-prompt.util';
 import { parseModerationVerdict } from '../utils/parse-moderation-verdict.util';
@@ -22,6 +22,8 @@ const completionResponseSchema = z.object({
 
 @Injectable()
 export class OpenRouterModerationService implements ModerationLlm {
+  constructor(private readonly exaSearchService: ExaSearchService) {}
+
   async judgeReview(params: JudgeReviewParams): Promise<ModerationVerdict> {
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!isNonEmptyString(apiKey)) {
@@ -32,23 +34,20 @@ export class OpenRouterModerationService implements ModerationLlm {
     }
 
     const model = process.env.MODERATION_MODEL ?? DEFAULT_MODERATION_MODEL;
+    const webContext = await this.exaSearchService.search(
+      `${params.game.name} native macOS Apple Silicon Mac version`,
+    );
 
-    for (const useWebSearch of [true, false]) {
-      try {
-        for (let attempt = 0; attempt < MODERATION_MAX_ATTEMPTS; attempt++) {
-          const content = await this.requestCompletion({
-            apiKey,
-            model,
-            params,
-            useWebSearch,
-          });
-          const verdict = parseModerationVerdict(content);
-          if (verdict) {
-            return verdict;
-          }
-        }
-      } catch {
-        // Web-search request failed (plugin/billing/model) — fall back to a text-only attempt.
+    for (let attempt = 0; attempt < MODERATION_MAX_ATTEMPTS; attempt++) {
+      const content = await this.requestCompletion({
+        apiKey,
+        model,
+        params,
+        webContext,
+      });
+      const verdict = parseModerationVerdict(content);
+      if (verdict) {
+        return verdict;
       }
     }
 
@@ -62,7 +61,7 @@ export class OpenRouterModerationService implements ModerationLlm {
     apiKey: string;
     model: string;
     params: JudgeReviewParams;
-    useWebSearch: boolean;
+    webContext: string[];
   }): Promise<string> {
     const response = await fetch(OPENROUTER_COMPLETIONS_URL, {
       method: 'POST',
@@ -74,10 +73,7 @@ export class OpenRouterModerationService implements ModerationLlm {
         model: params.model,
         temperature: 0,
         response_format: { type: 'json_object' },
-        messages: buildModerationPrompt(params.params),
-        ...(params.useWebSearch
-          ? { plugins: [{ id: 'web', max_results: WEB_SEARCH_MAX_RESULTS }] }
-          : {}),
+        messages: buildModerationPrompt(params.params, params.webContext),
       }),
     });
 

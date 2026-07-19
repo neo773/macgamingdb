@@ -5,6 +5,7 @@ import { MODERATION_LLM } from './constants/moderation-llm.constant';
 import { DiscordInteractionController } from './controllers/discord-interaction.controller';
 import { DiscordInteractionService } from './drivers/discord/services/discord-interaction.service';
 import { DiscordMessageService } from './drivers/discord/services/discord-message.service';
+import { ExaSearchService } from './drivers/exa/services/exa-search.service';
 import { OpenRouterModerationService } from './drivers/openrouter/services/openrouter-moderation.service';
 import { ReportSubmittedListener } from './listeners/report-submitted.listener';
 import { ReviewCreatedListener } from './listeners/review-created.listener';
@@ -20,6 +21,7 @@ import { ReportService } from './services/report.service';
     AuthMiddleware,
     DiscordMessageService,
     DiscordInteractionService,
+    ExaSearchService,
     ReviewCreatedListener,
     ReportSubmittedListener,
     { provide: MODERATION_LLM, useClass: OpenRouterModerationService },
