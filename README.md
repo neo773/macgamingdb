@@ -1,6 +1,6 @@
 # MacGamingDB
 
-A community-driven database for gaming performance on Apple Silicon Macs.
+A community-driven database for gaming performance on Apple Silicon Macs and the Mac gaming community.
 
 [MacGamingDB](https://macgamingdb.app/) lets users search for games and see how well they run on different Mac models with Apple Silicon chips (M1–M4). Users contribute performance reviews — FPS, play method (Native, CrossOver, Parallels, GPTK), graphics settings — keyed to specific Mac configurations. Games come from both Steam and IGDB, so console-first and non-Steam titles are covered too.
 
