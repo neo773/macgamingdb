@@ -1,0 +1,32 @@
+packages/macgamingdb-server/drizzle/migrations/0009_old_valeria_richards.sql
+  s_b9a89ea6b98f27::t_73a90ebda972fc 1-3
+packages/macgamingdb-server/drizzle/migrations/meta/_journal.json
+  s_b9a89ea6b98f27::t_73a90ebda972fc 67-73
+packages/macgamingdb-server/src/modules/report/services/report.service.ts
+  s_b9a89ea6b98f27::t_2b4a4dea51cfb6 101-109,113-139
+  s_b9a89ea6b98f27::t_7e2f4cfb84183f 2
+  s_b9a89ea6b98f27::t_1819a3ad40d73d 57,61-88,100
+  s_b9a89ea6b98f27::t_de927e0877c097 153-154
+packages/macgamingdb-server/drizzle/migrations/meta/0009_snapshot.json
+  s_b9a89ea6b98f27::t_73a90ebda972fc 1-1298
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/services/openrouter-moderation.service.ts
+  s_b9a89ea6b98f27::t_63b0586ca9da52 36-51,65,78-80
+packages/macgamingdb-server/src/database/schema.ts
+  s_b9a89ea6b98f27::t_e65e0ab973b1a5 138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "9462f04cd6673667f85964eaf789db40807b6376",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
