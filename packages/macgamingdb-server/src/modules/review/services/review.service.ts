@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { desc, eq, sql } from 'drizzle-orm';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyArray } from '@sniptt/guards';
@@ -24,6 +25,10 @@ import { parseGameRef } from '../../game/utils/parse-game-ref.util';
 import { GameMaterializationService } from '../../game/services/game-materialization.service';
 import { ReviewException } from '../exceptions/review.exception';
 import { PageRevalidationService } from '../../../engine/core-modules/page-revalidation/page-revalidation.service';
+import {
+  REVIEW_CREATED_EVENT,
+  type ReviewCreatedEvent,
+} from '../events/review-created.event';
 
 const ALLOWED_UPLOAD_TYPES = [
   'image/png',
@@ -65,6 +70,7 @@ export class ReviewService {
     private readonly pageRevalidationService: PageRevalidationService,
     private readonly fileStorageService: FileStorageService,
     private readonly gameMaterializationService: GameMaterializationService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async updateGameAggregatedPerformance(gameId: string): Promise<void> {
@@ -325,6 +331,9 @@ export class ReviewService {
       await this.pageRevalidationService.revalidatePaths({
         paths: [`/games/${game.slug ?? game.id}`, '/contributors'],
       });
+
+      const reviewCreatedEvent: ReviewCreatedEvent = { reviewId: review.id };
+      this.eventEmitter.emit(REVIEW_CREATED_EVENT, reviewCreatedEvent);
 
       return { review };
     } catch (error) {

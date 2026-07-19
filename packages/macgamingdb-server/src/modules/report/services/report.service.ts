@@ -8,6 +8,7 @@ import { gameReviews, users } from '../../../database/schema';
 import { deriveDisplayNameFromEmail } from '../../../engine/utils/derive-display-name-from-email.util';
 import { MODERATION_LLM } from '../constants/moderation-llm.constant';
 import { type ModerationLlm } from '../types/moderation-llm.type';
+import { type ModerationVerdict } from '../dtos/moderation-verdict.dto';
 import { type ReportReason } from '../dtos/report-reason.dto';
 import { DiscordMessageService } from '../drivers/discord/services/discord-message.service';
 import { ReportException } from '../exceptions/report.exception';
@@ -58,46 +59,78 @@ export class ReportService {
       return { success: true, message: 'Report submitted' };
     }
 
-    const [claimed] = await this.db
-      .update(gameReviews)
-      .set({ moderationAlertedAt: new Date().toISOString() })
-      .where(
-        and(
-          eq(gameReviews.id, params.reviewId),
-          isNull(gameReviews.moderationAlertedAt),
-        ),
-      )
-      .returning({ id: gameReviews.id });
-
-    if (!claimed) {
+    if (!(await this.claimAlert(params.reviewId))) {
       return { success: true, message: 'Report submitted' };
     }
 
     try {
-      await this.dispatchModerationAlert({
-        review,
-        reason: params.reason,
-        reporterUserId: params.reporterUserId,
-      });
+      const verdict = await this.judgeReviewOrThrow(review, params.reason);
+      const reporterName = await this.resolveReporterName(params.reporterUserId);
+      await this.postModerationAlert(review, verdict, reporterName, params.reason);
     } catch (error) {
       console.error('Failed to dispatch moderation alert:', error);
-      await this.db
-        .update(gameReviews)
-        .set({ moderationAlertedAt: null })
-        .where(eq(gameReviews.id, params.reviewId));
+      await this.releaseAlert(params.reviewId);
     }
 
     return { success: true, message: 'Report submitted' };
   }
 
-  private async dispatchModerationAlert(params: {
-    review: ReviewWithGame;
-    reason?: ReportReason;
-    reporterUserId: string;
-  }): Promise<void> {
-    const { review } = params;
+  async screenNewReview({ reviewId }: { reviewId: string }): Promise<void> {
+    const review = await this.findReviewWithGame(reviewId);
+    if (!review || isDefined(review.hiddenAt)) {
+      return;
+    }
 
-    const verdict = await this.moderationLlm.judgeReview({
+    let verdict: ModerationVerdict;
+    try {
+      verdict = await this.judgeReviewOrThrow(review);
+    } catch (error) {
+      console.error('Failed to screen new review:', error);
+      return;
+    }
+
+    if (verdict.verdict !== 'flag') {
+      return;
+    }
+
+    if (!(await this.claimAlert(reviewId))) {
+      return;
+    }
+
+    try {
+      await this.postModerationAlert(review, verdict, 'Auto-moderation');
+    } catch (error) {
+      console.error('Failed to post auto-moderation alert:', error);
+      await this.releaseAlert(reviewId);
+    }
+  }
+
+  private async claimAlert(reviewId: string): Promise<boolean> {
+    const [claimed] = await this.db
+      .update(gameReviews)
+      .set({ moderationAlertedAt: new Date().toISOString() })
+      .where(
+        and(
+          eq(gameReviews.id, reviewId),
+          isNull(gameReviews.moderationAlertedAt),
+        ),
+      )
+      .returning({ id: gameReviews.id });
+    return isDefined(claimed);
+  }
+
+  private async releaseAlert(reviewId: string): Promise<void> {
+    await this.db
+      .update(gameReviews)
+      .set({ moderationAlertedAt: null })
+      .where(eq(gameReviews.id, reviewId));
+  }
+
+  private async judgeReviewOrThrow(
+    review: ReviewWithGame,
+    reason?: ReportReason,
+  ): Promise<ModerationVerdict> {
+    return this.moderationLlm.judgeReview({
       game: {
         name: review.game.name ?? 'Unknown game',
         developers: review.game.developers ?? undefined,
@@ -118,11 +151,16 @@ export class ReportService {
         softwareVersion: review.softwareVersion ?? undefined,
         notes: review.notes ?? undefined,
       },
-      reportReason: params.reason,
+      reportReason: reason,
     });
+  }
 
-    const reporterName = await this.resolveReporterName(params.reporterUserId);
-
+  private async postModerationAlert(
+    review: ReviewWithGame,
+    verdict: ModerationVerdict,
+    reporterName: string,
+    reason?: ReportReason,
+  ): Promise<void> {
     await this.discordMessageService.postModerationAlert({
       reviewId: review.id,
       gameName: review.game.name ?? 'Unknown game',
@@ -133,7 +171,7 @@ export class ReportService {
       chipset: `${review.chipset} ${review.chipsetVariant}`,
       performance: review.performance,
       notes: review.notes ?? '',
-      reportReason: params.reason,
+      reportReason: reason,
       reporterName,
       verdict,
     });
