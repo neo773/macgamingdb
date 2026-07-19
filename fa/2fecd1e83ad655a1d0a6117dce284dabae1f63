@@ -1,0 +1,29 @@
+packages/macgamingdb-server/src/modules/report/report.module.ts
+  s_b9a89ea6b98f27::t_bf387b45747796 9
+  s_b9a89ea6b98f27::t_595bbdbd8023a7 24
+packages/macgamingdb-server/src/modules/report/listeners/report-submitted.listener.ts
+  s_b9a89ea6b98f27::t_079647c20c0523 1-17
+packages/macgamingdb-server/src/modules/report/events/report-submitted.event.ts
+  s_b9a89ea6b98f27::t_d915821ed68004 1-9
+packages/macgamingdb-server/src/modules/report/services/report.service.ts
+  s_b9a89ea6b98f27::t_191ac6ccf8f246 68-84,88-90,93
+  s_b9a89ea6b98f27::t_1ac354e3b0f3db 2
+  s_b9a89ea6b98f27::t_cc81998ebc6d19 39
+  s_b9a89ea6b98f27::t_503c7ef30834da 15-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "fa2fecd1e83ad655a1d0a6117dce284dabae1f63",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
