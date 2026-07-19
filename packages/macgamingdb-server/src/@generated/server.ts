@@ -19,8 +19,8 @@ import { ContributorsPageSchema } from "../modules/contributor/routers/../dtos/c
 import { GameSearchResultSchema } from "../modules/game/routers/../dtos/game-search-result.dto";
 import { CoverArtSchema } from "../modules/game/routers/../dtos/cover-art.dto";
 import { RatingCountsSchema } from "../modules/game/routers/../dtos/rating-counts.dto";
-import { PlayMethodEnum, PerformanceEnum, TranslationLayerEnum, GraphicsSettingsEnum } from "../modules/review/routers/../../../schema/index";
 import { ChipsetEnum, ChipsetVariantEnum } from "../modules/game/routers/../../../schema/index";
+import { PlayMethodEnum, PerformanceEnum, TranslationLayerEnum, GraphicsSettingsEnum } from "../modules/review/routers/../../../schema/index";
 import { GamesPageSchema } from "../modules/game/routers/../dtos/games-page.dto";
 import { SitemapEntrySchema } from "../modules/game/routers/../dtos/sitemap-entry.dto";
 import { GameByIdSchema } from "../modules/game/routers/../dtos/game-by-id.dto";
@@ -30,6 +30,8 @@ import { LibraryStatusSchema } from "../modules/library/routers/../dtos/library-
 import { LibrarySyncResultSchema } from "../modules/library/routers/../dtos/library-sync-result.dto";
 import { LibraryEntrySchema } from "../modules/library/routers/../dtos/library-entry.dto";
 import { OkResultSchema } from "../modules/library/routers/../dtos/ok-result.dto";
+import { ReportResultSchema } from "../modules/report/routers/../dtos/report-result.dto";
+import { ReportReasonSchema } from "../modules/report/routers/../dtos/report-reason.dto";
 import { MyReviewsSchema } from "../modules/review/routers/../dtos/my-reviews.dto";
 import { MacConfigSchema } from "../modules/review/routers/../../mac-config/dtos/mac-config.dto";
 import { UploadUrlSchema } from "../modules/review/routers/../dtos/upload-url.dto";
@@ -122,6 +124,16 @@ const appRouter = t.router({
     unlink: publicProcedure
       .input(z.void())
       .output(OkResultSchema)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
+    }),
+  report: t.router({
+    create: publicProcedure
+      .input(z.object({
+      reviewId: z.string(),
+      reason: ReportReasonSchema.optional(),
+      note: z.string().max(500).optional(),
+    }))
+      .output(ReportResultSchema)
       .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
     }),
   review: t.router({
