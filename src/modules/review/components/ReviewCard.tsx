@@ -68,7 +68,10 @@ export const ReviewCard = ({
   return (
     <Card
       key={review.id}
-      className={clsx('bg-primary-gradient overflow-hidden', className)}
+      className={clsx(
+        'bg-primary-gradient overflow-hidden flex flex-col h-full',
+        className,
+      )}
     >
       {header && header}
       <CardHeader>
@@ -113,7 +116,7 @@ export const ReviewCard = ({
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex flex-1 flex-col">
         <div className="border-t border-white/15 pt-3 pb-2">
           <dl className="space-y-2 text-sm text-gray-300">
             <div className="flex justify-between">
@@ -217,7 +220,7 @@ export const ReviewCard = ({
         )}
 
         {showReport && (
-          <div className="flex justify-end pt-2 mt-1">
+          <div className="mt-auto flex justify-end pt-3">
             <ReportReviewDialog reviewId={review.id} />
           </div>
         )}
