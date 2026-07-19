@@ -1,0 +1,42 @@
+packages/macgamingdb-server/src/modules/contributor/services/contributor.service.ts
+  s_b9a89ea6b98f27::t_30413a9b96ada5 129-131
+  s_b9a89ea6b98f27::t_139fe35b5b972c 40-52
+  s_b9a89ea6b98f27::t_03acda309bd2c0 101,104-105
+  s_b9a89ea6b98f27::t_4546e1498ca7a9 147-148
+  s_b9a89ea6b98f27::t_942ebf134ce400 2,5-10
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_b9a89ea6b98f27::t_84d57d0e7ea4c8 2
+  s_b9a89ea6b98f27::t_8caa29a26a08ec 11
+  s_b9a89ea6b98f27::t_d6de253b2bfc8b 72-74
+packages/macgamingdb-server/src/database/schema.ts
+  s_b9a89ea6b98f27::t_9432f4382b4c44 1-2
+  s_b9a89ea6b98f27::t_09ccd356685ce2 150-153
+packages/macgamingdb-server/drizzle/migrations/meta/0008_snapshot.json
+  s_b9a89ea6b98f27::t_9a196eedc2ceb5 1-1284
+packages/macgamingdb-server/drizzle/migrations/0008_flippant_amphibian.sql
+  s_b9a89ea6b98f27::t_9a196eedc2ceb5 1
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_b9a89ea6b98f27::t_c6f9babfd048a1 202,204-206,208-210,212,215-217
+  s_b9a89ea6b98f27::t_3378692f0a839f 472,475-478
+  s_b9a89ea6b98f27::t_c9036699b94662 122,124,126-128,130,134-135,137-138
+  s_b9a89ea6b98f27::t_3afb04b30455a3 353-362
+  s_b9a89ea6b98f27::t_c381ec19b57b80 19-20
+packages/macgamingdb-server/drizzle/migrations/meta/_journal.json
+  s_b9a89ea6b98f27::t_9a196eedc2ceb5 60-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "d7014ad839c4961ad93dc2ecfd4fa91afd47caa6",
+  "prompts": {},
+  "sessions": {
+    "s_b9a89ea6b98f27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9a4953ae-255e-47c9-842b-6f1d746aa7dd",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
