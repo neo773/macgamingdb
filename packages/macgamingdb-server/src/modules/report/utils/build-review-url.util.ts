@@ -1,4 +1,4 @@
-const DEFAULT_WEB_APP_URL = 'https://macgamingdb.com';
+const PUBLIC_APP_URL = 'https://macgamingdb.app';
 
 export const buildReviewUrl = (gameSlugOrId: string): string =>
-  `${process.env.WEB_APP_URL ?? DEFAULT_WEB_APP_URL}/games/${gameSlugOrId}`;
+  `${process.env.NEXT_PUBLIC_BASE_URL || PUBLIC_APP_URL}/games/${gameSlugOrId}`;
