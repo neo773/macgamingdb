@@ -3,6 +3,7 @@ import { and, count, desc, eq, inArray, isNull } from 'drizzle-orm';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { gameReviews, users } from '../../../database/schema';
+import { deriveDisplayNameFromEmail } from '../../../engine/utils/derive-display-name-from-email.util';
 import { ContributorException } from '../exceptions/contributor.exception';
 
 const toISODateString = (value: string | number): string =>
@@ -45,7 +46,7 @@ export class ContributorService {
 
       return {
         id: contributor.id,
-        name: contributor.email!.split('@')[0].replace(/[0-9._]/g, ''),
+        name: deriveDisplayNameFromEmail(contributor.email!),
         joinedAt: toISODateString(contributor.createdAt),
         reviewCount: reviews.length,
         uniqueGamesCount,
@@ -122,7 +123,7 @@ export class ContributorService {
 
           return {
             id: user.id,
-            name: user!.email!.split('@')[0].replace(/[0-9._]/g, ''),
+            name: deriveDisplayNameFromEmail(user!.email!),
             joinedAt: toISODateString(user.createdAt),
             reviewCount: user.reviewCount,
             uniqueGamesCount: uniqueGames.length,

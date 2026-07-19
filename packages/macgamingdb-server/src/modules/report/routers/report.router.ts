@@ -1,27 +1,15 @@
 import { Inject } from '@nestjs/common';
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { Ctx, Input, Mutation, Router, UseMiddlewares } from 'nestjs-trpc';
 import { AuthMiddleware } from '../../../engine/api/trpc/auth.middleware';
+import { requireUserIdOrThrow } from '../../../engine/api/trpc/require-user-id.util';
+import { type SessionContext } from '../../../engine/api/trpc/session-context.type';
 import {
   ReportReasonSchema,
   type ReportReason,
 } from '../dtos/report-reason.dto';
 import { ReportResultSchema } from '../dtos/report-result.dto';
 import { ReportService } from '../services/report.service';
-
-type SessionContext = { user?: { user?: { id?: string } } | null };
-
-const requireUserId = (ctx: SessionContext): string => {
-  const userId = ctx.user?.user?.id;
-  if (!userId) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'Missing authorization',
-    });
-  }
-  return userId;
-};
 
 @Router({ alias: 'report' })
 export class ReportRouter {
@@ -52,7 +40,7 @@ export class ReportRouter {
     @Ctx() ctx: SessionContext,
   ) {
     return this.reportService.reportReview({
-      reporterUserId: requireUserId(ctx),
+      reporterUserId: requireUserIdOrThrow(ctx),
       ...input,
     });
   }

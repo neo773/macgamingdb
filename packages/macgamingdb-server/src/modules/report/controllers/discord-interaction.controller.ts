@@ -2,7 +2,6 @@ import {
   Controller,
   Headers,
   HttpCode,
-  Logger,
   Post,
   Req,
   UnauthorizedException,
@@ -14,8 +13,6 @@ import { ReportException } from '../exceptions/report.exception';
 
 @Controller('discord')
 export class DiscordInteractionController {
-  private readonly logger = new Logger(DiscordInteractionController.name);
-
   constructor(
     private readonly discordInteractionService: DiscordInteractionService,
   ) {}
@@ -27,11 +24,6 @@ export class DiscordInteractionController {
     @Headers('x-signature-ed25519') signature?: string,
     @Headers('x-signature-timestamp') timestamp?: string,
   ) {
-    this.logger.log(
-      `interaction hit: hasSig=${!!signature} hasTs=${!!timestamp} bytes=${
-        request.rawBody?.length ?? 0
-      }`,
-    );
     const rawBody = request.rawBody;
     if (!rawBody) {
       throw new UnauthorizedException('Missing request body');

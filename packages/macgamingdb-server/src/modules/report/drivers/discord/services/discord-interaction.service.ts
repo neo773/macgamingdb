@@ -9,16 +9,13 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { ReviewService } from '../../../../review/services/review.service';
 import { REPORT_INTERACTION_ACTION } from '../../../constants/report-interaction-action.constant';
 import { ReportException } from '../../../exceptions/report.exception';
+import { type DiscordInteractionResponse } from '../types/discord-interaction-response.type';
+import { parseInteractionCustomId } from '../utils/parse-interaction-custom-id.util';
 
 type VerifyAndHandleParams = {
   rawBody: Buffer;
   signature?: string;
   timestamp?: string;
-};
-
-type DiscordInteractionResponse = {
-  type: number;
-  data?: { content: string; components: [] };
 };
 
 const interactionPayloadSchema = z.object({
@@ -27,19 +24,6 @@ const interactionPayloadSchema = z.object({
   member: z.object({ user: z.object({ id: z.string() }) }).optional(),
   user: z.object({ id: z.string() }).optional(),
 });
-
-const parseCustomId = (
-  customId: string,
-): { action: string; reviewId: string } => {
-  const separatorIndex = customId.indexOf(':');
-  if (separatorIndex === -1) {
-    return { action: customId, reviewId: '' };
-  }
-  return {
-    action: customId.slice(0, separatorIndex),
-    reviewId: customId.slice(separatorIndex + 1),
-  };
-};
 
 @Injectable()
 export class DiscordInteractionService {
@@ -95,7 +79,7 @@ export class DiscordInteractionService {
     customId: string;
     actorId: string;
   }): Promise<DiscordInteractionResponse> {
-    const { action, reviewId } = parseCustomId(params.customId);
+    const { action, reviewId } = parseInteractionCustomId(params.customId);
 
     if (action === REPORT_INTERACTION_ACTION.REMOVE) {
       await this.reviewService.hideReviewById({ reviewId });

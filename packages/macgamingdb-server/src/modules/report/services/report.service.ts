@@ -5,11 +5,13 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { gameReviews, users } from '../../../database/schema';
+import { deriveDisplayNameFromEmail } from '../../../engine/utils/derive-display-name-from-email.util';
 import { MODERATION_LLM } from '../constants/moderation-llm.constant';
 import { type ModerationLlm } from '../types/moderation-llm.type';
 import { type ReportReason } from '../dtos/report-reason.dto';
 import { DiscordMessageService } from '../drivers/discord/services/discord-message.service';
 import { ReportException } from '../exceptions/report.exception';
+import { buildReviewUrl } from '../utils/build-review-url.util';
 
 type ReportReviewParams = {
   reporterUserId: string;
@@ -21,8 +23,6 @@ type ReportReviewParams = {
 type ReviewWithGame = NonNullable<
   Awaited<ReturnType<ReportService['findReviewWithGame']>>
 >;
-
-const DEFAULT_WEB_APP_URL = 'https://macgamingdb.com';
 
 @Injectable()
 export class ReportService {
@@ -109,9 +109,7 @@ export class ReportService {
         reviewId: review.id,
         gameName: review.game.name ?? 'Unknown game',
         gameHeaderImage: review.game.headerImage ?? undefined,
-        reviewUrl: `${process.env.WEB_APP_URL ?? DEFAULT_WEB_APP_URL}/games/${
-          review.game.slug ?? review.gameId
-        }`,
+        reviewUrl: buildReviewUrl(review.game.slug ?? review.gameId),
         playMethod: review.playMethod,
         translationLayer: review.translationLayer ?? undefined,
         chipset: `${review.chipset} ${review.chipsetVariant}`,
@@ -137,6 +135,6 @@ export class ReportService {
       return 'a user';
     }
 
-    return email.split('@')[0].replace(/[0-9._]/g, '');
+    return deriveDisplayNameFromEmail(email);
   }
 }
