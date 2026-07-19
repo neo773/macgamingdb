@@ -66,7 +66,7 @@ export const ReportReviewDialog = ({ reviewId }: { reviewId: string }) => {
               aria-label="Report review"
               className="text-gray-400 hover:text-gray-200 transition-colors"
             >
-              <Flag size={16} />
+              <Flag size={14} />
             </button>
           </DialogTrigger>
         </TooltipTrigger>
