@@ -1,0 +1,21 @@
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/utils/build-moderation-prompt.util.ts
+  s_935aad954638c9::t_88511f4390fcb1 18-19
+  s_935aad954638c9::t_3dbd980cd189e9 20
+  s_935aad954638c9::t_a7739e331084f0 58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0550635159f5a8997d5d82f823a5a67c282a7e19",
+  "prompts": {},
+  "sessions": {
+    "s_935aad954638c9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d67712c8-caa2-498c-a016-54ded2414d39",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <neo773@protonmail.com>"
+    }
+  }
+}
