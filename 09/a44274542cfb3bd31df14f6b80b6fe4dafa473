@@ -1,0 +1,19 @@
+Dockerfile.web
+  s_a195378c952164::t_a56936abc9673f 27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "09a44274542cfb3bd31df14f6b80b6fe4dafa473",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
