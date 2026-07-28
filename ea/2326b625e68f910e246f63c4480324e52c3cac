@@ -1,0 +1,19 @@
+src/modules/review/components/ReviewCard.tsx
+  s_a195378c952164::t_a702caf770b2b8 78-81,84,86,97,111,114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ea2326b625e68f910e246f63c4480324e52c3cac",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
