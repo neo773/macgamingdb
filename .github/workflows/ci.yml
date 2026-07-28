@@ -59,3 +59,25 @@ jobs:
 
       - name: Build (Next.js)
         run: bun run build
+
+      - name: Deploy to Coolify
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          COOLIFY_APP_UUID: ${{ secrets.COOLIFY_APP_UUID }}
+        run: |
+          set -euo pipefail
+          response=$(curl --silent --show-error --fail-with-body \
+            --max-time 60 \
+            --write-out '\n%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${COOLIFY_TOKEN}" \
+            "${COOLIFY_URL}/api/v1/deploy?uuid=${COOLIFY_APP_UUID}&force=false")
+          status=$(printf '%s' "${response}" | tail -n 1)
+          body=$(printf '%s' "${response}" | sed '$d')
+          echo "Coolify responded ${status}: ${body}"
+          if [ "${status}" != "200" ]; then
+            echo "::error::Coolify deploy request failed (HTTP ${status})"
+            exit 1
+          fi
