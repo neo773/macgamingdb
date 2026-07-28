@@ -4,23 +4,15 @@ import remarkGfm from "remark-gfm";
 import vinext from "vinext";
 import { defineConfig } from "vite";
 
-import { apiRewrites } from "./api-rewrites";
-
 export default defineConfig({
   plugins: [
     {
       enforce: "pre",
       ...mdx({
+        include: /\.(md|mdx)$/,
         remarkPlugins: [remarkFrontmatter, remarkGfm],
       }),
     },
-    vinext({
-      nextConfig: {
-        output: "standalone",
-        pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-        rewrites: apiRewrites,
-        serverExternalPackages: ["@libsql/client"],
-      },
-    }),
+    vinext(),
   ],
 });

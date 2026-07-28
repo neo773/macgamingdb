@@ -34,7 +34,9 @@
     "build:api": "bunx tsc -p packages/macgamingdb-shared/tsconfig.json && bunx tsc -p packages/macgamingdb-emails/tsconfig.build.json && bunx tsc -p packages/macgamingdb-server/tsconfig.build.json",
     "dev:vinext": "vinext dev --port 3001",
     "build:vinext": "vinext build",
-    "start:vinext": "vinext start"
+    "start:vinext": "vinext start",
+    "images:avif": "bun --bun scripts/generate-avif.ts",
+    "images:avif:check": "bun --bun scripts/generate-avif.ts --check"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.826.0",
