@@ -1,0 +1,20 @@
+packages/macgamingdb-ui/src/display/Picture/Picture.tsx
+  s_a195378c952164::t_4580d6c1e8c04b 7-8
+  s_a195378c952164::t_aa95c94773e27d 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "04af58b5a7ead7f82e75f0a5a5eb1606630deb78",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
