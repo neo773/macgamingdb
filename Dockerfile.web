@@ -24,6 +24,9 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 
 COPY --from=builder /app/dist/standalone ./
+# The blog index reads src/app/blog at runtime. Next traced these files into its
+# standalone output; vinext does not, so they are copied explicitly.
+COPY --from=builder /app/src/app/blog ./src/app/blog
 
 EXPOSE 3000
 CMD ["node", "server.js"]
