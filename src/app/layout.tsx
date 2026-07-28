@@ -1,12 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist } from 'next/font/google';
 import { TRPCProvider } from '@/modules/trpc/components/TRPCProvider';
 import { Toaster } from 'macgamingdb-ui/feedback/Toaster';
 import Script from 'next/script';
 import { BackgroundGradient } from '@/modules/layout/components/BackgroundGradient';
 import './tailwind.css';
-
-const GeistMono = Geist({ subsets: ['latin'], weight: ['400', '500'] });
 
 export const metadata: Metadata = {
   title: 'MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks',
@@ -29,12 +26,19 @@ export const viewport: Viewport = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
+      <link
+        rel="preload"
+        href="/fonts/geist-latin.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+      />
       <meta
         name="google-site-verification"
         content="ZHuErRXhH2hBeyHfh9ieBXRVc6W19dktrLaCK-_dmDc"
       />
       <meta name="google-adsense-account" content="ca-pub-4009451848051361" />
-      <body className={`${GeistMono.className} dark`}>
+      <body className="font-sans dark">
         <BackgroundGradient />
         <TRPCProvider>{children}</TRPCProvider>
         <Toaster />
