@@ -1,0 +1,27 @@
+package.json
+  s_a195378c952164::t_12b923a9258a2f 37-39
+.github/workflows/ci.yml
+  s_a195378c952164::t_6d49df4c77bcd3 48-50
+Dockerfile.api
+  s_a195378c952164::t_0004e0c3bfa55c 3
+scripts/generate-avif.ts
+  s_a195378c952164::t_d8503fe0a57335 1-73
+vite.config.ts
+  s_a195378c952164::t_17f85c56dcc4f7 12,16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0420bdbb184eb72a3f38a089ff29117aa5241cff",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
