@@ -116,6 +116,7 @@
     "drizzle-kit": "^0.31.9",
     "eslint": "^9.27.0",
     "eslint-config-next": "16.1.1",
+    "fontaine": "^0.8.0",
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.7",
     "typescript": "7",
