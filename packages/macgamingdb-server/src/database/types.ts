@@ -1,12 +1,12 @@
 import { type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 import {
-  users,
-  games,
-  macConfigs,
-  gameReviews,
-  sessions,
-  accounts,
-  verifications,
+  type users,
+  type games,
+  type macConfigs,
+  type gameReviews,
+  type sessions,
+  type accounts,
+  type verifications,
 } from './schema';
 
 // Select types (what you get back from queries)
