@@ -1,0 +1,21 @@
+README.md
+  s_a195378c952164::t_fbe55e6c2a56be 24
+CLAUDE.md
+  s_a195378c952164::t_310f9f596b0ce5 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5a2d3c7218bbec374e5632100045c93dbb37982a",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
