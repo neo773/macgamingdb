@@ -4,6 +4,7 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { Card, CardHeader, CardContent } from 'macgamingdb-ui/display/Card';
 import { Badge } from 'macgamingdb-ui/display/Badge';
+import { Picture } from 'macgamingdb-ui/display/Picture';
 import clsx from 'clsx';
 import { ScreenshotDisplay } from './ScreenshotDisplay';
 import { ReportReviewDialog } from './ReportReviewDialog';
@@ -78,7 +79,7 @@ export const ReviewCard = ({
         <div className="flex justify-between items-center">
           <div className="flex flex-col items-center gap-3">
             <div className="flex gap-4">
-              <img
+              <Picture
                 src={`/images/${review.playMethod.toLowerCase()}.png`}
                 alt={formatMethodName(review.playMethod)}
                 className="size-16 object-contain"
@@ -108,7 +109,7 @@ export const ReviewCard = ({
               </div>
             </div>
           </div>
-          <img
+          <Picture
             src={`/images/chipsets/${review.chipset.toLowerCase()}/${review.chipsetVariant.toLowerCase()}.png`}
             alt={`${review.chipset} ${review.chipsetVariant}`}
             className="w-[70px] object-contain"
