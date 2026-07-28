@@ -1,0 +1,27 @@
+packages/macgamingdb-emails/tsconfig.build.json
+  s_a195378c952164::t_faa08cd3a74d0b 4-5
+package.json
+  s_a195378c952164::t_0213f73695fa88 121
+.github/workflows/ci.yml
+  s_a195378c952164::t_c69d455cb0c78d 61-67
+packages/macgamingdb-shared/tsconfig.json
+  s_a195378c952164::t_faa08cd3a74d0b 4-5
+bun.lock
+  s_a195378c952164::t_d3bc874ea3878b 87,1116-1155,2980
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9573b32d61044739ff41483f0dfcb3c700bf8d73",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
