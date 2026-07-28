@@ -47,7 +47,9 @@ const runMigrateCommand = (label: string): string => {
 
 const assertIncludes = (output: string, needle: string, label: string) => {
   if (!output.includes(needle)) {
-    console.error(`ASSERTION FAILED (${label}): expected output to include "${needle}"`);
+    console.error(
+      `ASSERTION FAILED (${label}): expected output to include "${needle}"`,
+    );
     process.exit(1);
   }
 };
@@ -65,12 +67,22 @@ copyFileSync(snapshotPath, testDatabasePath);
 console.log('Fresh copy of production snapshot created');
 
 const firstRun = runMigrateCommand('first run (fresh snapshot)');
-assertIncludes(firstRun, 'Pending migrations: 0004_curly_chamber, 0005_flippant_lionheart, 0006_slow_meggan', 'first run pending list');
+assertIncludes(
+  firstRun,
+  'Pending migrations: 0004_curly_chamber, 0005_flippant_lionheart, 0006_slow_meggan',
+  'first run pending list',
+);
 assertIncludes(firstRun, 'Validation passed', 'first run validation');
 
 const secondRun = runMigrateCommand('second run (idempotency)');
-assertIncludes(secondRun, 'Pending migrations: none', 'second run pending list');
+assertIncludes(
+  secondRun,
+  'Pending migrations: none',
+  'second run pending list',
+);
 assertIncludes(secondRun, 'Slugs assigned: 0', 'second run slug count');
 assertIncludes(secondRun, 'Validation passed', 'second run validation');
 
-console.log('\nAll assertions passed: migration is reproducible and idempotent.');
+console.log(
+  '\nAll assertions passed: migration is reproducible and idempotent.',
+);

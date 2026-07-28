@@ -91,7 +91,6 @@ const ContributorPage = async ({
                       header={
                         <div className="aspect-[460/215] relative overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={`${review.gameHeaderImage}`}
                             alt={`${review.gameName} cover art`}

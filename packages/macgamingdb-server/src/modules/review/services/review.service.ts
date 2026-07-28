@@ -127,7 +127,10 @@ export class ReviewService {
       }));
     } catch (error) {
       console.error('Error fetching my reviews:', error);
-      throw new ReviewException('Failed to fetch reviews', 'REVIEW_FETCH_FAILED');
+      throw new ReviewException(
+        'Failed to fetch reviews',
+        'REVIEW_FETCH_FAILED',
+      );
     }
   }
 
@@ -204,7 +207,9 @@ export class ReviewService {
         }
       }
 
-      return finalConfigs.map(({ searchText: _searchText, ...config }) => config);
+      return finalConfigs.map(
+        ({ searchText: _searchText, ...config }) => config,
+      );
     } catch (error) {
       console.error('Error fetching Mac configs:', error);
       throw new ReviewException(
@@ -293,10 +298,15 @@ export class ReviewService {
       });
 
       if (!macConfig) {
-        throw new ReviewException('Mac config not found', 'MAC_CONFIG_NOT_FOUND');
+        throw new ReviewException(
+          'Mac config not found',
+          'MAC_CONFIG_NOT_FOUND',
+        );
       }
 
-      const macConfigMetadata = parseMacSpecificationOrThrow(macConfig.metadata);
+      const macConfigMetadata = parseMacSpecificationOrThrow(
+        macConfig.metadata,
+      );
       const hasScreenshots = isNonEmptyArray(params.screenshots);
 
       const [review] = await this.db
@@ -338,7 +348,10 @@ export class ReviewService {
       return { review };
     } catch (error) {
       console.error('Error creating review:', error);
-      throw new ReviewException('Failed to create review', 'REVIEW_CREATE_FAILED');
+      throw new ReviewException(
+        'Failed to create review',
+        'REVIEW_CREATE_FAILED',
+      );
     }
   }
 
@@ -428,10 +441,15 @@ export class ReviewService {
     }
 
     if (!params.confirmation) {
-      throw new ReviewException('Please confirm deletion', 'CONFIRMATION_INVALID');
+      throw new ReviewException(
+        'Please confirm deletion',
+        'CONFIRMATION_INVALID',
+      );
     }
 
-    await this.db.delete(gameReviews).where(eq(gameReviews.id, params.reviewId));
+    await this.db
+      .delete(gameReviews)
+      .where(eq(gameReviews.id, params.reviewId));
 
     await this.db
       .update(games)

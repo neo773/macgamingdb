@@ -105,12 +105,8 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -245,43 +241,27 @@
       "indexes": {
         "GameReview_gameId_chipset_idx": {
           "name": "GameReview_gameId_chipset_idx",
-          "columns": [
-            "gameId",
-            "chipset"
-          ],
+          "columns": ["gameId", "chipset"],
           "isUnique": false
         },
         "GameReview_gameId_playMethod_idx": {
           "name": "GameReview_gameId_playMethod_idx",
-          "columns": [
-            "gameId",
-            "playMethod"
-          ],
+          "columns": ["gameId", "playMethod"],
           "isUnique": false
         },
         "GameReview_gameId_chipset_chipsetVariant_idx": {
           "name": "GameReview_gameId_chipset_chipsetVariant_idx",
-          "columns": [
-            "gameId",
-            "chipset",
-            "chipsetVariant"
-          ],
+          "columns": ["gameId", "chipset", "chipsetVariant"],
           "isUnique": false
         },
         "GameReview_gameId_chipset_playMethod_idx": {
           "name": "GameReview_gameId_chipset_playMethod_idx",
-          "columns": [
-            "gameId",
-            "chipset",
-            "playMethod"
-          ],
+          "columns": ["gameId", "chipset", "playMethod"],
           "isUnique": false
         },
         "GameReview_macConfigId_idx": {
           "name": "GameReview_macConfigId_idx",
-          "columns": [
-            "macConfigId"
-          ],
+          "columns": ["macConfigId"],
           "isUnique": false
         },
         "GameReview_filter_game_covering_idx": {
@@ -301,12 +281,8 @@
           "name": "GameReview_gameId_Game_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "Game",
-          "columnsFrom": [
-            "gameId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["gameId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         },
@@ -314,12 +290,8 @@
           "name": "GameReview_userId_user_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         },
@@ -327,12 +299,8 @@
           "name": "GameReview_macConfigId_MacConfig_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "MacConfig",
-          "columnsFrom": [
-            "macConfigId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["macConfigId"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -391,25 +359,17 @@
       "indexes": {
         "Game_aggregatedPerformance_id_idx": {
           "name": "Game_aggregatedPerformance_id_idx",
-          "columns": [
-            "aggregatedPerformance",
-            "id"
-          ],
+          "columns": ["aggregatedPerformance", "id"],
           "isUnique": false
         },
         "Game_reviewCount_idx": {
           "name": "Game_reviewCount_idx",
-          "columns": [
-            "reviewCount"
-          ],
+          "columns": ["reviewCount"],
           "isUnique": false
         },
         "Game_aggregatedPerformance_reviewCount_idx": {
           "name": "Game_aggregatedPerformance_reviewCount_idx",
-          "columns": [
-            "aggregatedPerformance",
-            "reviewCount"
-          ],
+          "columns": ["aggregatedPerformance", "reviewCount"],
           "isUnique": false
         }
       },
@@ -460,9 +420,7 @@
       "indexes": {
         "MacConfig_identifier_key": {
           "name": "MacConfig_identifier_key",
-          "columns": [
-            "identifier"
-          ],
+          "columns": ["identifier"],
           "isUnique": true
         }
       },
@@ -534,9 +492,7 @@
       "indexes": {
         "session_token_key": {
           "name": "session_token_key",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -545,12 +501,8 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -615,9 +567,7 @@
       "indexes": {
         "user_email_key": {
           "name": "user_email_key",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },

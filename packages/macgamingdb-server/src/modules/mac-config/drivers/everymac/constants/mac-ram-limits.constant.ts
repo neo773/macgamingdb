@@ -1,4 +1,8 @@
-import { type Chipset, ChipsetVariant, type MacFamily } from '../../../../../schema';
+import {
+  type Chipset,
+  ChipsetVariant,
+  type MacFamily,
+} from '../../../../../schema';
 
 type RamLimitsStructure = Record<
   MacFamily,

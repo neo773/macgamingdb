@@ -83,7 +83,7 @@ export const SignInWithApple: React.FC<SignInWithAppleProps> = ({
                   fontFamily="applied-button-font-0"
                   direction="ltr"
                 >
-                  {/* eslint-disable-next-line no-irregular-whitespace */}
+                  {/* oxlint-disable-next-line no-irregular-whitespace */}
                    Continue with Apple
                 </text>
               </svg>

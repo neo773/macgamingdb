@@ -4,7 +4,9 @@ import { z } from 'zod';
 import { Ctx, Input, Mutation, Router } from 'nestjs-trpc';
 import { TrafficService } from '../services/traffic.service';
 
-const firstHeaderValue = (value: string | string[] | undefined): string | null => {
+const firstHeaderValue = (
+  value: string | string[] | undefined,
+): string | null => {
   if (Array.isArray(value)) return value[0] ?? null;
   return value ?? null;
 };

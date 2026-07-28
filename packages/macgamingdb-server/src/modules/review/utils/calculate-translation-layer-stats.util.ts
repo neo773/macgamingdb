@@ -7,7 +7,9 @@ export const calculateTranslationLayerStats = (reviews: GameReview[]) => {
     {};
 
   layers.forEach((layer) => {
-    const layerReviews = reviews.filter((review) => review.translationLayer === layer);
+    const layerReviews = reviews.filter(
+      (review) => review.translationLayer === layer,
+    );
     stats[layer] = {
       count: layerReviews.length,
       averagePerformance: calculateAveragePerformance(layerReviews),

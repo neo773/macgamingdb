@@ -34,10 +34,7 @@ const Alert = ({
   );
 };
 
-const AlertTitle = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const AlertTitle = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="alert-title"

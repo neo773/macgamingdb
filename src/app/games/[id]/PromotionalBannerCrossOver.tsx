@@ -93,7 +93,9 @@ export const PromotionalBannerCrossOver = () => {
           {/* Features */}
           <div className="text-gray-300 mb-6 space-y-1">
             <Feature>Native gameplay, no cloud streaming</Feature>
-            <Feature>15% OFF with exclusive code <b>MGDB15</b></Feature>
+            <Feature>
+              15% OFF with exclusive code <b>MGDB15</b>
+            </Feature>
             <Feature>14 Days Free Trial</Feature>
           </div>
 
@@ -112,7 +114,8 @@ export const PromotionalBannerCrossOver = () => {
 
           {/* Affiliate disclosure */}
           <p className="text-[10px] text-gray-500 mt-4 max-w-xs leading-tight">
-          *Affiliate link. Supports this site & Mac gaming through CodeWeavers' contributions to Wine.
+            *Affiliate link. Supports this site &amp; Mac gaming through
+            CodeWeavers&apos; contributions to Wine.
           </p>
         </div>
 

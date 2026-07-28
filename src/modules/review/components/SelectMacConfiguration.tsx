@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Button } from 'macgamingdb-ui/input/Button';
 import { Input } from 'macgamingdb-ui/input/Input';
@@ -35,7 +35,7 @@ interface SelectMacConfigurationProps {
   onBack: () => void;
 }
 
-const MacConfigSkeleton = memo(() => (
+const MacConfigSkeleton = () => (
   <div className="w-full p-4 rounded-lg border border-border">
     <div className="flex items-center gap-4">
       <Skeleton className="w-12 h-12 rounded" />
@@ -49,9 +49,9 @@ const MacConfigSkeleton = memo(() => (
       </div>
     </div>
   </div>
-));
+);
 
-const MacConfigGroupSkeleton = memo(() => (
+const MacConfigGroupSkeleton = () => (
   <div className="py-3">
     <Skeleton className="h-4 w-24 mb-3" />
     <div className="grid gap-3">
@@ -60,23 +60,23 @@ const MacConfigGroupSkeleton = memo(() => (
       ))}
     </div>
   </div>
-));
+);
 
-const LoadingState = memo(() => (
+const LoadingState = () => (
   <div className="space-y-6">
     {Array.from({ length: 3 }).map((_, index) => (
       <MacConfigGroupSkeleton key={index} />
     ))}
   </div>
-));
+);
 
-const NoResultsState = memo(() => (
+const NoResultsState = () => (
   <div className="flex items-center justify-center py-8">
     <p className="text-muted-foreground">No Mac configurations found</p>
   </div>
-));
+);
 
-const MacConfigGuide = memo(() => {
+const MacConfigGuide = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -131,7 +131,7 @@ const MacConfigGuide = memo(() => {
                 2
               </span>
               <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
-                Select "About This Mac"
+                Select &quot;About This Mac&quot;
               </span>
             </div>
             <div className="ml-9">
@@ -146,7 +146,7 @@ const MacConfigGuide = memo(() => {
       )}
     </div>
   );
-});
+};
 
 interface MacConfigCardProps {
   config: MacConfig;
@@ -154,59 +154,61 @@ interface MacConfigCardProps {
   onSelect: (config: MacConfig) => void;
 }
 
-const MacConfigCard = memo(
-  ({ config, isSelected, onSelect }: MacConfigCardProps) => (
-    <button
-      type="button"
-      onClick={() => onSelect(config)}
-      className={cn(
-        'w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500',
-        isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border',
-      )}
-    >
-      <div className="flex items-center gap-4">
-        {/* Device Icon */}
-        <div className="flex-shrink-0">
-          <img
-            src={getDeviceIcon(config.metadata.family)}
-            alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
-            className="w-12 h-12 object-contain opacity-80"
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
-          />
-        </div>
+const MacConfigCard = ({
+  config,
+  isSelected,
+  onSelect,
+}: MacConfigCardProps) => (
+  <button
+    type="button"
+    onClick={() => onSelect(config)}
+    className={cn(
+      'w-full p-4 rounded-lg border text-left transition-colors hover:bg-blue-500/10 hover:border-blue-500',
+      isSelected ? 'border-blue-500 bg-blue-500/10' : 'border-border',
+    )}
+  >
+    <div className="flex items-center gap-4">
+      {/* Device Icon */}
+      <div className="flex-shrink-0">
+        <img
+          src={getDeviceIcon(config.metadata.family)}
+          alt={`${config.metadata.chip} ${config.metadata.chipVariant}`}
+          className="w-12 h-12 object-contain opacity-80"
+          onError={(event) => {
+            event.currentTarget.style.display = 'none';
+          }}
+        />
+      </div>
 
-        {/* Mac Info */}
-        <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm truncate">
-            {config.metadata.family} {config.metadata.chip}{' '}
-            {config.metadata.chipVariant === 'BASE'
-              ? ''
-              : config.metadata.chipVariant}{' '}
-            {config.metadata.year}
-          </h4>
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <Cpu className="w-3 h-3" />
-              <span>{config.metadata.cpuCores}C CPU</span>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <Gpu className="w-3 h-3" />
-              <span>{config.metadata.gpuCores}C GPU</span>
-            </div>
-            <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
-              <MemoryStick className="w-3 h-3" />
-              <span>{config.metadata.ram}GB RAM</span>
-            </div>
+      {/* Mac Info */}
+      <div className="flex-1 min-w-0">
+        <h4 className="font-medium text-sm truncate">
+          {config.metadata.family} {config.metadata.chip}{' '}
+          {config.metadata.chipVariant === 'BASE'
+            ? ''
+            : config.metadata.chipVariant}{' '}
+          {config.metadata.year}
+        </h4>
+        <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
+            <Cpu className="w-3 h-3" />
+            <span>{config.metadata.cpuCores}C CPU</span>
+          </div>
+          <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
+            <Gpu className="w-3 h-3" />
+            <span>{config.metadata.gpuCores}C GPU</span>
+          </div>
+          <div className="flex items-center gap-1 px-2 py-1 bg-input text-white rounded-full text-xs">
+            <MemoryStick className="w-3 h-3" />
+            <span>{config.metadata.ram}GB RAM</span>
           </div>
         </div>
-
-        {/* Selection Indicator */}
-        {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
       </div>
-    </button>
-  ),
+
+      {/* Selection Indicator */}
+      {isSelected && <Check className="h-5 w-5 text-primary flex-shrink-0" />}
+    </div>
+  </button>
 );
 
 interface MacConfigGroupProps {
@@ -216,36 +218,34 @@ interface MacConfigGroupProps {
   onSelect: (config: MacConfig) => void;
 }
 
-const MacConfigGroup = memo(
-  ({
-    familyKey,
-    configs,
-    selectedConfigIdentifier,
-    onSelect,
-  }: MacConfigGroupProps) => (
-    <div className="py-3">
-      <h3 className="text-sm font-medium text-muted-foreground mb-3 tracking-wide">
-        {getHumanReadableFamily(familyKey)}
-      </h3>
-      <div className="grid gap-3">
-        {configs.map((config) => (
-          <MacConfigCard
-            key={config.identifier}
-            config={config}
-            isSelected={selectedConfigIdentifier === config.identifier}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
+const MacConfigGroup = ({
+  familyKey,
+  configs,
+  selectedConfigIdentifier,
+  onSelect,
+}: MacConfigGroupProps) => (
+  <div className="py-3">
+    <h3 className="text-sm font-medium text-muted-foreground mb-3 tracking-wide">
+      {getHumanReadableFamily(familyKey)}
+    </h3>
+    <div className="grid gap-3">
+      {configs.map((config) => (
+        <MacConfigCard
+          key={config.identifier}
+          config={config}
+          isSelected={selectedConfigIdentifier === config.identifier}
+          onSelect={onSelect}
+        />
+      ))}
     </div>
-  ),
+  </div>
 );
 
 interface HeaderProps {
   onBack: () => void;
 }
 
-const Header = memo(({ onBack }: HeaderProps) => (
+const Header = ({ onBack }: HeaderProps) => (
   <div className="flex items-center gap-3">
     <Button variant="ghost" size="sm" onClick={onBack} className="p-2">
       <ChevronLeft className="h-5 w-5" />
@@ -257,34 +257,32 @@ const Header = memo(({ onBack }: HeaderProps) => (
       </p>
     </div>
   </div>
-));
+);
 
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-const SearchBar = memo(
-  ({
-    value,
-    onChange,
-    isSearching,
-  }: SearchBarProps & { isSearching?: boolean }) => (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      <Input
-        placeholder="Search Mac models, chipsets..."
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="pl-10 rounded-full"
-      />
-      {isSearching && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          <div className="animate-spin rounded-full h-4 w-4 border-b border-muted-foreground"></div>
-        </div>
-      )}
-    </div>
-  ),
+const SearchBar = ({
+  value,
+  onChange,
+  isSearching,
+}: SearchBarProps & { isSearching?: boolean }) => (
+  <div className="relative">
+    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <Input
+      placeholder="Search Mac models, chipsets..."
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      className="pl-10 rounded-full"
+    />
+    {isSearching && (
+      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+        <div className="animate-spin rounded-full h-4 w-4 border-b border-muted-foreground"></div>
+      </div>
+    )}
+  </div>
 );
 
 export const SelectMacConfiguration = ({

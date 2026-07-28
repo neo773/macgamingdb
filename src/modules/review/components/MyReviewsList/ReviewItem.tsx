@@ -19,7 +19,6 @@ import { useReviewDraft } from '@/modules/review/hooks/useReviewDraft';
 import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
 import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
-import { type SteamAppData } from 'macgamingdb-server/modules/game/drivers/steam/types/steam-app-data';
 import { type Performance } from 'macgamingdb-server/schema';
 import {
   PERFORMANCE_RATINGS,
@@ -45,8 +44,7 @@ export const ReviewItem = ({
     useReviewDraft(review);
 
   const hasSoftwareVersion =
-    review.playMethod === 'CROSSOVER' ||
-    review.playMethod === 'PARALLELS';
+    review.playMethod === 'CROSSOVER' || review.playMethod === 'PARALLELS';
 
   const softwareVersionOptions = hasSoftwareVersion
     ? review.playMethod === 'CROSSOVER'

@@ -1,6 +1,6 @@
-import createMDX from "@next/mdx";
+import createMDX from '@next/mdx';
 
-import { apiRewrites } from "./api-rewrites";
+import { apiRewrites } from './api-rewrites';
 
 const nextConfig = {
   serverExternalPackages: ['@libsql/client'],

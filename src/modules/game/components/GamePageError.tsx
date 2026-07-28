@@ -26,8 +26,8 @@ export const GamePageError = () => {
               Game Information Temporarily Unavailable
             </h1>
             <p className="text-gray-300 mb-4">
-              We're having trouble loading the information for this game. This
-              could be due to:
+              We&apos;re having trouble loading the information for this game.
+              This could be due to:
             </p>
             <ul className="list-disc pl-5 text-gray-300 mb-6 space-y-2">
               <li>Temporary Steam API unavailability</li>

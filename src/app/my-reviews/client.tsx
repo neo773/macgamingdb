@@ -62,7 +62,7 @@ export const MyReviewsClient = ({
           <Card className="bg-primary-gradient">
             <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
               <h2 className="text-xl font-medium text-white">
-                You haven't submitted any game reviews yet
+                You haven&apos;t submitted any game reviews yet
               </h2>
               <Link href="/">
                 <Button>Browse Games</Button>

@@ -1,8 +1,4 @@
-type IgdbImageSize =
-  | 't_cover_big'
-  | 't_screenshot_big'
-  | 't_720p'
-  | 't_1080p';
+type IgdbImageSize = 't_cover_big' | 't_screenshot_big' | 't_720p' | 't_1080p';
 
 export const igdbImageUrl = ({
   imageId,

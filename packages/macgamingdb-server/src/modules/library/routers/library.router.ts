@@ -34,7 +34,12 @@ export class LibraryRouter {
     input: z.void(),
     output: LibraryLinkUrlSchema,
     meta: {
-      openapi: { method: 'GET', path: '/library/link-url', protect: true, tags: ['library'] },
+      openapi: {
+        method: 'GET',
+        path: '/library/link-url',
+        protect: true,
+        tags: ['library'],
+      },
     },
   })
   async linkStartUrl(@Ctx() ctx: SessionContext) {
@@ -46,7 +51,12 @@ export class LibraryRouter {
     input: z.void(),
     output: LibraryStatusSchema,
     meta: {
-      openapi: { method: 'GET', path: '/library/status', protect: true, tags: ['library'] },
+      openapi: {
+        method: 'GET',
+        path: '/library/status',
+        protect: true,
+        tags: ['library'],
+      },
     },
   })
   async status(@Ctx() ctx: SessionContext) {
@@ -58,7 +68,12 @@ export class LibraryRouter {
     input: z.void(),
     output: LibrarySyncResultSchema,
     meta: {
-      openapi: { method: 'POST', path: '/library/sync', protect: true, tags: ['library'] },
+      openapi: {
+        method: 'POST',
+        path: '/library/sync',
+        protect: true,
+        tags: ['library'],
+      },
     },
   })
   async sync(@Ctx() ctx: SessionContext) {
@@ -70,7 +85,12 @@ export class LibraryRouter {
     input: z.void(),
     output: z.array(LibraryEntrySchema),
     meta: {
-      openapi: { method: 'GET', path: '/library', protect: true, tags: ['library'] },
+      openapi: {
+        method: 'GET',
+        path: '/library',
+        protect: true,
+        tags: ['library'],
+      },
     },
   })
   async list(@Ctx() ctx: SessionContext) {
@@ -82,7 +102,12 @@ export class LibraryRouter {
     input: z.void(),
     output: OkResultSchema,
     meta: {
-      openapi: { method: 'DELETE', path: '/library/link', protect: true, tags: ['library'] },
+      openapi: {
+        method: 'DELETE',
+        path: '/library/link',
+        protect: true,
+        tags: ['library'],
+      },
     },
   })
   async unlink(@Ctx() ctx: SessionContext) {

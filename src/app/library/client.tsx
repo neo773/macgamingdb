@@ -141,6 +141,8 @@ export const LibraryClient = () => {
                 See which games in your Steam library run on Apple Silicon and
                 how well they perform. Your Steam library must be set to public.
               </p>
+              {/* Full navigation: this is an API route that redirects to Steam, not a page */}
+              {/* oxlint-disable-next-line no-html-link-for-pages */}
               <a
                 href="/api/connections/steam/start"
                 onClick={() => trackEvent({ name: 'steam-library-link-click' })}

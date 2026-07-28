@@ -112,7 +112,12 @@ export class ReportService {
     try {
       const verdict = await this.judgeReviewOrThrow(review, event.reason);
       const reporterName = await this.resolveReporterName(event.reporterUserId);
-      await this.postModerationAlert(review, verdict, reporterName, event.reason);
+      await this.postModerationAlert(
+        review,
+        verdict,
+        reporterName,
+        event.reason,
+      );
     } catch (error) {
       console.error('Failed to dispatch moderation alert:', error);
       await this.releaseAlert(event.reviewId);

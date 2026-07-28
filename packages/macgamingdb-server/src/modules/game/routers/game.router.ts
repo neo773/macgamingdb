@@ -42,7 +42,12 @@ export class GameRouter {
     input: z.object({ query: z.string() }),
     output: z.array(GameSearchResultSchema),
     meta: {
-      openapi: { method: 'GET', path: '/games/search', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/search',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async search(@Input('query') query: string) {
@@ -53,7 +58,12 @@ export class GameRouter {
     input: z.object({ gameId: z.string() }),
     output: CoverArtSchema,
     meta: {
-      openapi: { method: 'GET', path: '/games/{gameId}/cover-art', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/{gameId}/cover-art',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getCoverArt(@Input('gameId') gameId: string) {
@@ -68,7 +78,12 @@ export class GameRouter {
     }),
     output: RatingCountsSchema,
     meta: {
-      openapi: { method: 'GET', path: '/games/filter-counts', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/filter-counts',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getFilterCounts(
@@ -93,7 +108,12 @@ export class GameRouter {
     }),
     output: GamesPageSchema,
     meta: {
-      openapi: { method: 'GET', path: '/games', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getGames(
@@ -114,7 +134,12 @@ export class GameRouter {
     input: z.void(),
     output: z.array(SitemapEntrySchema),
     meta: {
-      openapi: { method: 'GET', path: '/games/sitemap-entries', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/sitemap-entries',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getSitemapEntries() {
@@ -125,7 +150,12 @@ export class GameRouter {
     input: z.object({ id: z.string() }),
     output: GameByIdSchema,
     meta: {
-      openapi: { method: 'GET', path: '/games/{id}', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/{id}',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getById(@Input('id') id: string) {
@@ -141,7 +171,12 @@ export class GameRouter {
     }),
     output: z.array(z.object({ original: z.string(), signed: z.string() })),
     meta: {
-      openapi: { method: 'GET', path: '/screenshots/signed-urls', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/screenshots/signed-urls',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getScreenshotSignedUrls(@Input('screenshots') screenshots: string[]) {
@@ -152,7 +187,12 @@ export class GameRouter {
     input: z.object({ gameId: z.string() }),
     output: GamePricesSchema,
     meta: {
-      openapi: { method: 'GET', path: '/games/{gameId}/prices', protect: false, tags: ['games'] },
+      openapi: {
+        method: 'GET',
+        path: '/games/{gameId}/prices',
+        protect: false,
+        tags: ['games'],
+      },
     },
   })
   async getPrices(

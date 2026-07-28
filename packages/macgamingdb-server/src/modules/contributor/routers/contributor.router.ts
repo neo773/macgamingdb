@@ -16,7 +16,12 @@ export class ContributorRouter {
     input: z.object({ id: z.string() }),
     output: ContributorDetailSchema,
     meta: {
-      openapi: { method: 'GET', path: '/contributors/{id}', protect: false, tags: ['contributors'] },
+      openapi: {
+        method: 'GET',
+        path: '/contributors/{id}',
+        protect: false,
+        tags: ['contributors'],
+      },
     },
   })
   async getById(@Input('id') id: string) {
@@ -30,7 +35,12 @@ export class ContributorRouter {
     }),
     output: ContributorsPageSchema,
     meta: {
-      openapi: { method: 'GET', path: '/contributors', protect: false, tags: ['contributors'] },
+      openapi: {
+        method: 'GET',
+        path: '/contributors',
+        protect: false,
+        tags: ['contributors'],
+      },
     },
   })
   async getTopContributors(

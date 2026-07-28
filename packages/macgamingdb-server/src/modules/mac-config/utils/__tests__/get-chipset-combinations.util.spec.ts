@@ -12,7 +12,9 @@ describe('getChipsetCombinations', () => {
 
   it('formats BASE variant labels without suffix', () => {
     const combinations = getChipsetCombinations();
-    const m1Base = combinations.find((combination) => combination.value === 'M1-BASE');
+    const m1Base = combinations.find(
+      (combination) => combination.value === 'M1-BASE',
+    );
 
     expect(m1Base).toBeDefined();
     expect(m1Base?.label).toBe('M1');
@@ -20,8 +22,12 @@ describe('getChipsetCombinations', () => {
 
   it('formats non-BASE variant labels with suffix', () => {
     const combinations = getChipsetCombinations();
-    const m1Pro = combinations.find((combination) => combination.value === 'M1-PRO');
-    const m3Max = combinations.find((combination) => combination.value === 'M3-MAX');
+    const m1Pro = combinations.find(
+      (combination) => combination.value === 'M1-PRO',
+    );
+    const m3Max = combinations.find(
+      (combination) => combination.value === 'M3-MAX',
+    );
 
     expect(m1Pro?.label).toBe('M1 PRO');
     expect(m3Max?.label).toBe('M3 MAX');

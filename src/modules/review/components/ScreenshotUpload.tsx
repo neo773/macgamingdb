@@ -169,7 +169,6 @@ export const ScreenshotUpload = ({
                     <ImageOff className="w-8 h-8" />
                   </div>
                 ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={url}
                     alt={`Screenshot ${index + 1}`}

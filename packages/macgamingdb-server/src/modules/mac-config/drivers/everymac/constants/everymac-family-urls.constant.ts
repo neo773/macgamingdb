@@ -10,7 +10,8 @@ export const EVERYMAC_FAMILY_URLS: Partial<Record<MacFamily, string>> = {
     'https://everymac.com/systems/apple/mac_mini/all-apple-silicon-mac-mini-models.html',
   MacPro:
     'https://everymac.com/systems/apple/mac_pro/all-apple-silicon-mac-pro-models.html',
-  MacStudio: 'https://everymac.com/systems/apple/mac-studio/index-macstudio.html',
+  MacStudio:
+    'https://everymac.com/systems/apple/mac-studio/index-macstudio.html',
   MacBookAir:
     'https://everymac.com/systems/apple/macbook-air/all-apple-silicon-macbook-air-models.html',
 };
