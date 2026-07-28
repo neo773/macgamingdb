@@ -24,6 +24,7 @@ import { type AppRouter } from 'macgamingdb-server/generated';
 import { trpc } from '@/modules/trpc/trpc';
 import { getDeviceIcon } from '@/modules/review/utils/getDeviceIcon';
 import { getHumanReadableFamily } from '@/modules/review/utils/getHumanReadableFamily';
+import { Picture } from 'macgamingdb-ui/display/Picture';
 
 export type MacConfig =
   inferRouterOutputs<AppRouter>['review']['getMacConfigs'][number];
@@ -116,7 +117,7 @@ const MacConfigGuide = memo(() => {
               </span>
             </div>
             <div className="ml-9">
-              <img
+              <Picture
                 src="/images/guide/how-find-specs/1.jpeg"
                 className="w-full max-w-md rounded-lg border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-shadow"
                 alt="Click Apple icon"
@@ -134,7 +135,7 @@ const MacConfigGuide = memo(() => {
               </span>
             </div>
             <div className="ml-9">
-              <img
+              <Picture
                 src="/images/guide/how-find-specs/2.jpeg"
                 className="w-full max-w-md rounded-lg border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-shadow"
                 alt="Click About This Mac"

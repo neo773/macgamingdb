@@ -1,6 +1,6 @@
 FROM oven/bun:1.3.14 AS deps
 WORKDIR /app
-COPY package.json bun.lock ./
+COPY package.json bun.lock bunfig.toml ./
 COPY packages/macgamingdb-server/package.json packages/macgamingdb-server/
 COPY packages/macgamingdb-shared/package.json packages/macgamingdb-shared/
 COPY packages/macgamingdb-emails/package.json packages/macgamingdb-emails/

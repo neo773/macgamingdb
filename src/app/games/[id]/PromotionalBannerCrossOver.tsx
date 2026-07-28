@@ -1,4 +1,5 @@
 'use client';
+import { Picture } from 'macgamingdb-ui/display/Picture';
 
 const CheckIcon = () => (
   <svg
@@ -66,7 +67,7 @@ export const PromotionalBannerCrossOver = () => {
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
           {/* Logo */}
-          <img
+          <Picture
             src="/images/promotions/crossover-logo.png"
             alt="CrossOver"
             className="h-14 mb-6 drop-shadow-lg filter invert"

@@ -1,4 +1,5 @@
-import { CHIPSET_VARIANTS, ChipsetEnum, type Chipset } from '../../../schema';
+import { type Chipset } from '../../../schema';
+import { CHIPSET_VARIANTS, CHIPSETS } from '../../../schema/constants';
 
 export type ChipsetCombination = {
   value: string;
@@ -15,7 +16,7 @@ const formatLabel = (chipset: Chipset, variant: string): string =>
 
 export const getChipsetCombinations = (): ChipsetCombination[] => {
   const combinations: ChipsetCombination[] = [];
-  for (const chipset of ChipsetEnum.options) {
+  for (const chipset of CHIPSETS) {
     for (const variant of CHIPSET_VARIANTS[chipset]) {
       combinations.push({
         value: `${chipset}-${variant}`,
@@ -27,7 +28,7 @@ export const getChipsetCombinations = (): ChipsetCombination[] => {
 };
 
 export const getGroupedChipsetCombinations = (): ChipsetGroup[] =>
-  ChipsetEnum.options.map((chipset) => ({
+  CHIPSETS.map((chipset) => ({
     chipset,
     variants: CHIPSET_VARIANTS[chipset].map((variant) => ({
       value: `${chipset}-${variant}`,

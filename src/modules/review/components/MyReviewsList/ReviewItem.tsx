@@ -20,12 +20,11 @@ import { ReviewCard } from '@/modules/review/components/ReviewCard';
 import { ExpandableReviewNote } from '@/modules/review/components/ExpandableReviewNote';
 import { ScreenshotDisplay } from '@/modules/review/components/ScreenshotDisplay';
 import { type SteamAppData } from 'macgamingdb-server/modules/game/drivers/steam/types/steam-app-data';
+import { type Performance } from 'macgamingdb-server/schema';
 import {
-  PerformanceEnum,
-  PlayMethodEnum,
+  PERFORMANCE_RATINGS,
   SOFTWARE_VERSIONS,
-  type Performance,
-} from 'macgamingdb-server/schema';
+} from 'macgamingdb-server/schema/constants';
 import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
@@ -46,11 +45,11 @@ export const ReviewItem = ({
     useReviewDraft(review);
 
   const hasSoftwareVersion =
-    review.playMethod === PlayMethodEnum.enum.CROSSOVER ||
-    review.playMethod === PlayMethodEnum.enum.PARALLELS;
+    review.playMethod === 'CROSSOVER' ||
+    review.playMethod === 'PARALLELS';
 
   const softwareVersionOptions = hasSoftwareVersion
-    ? review.playMethod === PlayMethodEnum.enum.CROSSOVER
+    ? review.playMethod === 'CROSSOVER'
       ? SOFTWARE_VERSIONS.CROSSOVER
       : SOFTWARE_VERSIONS.PARALLELS
     : [];
@@ -140,7 +139,7 @@ export const ReviewItem = ({
                       <SelectValue placeholder="Select performance rating" />
                     </SelectTrigger>
                     <SelectContent>
-                      {PerformanceEnum.options.map((rating) => (
+                      {PERFORMANCE_RATINGS.map((rating) => (
                         <SelectItem key={rating} value={rating}>
                           {transformPerformanceRating(rating)}
                         </SelectItem>

@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'macgamingdb-ui/input/Select';
-import { type PlayMethod, SOFTWARE_VERSIONS } from 'macgamingdb-server/schema';
+import { type PlayMethod } from 'macgamingdb-server/schema';
+import { SOFTWARE_VERSIONS } from 'macgamingdb-server/schema/constants';
 
 interface SoftwareVersionSelectProps {
   playMethod: PlayMethod;
