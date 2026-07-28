@@ -56,3 +56,5 @@ dev.db-wal
 packages/macgamingdb-server/prisma/prod-snapshot.db
 packages/macgamingdb-server/prisma/prod-migration-test.db
 packages/*/dist/
+/dist/
+.vinext/
