@@ -1,0 +1,23 @@
+package.json
+  s_a195378c952164::t_90fdc2fe62cd22 137-140
+patches/vinext@1.0.0-beta.4.patch
+  s_a195378c952164::t_90fdc2fe62cd22 1-38
+bun.lock
+  s_a195378c952164::t_bbb86514cdb72c 173-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c1645faa99a60aac4c2c076d2dce927ab16c14d4",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
