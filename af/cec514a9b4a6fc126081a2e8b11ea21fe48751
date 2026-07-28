@@ -1,0 +1,169 @@
+packages/macgamingdb-server/src/database/schema.ts
+  s_a195378c952164::t_b1e5e929ebacb8 1-9,29-30,40-41,49-50,58-59,64-65,69-88,90-129,131-147,149-161,163-180,182-251,257-272,278-280,292-323,325-359,380-388,390-402,411-414,417-425,434-437
+packages/macgamingdb-server/src/database/commands/migrate-database.command.ts
+  s_a195378c952164::t_b1e5e929ebacb8 117-120,150-159,166-168
+src/app/my-reviews/client.tsx
+  s_a195378c952164::t_5551a208d69fe7 65
+packages/macgamingdb-server/src/database/seeds/mac-configs.json
+  s_a195378c952164::t_b1e5e929ebacb8 1-918
+src/app/blog/how-to-play-windows-games-on-mac/page.mdx
+  s_a195378c952164::t_b1e5e929ebacb8 2-5,13,32-43,85,93,107,141-143,145-146,154-158,245
+packages/macgamingdb-ui/src/display/Card/Card.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 18,31,54,67,77
+packages/macgamingdb-ui/src/display/Table/Table.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 6,34,60,73,86
+src/modules/layout/components/Header.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 7-18
+packages/macgamingdb-ui/src/feedback/Alert/Alert.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 37
+packages/macgamingdb-server/src/modules/review/routers/review.router.ts
+  s_a195378c952164::t_b1e5e929ebacb8 3-10,50-55,69-74,87-92,108-113,143-148,168-171,187-192,222-227
+packages/macgamingdb-server/src/schema/constants.ts
+  s_a195378c952164::t_b1e5e929ebacb8 3-8
+packages/macgamingdb-server/src/modules/game/drivers/igdb/utils/igdb-image-url.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 1
+packages/macgamingdb-server/src/modules/game/services/game.service.ts
+  s_a195378c952164::t_b1e5e929ebacb8 130-132,206-208,221-225,372-390,482
+tsconfig.json
+  s_a195378c952164::t_b1e5e929ebacb8 4,29,39
+next.config.ts
+  s_a195378c952164::t_b1e5e929ebacb8 1,3
+packages/macgamingdb-server/src/modules/library/drivers/steam/services/steam-web-api.service.ts
+  s_a195378c952164::t_b1e5e929ebacb8 26-28
+packages/macgamingdb-server/src/modules/review/utils/calculate-translation-layer-stats.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 10-12
+packages/macgamingdb-server/tsconfig.build.json
+  s_a195378c952164::t_b1e5e929ebacb8 16-18
+packages/macgamingdb-server/drizzle/migrations/meta/0004_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,291,296,301,306,311,331-332,340-341,349-350,431,436,441,446,451,502,574,583-584,656,661,670-671,751,756,761,770-771,779-780,845,917
+src/modules/review/hooks/useCreateReview.ts
+  s_a195378c952164::t_b1e5e929ebacb8 74
+package.json
+  s_a195378c952164::t_05f7c885f56c5d 111-112
+  s_a195378c952164::t_0c4a8e8d3960d5 26-27,30-31
+packages/macgamingdb-server/src/modules/library/controllers/steam-connection.controller.ts
+  s_a195378c952164::t_b1e5e929ebacb8 38-39
+packages/macgamingdb-ui/src/feedback/Dialog/Dialog.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 75,85
+packages/macgamingdb-server/src/engine/utils/get-region.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 26-28
+src/modules/search/components/filters/PerformanceFilter.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 26
+packages/macgamingdb-server/drizzle/migrations/meta/0005_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,291,296,301,306,311,331-332,340-341,349-350,394,403-404,411,560,565,570,575,580,631,703,712-713,785,790,799-800,880,885,890,899-900,908-909,974,1046
+packages/macgamingdb-server/src/modules/game/routers/game.router.ts
+  s_a195378c952164::t_b1e5e929ebacb8 45-50,61-66,81-86,111-116,137-142,153-158,174-179,190-195
+packages/macgamingdb-server/src/modules/report/drivers/discord/utils/build-confidence-bar.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 5
+.vscode/setttings.json
+  s_a195378c952164::t_b1e5e929ebacb8 2,4-5,7-8,10-11,13-14,16-20,22-23,25-32
+  s_a195378c952164::t_0511fab32a66d5 3,6,12,15,21,24
+packages/macgamingdb-server/src/modules/mac-config/utils/__tests__/get-chipset-combinations.util.spec.ts
+  s_a195378c952164::t_b1e5e929ebacb8 15-17,25-30
+packages/macgamingdb-server/src/modules/review/services/review.service.ts
+  s_a195378c952164::t_b1e5e929ebacb8 130-133,210-212,301-304,307-309,351-354,444-447,450-452
+packages/macgamingdb-server/drizzle/migrations/meta/_journal.json
+  s_a195378c952164::t_b1e5e929ebacb8 76
+packages/macgamingdb-server/src/modules/traffic/routers/traffic.router.ts
+  s_a195378c952164::t_b1e5e929ebacb8 7-9
+packages/macgamingdb-server/src/database/drizzle.ts
+  s_a195378c952164::t_b1e5e929ebacb8 4
+packages/macgamingdb-server/src/modules/game/drivers/igdb/services/igdb-api-client.service.ts
+  s_a195378c952164::t_b1e5e929ebacb8 89-92
+src/modules/game/components/GamePageError.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 29-30
+components.json
+  s_a195378c952164::t_b1e5e929ebacb8 21
+postcss.config.mjs
+  s_a195378c952164::t_b1e5e929ebacb8 2
+src/app/profile/client.tsx
+  s_a195378c952164::t_c65a3ad8ab9a52 6
+packages/macgamingdb-server/drizzle/migrations/meta/0009_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,320,325,330,335,340,360-361,369-370,378-379,423,432-433,440,567,572,577,582,633,705,714-715,787,792,801-802,882,887,892,901-902,910-911,976,1204
+vite.config.ts
+  s_a195378c952164::t_b1e5e929ebacb8 1-7,9,14,22-25,27
+src/modules/review/components/ExpandableReviewNote.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 66
+packages/macgamingdb-server/src/modules/library/routers/library.router.ts
+  s_a195378c952164::t_b1e5e929ebacb8 37-42,54-59,71-76,88-93,105-110
+src/app/library/client.tsx
+  s_a195378c952164::t_33df08e7a6fe8d 144-145
+packages/macgamingdb-server/src/engine/core-modules/logger/create-logger.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 5-9
+scripts/test-production-migration.ts
+  s_a195378c952164::t_b1e5e929ebacb8 50-52,70-74,78-82,86-88
+src/modules/review/components/MyReviewsList/ReviewItem.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 47
+drizzle.config.ts
+  s_a195378c952164::t_b1e5e929ebacb8 8-10
+src/modules/auth/components/SignInWithApple.tsx
+  s_a195378c952164::t_f6a71f75cb5861 86
+packages/macgamingdb-server/src/modules/mac-config/utils/parse-mac-specification.util.ts
+  s_a195378c952164::t_b1e5e929ebacb8 6-8
+src/modules/review/components/SelectMacConfiguration.tsx
+  s_a195378c952164::t_9f705385942718 38,54,65,73,79,248
+  s_a195378c952164::t_739cc1e089fd3c 134
+  s_a195378c952164::t_ca022cfc5f0b64 3,52,63,71,77,149,260
+  s_a195378c952164::t_b1e5e929ebacb8 157-181,183-203,207-211,221-239,241,267-285
+packages/macgamingdb-server/drizzle/migrations/meta/0006_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,291,296,301,306,311,331-332,340-341,349-350,394,403-404,411,538,543,548,553,604,676,685-686,758,763,772-773,853,858,863,872-873,881-882,947,1019
+.oxfmtrc.json
+  s_a195378c952164::t_4ccee53d264505 7-12,16
+  s_a195378c952164::t_d64ab29a73258b 2,5-6,17
+  s_a195378c952164::t_3de9c5767a3433 13-15
+packages/macgamingdb-server/src/modules/contributor/routers/contributor.router.ts
+  s_a195378c952164::t_b1e5e929ebacb8 19-24,38-43
+src/modules/auth/components/Account.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 51-52
+packages/macgamingdb-server/drizzle/migrations/meta/0003_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,244,249,254,259,264,284-285,293-294,302-303,362,367,372,423,495,504-505,577,582,591-592,672,677,682,691-692,700-701,766,838
+packages/macgamingdb-server/drizzle/migrations/meta/0000_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,244,249,254,259,264,269,278-279,287-288,296-297,356,361,366,417,489,498-499,564,636
+src/app/sitemap.ts
+  s_a195378c952164::t_b1e5e929ebacb8 20
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/mac-ram-limits.constant.ts
+  s_a195378c952164::t_b1e5e929ebacb8 1-5
+packages/macgamingdb-emails/emails/magic-link.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 62-63
+src/app/games/[id]/PromotionalBannerCrossOver.tsx
+  s_a195378c952164::t_b1e5e929ebacb8 96-98,117-118
+packages/macgamingdb-server/drizzle/migrations/meta/0007_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,313,318,323,328,333,353-354,362-363,371-372,416,425-426,433,560,565,570,575,626,698,707-708,780,785,794-795,875,880,885,894-895,903-904,969,1041
+packages/macgamingdb-server/drizzle/migrations/meta/0002_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,244,249,254,259,264,284-285,293-294,302-303,362,367,372,423,495,504-505,577,582,591-592,658,663,668,677-678,686-687,752,824
+packages/macgamingdb-server/src/modules/report/services/report.service.ts
+  s_a195378c952164::t_b1e5e929ebacb8 115-120
+packages/macgamingdb-server/src/modules/mac-config/drivers/everymac/constants/everymac-family-urls.constant.ts
+  s_a195378c952164::t_b1e5e929ebacb8 13-14
+packages/macgamingdb-server/drizzle/migrations/meta/0001_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,244,249,254,259,264,284-285,293-294,302-303,362,367,372,423,495,504-505,570,642
+packages/macgamingdb-server/drizzle/migrations/meta/0008_snapshot.json
+  s_a195378c952164::t_b1e5e929ebacb8 108-109,146,155-156,313,318,323,328,333,353-354,362-363,371-372,416,425-426,433,560,565,570,575,626,698,707-708,780,785,794-795,875,880,885,894-895,903-904,969,1190
+README.md
+  s_a195378c952164::t_b1e5e929ebacb8 13-15,17-19
+.oxlintrc.json
+  s_a195378c952164::t_a68c3e589395d6 90,1341-1342,1344-1346,1349
+  s_a195378c952164::t_b1e5e929ebacb8 3,123,146-147,1254,1260,1269,1296,1299,1343
+  s_a195378c952164::t_f270d7ceebbca2 1-2,4-89,91-122,124-145,148-1253,1255-1259,1261-1268,1270-1285,1287-1295,1297-1298,1300-1340,1347-1348
+  s_a195378c952164::t_47ac288c1f5e18 1286
+src/app/tailwind.css
+  s_a195378c952164::t_b1e5e929ebacb8 12-15
+bun.lock
+  s_a195378c952164::t_0966470079bd45 75-76,658-733,1248,1260,1304,1336,1394,1548,1590,1592,1598,1658,1734,1762,1764,1884,2144,2238,2240,2310,2360,2406,2428,2430,2474,2626-2627,2648,2814-2815,2818-2819,2822-2824,2848-2849,2898-2899,3128,3130,3138,3150-3151,3154-3155,3158,3194,3210,3212,3340,3434,3436,3442,3460-3461,3704,3712-3713,3750-3751,3762-3763,3768-3771,3808
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "afcec514a9b4a6fc126081a2e8b11ea21fe48751",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
