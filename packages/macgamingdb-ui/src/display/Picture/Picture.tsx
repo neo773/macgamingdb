@@ -2,18 +2,16 @@ import React from 'react';
 
 const OPTIMIZABLE_EXTENSION_PATTERN = /\.(png|jpe?g)$/i;
 
+const LAYOUT_NEUTRAL_WRAPPER: React.CSSProperties = { display: 'contents' };
+
+const HIDDEN_SOURCE: React.CSSProperties = { display: 'none' };
+
 type PictureProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   src: string;
   alt: string;
-  pictureClassName?: string;
 };
 
-export const Picture = ({
-  src,
-  alt,
-  pictureClassName = 'contents',
-  ...imageProps
-}: PictureProps) => {
+export const Picture = ({ src, alt, ...imageProps }: PictureProps) => {
   const avifSource = src.replace(OPTIMIZABLE_EXTENSION_PATTERN, '.avif');
 
   if (avifSource === src) {
@@ -21,8 +19,8 @@ export const Picture = ({
   }
 
   return (
-    <picture className={pictureClassName}>
-      <source srcSet={avifSource} type="image/avif" />
+    <picture style={LAYOUT_NEUTRAL_WRAPPER}>
+      <source srcSet={avifSource} type="image/avif" style={HIDDEN_SOURCE} />
       <img src={src} alt={alt} {...imageProps} />
     </picture>
   );
