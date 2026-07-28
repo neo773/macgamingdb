@@ -116,7 +116,7 @@ jobs:
             --write-out '\n%{http_code}' \
             --request POST \
             --header "Authorization: Bearer ${COOLIFY_TOKEN}" \
-            "${COOLIFY_URL}/api/v1/deploy?uuid=${COOLIFY_APP_UUID}&force=false")
+            "${COOLIFY_URL}/api/v1/deploy?uuid=${COOLIFY_APP_UUID}")
           status=$(printf '%s' "${response}" | tail -n 1)
           body=$(printf '%s' "${response}" | sed '$d')
           echo "Coolify responded ${status}: ${body}"
