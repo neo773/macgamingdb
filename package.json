@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:server": "bun run build:api && env $(grep -v \"^#\" .env.local | xargs) node --watch packages/macgamingdb-server/dist/main.js",
+    "dev:server": "bun run build:api && node --env-file=.env.local --watch packages/macgamingdb-server/dist/main.js",
     "db:push": "bunx drizzle-kit push",
     "db:push:prod": "NODE_ENV=production bunx --env-file=.env.prod drizzle-kit push",
     "db:generate": "bunx drizzle-kit generate",
@@ -85,6 +85,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-server-dom-webpack": "^19.2.8",
+    "reflect-metadata": "^0.2.2",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "resend": "^4.2.0",
