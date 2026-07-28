@@ -77,36 +77,22 @@ export const ReviewCard = ({
       {header && header}
       <CardHeader>
         <div className="flex justify-between items-center gap-3">
-          <div className="flex min-w-0 flex-col items-center gap-3">
-            <div className="flex min-w-0 gap-4">
-              <Picture
-                src={`/images/${review.playMethod.toLowerCase()}.png`}
-                alt={formatMethodName(review.playMethod)}
-                className="size-16 shrink-0 object-contain"
-              />
-              <div className="flex min-w-0 flex-col justify-between -mt-1">
-                <p className="font-medium text-white text-lg">
-                  {formatMethodName(review.playMethod)}
-                </p>
+          <div className="flex min-w-0 gap-4">
+            <Picture
+              src={`/images/${review.playMethod.toLowerCase()}.png`}
+              alt={formatMethodName(review.playMethod)}
+              className="size-16 shrink-0 object-contain"
+            />
+            <div className="flex min-w-0 flex-col justify-center">
+              <p className="font-medium text-white text-lg">
+                {formatMethodName(review.playMethod)}
+              </p>
 
-                {review.softwareVersion && (
-                  <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
-                    v{review.softwareVersion}
-                  </span>
-                )}
-
-                <div className="flex flex-wrap gap-2">
-                  {review.translationLayer && (
-                    <Badge variant="secondary">{review.translationLayer}</Badge>
-                  )}
-                  <Badge
-                    variant="outline"
-                    className={`${getPerformanceColor(review.performance)}`}
-                  >
-                    {review.performance.replace('_', ' ')}
-                  </Badge>
-                </div>
-              </div>
+              {review.softwareVersion && (
+                <span className="text-gray-400 text-xs ml-1 -mt-[5px]">
+                  v{review.softwareVersion}
+                </span>
+              )}
             </div>
           </div>
           <Picture
@@ -114,6 +100,18 @@ export const ReviewCard = ({
             alt={`${review.chipset} ${review.chipsetVariant}`}
             className="w-[70px] shrink-0 object-contain"
           />
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {review.translationLayer && (
+            <Badge variant="secondary">{review.translationLayer}</Badge>
+          )}
+          <Badge
+            variant="outline"
+            className={`${getPerformanceColor(review.performance)}`}
+          >
+            {review.performance.replace('_', ' ')}
+          </Badge>
         </div>
       </CardHeader>
 
