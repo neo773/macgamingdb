@@ -51,6 +51,7 @@
         "react": "^19.2.3",
         "react-dom": "^19.2.3",
         "react-server-dom-webpack": "^19.2.8",
+        "reflect-metadata": "^0.2.2",
         "remark-frontmatter": "^5.0.0",
         "remark-gfm": "^4.0.1",
         "resend": "^4.2.0",

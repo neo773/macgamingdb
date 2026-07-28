@@ -1,3 +1,7 @@
+// @nestjs/common requires reflect-metadata at load, but declares it as a peer
+// dependency, so bundler tracing does not follow it. Importing it here keeps it
+// in the standalone output.
+import 'reflect-metadata';
 import { type NextRequest, NextResponse } from 'next/server';
 import { and, eq } from 'drizzle-orm';
 import { createDrizzleClient } from 'macgamingdb-server/database';
