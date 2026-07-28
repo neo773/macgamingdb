@@ -1,0 +1,28 @@
+src/app/api/connections/steam/start/route.ts
+  s_a195378c952164::t_2a2badc6d4b44a 1-4
+src/app/api/connections/steam/callback/route.ts
+  s_a195378c952164::t_2a2badc6d4b44a 1-4
+src/app/api/connections/steam/app-callback/route.ts
+  s_a195378c952164::t_2a2badc6d4b44a 1-4
+package.json
+  s_a195378c952164::t_4c75c338039d20 88
+  s_a195378c952164::t_830e5ebb88d45d 13
+bun.lock
+  s_a195378c952164::t_b21193f3f298f9 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fc10485ca78716eb93745771f76619b6f4c8a298",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
