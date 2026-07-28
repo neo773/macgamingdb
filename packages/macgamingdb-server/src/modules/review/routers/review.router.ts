@@ -1,6 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { z } from 'zod';
-import { Ctx, Input, Mutation, Query, Router, UseMiddlewares } from 'nestjs-trpc';
+import {
+  Ctx,
+  Input,
+  Mutation,
+  Query,
+  Router,
+  UseMiddlewares,
+} from 'nestjs-trpc';
 import { AuthMiddleware } from '../../../engine/api/trpc/auth.middleware';
 import { requireUserIdOrThrow } from '../../../engine/api/trpc/require-user-id.util';
 import { type SessionContext } from '../../../engine/api/trpc/session-context.type';
@@ -40,7 +47,12 @@ export class ReviewRouter {
     input: z.void(),
     output: MyReviewsSchema,
     meta: {
-      openapi: { method: 'GET', path: '/reviews/mine', protect: true, tags: ['reviews'] },
+      openapi: {
+        method: 'GET',
+        path: '/reviews/mine',
+        protect: true,
+        tags: ['reviews'],
+      },
     },
   })
   async listMine(@Ctx() ctx: SessionContext) {
@@ -54,7 +66,12 @@ export class ReviewRouter {
     }),
     output: z.array(MacConfigSchema),
     meta: {
-      openapi: { method: 'GET', path: '/mac-configs', protect: false, tags: ['mac-configs'] },
+      openapi: {
+        method: 'GET',
+        path: '/mac-configs',
+        protect: false,
+        tags: ['mac-configs'],
+      },
     },
   })
   async getMacConfigs(
@@ -67,7 +84,12 @@ export class ReviewRouter {
     input: z.object({ identifier: z.string() }),
     output: MacConfigSchema.nullable(),
     meta: {
-      openapi: { method: 'GET', path: '/mac-configs/{identifier}', protect: false, tags: ['mac-configs'] },
+      openapi: {
+        method: 'GET',
+        path: '/mac-configs/{identifier}',
+        protect: false,
+        tags: ['mac-configs'],
+      },
     },
   })
   async getMacConfigById(@Input('identifier') identifier: string) {
@@ -83,7 +105,12 @@ export class ReviewRouter {
     }),
     output: UploadUrlSchema,
     meta: {
-      openapi: { method: 'POST', path: '/reviews/upload-url', protect: true, tags: ['reviews'] },
+      openapi: {
+        method: 'POST',
+        path: '/reviews/upload-url',
+        protect: true,
+        tags: ['reviews'],
+      },
     },
   })
   async getUploadUrl(
@@ -113,7 +140,12 @@ export class ReviewRouter {
     }),
     output: CreateReviewResultSchema,
     meta: {
-      openapi: { method: 'POST', path: '/reviews', protect: true, tags: ['reviews'] },
+      openapi: {
+        method: 'POST',
+        path: '/reviews',
+        protect: true,
+        tags: ['reviews'],
+      },
     },
   })
   async create(
@@ -133,7 +165,10 @@ export class ReviewRouter {
     },
     @Ctx() ctx: SessionContext,
   ) {
-    return this.reviewService.create({ userId: requireUserIdOrThrow(ctx), ...input });
+    return this.reviewService.create({
+      userId: requireUserIdOrThrow(ctx),
+      ...input,
+    });
   }
 
   @UseMiddlewares(AuthMiddleware)
@@ -149,7 +184,12 @@ export class ReviewRouter {
     }),
     output: MutationResultSchema,
     meta: {
-      openapi: { method: 'PATCH', path: '/reviews/{reviewId}', protect: true, tags: ['reviews'] },
+      openapi: {
+        method: 'PATCH',
+        path: '/reviews/{reviewId}',
+        protect: true,
+        tags: ['reviews'],
+      },
     },
   })
   async updateReview(
@@ -179,7 +219,12 @@ export class ReviewRouter {
     }),
     output: MutationResultSchema,
     meta: {
-      openapi: { method: 'DELETE', path: '/reviews/{reviewId}', protect: true, tags: ['reviews'] },
+      openapi: {
+        method: 'DELETE',
+        path: '/reviews/{reviewId}',
+        protect: true,
+        tags: ['reviews'],
+      },
     },
   })
   async deleteReview(

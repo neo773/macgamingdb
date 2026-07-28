@@ -105,12 +105,8 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -147,9 +143,7 @@
       "indexes": {
         "GameAlias_canonicalId_idx": {
           "name": "GameAlias_canonicalId_idx",
-          "columns": [
-            "canonicalId"
-          ],
+          "columns": ["canonicalId"],
           "isUnique": false
         }
       },
@@ -158,12 +152,8 @@
           "name": "GameAlias_canonicalId_Game_id_fk",
           "tableFrom": "GameAlias",
           "tableTo": "Game",
-          "columnsFrom": [
-            "canonicalId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["canonicalId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -298,43 +288,27 @@
       "indexes": {
         "GameReview_gameId_chipset_idx": {
           "name": "GameReview_gameId_chipset_idx",
-          "columns": [
-            "gameId",
-            "chipset"
-          ],
+          "columns": ["gameId", "chipset"],
           "isUnique": false
         },
         "GameReview_gameId_playMethod_idx": {
           "name": "GameReview_gameId_playMethod_idx",
-          "columns": [
-            "gameId",
-            "playMethod"
-          ],
+          "columns": ["gameId", "playMethod"],
           "isUnique": false
         },
         "GameReview_gameId_chipset_chipsetVariant_idx": {
           "name": "GameReview_gameId_chipset_chipsetVariant_idx",
-          "columns": [
-            "gameId",
-            "chipset",
-            "chipsetVariant"
-          ],
+          "columns": ["gameId", "chipset", "chipsetVariant"],
           "isUnique": false
         },
         "GameReview_gameId_chipset_playMethod_idx": {
           "name": "GameReview_gameId_chipset_playMethod_idx",
-          "columns": [
-            "gameId",
-            "chipset",
-            "playMethod"
-          ],
+          "columns": ["gameId", "chipset", "playMethod"],
           "isUnique": false
         },
         "GameReview_macConfigId_idx": {
           "name": "GameReview_macConfigId_idx",
-          "columns": [
-            "macConfigId"
-          ],
+          "columns": ["macConfigId"],
           "isUnique": false
         },
         "GameReview_filter_game_covering_idx": {
@@ -354,12 +328,8 @@
           "name": "GameReview_gameId_Game_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "Game",
-          "columnsFrom": [
-            "gameId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["gameId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         },
@@ -367,12 +337,8 @@
           "name": "GameReview_userId_user_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         },
@@ -380,12 +346,8 @@
           "name": "GameReview_macConfigId_MacConfig_id_fk",
           "tableFrom": "GameReview",
           "tableTo": "MacConfig",
-          "columnsFrom": [
-            "macConfigId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["macConfigId"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -466,39 +428,27 @@
       "indexes": {
         "Game_slug_key": {
           "name": "Game_slug_key",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         },
         "Game_igdbId_key": {
           "name": "Game_igdbId_key",
-          "columns": [
-            "igdbId"
-          ],
+          "columns": ["igdbId"],
           "isUnique": true
         },
         "Game_aggregatedPerformance_id_idx": {
           "name": "Game_aggregatedPerformance_id_idx",
-          "columns": [
-            "aggregatedPerformance",
-            "id"
-          ],
+          "columns": ["aggregatedPerformance", "id"],
           "isUnique": false
         },
         "Game_reviewCount_idx": {
           "name": "Game_reviewCount_idx",
-          "columns": [
-            "reviewCount"
-          ],
+          "columns": ["reviewCount"],
           "isUnique": false
         },
         "Game_aggregatedPerformance_reviewCount_idx": {
           "name": "Game_aggregatedPerformance_reviewCount_idx",
-          "columns": [
-            "aggregatedPerformance",
-            "reviewCount"
-          ],
+          "columns": ["aggregatedPerformance", "reviewCount"],
           "isUnique": false
         }
       },
@@ -549,9 +499,7 @@
       "indexes": {
         "MacConfig_identifier_key": {
           "name": "MacConfig_identifier_key",
-          "columns": [
-            "identifier"
-          ],
+          "columns": ["identifier"],
           "isUnique": true
         }
       },
@@ -623,9 +571,7 @@
       "indexes": {
         "session_token_key": {
           "name": "session_token_key",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -634,12 +580,8 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -711,18 +653,12 @@
       "indexes": {
         "UserExternalAccount_userId_provider_key": {
           "name": "UserExternalAccount_userId_provider_key",
-          "columns": [
-            "userId",
-            "provider"
-          ],
+          "columns": ["userId", "provider"],
           "isUnique": true
         },
         "UserExternalAccount_provider_externalUserId_idx": {
           "name": "UserExternalAccount_provider_externalUserId_idx",
-          "columns": [
-            "provider",
-            "externalUserId"
-          ],
+          "columns": ["provider", "externalUserId"],
           "isUnique": false
         }
       },
@@ -731,12 +667,8 @@
           "name": "UserExternalAccount_userId_user_id_fk",
           "tableFrom": "UserExternalAccount",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -816,26 +748,17 @@
       "indexes": {
         "UserLibraryEntry_userId_provider_externalGameId_key": {
           "name": "UserLibraryEntry_userId_provider_externalGameId_key",
-          "columns": [
-            "userId",
-            "provider",
-            "externalGameId"
-          ],
+          "columns": ["userId", "provider", "externalGameId"],
           "isUnique": true
         },
         "UserLibraryEntry_userId_provider_idx": {
           "name": "UserLibraryEntry_userId_provider_idx",
-          "columns": [
-            "userId",
-            "provider"
-          ],
+          "columns": ["userId", "provider"],
           "isUnique": false
         },
         "UserLibraryEntry_gameId_idx": {
           "name": "UserLibraryEntry_gameId_idx",
-          "columns": [
-            "gameId"
-          ],
+          "columns": ["gameId"],
           "isUnique": false
         }
       },
@@ -844,12 +767,8 @@
           "name": "UserLibraryEntry_userId_user_id_fk",
           "tableFrom": "UserLibraryEntry",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -857,12 +776,8 @@
           "name": "UserLibraryEntry_gameId_Game_id_fk",
           "tableFrom": "UserLibraryEntry",
           "tableTo": "Game",
-          "columnsFrom": [
-            "gameId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["gameId"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         }
@@ -927,9 +842,7 @@
       "indexes": {
         "user_email_key": {
           "name": "user_email_key",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },

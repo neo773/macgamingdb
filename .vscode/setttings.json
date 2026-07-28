@@ -1,29 +1,32 @@
 {
-    "[typescript]": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.addMissingImports": "always",
-            "source.organizeImports": "always"
-        }
-    },
-    "[javascript]": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.addMissingImports": "always",
-            "source.organizeImports": "always"
-        }
-    },
-    "[typescriptreact]": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.addMissingImports": "always",
-            "source.organizeImports": "always"
-        }
-    },
-    "[json]": {
-        "editor.formatOnSave": true
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.oxc": "explicit",
+      "source.addMissingImports": "always",
+      "source.organizeImports": "always"
     }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.oxc": "explicit",
+      "source.addMissingImports": "always",
+      "source.organizeImports": "always"
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.oxc": "explicit",
+      "source.addMissingImports": "always",
+      "source.organizeImports": "always"
+    }
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  }
 }

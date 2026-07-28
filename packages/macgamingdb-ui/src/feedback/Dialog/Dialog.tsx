@@ -72,10 +72,7 @@ const DialogContent = ({
   );
 };
 
-const DialogHeader = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const DialogHeader = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="dialog-header"
@@ -85,10 +82,7 @@ const DialogHeader = ({
   );
 };
 
-const DialogFooter = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const DialogFooter = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="dialog-footer"

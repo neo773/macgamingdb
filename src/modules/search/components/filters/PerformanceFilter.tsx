@@ -23,7 +23,7 @@ export const PerformanceFilter: React.FC<PerformanceFilterProps> = ({
     (rating) => ({
       value: rating,
       label: formatRatingLabel(rating as PerformanceLabel),
-    })
+    }),
   );
 
   const handleValueChange = (value: string) => {

@@ -1,6 +1,11 @@
 export const PLAY_METHODS = ['NATIVE', 'CROSSOVER', 'PARALLELS'] as const;
 
-export const TRANSLATION_LAYERS = ['DXVK', 'DXMT', 'D3D_METAL', 'NONE'] as const;
+export const TRANSLATION_LAYERS = [
+  'DXVK',
+  'DXMT',
+  'D3D_METAL',
+  'NONE',
+] as const;
 
 export const PERFORMANCE_RATINGS = [
   'EXCELLENT',

@@ -35,7 +35,8 @@ export class SteamConnectionController {
       return response.redirect(`${origin}/`);
     }
 
-    const { state, url } = await this.libraryService.browserLinkStartUrl(userId);
+    const { state, url } =
+      await this.libraryService.browserLinkStartUrl(userId);
 
     response.cookie(STEAM_STATE_COOKIE_NAME, state, {
       httpOnly: true,

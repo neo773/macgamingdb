@@ -15,10 +15,7 @@ const Card = ({ className, ...props }: React.ComponentProps<'div'>) => {
   );
 };
 
-const CardHeader = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const CardHeader = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="card-header"
@@ -31,10 +28,7 @@ const CardHeader = ({
   );
 };
 
-const CardTitle = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const CardTitle = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="card-title"
@@ -57,10 +51,7 @@ const CardDescription = ({
   );
 };
 
-const CardAction = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const CardAction = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="card-action"
@@ -73,10 +64,7 @@ const CardAction = ({
   );
 };
 
-const CardContent = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const CardContent = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="card-content"
@@ -86,10 +74,7 @@ const CardContent = ({
   );
 };
 
-const CardFooter = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
+const CardFooter = ({ className, ...props }: React.ComponentProps<'div'>) => {
   return (
     <div
       data-slot="card-footer"

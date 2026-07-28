@@ -59,8 +59,8 @@ export const MacGamingDBMagicLinkEmail = ({
             can safely ignore this email.
           </Text>
           <Text className="mb-8 leading-relaxed text-white opacity-90">
-            After logging in, you'll be able to add your experience reports for
-            Mac games.
+            After logging in, you&apos;ll be able to add your experience reports
+            for Mac games.
           </Text>
           <Hr className="border-gray-medium h-[0.5px] opacity-40" />
           <Link

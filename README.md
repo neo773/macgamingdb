@@ -10,18 +10,18 @@ A community-driven database for gaming performance on Apple Silicon Macs and the
 
 Two deployable services plus shared workspace packages. Bun is the package manager; everything runs on Node.js.
 
-| Piece | What it is |
-|---|---|
-| `src/` | Next.js 16 web app (App Router). Thin routes; all feature logic in `src/modules/<domain>/`. Proxies `/api/trpc` and `/api/rest` to the API server. |
+| Piece                         | What it is                                                                                                                                                                                                                                                                                                                         |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/`                        | Next.js 16 web app (App Router). Thin routes; all feature logic in `src/modules/<domain>/`. Proxies `/api/trpc` and `/api/rest` to the API server.                                                                                                                                                                                 |
 | `packages/macgamingdb-server` | NestJS API server using nestjs-trpc. `engine/` (infrastructure) vs `modules/` (domains: game, review, contributor, library, mac-config, pricing, traffic). External vendors live behind `drivers/` (Steam, IGDB, GG.deals, EveryMac). Serves tRPC at `/trpc` and a REST surface at `/rest` (consumed by the iOS app) on port 4000. |
-| `packages/macgamingdb-ui` | Shared React primitives (shadcn/Radix + Tailwind), twenty-ui-style category folders. |
-| `packages/macgamingdb-shared` | Pure cross-package utils (e.g. `isDefined`). |
-| `packages/macgamingdb-emails` | React Email templates (magic link). |
+| `packages/macgamingdb-ui`     | Shared React primitives (shadcn/Radix + Tailwind), twenty-ui-style category folders.                                                                                                                                                                                                                                               |
+| `packages/macgamingdb-shared` | Pure cross-package utils (e.g. `isDefined`).                                                                                                                                                                                                                                                                                       |
+| `packages/macgamingdb-emails` | React Email templates (magic link).                                                                                                                                                                                                                                                                                                |
 
 - **Database**: SQLite via Drizzle ORM — local file in development, [sqld](https://github.com/tursodatabase/libsql) (libSQL server) in production.
 - **Auth**: BetterAuth (magic link, Sign in with Apple, Steam OpenID account linking).
 - **Game sources**: Steam store + IGDB (Twitch client credentials). Steam is canonical when a game exists on both.
-- **Conventions**: see `CODE_STYLE.md` — hard rules, enforced.
+- **Conventions**: see `docs/CODE_STYLE.md` — hard rules, enforced.
 
 ## Development
 

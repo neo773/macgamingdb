@@ -114,7 +114,10 @@ export class MigrateDatabaseCommand extends CommandRunner {
     });
     const journal = journalSchema.parse(
       JSON.parse(
-        readFileSync(path.join(MIGRATIONS_FOLDER, 'meta', '_journal.json'), 'utf-8'),
+        readFileSync(
+          path.join(MIGRATIONS_FOLDER, 'meta', '_journal.json'),
+          'utf-8',
+        ),
       ),
     );
     return journal.entries.slice(appliedCount);
@@ -144,16 +147,25 @@ export class MigrateDatabaseCommand extends CommandRunner {
         try {
           await this.db.run(sql.raw(statement));
         } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          if (/duplicate column|already exists|no such column|no such index/i.test(message)) {
-            logger.warn(`Skipping already-applied statement in ${entry.tag}: ${message}`);
+          const message =
+            error instanceof Error ? error.message : String(error);
+          if (
+            /duplicate column|already exists|no such column|no such index/i.test(
+              message,
+            )
+          ) {
+            logger.warn(
+              `Skipping already-applied statement in ${entry.tag}: ${message}`,
+            );
             continue;
           }
           throw error;
         }
       }
 
-      const migrationHash = createHash('sha256').update(migrationSql).digest('hex');
+      const migrationHash = createHash('sha256')
+        .update(migrationSql)
+        .digest('hex');
       await this.db.run(
         sql`INSERT INTO __drizzle_migrations (hash, created_at) VALUES (${migrationHash}, ${entry.when})`,
       );

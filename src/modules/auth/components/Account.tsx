@@ -48,7 +48,8 @@ export const Account = () => {
   }
 
   if (session?.user?.id) {
-    const avatarName = session.user.name || session.user.email || session.user.id;
+    const avatarName =
+      session.user.name || session.user.email || session.user.id;
 
     return (
       <DropdownMenu>

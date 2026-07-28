@@ -23,7 +23,9 @@ export class SteamWebApiService {
       throw new Error('STEAM_WEB_API_KEY not configured');
     }
 
-    const url = new URL(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1/`);
+    const url = new URL(
+      `${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1/`,
+    );
     url.searchParams.set('key', apiKey);
     url.searchParams.set('steamid', steamId);
     url.searchParams.set('include_appinfo', '1');

@@ -71,8 +71,7 @@ export const useCreateReview = ({
     screenshots: [],
     softwareVersion: defaultSoftwareVersion(initialPlayMethod),
     playMethod: initialPlayMethod,
-    translationLayer:
-      preferences.translationLayer ?? TRANSLATION_LAYERS[0],
+    translationLayer: preferences.translationLayer ?? TRANSLATION_LAYERS[0],
     performance: PERFORMANCE_RATINGS[1],
     graphicsSettings: GRAPHICS_SETTINGS[1],
     macConfigIdentifier: preferences.macConfigIdentifier || '',

@@ -1,4 +1,12 @@
-import { sqliteTable, sqliteView, text, integer, index, uniqueIndex, primaryKey } from 'drizzle-orm/sqlite-core';
+import {
+  sqliteTable,
+  sqliteView,
+  text,
+  integer,
+  index,
+  uniqueIndex,
+  primaryKey,
+} from 'drizzle-orm/sqlite-core';
 import { relations, isNull } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
 import type { GameSource } from '../modules/game/types/game-source.type';
@@ -18,7 +26,8 @@ export const TranslationLayer = {
   D3D_METAL: 'D3D_METAL',
   NONE: 'NONE',
 } as const;
-export type TranslationLayer = (typeof TranslationLayer)[keyof typeof TranslationLayer];
+export type TranslationLayer =
+  (typeof TranslationLayer)[keyof typeof TranslationLayer];
 
 export const PerformanceRating = {
   UNPLAYABLE: 'UNPLAYABLE',
@@ -28,7 +37,8 @@ export const PerformanceRating = {
   VERY_GOOD: 'VERY_GOOD',
   EXCELLENT: 'EXCELLENT',
 } as const;
-export type PerformanceRating = (typeof PerformanceRating)[keyof typeof PerformanceRating];
+export type PerformanceRating =
+  (typeof PerformanceRating)[keyof typeof PerformanceRating];
 
 export const GraphicsSetting = {
   LOW: 'LOW',
@@ -36,7 +46,8 @@ export const GraphicsSetting = {
   HIGH: 'HIGH',
   ULTRA: 'ULTRA',
 } as const;
-export type GraphicsSetting = (typeof GraphicsSetting)[keyof typeof GraphicsSetting];
+export type GraphicsSetting =
+  (typeof GraphicsSetting)[keyof typeof GraphicsSetting];
 
 export const ChipsetVariant = {
   BASE: 'BASE',
@@ -44,132 +55,229 @@ export const ChipsetVariant = {
   MAX: 'MAX',
   ULTRA: 'ULTRA',
 } as const;
-export type ChipsetVariant = (typeof ChipsetVariant)[keyof typeof ChipsetVariant];
+export type ChipsetVariant =
+  (typeof ChipsetVariant)[keyof typeof ChipsetVariant];
 
 export const LibraryProvider = {
   STEAM: 'STEAM',
 } as const;
-export type LibraryProvider = (typeof LibraryProvider)[keyof typeof LibraryProvider];
+export type LibraryProvider =
+  (typeof LibraryProvider)[keyof typeof LibraryProvider];
 
 // ─── Tables ──────────────────────────────────────────────────────────────────
 
-export const users = sqliteTable('user', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  email: text('email'),
-  name: text('name'),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
-  emailVerified: integer('emailVerified', { mode: 'boolean' }).notNull(),
-  image: text('image'),
-}, (table) => [
-  uniqueIndex('user_email_key').on(table.email),
-]);
+export const users = sqliteTable(
+  'user',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    email: text('email'),
+    name: text('name'),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+    updatedAt: text('updatedAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString())
+      .$onUpdate(() => new Date().toISOString()),
+    emailVerified: integer('emailVerified', { mode: 'boolean' }).notNull(),
+    image: text('image'),
+  },
+  (table) => [uniqueIndex('user_email_key').on(table.email)],
+);
 
-export const games = sqliteTable('Game', {
-  id: text('id').primaryKey(),
-  slug: text('slug'),
-  name: text('name'),
-  headerImage: text('headerImage'),
-  descriptionHtml: text('descriptionHtml'),
-  website: text('website'),
-  releaseDate: text('releaseDate'),
-  releaseYear: integer('releaseYear'),
-  developers: text('developers', { mode: 'json' }).$type<string[]>(),
-  publishers: text('publishers', { mode: 'json' }).$type<string[]>(),
-  genres: text('genres', { mode: 'json' }).$type<string[]>(),
-  screenshots: text('screenshots', { mode: 'json' }).$type<string[]>(),
-  updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-  aggregatedPerformance: text('aggregatedPerformance').$type<PerformanceRating>(),
-  reviewCount: integer('reviewCount').notNull().default(0),
-}, (table) => [
-  uniqueIndex('Game_slug_key').on(table.slug),
-  index('Game_aggregatedPerformance_id_idx').on(table.aggregatedPerformance, table.id),
-  index('Game_reviewCount_idx').on(table.reviewCount),
-  index('Game_aggregatedPerformance_reviewCount_idx').on(table.aggregatedPerformance, table.reviewCount),
-]);
+export const games = sqliteTable(
+  'Game',
+  {
+    id: text('id').primaryKey(),
+    slug: text('slug'),
+    name: text('name'),
+    headerImage: text('headerImage'),
+    descriptionHtml: text('descriptionHtml'),
+    website: text('website'),
+    releaseDate: text('releaseDate'),
+    releaseYear: integer('releaseYear'),
+    developers: text('developers', { mode: 'json' }).$type<string[]>(),
+    publishers: text('publishers', { mode: 'json' }).$type<string[]>(),
+    genres: text('genres', { mode: 'json' }).$type<string[]>(),
+    screenshots: text('screenshots', { mode: 'json' }).$type<string[]>(),
+    updatedAt: text('updatedAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString())
+      .$onUpdate(() => new Date().toISOString()),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+    aggregatedPerformance: text(
+      'aggregatedPerformance',
+    ).$type<PerformanceRating>(),
+    reviewCount: integer('reviewCount').notNull().default(0),
+  },
+  (table) => [
+    uniqueIndex('Game_slug_key').on(table.slug),
+    index('Game_aggregatedPerformance_id_idx').on(
+      table.aggregatedPerformance,
+      table.id,
+    ),
+    index('Game_reviewCount_idx').on(table.reviewCount),
+    index('Game_aggregatedPerformance_reviewCount_idx').on(
+      table.aggregatedPerformance,
+      table.reviewCount,
+    ),
+  ],
+);
 
-export const gameSourceLinks = sqliteTable('GameSourceLink', {
-  gameId: text('gameId').notNull().references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  source: text('source').$type<GameSource>().notNull(),
-  externalId: text('externalId').notNull(),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-}, (table) => [
-  primaryKey({ columns: [table.source, table.externalId] }),
-  index('GameSourceLink_gameId_idx').on(table.gameId),
-]);
+export const gameSourceLinks = sqliteTable(
+  'GameSourceLink',
+  {
+    gameId: text('gameId')
+      .notNull()
+      .references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    source: text('source').$type<GameSource>().notNull(),
+    externalId: text('externalId').notNull(),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (table) => [
+    primaryKey({ columns: [table.source, table.externalId] }),
+    index('GameSourceLink_gameId_idx').on(table.gameId),
+  ],
+);
 
-export const gameAliases = sqliteTable('GameAlias', {
-  aliasId: text('aliasId').primaryKey(),
-  canonicalId: text('canonicalId').notNull().references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-}, (table) => [
-  index('GameAlias_canonicalId_idx').on(table.canonicalId),
-]);
+export const gameAliases = sqliteTable(
+  'GameAlias',
+  {
+    aliasId: text('aliasId').primaryKey(),
+    canonicalId: text('canonicalId')
+      .notNull()
+      .references(() => games.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (table) => [index('GameAlias_canonicalId_idx').on(table.canonicalId)],
+);
 
-export const macConfigs = sqliteTable('MacConfig', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  identifier: text('identifier').notNull(),
-  metadata: text('metadata').notNull(),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
-}, (table) => [
-  uniqueIndex('MacConfig_identifier_key').on(table.identifier),
-]);
+export const macConfigs = sqliteTable(
+  'MacConfig',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    identifier: text('identifier').notNull(),
+    metadata: text('metadata').notNull(),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+    updatedAt: text('updatedAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString())
+      .$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [uniqueIndex('MacConfig_identifier_key').on(table.identifier)],
+);
 
-export const gameReviews = sqliteTable('GameReview', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  gameId: text('gameId').notNull().references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-  userId: text('userId').notNull().references(() => users.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-  playMethod: text('playMethod').$type<PlayMethod>().notNull(),
-  translationLayer: text('translationLayer').$type<TranslationLayer>(),
-  performance: text('performance').$type<PerformanceRating>().notNull(),
-  fps: integer('fps'),
-  graphicsSettings: text('graphicsSettings').$type<GraphicsSetting>(),
-  resolution: text('resolution'),
-  chipset: text('chipset').notNull(),
-  chipsetVariant: text('chipsetVariant').$type<ChipsetVariant>().notNull(),
-  macConfigId: text('macConfigId').references(() => macConfigs.id, { onDelete: 'set null', onUpdate: 'cascade' }),
-  notes: text('notes'),
-  screenshots: text('screenshots'),
-  softwareVersion: text('softwareVersion'),
-  reportCount: integer('reportCount').notNull().default(0),
-  lastReportedAt: text('lastReportedAt'),
-  moderationAlertedAt: text('moderationAlertedAt'),
-  hiddenAt: text('hiddenAt'),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updatedAt').$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
-}, (table) => [
-  index('GameReview_gameId_chipset_idx').on(table.gameId, table.chipset),
-  index('GameReview_gameId_playMethod_idx').on(table.gameId, table.playMethod),
-  index('GameReview_gameId_chipset_chipsetVariant_idx').on(table.gameId, table.chipset, table.chipsetVariant),
-  index('GameReview_gameId_chipset_playMethod_idx').on(table.gameId, table.chipset, table.playMethod),
-  index('GameReview_macConfigId_idx').on(table.macConfigId),
-  index('GameReview_filter_game_covering_idx').on(table.chipset, table.chipsetVariant, table.playMethod, table.performance, table.gameId),
-]);
+export const gameReviews = sqliteTable(
+  'GameReview',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    gameId: text('gameId')
+      .notNull()
+      .references(() => games.id, {
+        onDelete: 'restrict',
+        onUpdate: 'cascade',
+      }),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, {
+        onDelete: 'restrict',
+        onUpdate: 'cascade',
+      }),
+    playMethod: text('playMethod').$type<PlayMethod>().notNull(),
+    translationLayer: text('translationLayer').$type<TranslationLayer>(),
+    performance: text('performance').$type<PerformanceRating>().notNull(),
+    fps: integer('fps'),
+    graphicsSettings: text('graphicsSettings').$type<GraphicsSetting>(),
+    resolution: text('resolution'),
+    chipset: text('chipset').notNull(),
+    chipsetVariant: text('chipsetVariant').$type<ChipsetVariant>().notNull(),
+    macConfigId: text('macConfigId').references(() => macConfigs.id, {
+      onDelete: 'set null',
+      onUpdate: 'cascade',
+    }),
+    notes: text('notes'),
+    screenshots: text('screenshots'),
+    softwareVersion: text('softwareVersion'),
+    reportCount: integer('reportCount').notNull().default(0),
+    lastReportedAt: text('lastReportedAt'),
+    moderationAlertedAt: text('moderationAlertedAt'),
+    hiddenAt: text('hiddenAt'),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+    updatedAt: text('updatedAt')
+      .$defaultFn(() => new Date().toISOString())
+      .$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    index('GameReview_gameId_chipset_idx').on(table.gameId, table.chipset),
+    index('GameReview_gameId_playMethod_idx').on(
+      table.gameId,
+      table.playMethod,
+    ),
+    index('GameReview_gameId_chipset_chipsetVariant_idx').on(
+      table.gameId,
+      table.chipset,
+      table.chipsetVariant,
+    ),
+    index('GameReview_gameId_chipset_playMethod_idx').on(
+      table.gameId,
+      table.chipset,
+      table.playMethod,
+    ),
+    index('GameReview_macConfigId_idx').on(table.macConfigId),
+    index('GameReview_filter_game_covering_idx').on(
+      table.chipset,
+      table.chipsetVariant,
+      table.playMethod,
+      table.performance,
+      table.gameId,
+    ),
+  ],
+);
 
 export const visibleGameReviews = sqliteView('VisibleGameReview').as((qb) =>
   qb.select().from(gameReviews).where(isNull(gameReviews.hiddenAt)),
 );
 
-export const sessions = sqliteTable('session', {
-  id: text('id').primaryKey(),
-  expiresAt: text('expiresAt').notNull(),
-  token: text('token').notNull(),
-  createdAt: text('createdAt').notNull(),
-  updatedAt: text('updatedAt').notNull(),
-  ipAddress: text('ipAddress'),
-  userAgent: text('userAgent'),
-  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-}, (table) => [
-  uniqueIndex('session_token_key').on(table.token),
-]);
+export const sessions = sqliteTable(
+  'session',
+  {
+    id: text('id').primaryKey(),
+    expiresAt: text('expiresAt').notNull(),
+    token: text('token').notNull(),
+    createdAt: text('createdAt').notNull(),
+    updatedAt: text('updatedAt').notNull(),
+    ipAddress: text('ipAddress'),
+    userAgent: text('userAgent'),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  },
+  (table) => [uniqueIndex('session_token_key').on(table.token)],
+);
 
 export const accounts = sqliteTable('account', {
   id: text('id').primaryKey(),
   accountId: text('accountId').notNull(),
   providerId: text('providerId').notNull(),
-  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   accessToken: text('accessToken'),
   refreshToken: text('refreshToken'),
   idToken: text('idToken'),
@@ -181,35 +289,74 @@ export const accounts = sqliteTable('account', {
   updatedAt: text('updatedAt').notNull(),
 });
 
-export const userExternalAccounts = sqliteTable('UserExternalAccount', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  provider: text('provider').$type<LibraryProvider>().notNull(),
-  externalUserId: text('externalUserId').notNull(),
-  metadata: text('metadata'),
-  lastSyncedAt: text('lastSyncedAt'),
-  createdAt: text('createdAt').notNull().$defaultFn(() => new Date().toISOString()),
-  updatedAt: text('updatedAt').notNull().$defaultFn(() => new Date().toISOString()).$onUpdate(() => new Date().toISOString()),
-}, (table) => [
-  uniqueIndex('UserExternalAccount_userId_provider_key').on(table.userId, table.provider),
-  index('UserExternalAccount_provider_externalUserId_idx').on(table.provider, table.externalUserId),
-]);
+export const userExternalAccounts = sqliteTable(
+  'UserExternalAccount',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    provider: text('provider').$type<LibraryProvider>().notNull(),
+    externalUserId: text('externalUserId').notNull(),
+    metadata: text('metadata'),
+    lastSyncedAt: text('lastSyncedAt'),
+    createdAt: text('createdAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+    updatedAt: text('updatedAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString())
+      .$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    uniqueIndex('UserExternalAccount_userId_provider_key').on(
+      table.userId,
+      table.provider,
+    ),
+    index('UserExternalAccount_provider_externalUserId_idx').on(
+      table.provider,
+      table.externalUserId,
+    ),
+  ],
+);
 
-export const userLibraryEntries = sqliteTable('UserLibraryEntry', {
-  id: text('id').primaryKey().$defaultFn(() => createId()),
-  userId: text('userId').notNull().references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  provider: text('provider').$type<LibraryProvider>().notNull(),
-  externalGameId: text('externalGameId').notNull(),
-  gameId: text('gameId').references(() => games.id, { onDelete: 'set null', onUpdate: 'cascade' }),
-  name: text('name'),
-  iconHash: text('iconHash'),
-  playtimeMinutes: integer('playtimeMinutes').notNull().default(0),
-  lastSyncedAt: text('lastSyncedAt').notNull().$defaultFn(() => new Date().toISOString()),
-}, (table) => [
-  uniqueIndex('UserLibraryEntry_userId_provider_externalGameId_key').on(table.userId, table.provider, table.externalGameId),
-  index('UserLibraryEntry_userId_provider_idx').on(table.userId, table.provider),
-  index('UserLibraryEntry_gameId_idx').on(table.gameId),
-]);
+export const userLibraryEntries = sqliteTable(
+  'UserLibraryEntry',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    provider: text('provider').$type<LibraryProvider>().notNull(),
+    externalGameId: text('externalGameId').notNull(),
+    gameId: text('gameId').references(() => games.id, {
+      onDelete: 'set null',
+      onUpdate: 'cascade',
+    }),
+    name: text('name'),
+    iconHash: text('iconHash'),
+    playtimeMinutes: integer('playtimeMinutes').notNull().default(0),
+    lastSyncedAt: text('lastSyncedAt')
+      .notNull()
+      .$defaultFn(() => new Date().toISOString()),
+  },
+  (table) => [
+    uniqueIndex('UserLibraryEntry_userId_provider_externalGameId_key').on(
+      table.userId,
+      table.provider,
+      table.externalGameId,
+    ),
+    index('UserLibraryEntry_userId_provider_idx').on(
+      table.userId,
+      table.provider,
+    ),
+    index('UserLibraryEntry_gameId_idx').on(table.gameId),
+  ],
+);
 
 export const verifications = sqliteTable('verification', {
   id: text('id').primaryKey(),
@@ -230,14 +377,29 @@ export const usersRelations = relations(users, ({ many }) => ({
   libraryEntries: many(userLibraryEntries),
 }));
 
-export const userExternalAccountsRelations = relations(userExternalAccounts, ({ one }) => ({
-  user: one(users, { fields: [userExternalAccounts.userId], references: [users.id] }),
-}));
+export const userExternalAccountsRelations = relations(
+  userExternalAccounts,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userExternalAccounts.userId],
+      references: [users.id],
+    }),
+  }),
+);
 
-export const userLibraryEntriesRelations = relations(userLibraryEntries, ({ one }) => ({
-  user: one(users, { fields: [userLibraryEntries.userId], references: [users.id] }),
-  game: one(games, { fields: [userLibraryEntries.gameId], references: [games.id] }),
-}));
+export const userLibraryEntriesRelations = relations(
+  userLibraryEntries,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userLibraryEntries.userId],
+      references: [users.id],
+    }),
+    game: one(games, {
+      fields: [userLibraryEntries.gameId],
+      references: [games.id],
+    }),
+  }),
+);
 
 export const gamesRelations = relations(games, ({ many }) => ({
   reviews: many(gameReviews),
@@ -246,12 +408,21 @@ export const gamesRelations = relations(games, ({ many }) => ({
 }));
 
 export const gameAliasesRelations = relations(gameAliases, ({ one }) => ({
-  canonical: one(games, { fields: [gameAliases.canonicalId], references: [games.id] }),
+  canonical: one(games, {
+    fields: [gameAliases.canonicalId],
+    references: [games.id],
+  }),
 }));
 
-export const gameSourceLinksRelations = relations(gameSourceLinks, ({ one }) => ({
-  game: one(games, { fields: [gameSourceLinks.gameId], references: [games.id] }),
-}));
+export const gameSourceLinksRelations = relations(
+  gameSourceLinks,
+  ({ one }) => ({
+    game: one(games, {
+      fields: [gameSourceLinks.gameId],
+      references: [games.id],
+    }),
+  }),
+);
 
 export const macConfigsRelations = relations(macConfigs, ({ many }) => ({
   reviews: many(gameReviews),
@@ -260,7 +431,10 @@ export const macConfigsRelations = relations(macConfigs, ({ many }) => ({
 export const gameReviewsRelations = relations(gameReviews, ({ one }) => ({
   game: one(games, { fields: [gameReviews.gameId], references: [games.id] }),
   user: one(users, { fields: [gameReviews.userId], references: [users.id] }),
-  macConfig: one(macConfigs, { fields: [gameReviews.macConfigId], references: [macConfigs.id] }),
+  macConfig: one(macConfigs, {
+    fields: [gameReviews.macConfigId],
+    references: [macConfigs.id],
+  }),
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({

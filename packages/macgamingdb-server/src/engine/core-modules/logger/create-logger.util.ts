@@ -2,7 +2,11 @@ import pino, { type Logger as PinoLogger } from 'pino';
 
 export type Logger = {
   log(message: string, context?: Record<string, unknown>): void;
-  error(message: string, trace?: string, context?: Record<string, unknown>): void;
+  error(
+    message: string,
+    trace?: string,
+    context?: Record<string, unknown>,
+  ): void;
   warn(message: string, context?: Record<string, unknown>): void;
   debug(message: string, context?: Record<string, unknown>): void;
   verbose(message: string, context?: Record<string, unknown>): void;

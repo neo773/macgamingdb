@@ -127,7 +127,9 @@ export class GameService {
         eq(visibleGameReviews.chipsetVariant, reviewFilter.chipsetVariant),
       );
     if (reviewFilter.playMethod)
-      conditions.push(eq(visibleGameReviews.playMethod, reviewFilter.playMethod));
+      conditions.push(
+        eq(visibleGameReviews.playMethod, reviewFilter.playMethod),
+      );
 
     const pairs = await this.db
       .select({
@@ -201,7 +203,9 @@ export class GameService {
       if (hasChipsetOrPlayMethodFilter) {
         const reviewConditions: SQL[] = [];
         if (performance !== 'ALL')
-          reviewConditions.push(eq(visibleGameReviews.performance, performance));
+          reviewConditions.push(
+            eq(visibleGameReviews.performance, performance),
+          );
         if (chipset)
           reviewConditions.push(eq(visibleGameReviews.chipset, chipset));
         if (chipset && chipsetVariant)
@@ -214,7 +218,11 @@ export class GameService {
         const matchingGameIds = this.db
           .selectDistinct({ gameId: visibleGameReviews.gameId })
           .from(visibleGameReviews)
-          .where(isNonEmptyArray(reviewConditions) ? and(...reviewConditions) : undefined);
+          .where(
+            isNonEmptyArray(reviewConditions)
+              ? and(...reviewConditions)
+              : undefined,
+          );
 
         const gamesForIds = await this.db
           .select({ id: games.id })
@@ -361,26 +369,25 @@ export class GameService {
         macConfig: row.MacConfig,
       }));
 
-      const reviewStats =
-        isNonEmptyArray(reviews)
-          ? {
-              totalReviews: reviews.length,
-              methods: {
-                native: reviews.filter((review) => review.playMethod === 'NATIVE')
-                  .length,
-                crossover: reviews.filter(
-                  (review) => review.playMethod === 'CROSSOVER',
-                ).length,
-                parallels: reviews.filter(
-                  (review) => review.playMethod === 'PARALLELS',
-                ).length,
-                other: reviews.filter((review) => review.playMethod === 'OTHER')
-                  .length,
-              },
-              averagePerformance: calculateAveragePerformance(reviews),
-              translationLayers: calculateTranslationLayerStats(reviews),
-            }
-          : null;
+      const reviewStats = isNonEmptyArray(reviews)
+        ? {
+            totalReviews: reviews.length,
+            methods: {
+              native: reviews.filter((review) => review.playMethod === 'NATIVE')
+                .length,
+              crossover: reviews.filter(
+                (review) => review.playMethod === 'CROSSOVER',
+              ).length,
+              parallels: reviews.filter(
+                (review) => review.playMethod === 'PARALLELS',
+              ).length,
+              other: reviews.filter((review) => review.playMethod === 'OTHER')
+                .length,
+            },
+            averagePerformance: calculateAveragePerformance(reviews),
+            translationLayers: calculateTranslationLayerStats(reviews),
+          }
+        : null;
 
       return {
         game: { ...game, name: game.name, sourceLinks },
@@ -472,10 +479,7 @@ export class GameService {
         lastModified: max(visibleGameReviews.updatedAt),
       })
       .from(games)
-      .innerJoin(
-        visibleGameReviews,
-        eq(visibleGameReviews.gameId, games.id),
-      )
+      .innerJoin(visibleGameReviews, eq(visibleGameReviews.gameId, games.id))
       .groupBy(games.id);
 
     return rows.map((row) => ({

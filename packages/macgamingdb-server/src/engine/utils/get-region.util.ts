@@ -23,7 +23,9 @@ export const getRegion = (headers: Headers): string => {
   const akamai = headers.get('x-akamai-edgescape')?.match(AKAMAI_COUNTRY);
   if (akamai) return akamai[1].toLowerCase();
 
-  const acceptLang = headers.get('accept-language')?.match(ACCEPT_LANGUAGE_REGION);
+  const acceptLang = headers
+    .get('accept-language')
+    ?.match(ACCEPT_LANGUAGE_REGION);
   if (acceptLang) return acceptLang[1].toLowerCase();
 
   return DEFAULT_REGION;

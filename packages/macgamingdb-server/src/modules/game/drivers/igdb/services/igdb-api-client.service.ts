@@ -86,9 +86,10 @@ export class IgdbApiClientService {
       ` & external_game_source = ${EXTERNAL_GAME_SOURCE_STEAM};` +
       ` limit 1;`;
 
-    const externalGames = await this.queryIgdb<Array<{ game?: IgdbGameData }>>(
-      { endpoint: 'external_games', query: apicalypseQuery },
-    );
+    const externalGames = await this.queryIgdb<Array<{ game?: IgdbGameData }>>({
+      endpoint: 'external_games',
+      query: apicalypseQuery,
+    });
 
     return externalGames[0]?.game ?? null;
   }
