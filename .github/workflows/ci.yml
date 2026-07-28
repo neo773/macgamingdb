@@ -6,14 +6,25 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   ci:
     name: Lint, Test & Build
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
 
     services:
       libsql:
-        image: ghcr.io/tursodatabase/libsql-server:latest
+        image: ghcr.io/tursodatabase/libsql-server@sha256:07d5da358f37f7f327cc33c1cb5278e7892e04225f011a65a76049372a308982 # latest as of 2026-07-28
         ports:
           - 8080:8080
 
@@ -25,8 +36,6 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       LIBSQL_DATABASE_URL: http://127.0.0.1:8080
       LIBSQL_DATABASE_TOKEN: ""
-      LIBSQL_STATS_ENDPOINT: ${{ secrets.LIBSQL_STATS_ENDPOINT }}
-      LIBSQL_STATS_TOKEN: ${{ secrets.LIBSQL_STATS_TOKEN }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
       S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
@@ -34,11 +43,18 @@ jobs:
       S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
 
     steps:
+      - name: Monitor egress
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.3.14
 
@@ -59,3 +75,52 @@ jobs:
 
       - name: Build (Next.js)
         run: bun run build
+
+  deploy:
+    name: Deploy to Coolify
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions: {}
+
+    environment: production
+
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+
+    steps:
+      - name: Restrict egress
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: block
+          disable-telemetry: true
+          allowed-endpoints: >
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            results.receiver.actions.githubusercontent.com:443
+            ${{ secrets.COOLIFY_EGRESS_ENDPOINT }}
+
+      - name: Trigger deployment
+        env:
+          COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          COOLIFY_APP_UUID: ${{ secrets.COOLIFY_APP_UUID }}
+        run: |
+          set -euo pipefail
+          response=$(curl --silent --show-error \
+            --max-time 60 \
+            --write-out '\n%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${COOLIFY_TOKEN}" \
+            "${COOLIFY_URL}/api/v1/deploy?uuid=${COOLIFY_APP_UUID}&force=false")
+          status=$(printf '%s' "${response}" | tail -n 1)
+          body=$(printf '%s' "${response}" | sed '$d')
+          echo "Coolify responded ${status}: ${body}"
+          if [ "${status}" != "200" ]; then
+            echo "::error::Coolify deploy request failed (HTTP ${status})"
+            exit 1
+          fi
