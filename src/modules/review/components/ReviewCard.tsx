@@ -76,15 +76,15 @@ export const ReviewCard = ({
     >
       {header && header}
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex gap-4">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex min-w-0 flex-col items-center gap-3">
+            <div className="flex min-w-0 gap-4">
               <Picture
                 src={`/images/${review.playMethod.toLowerCase()}.png`}
                 alt={formatMethodName(review.playMethod)}
-                className="size-16 object-contain"
+                className="size-16 shrink-0 object-contain"
               />
-              <div className="flex flex-col justify-between -mt-1">
+              <div className="flex min-w-0 flex-col justify-between -mt-1">
                 <p className="font-medium text-white text-lg">
                   {formatMethodName(review.playMethod)}
                 </p>
@@ -95,7 +95,7 @@ export const ReviewCard = ({
                   </span>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {review.translationLayer && (
                     <Badge variant="secondary">{review.translationLayer}</Badge>
                   )}
@@ -112,7 +112,7 @@ export const ReviewCard = ({
           <Picture
             src={`/images/chipsets/${review.chipset.toLowerCase()}/${review.chipsetVariant.toLowerCase()}.png`}
             alt={`${review.chipset} ${review.chipsetVariant}`}
-            className="w-[70px] object-contain"
+            className="w-[70px] shrink-0 object-contain"
           />
         </div>
       </CardHeader>
