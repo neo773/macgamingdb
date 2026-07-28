@@ -1,0 +1,29 @@
+src/app/tailwind.css
+  s_a195378c952164::t_a71fc6d301aa74 4-5
+  s_a195378c952164::t_7e0573643202dd 18
+src/app/blog/how-to-play-windows-games-on-mac/page.mdx
+  s_a195378c952164::t_cbee1e808d7640 4
+package.json
+  s_a195378c952164::t_94868e8ea98510 107
+src/app/blog/page.tsx
+  s_a195378c952164::t_2d838532944aa1 2
+  s_a195378c952164::t_69fa43a4f85693 79,84
+bun.lock
+  s_a195378c952164::t_f6b4854c877a51 73,998-999,2528,3652-3653,4088-4089
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3d19394ee559589a80b12c3e466ee22b6985af14",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
