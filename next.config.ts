@@ -3,7 +3,7 @@ import createMDX from "@next/mdx";
 import { apiRewrites } from "./api-rewrites";
 
 const nextConfig = {
-  serverExternalPackages: ['@libsql/client', '@nestjs/common', 'reflect-metadata'],
+  serverExternalPackages: ['@libsql/client'],
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   output: 'standalone' as const,
   // Pinned because a package.json above the repo makes Turbopack infer the

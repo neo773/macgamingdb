@@ -11,7 +11,7 @@ import prettierPlugin from 'eslint-plugin-prettier';
 import unicornPlugin from 'eslint-plugin-unicorn';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 
-export default [
+const eslintConfig = [
   ...next,
   ...nextCoreWebVitals,
   ...nextTypescript,
@@ -19,6 +19,7 @@ export default [
   {
     ignores: [
       '**/node_modules/**',
+      '**/@generated/**',
       ".next/**",
       "dist/**",
       "build/**",
@@ -129,5 +130,21 @@ export default [
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
-  }
+  },
+  {
+    // consistent-type-imports exempts files carrying decorators, but only when it
+    // can read experimentalDecorators and emitDecoratorMetadata from the tsconfig.
+    // Nest resolves injected constructor params from that metadata, so a type-only
+    // import of an injected class breaks DI at runtime.
+    files: ['packages/macgamingdb-server/**/*.ts'],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
 ];
+
+export default eslintConfig;

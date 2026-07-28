@@ -9,28 +9,21 @@ import { AppModule } from './app.module';
 const bootstrap = async (): Promise<void> => {
   const server = express();
 
-  let restHandler:
-    | ((request: express.Request, response: express.Response) => Promise<void>)
-    | undefined;
-
-  server.use('/rest', (request, response, next) => {
-    if (!restHandler) {
-      next();
-      return;
-    }
-    restHandler(request, response).catch(next);
-  });
+  const restRouter = express.Router();
+  server.use('/rest', restRouter);
 
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
     rawBody: true,
   });
   await app.init();
 
-  const appRouter = app.get(AppRouterHost).appRouter;
-
-  restHandler = createOpenApiExpressMiddleware({
-    router: appRouter,
+  const restHandler = createOpenApiExpressMiddleware({
+    router: app.get(AppRouterHost).appRouter,
     createContext: ({ req, res }) => ({ req, res }),
+  });
+
+  restRouter.use((request, response, next) => {
+    restHandler(request, response).catch(next);
   });
 
   const port = process.env.SERVER_PORT ?? 4000;

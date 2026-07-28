@@ -1,3 +1,3 @@
-import { GAME_SOURCES } from '../constants/game-sources.constant';
+import { type GAME_SOURCES } from '../constants/game-sources.constant';
 
 export type GameSource = (typeof GAME_SOURCES)[number];

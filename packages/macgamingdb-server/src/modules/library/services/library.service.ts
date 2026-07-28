@@ -16,6 +16,9 @@ import { STEAM_LIBRARY_PRIVATE_CODE } from '../drivers/steam/constants/steam-lib
 import { SteamLibraryPrivateError } from '../drivers/steam/exceptions/steam-library-private.exception';
 import { SteamLibrarySyncService } from '../drivers/steam/services/steam-library-sync.service';
 import { SteamOpenIdService } from '../drivers/steam/services/steam-openid.service';
+import { STEAM_BROWSER_CALLBACK_PATH } from '../drivers/steam/constants/steam-browser-callback-path.constant';
+import { STEAM_LINK_OUTCOME } from '../drivers/steam/constants/steam-link-outcome.constant';
+import { type SteamLinkOutcome } from '../drivers/steam/types/steam-link-outcome.type';
 import { getAppOrigin } from '../drivers/steam/utils/get-app-origin.util';
 import { issueStateToken } from '../drivers/steam/utils/issue-state-token.util';
 import { LibraryException } from '../exceptions/library.exception';
@@ -67,6 +70,91 @@ export class LibraryService {
         realm: `${origin}/`,
       }),
     };
+  }
+
+  async browserLinkStartUrl(userId: string) {
+    const origin = getAppOrigin();
+    const state = await issueStateToken({ userId });
+    const returnTo = new URL(STEAM_BROWSER_CALLBACK_PATH, origin);
+    returnTo.searchParams.set('state', state);
+
+    return {
+      state,
+      url: this.steamOpenIdService.buildRedirectUrl({
+        returnTo: returnTo.toString(),
+        realm: `${origin}/`,
+      }),
+    };
+  }
+
+  async completeSteamLink({
+    userId,
+    callbackUrl,
+  }: {
+    userId: string;
+    callbackUrl: string;
+  }): Promise<SteamLinkOutcome> {
+    const steamId = await this.verifySteamIdentity({ callbackUrl });
+
+    if (!isDefined(steamId)) {
+      return STEAM_LINK_OUTCOME.OpenIdFailed;
+    }
+
+    await this.upsertSteamLink({ userId, steamId });
+
+    try {
+      await this.steamLibrarySyncService.syncLibraryForUser({ userId });
+    } catch (error) {
+      if (error instanceof SteamLibraryPrivateError) {
+        return STEAM_LINK_OUTCOME.LibraryPrivate;
+      }
+      console.error('Initial Steam library sync failed:', error);
+      return STEAM_LINK_OUTCOME.SyncFailed;
+    }
+
+    return STEAM_LINK_OUTCOME.Ok;
+  }
+
+  private async verifySteamIdentity({
+    callbackUrl,
+  }: {
+    callbackUrl: string;
+  }): Promise<string | undefined> {
+    try {
+      return await this.steamOpenIdService.verifyResponse({
+        callbackUrl,
+        realm: `${getAppOrigin()}/`,
+      });
+    } catch (error) {
+      console.error('Steam OpenID verification failed:', error);
+      return undefined;
+    }
+  }
+
+  private async upsertSteamLink({
+    userId,
+    steamId,
+  }: {
+    userId: string;
+    steamId: string;
+  }) {
+    const existingLink = await this.db.query.userExternalAccounts.findFirst({
+      where: steamConnectionWhere(userId),
+    });
+
+    if (isDefined(existingLink)) {
+      await this.db
+        .update(userExternalAccounts)
+        .set({ externalUserId: steamId })
+        .where(eq(userExternalAccounts.id, existingLink.id));
+      return;
+    }
+
+    await this.db.insert(userExternalAccounts).values({
+      userId,
+      provider: LibraryProvider.STEAM,
+      externalUserId: steamId,
+    });
   }
 
   async status(userId: string) {

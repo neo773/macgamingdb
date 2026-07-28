@@ -5,8 +5,10 @@ import { LibraryRouter } from './routers/library.router';
 import { SteamWebApiService } from './drivers/steam/services/steam-web-api.service';
 import { SteamLibrarySyncService } from './drivers/steam/services/steam-library-sync.service';
 import { SteamOpenIdService } from './drivers/steam/services/steam-openid.service';
+import { SteamConnectionController } from './controllers/steam-connection.controller';
 
 @Module({
+  controllers: [SteamConnectionController],
   providers: [
     LibraryService,
     LibraryRouter,

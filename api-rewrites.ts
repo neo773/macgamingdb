@@ -7,5 +7,9 @@ export const apiRewrites = () => {
       source: '/discord/interactions',
       destination: `${apiServerUrl}/discord/interactions`,
     },
+    {
+      source: '/api/connections/steam/:path*',
+      destination: `${apiServerUrl}/connections/steam/:path*`,
+    },
   ];
 };
