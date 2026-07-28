@@ -21,7 +21,7 @@ Two deployable services plus shared workspace packages. Bun is the package manag
 - **Database**: SQLite via Drizzle ORM — local file in development, [sqld](https://github.com/tursodatabase/libsql) (libSQL server) in production.
 - **Auth**: BetterAuth (magic link, Sign in with Apple, Steam OpenID account linking).
 - **Game sources**: Steam store + IGDB (Twitch client credentials). Steam is canonical when a game exists on both.
-- **Conventions**: see `CODE_STYLE.md` — hard rules, enforced.
+- **Conventions**: see `docs/CODE_STYLE.md` — hard rules, enforced.
 
 ## Development
 
