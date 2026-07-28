@@ -1,0 +1,69 @@
+packages/macgamingdb-server/src/main.ts
+  s_a195378c952164::t_98af75300d271e 12-13,20-21,25-26
+  s_a195378c952164::t_35e06506fb187f 27-28
+api-rewrites.ts
+  s_a195378c952164::t_e7ed4541c07338 10-13
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-browser-flow-error.constant.ts
+  s_a195378c952164::t_4d1f3f8e957aa4 1-5
+next.config.ts
+  s_a195378c952164::t_fdc98cb873fb67 6
+packages/macgamingdb-server/src/modules/library/library.module.ts
+  s_a195378c952164::t_46758044cbba41 8,11
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-state-cookie-name.constant.ts
+  s_a195378c952164::t_2673f80daf0997 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-app-redirect-scheme.constant.ts
+  s_a195378c952164::t_4859373829efaa 1
+eslint.config.mjs
+  s_a195378c952164::t_d218b2da407406 135-145,147
+  s_a195378c952164::t_922511498bd254 149-150
+  s_a195378c952164::t_5ee14bfe1cca1f 22
+  s_a195378c952164::t_4d9429f8cdb71a 14
+  s_a195378c952164::t_6f97304b511022 133-134,146
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/read-steam-state-cookie.util.ts
+  s_a195378c952164::t_ed39723de08ef9 1-23
+packages/macgamingdb-server/src/database/drizzle.ts
+  s_a195378c952164::t_d5625daa8d03ac 4
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-browser-callback-path.constant.ts
+  s_a195378c952164::t_6a1f471b4293b8 1
+packages/macgamingdb-server/src/modules/game/types/game-source.type.ts
+  s_a195378c952164::t_d5625daa8d03ac 1
+packages/macgamingdb-server/src/modules/pricing/drivers/ggdeals/types/ggdeals-region.type.ts
+  s_a195378c952164::t_d5625daa8d03ac 1
+packages/macgamingdb-server/src/modules/library/services/library.service.ts
+  s_a195378c952164::t_b6bea2b4298bd8 90-99,103,106,116-157
+  s_a195378c952164::t_53a0693897a3d8 19-20
+  s_a195378c952164::t_d78fcbf008d57b 21
+  s_a195378c952164::t_1fe9fb5c0e140c 75-89,100-102,104-105,107-115,158-159
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-state-ttl-seconds.constant.ts
+  s_a195378c952164::t_5d54b7e78be18c 1
+packages/macgamingdb-server/src/modules/library/drivers/steam/constants/steam-link-outcome.constant.ts
+  s_a195378c952164::t_571704785f7c39 1-8
+packages/macgamingdb-server/src/modules/library/controllers/steam-connection.controller.ts
+  s_a195378c952164::t_30109fe3ef61bb 1-3,6-8,11-12,16,18-31,33,35-44,46-57,59,61-63,67-68,81-84,89-90,93,103-110,116-118,125-126,132,136,182,184
+  s_a195378c952164::t_8618ec7c81a736 4-5,9-10,13-15,17,32,34,45,58,60,64-66,69-80,85-88,91-92,94-102,111-115,119-124,127-131,133-135,137-181,183,185
+packages/macgamingdb-server/src/database/types.ts
+  s_a195378c952164::t_d5625daa8d03ac 3-9
+packages/macgamingdb-server/src/modules/library/drivers/steam/utils/build-steam-callback-url.util.ts
+  s_a195378c952164::t_01c392e9ce9ba7 1-7
+packages/macgamingdb-server/src/modules/library/drivers/steam/types/steam-link-outcome.type.ts
+  s_a195378c952164::t_7d6ee3a6bc33f5 1
+  s_a195378c952164::t_3833f712ab9dfc 2-4
+package.json
+  s_a195378c952164::t_3a1cbbd23c36be 136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d39d47979a8d693aa157500814bace81fb986e96",
+  "prompts": {},
+  "sessions": {
+    "s_a195378c952164": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1af2c283-adca-46df-8997-62804de2eb2f",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
