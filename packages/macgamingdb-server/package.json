@@ -10,6 +10,7 @@
   },
   "exports": {
     "./schema": "./src/schema/index.ts",
+    "./schema/constants": "./src/schema/constants.ts",
     "./generated": "./src/@generated/server.ts",
     "./engine/api/write-openapi-document": "./src/engine/api/write-openapi-document.ts",
     "./modules/review/utils/calculate-average-performance": "./src/modules/review/utils/calculate-average-performance.util.ts",

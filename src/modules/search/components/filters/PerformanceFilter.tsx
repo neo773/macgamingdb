@@ -1,6 +1,6 @@
 import React from 'react';
 import { ButtonFilter } from 'macgamingdb-ui/input/ButtonFilter';
-import { PerformanceEnum } from 'macgamingdb-server/schema';
+import { PERFORMANCE_RATINGS } from 'macgamingdb-server/schema/constants';
 import { type PerformanceFilter as PerformanceFilterType } from '@/modules/search/types/PerformanceFilter';
 import { type PerformanceLabel } from 'macgamingdb-server/modules/review/utils/format-rating-label';
 
@@ -19,7 +19,7 @@ export const PerformanceFilter: React.FC<PerformanceFilterProps> = ({
   formatRatingLabel,
   className = '',
 }) => {
-  const performanceOptions = (['ALL', ...PerformanceEnum.options] as const).map(
+  const performanceOptions = (['ALL', ...PERFORMANCE_RATINGS] as const).map(
     (rating) => ({
       value: rating,
       label: formatRatingLabel(rating as PerformanceLabel),

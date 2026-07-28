@@ -29,7 +29,8 @@
     "./layout/Accordion": "./src/layout/Accordion/Accordion.tsx",
     "./layout/ScrollArea": "./src/layout/ScrollArea/ScrollArea.tsx",
     "./utilities/WiggleWrapper": "./src/utilities/WiggleWrapper/WiggleWrapper.tsx",
-    "./utilities/cn": "./src/utilities/cn/cn.ts"
+    "./utilities/cn": "./src/utilities/cn/cn.ts",
+    "./display/Picture": "./src/display/Picture/Picture.tsx"
   },
   "peerDependencies": {
     "react": "^19.2.3",
@@ -39,6 +40,7 @@
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.1.24",
     "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-scroll-area": "^1.2.5",
     "@radix-ui/react-select": "^2.1.6",
@@ -51,7 +53,6 @@
     "lucide-react": "^0.532.0",
     "macgamingdb-shared": "workspace:*",
     "next-themes": "^0.4.6",
-    "radix-ui": "^1.4.3",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.0.2",
     "vaul": "^1.1.2"

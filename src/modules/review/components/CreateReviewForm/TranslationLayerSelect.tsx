@@ -7,10 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'macgamingdb-ui/input/Select';
-import {
-  type TranslationLayer,
-  TranslationLayerEnum,
-} from 'macgamingdb-server/schema';
+import { type TranslationLayer } from 'macgamingdb-server/schema';
+import { TRANSLATION_LAYERS } from 'macgamingdb-server/schema/constants';
 
 interface TranslationLayerSelectProps {
   value: TranslationLayer;
@@ -36,7 +34,7 @@ export const TranslationLayerSelect = ({
           <SelectValue placeholder="Select translation layer" />
         </SelectTrigger>
         <SelectContent>
-          {TranslationLayerEnum.options.map((layer) => (
+          {TRANSLATION_LAYERS.map((layer) => (
             <SelectItem key={layer} value={layer}>
               {TRANSLATION_LAYER_LABELS[layer] || layer}
             </SelectItem>

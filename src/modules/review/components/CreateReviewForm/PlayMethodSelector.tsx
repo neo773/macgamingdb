@@ -1,6 +1,8 @@
 'use client';
 
-import { type PlayMethod, PlayMethodEnum } from 'macgamingdb-server/schema';
+import { type PlayMethod } from 'macgamingdb-server/schema';
+import { PLAY_METHODS } from 'macgamingdb-server/schema/constants';
+import { Picture } from 'macgamingdb-ui/display/Picture';
 
 interface PlayMethodSelectorProps {
   selectedMethod: PlayMethod;
@@ -21,7 +23,7 @@ export const PlayMethodSelector = ({
     <div className="space-y-2">
       <label className="block text-sm font-medium">Play Method</label>
       <div className="flex gap-4 justify-between">
-        {PlayMethodEnum.options.map((method) => (
+        {PLAY_METHODS.map((method) => (
           <div
             key={method}
             className={`cursor-pointer flex flex-col items-center ${
@@ -36,7 +38,7 @@ export const PlayMethodSelector = ({
                 selectedMethod === method ? 'ring-2 ring-blue-500' : ''
               }`}
             >
-              <img
+              <Picture
                 src={`/images/${method.toLowerCase()}.png`}
                 alt={method}
                 className="w-14 h-14 object-contain p-1"

@@ -10,12 +10,14 @@ import { useFormPreferences } from '@/modules/review/hooks/useFormPreferences';
 import {
   type PlayMethod,
   type TranslationLayer,
-  PlayMethodEnum,
-  TranslationLayerEnum,
-  PerformanceEnum,
-  GraphicsSettingsEnum,
-  SOFTWARE_VERSIONS,
 } from 'macgamingdb-server/schema';
+import {
+  GRAPHICS_SETTINGS,
+  PERFORMANCE_RATINGS,
+  PLAY_METHODS,
+  SOFTWARE_VERSIONS,
+  TRANSLATION_LAYERS,
+} from 'macgamingdb-server/schema/constants';
 import { type ReviewFormData } from '../types/ReviewFormData';
 
 interface MacConfig {
@@ -60,7 +62,7 @@ export const useCreateReview = ({
   const { getPreferences, updatePreference } = useFormPreferences();
   const preferences = getPreferences();
 
-  const initialPlayMethod = preferences.playMethod ?? PlayMethodEnum.options[1];
+  const initialPlayMethod = preferences.playMethod ?? PLAY_METHODS[1];
 
   const [formData, setFormData] = useState<ReviewFormData>({
     fps: '',
@@ -70,9 +72,9 @@ export const useCreateReview = ({
     softwareVersion: defaultSoftwareVersion(initialPlayMethod),
     playMethod: initialPlayMethod,
     translationLayer:
-      preferences.translationLayer ?? TranslationLayerEnum.options[0],
-    performance: PerformanceEnum.options[1],
-    graphicsSettings: GraphicsSettingsEnum.options[1],
+      preferences.translationLayer ?? TRANSLATION_LAYERS[0],
+    performance: PERFORMANCE_RATINGS[1],
+    graphicsSettings: GRAPHICS_SETTINGS[1],
     macConfigIdentifier: preferences.macConfigIdentifier || '',
   });
 

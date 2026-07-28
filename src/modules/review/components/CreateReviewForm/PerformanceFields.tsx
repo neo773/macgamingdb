@@ -11,9 +11,11 @@ import {
 import {
   type Performance,
   type GraphicsSettings,
-  PerformanceEnum,
-  GraphicsSettingsEnum,
 } from 'macgamingdb-server/schema';
+import {
+  GRAPHICS_SETTINGS,
+  PERFORMANCE_RATINGS,
+} from 'macgamingdb-server/schema/constants';
 import { transformPerformanceRating } from '../../utils/transformPerformanceRating';
 
 interface PerformanceFieldsProps {
@@ -53,7 +55,7 @@ export const PerformanceFields = ({
             <SelectValue placeholder="Select performance rating" />
           </SelectTrigger>
           <SelectContent>
-            {PerformanceEnum.options.map((rating) => (
+            {PERFORMANCE_RATINGS.map((rating) => (
               <SelectItem key={rating} value={rating}>
                 {transformPerformanceRating(rating)}
               </SelectItem>
@@ -83,7 +85,7 @@ export const PerformanceFields = ({
             <SelectValue placeholder="Select graphics settings" />
           </SelectTrigger>
           <SelectContent>
-            {GraphicsSettingsEnum.options.map((setting) => (
+            {GRAPHICS_SETTINGS.map((setting) => (
               <SelectItem key={setting} value={setting}>
                 {GRAPHICS_LABELS[setting] || setting}
               </SelectItem>

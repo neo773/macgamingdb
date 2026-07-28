@@ -10,7 +10,7 @@ import { createFilterConfig } from '@/modules/search/utils/createFilterConfig';
 import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
 import { type PlayMethodFilter } from '@/modules/search/types/PlayMethodFilter';
 import { getGroupedChipsetCombinations } from 'macgamingdb-server/modules/mac-config/utils/get-chipset-combinations';
-import { PlayMethodEnum } from 'macgamingdb-server/schema';
+import { PLAY_METHODS } from 'macgamingdb-server/schema/constants';
 
 export const useHomeFilters = () => {
   const searchParams = useSearchParams();
@@ -48,7 +48,7 @@ export const useHomeFilters = () => {
   const playMethodOptions = useMemo(
     () => [
       { value: 'ALL', label: 'All Methods' },
-      ...PlayMethodEnum.options.map((method) => ({
+      ...PLAY_METHODS.map((method) => ({
         value: method,
         label: method,
       })),
