@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@plugin '@tailwindcss/typography';
+
 @font-face {
   font-family: 'Geist';
   font-style: normal;
@@ -13,6 +15,7 @@
 }
 
 @source '../../packages/macgamingdb-ui/src';
+@source './blog/**/*.mdx';
 
 @custom-variant dark (&:is(.dark *));
 
