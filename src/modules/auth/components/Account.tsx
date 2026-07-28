@@ -29,8 +29,22 @@ export const Account = () => {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const router = useRouter();
 
+  const loginButton = (
+    <Button
+      variant="outline"
+      className="flex items-center gap-2 border-gray-600 text-white hover:bg-gray-800 hover:text-gray-200"
+    >
+      <LogInIcon className="size-4" />
+      Login
+    </Button>
+  );
+
   if (isPending) {
-    return null;
+    return (
+      <div className="invisible" aria-hidden="true">
+        {loginButton}
+      </div>
+    );
   }
 
   if (session?.user?.id) {
@@ -101,15 +115,7 @@ export const Account = () => {
         }
       }}
     >
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex items-center gap-2 border-gray-600 text-white hover:bg-gray-800 hover:text-gray-200"
-        >
-          <LogInIcon className="size-4" />
-          Login
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{loginButton}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-black border-[#272727] p-0 rounded-3xl">
         <DialogTitle className="sr-only">Login</DialogTitle>
         <AuthPrompt
