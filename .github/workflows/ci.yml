@@ -67,14 +67,14 @@ jobs:
       - name: Build workspace packages
         run: bun run build:api
 
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
       - name: Test
         run: bun run test
 
-      - name: Build (vinext)
+      - name: Build
         run: bun run build:vinext
-
-      - name: Build (Next.js)
-        run: bun run build
 
   deploy:
     name: Deploy to Coolify
