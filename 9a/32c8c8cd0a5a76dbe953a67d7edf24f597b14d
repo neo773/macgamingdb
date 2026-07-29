@@ -1,0 +1,32 @@
+.env.example
+  s_7f5ee6502db3bf::t_09a68d9ec5c8e8 51
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/utils/build-moderation-prompt.util.ts
+  s_7f5ee6502db3bf::t_bfe21be151cf83 61
+  s_7f5ee6502db3bf::t_67fc1ad1e5e439 27
+  s_7f5ee6502db3bf::t_505bd22220a184 77-78
+  s_7f5ee6502db3bf::t_56d96f28041fc4 18
+  s_7f5ee6502db3bf::t_23bf200dc74b00 28
+  s_7f5ee6502db3bf::t_3d7f1d0b46736f 25
+  s_7f5ee6502db3bf::t_aa2305438abdec 39-49
+  s_7f5ee6502db3bf::t_6bd832e430517a 13-17,22
+  s_7f5ee6502db3bf::t_ddbcf20a27aecc 19
+  s_7f5ee6502db3bf::t_96b8629fbba0be 26
+packages/macgamingdb-server/src/modules/report/drivers/openrouter/constants/openrouter-request.constant.ts
+  s_7f5ee6502db3bf::t_92796a2b99a297 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9a32c8c8cd0a5a76dbe953a67d7edf24f597b14d",
+  "prompts": {},
+  "sessions": {
+    "s_7f5ee6502db3bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ef2262a4-a3a4-498e-b4c7-5ae9d3ca8596",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
