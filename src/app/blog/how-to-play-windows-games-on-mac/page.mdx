@@ -1,245 +1,191 @@
 ---
-title: 'How to Run Windows Games on Mac With CrossOver or Parallels'
-date: '2026-02-02'
+title: 'How to Play Windows Games on a Mac'
+date: '2026-07-30'
 image: '/images/crossover.png'
 imageGradient: 'from-blue-600/70 via-purple-600/60 to-pink-600/70'
 ---
 
-# How to Run Windows Games on Mac: CrossOver vs Parallels (2026 Guide)
+import { BlogFigure } from '@/modules/blog/components/BlogFigure';
+import { TranslationLayerDiagram } from '@/modules/blog/components/TranslationLayerDiagram';
+import { GraphicsTranslationDiagram } from '@/modules/blog/components/GraphicsTranslationDiagram';
+import { VirtualMachineDiagram } from '@/modules/blog/components/VirtualMachineDiagram';
 
-> Your Mac can play Windows games—no Boot Camp required. This guide breaks down CrossOver and Parallels, explains the translation tech that makes it all work, and helps you pick the right tool for your setup.
+# How to Play Windows Games on a Mac
 
-## Quick Navigation
+Most games ship for Windows only. Your Mac cannot open them directly. Two tools fix that, and one of them is much better for games.
 
-- [CrossOver vs Parallels at a Glance](#quick-comparison)
-- [How the Translation Layers Actually Work](#understanding-the-technology)
-- [Graphics Translation Deep Dive](#graphics-translation-dxvk-dxmt-and-d3dmetal)
-- [Which Mac Models Work Best](#which-mac-models-work-best)
-- [Cost Breakdown](#cost-breakdown)
-- [Setup Guides](#getting-started)
-- [FAQ](#frequently-asked-questions)
+This page explains how each one works, what it costs, and which one to pick.
 
-## The Short Version
+## Why your Mac cannot just run them
 
-**CrossOver** translates Windows code to macOS using Wine and direct-to-Metal translation layers. No Windows license needed, minimal overhead, and significantly better performance than virtualization. The $74 first-year cost drops to $34/year on renewal. Works great with modern AAA games—the main limitation is anti-cheat, not game age.
+Until 2020, every Mac used an Intel chip. Boot Camp let you install Windows on a second partition and reboot into it. Games then ran at full native speed. Apple silicon Macs cannot do this, and Apple removed Boot Camp from them.
 
-**Parallels Desktop** runs actual Windows in a virtual machine. Broader compatibility for games with anti-cheat systems, but the VM overhead means lower frame rates. You'll need both a Parallels subscription ($99.99/year) and a Windows license ($139+). Best for users who need Windows for work or must play anti-cheat-protected games.
+Apple silicon reads ARM instructions. Windows games are built as x86 binaries. A chip cannot execute the wrong instruction set, so the game means nothing to it.
 
----
+Two options are left:
 
-## Quick Comparison
+1. A **translation layer**.
+2. A **virtual machine**.
 
-| Factor                 | CrossOver                     | Parallels Desktop                |
-| ---------------------- | ----------------------------- | -------------------------------- |
-| **First Year Cost**    | $74                           | $99.99 + Windows license (~$139) |
-| **Renewal Cost**       | $34/year                      | $99.99/year                      |
-| **Windows License**    | Not required                  | Required                         |
-| **Setup Time**         | 10–15 minutes                 | 45–60 minutes                    |
-| **Disk Space**         | 5–10 GB                       | 50–80 GB                         |
-| **RAM Usage**          | Dynamic (game only)           | 4–8 GB allocated to VM           |
-| **Game Performance**   | Excellent (minimal overhead)  | Good (VM overhead)               |
-| **Modern AAA Games**   | Works well without anti-cheat | Broader anti-cheat support       |
-| **Anti-Cheat Support** | Usually fails                 | Sometimes works                  |
-| **Free Trial**         | 14 days                       | 14 days                          |
+We explain both. We recommend the first one for games.
 
----
+## Way 1: The translation layer
 
-## Understanding the Technology
+### What it does
 
-The question isn't really "CrossOver or Parallels"—it's "translation layer or virtual machine." These are fundamentally different approaches to the same problem.
+A translation layer sits between the game and macOS. The game makes a Windows system call. The layer converts that call into the macOS equivalent. Your Mac then does the work.
 
-### CrossOver: Translation Without Windows
+Think of a live interpreter. One side speaks Windows. The interpreter repeats it in macOS. Nobody learns a new language.
 
-CrossOver is built on Wine (Wine Is Not an Emulator), an open-source compatibility layer that's been in development since the 1990s. When you run a Windows game through CrossOver, it intercepts the game's Windows API calls and translates them to macOS equivalents in real time.
+Nothing here is a copy of Windows. No Windows sits on your disk. You do not buy a Windows licence. You install one normal Mac app.
 
-Think of it like a simultaneous interpreter at the UN. The game speaks Windows, CrossOver translates to macOS on the fly, and your Mac executes the instructions. No actual Windows operating system is involved.
+<BlogFigure caption="The layer converts Windows calls into macOS calls. Windows itself is never involved.">
+  <TranslationLayerDiagram />
+</BlogFigure>
 
-This approach has real advantages. You're only running the game itself—not an entire operating system underneath it—so there's less overhead. CrossOver uses memory dynamically based on what the game needs rather than reserving a fixed chunk for a VM. And since there's no Windows, there's no Windows license to buy.
+### Wine, the engine underneath
 
-The catch? Translation is hard. Some Windows features don't have clean macOS equivalents. Modern graphics APIs like DirectX 12 are particularly challenging. And anti-cheat systems that check for a "real" Windows environment will usually fail.
+The layer is called **Wine**. It is free and open source. People have built it since 1993, and it still improves every week.
 
-### Parallels: Actual Windows on Your Mac
+Wine gives you the engine, not the dashboard. Raw Wine means hundreds of settings and no guidance.
 
-Parallels Desktop creates a virtual machine—a simulated PC running inside your Mac. You install a real copy of Windows 11 ARM, and games run in that environment exactly as they would on a Windows computer.
+**CrossOver** is the packaged version for the Mac. CodeWeavers build it, and their developers work on Wine itself. You get tuned per-game profiles, sane defaults, and someone to email when a game breaks.
 
-The game thinks it's on a Windows PC. Windows handles all the DirectX calls natively. Parallels just has to translate the final graphics output to your Mac's display.
+### Two translations run at once
 
-This means broader compatibility. If a game runs on Windows, it'll probably run in Parallels. Anti-cheat systems see a "real" Windows environment. DirectX 12 games that won't even launch in CrossOver often work fine in Parallels.
+Your Mac has to translate two separate things:
 
-But you're running two operating systems simultaneously. That means reserving RAM for Windows (typically 4–8 GB), significant disk space for the Windows installation, and the overhead of virtualization. You'll also need to buy Windows, which adds $139–200 to your costs.
+1. **The CPU instructions.** Apple's **Rosetta 2** converts x86 to ARM while the game runs. It is fast and you never see it work.
+2. **The graphics calls.** This is the hard half. The next section covers it.
 
----
+Apple has said it will keep Rosetta 2 for older games even after it strips it out of the rest of the system. So this half is safe.
 
-## Graphics Translation: DXVK, DXMT, and D3DMetal
+### The graphics half
 
-Here's where things get technical—and where CrossOver has gotten dramatically better in recent years.
+A game does not draw anything itself. It asks the GPU to draw, using a standard graphics API.
 
-Windows games talk to graphics cards using DirectX. Macs use Metal. Getting DirectX calls to work on Metal requires translation, and there are now several ways to do it.
+- On Windows, that API is **DirectX**.
+- On macOS, it is **Metal**.
 
-### The Translation Stack
+So the layer also converts DirectX into Metal. Every draw call, every frame. This is where your frame rate is won or lost.
 
-**wined3d** is Wine's original Direct3D implementation. It translates DirectX to OpenGL, which then gets translated to Metal via Apple's deprecated OpenGL support. This double translation is slow and limited, but it's been around forever and handles some edge cases well.
+<BlogFigure caption="DirectX goes straight to Metal. Nothing sits in between.">
+  <GraphicsTranslationDiagram />
+</BlogFigure>
 
-**DXVK** translates DirectX 10 and 11 to Vulkan. On Mac, this requires another layer (MoltenVK) to translate Vulkan to Metal. Two translation hops: DirectX → Vulkan → Metal. It works, but the overhead adds up.
+Two backends do this job, and you will see both names:
 
-**DXMT** is a newer Metal-based implementation of DirectX 11, developed by 3Shain and now integrated into CrossOver 25. This is where things get interesting: DXMT translates D3D11 _directly_ to Metal, skipping the Vulkan middleman entirely. One hop instead of two. The performance difference is substantial—games that stuttered with DXVK often run smoothly with DXMT, especially on lower-spec Macs.
+- **DXMT** covers DirectX 10 and DirectX 11. Written by CodeWeavers developer 3Shain.
+- **D3DMetal** covers DirectX 11 and DirectX 12. Apple wrote it, for its Game Porting Toolkit.
 
-**D3DMetal** is Apple's translation layer from the Game Porting Toolkit. Like DXMT, it goes directly to Metal—no Vulkan in between. It supports both DirectX 11 and DirectX 12, making it the only option for DX12 games in CrossOver. Apple developed this to help game studios port titles to Mac, and CrossOver has integrated it for consumer use.
+Both talk to Metal directly. That is why modern CrossOver often beats a virtual machine on frame rate.
 
-### Why Direct-to-Metal Matters
+You do not pick between them. CrossOver reads its own compatibility list and sets one for you. You can override it later, but you rarely need to.
 
-The old approach (DXVK + MoltenVK) meant every frame went through two translation steps. With DXMT and D3DMetal, you're cutting that in half. Combined with Rosetta 2's remarkably efficient x86-to-ARM translation, CrossOver now runs many games with near-native performance.
+### DirectX is not one thing
 
-This is why CrossOver often _outperforms_ Parallels despite Parallels running "real" Windows. Parallels has the overhead of an entire virtualized operating system. CrossOver just has the translation layer—and with direct-to-Metal backends, that translation is fast.
+DirectX has been through many versions. Your game targets one of them, and that version decides how well it translates.
 
-### What CrossOver 25 Does Automatically
+| Version      | Roughly when | On a Mac                                                                       |
+| ------------ | ------------ | ------------------------------------------------------------------------------ |
+| DirectX 7, 8 | 1999 to 2002 | Hit and miss. A virtual machine is often steadier.                             |
+| DirectX 9    | 2002 to 2009 | Very common in older titles. A virtual machine often runs these more smoothly. |
+| DirectX 10   | 2007         | Uncommon, but covered. DXMT handles it.                                        |
+| DirectX 11   | 2009 onward  | The sweet spot. DXMT handles it well.                                          |
+| DirectX 12   | 2015 onward  | Modern AAA titles. D3DMetal covers it.                                         |
 
-The good news: you usually don't have to think about any of this.
+The Steam store page usually lists the version. Some launchers also let you choose. If yours offers both 11 and 12, try 11 first. DXMT is often the faster path on a Mac.
 
-CrossOver 25 includes all four translation layers and automatically selects the best one based on its compatibility database. When you install a game, CrossOver checks which backend works best and configures it for you. You can override this in Advanced Settings if you want to experiment, but the defaults are solid.
+### Why we point you at CrossOver
 
-For DirectX 9 games, CrossOver typically uses wined3d or DXVK. For DirectX 11, it'll often pick DXMT. For DirectX 12, D3DMetal is the only option.
+CodeWeavers sells CrossOver. CodeWeavers also employs Wine developers and pushes that work back upstream, for free. Whisky, Heroic and every other Wine-based tool ran on the same code.
 
-### The DirectX 12 Reality
+Parallels keeps its code private and gives nothing back.
 
-D3DMetal has matured significantly. CrossOver 25 runs DirectX 12 titles like Red Dead Redemption 2, Street Fighter 6, Dragon's Dogma 2, and The Last of Us Part 1. Many modern AAA games work well—the main barrier isn't DirectX 12 itself but anti-cheat systems.
+Both products work. We think the first one earns your money.
 
-When a DirectX 12 game runs in CrossOver, it typically runs _better_ than in Parallels. You're not fighting VM overhead. The direct-to-Metal translation is efficient.
+Please note: we earn a small fee if you buy CrossOver through our link. It does not change your price, and it does not change what we write here.
 
-Parallels' advantage is compatibility breadth, not performance. If a game has aggressive anti-cheat or checks for a "real" Windows environment, Parallels has a better chance of passing those checks. But for games that work in both, CrossOver delivers higher frame rates.
+### What it costs
 
-**The practical approach:** Check [Mac Gaming DB](https://macgamingdb.app/?playMethod=CROSSOVER) for your specific games. If they run in CrossOver, that's your best option. Fall back to Parallels only for titles that require it.
+- Free trial: 14 days, no card.
+- First year: about 74 US dollars.
+- Renewal: about 34 US dollars per year.
 
----
+Prices change. Check [the CodeWeavers store](https://www.codeweavers.com/store?ad=1100;deal=MGDB15) before you buy.
 
-## Which Mac Models Work Best?
+### How to set it up
 
-### Apple Silicon Macs (M1/M2/M3/M4)
+1. Check your game on [MacGamingDB](https://macgamingdb.app/?playMethod=CROSSOVER) first. Other players report what works.
+2. [Install CrossOver](https://www.codeweavers.com/store?ad=1100;deal=MGDB15).
+3. Click **Install a Windows Application**.
+4. Search for your game, or for your launcher, such as Steam.
+5. Let CrossOver pull down the dependencies it needs.
+6. Sign in and install the game as normal.
+7. Launch it from CrossOver.
 
-All Apple Silicon Macs can run both CrossOver and Parallels, but your experience will vary based on RAM and GPU cores.
+Budget about 15 minutes. Most of that is download time.
 
-**8GB RAM:** CrossOver works fine since it uses memory dynamically. Parallels is tight—Windows needs 4GB minimum, leaving only 4GB for macOS and any background apps. Playable for lighter games, but you'll feel the squeeze on anything demanding.
+### What does not work
 
-**16GB RAM:** The sweet spot. Parallels can allocate 8GB to Windows while leaving plenty for macOS. CrossOver handles everything comfortably.
+Kernel-level **anti-cheat** is the wall. It hooks deep into Windows and looks for anything abnormal. A translation layer is abnormal by definition, so it refuses to start the game.
 
-**32GB+ RAM:** Overkill for gaming, but useful if you're running Parallels for work and gaming simultaneously.
+Valorant, Fortnite and most competitive shooters will not run this way. That is the publisher's decision. No Mac tool gets around it.
 
-GPU cores matter for graphics-heavy titles. The base M1/M2 chips have 7-8 GPU cores. The M3 Pro and Max variants scale up to 40 cores. More GPU cores = better frame rates, especially at higher resolutions.
+Almost everything else has a good chance. Single-player titles work best.
 
-### Intel Macs (2015–2020)
+## Way 2: The virtual machine
 
-Intel Macs run x86 Windows natively, which means theoretically better compatibility since there's no ARM translation layer involved. In practice, the older GPUs and limited Metal support on these machines often bottleneck performance anyway.
+A virtual machine is a full second computer in software. It runs in a window on your Mac. You install a real copy of Windows inside it, and the game runs inside that.
 
-If you have an Intel Mac, Boot Camp (installing Windows directly on a separate partition) remains an option for maximum game performance. Neither Apple nor Microsoft officially supports this anymore, but it still works on existing hardware.
+<BlogFigure caption="A virtual machine stacks a whole OS between your game and your GPU.">
+  <VirtualMachineDiagram />
+</BlogFigure>
 
----
+It works, and it is easy to reason about. It also costs you:
 
-## Cost Breakdown
+- A yearly licence for the VM app.
+- A Windows licence on top.
+- 50 GB or more of disk.
+- Several GB of RAM reserved away from macOS.
+- Real performance. You are running two operating systems at once.
 
-### CrossOver
+It wins in two places, though:
 
-| Item               | Cost     |
-| ------------------ | -------- |
-| First year         | $74      |
-| Renewal (years 2+) | $34/year |
-| Windows license    | $0       |
-| **5-year total**   | **$210** |
+- **Old games.** DirectX 9 and older titles often behave better in a VM. Real Windows handles those legacy paths itself, so nothing has to be translated. These games are also light enough that the VM overhead does not matter.
+- **Anti-cheat.** It sometimes passes, because it sees genuine Windows.
 
-CrossOver's 50%+ renewal discount is significant. That $34/year gets you continued updates, including new translation layer improvements and game compatibility fixes.
+Pick this route for a retro library, or if you already need Windows for work. For modern games, it is the slower and pricier choice.
 
-Alternatively, the $494 lifetime license makes sense if you plan to use CrossOver for 7+ years.
+## Which one to pick
 
-### Parallels Desktop
+| Your situation                      | Pick                      |
+| ----------------------------------- | ------------------------- |
+| Modern single-player games          | CrossOver                 |
+| You want the most frames per second | CrossOver                 |
+| Small SSD                           | CrossOver                 |
+| Old DirectX 9 or earlier games      | A virtual machine         |
+| You already need Windows for work   | A virtual machine         |
+| Kernel-level anti-cheat             | Neither. It will not run. |
 
-| Item             | Cost            |
-| ---------------- | --------------- |
-| Standard Edition | $99.99/year     |
-| Windows 11 Home  | $139 (one-time) |
-| **5-year total** | **$639**        |
+Start with the CrossOver trial. Test the games you actually care about before you pay.
 
-The perpetual license option ($219.99) eliminates the subscription, but you won't get major version updates. Most users stick with the subscription for ongoing compatibility improvements.
+## Check your game first
 
-Student/education pricing drops Parallels to $49.99/year if you qualify.
+Every title behaves differently. Most have already been tested by someone.
 
-### The Hidden Cost: Your Time
+Search your game on [MacGamingDB](https://macgamingdb.app/). Each report lists the Mac model, the settings used, and the frame rate.
 
-CrossOver requires checking compatibility databases, occasionally tweaking settings, and accepting that some games won't work. If you value your time highly and want things to "just work," Parallels' premium is easier to justify.
+## Quick glossary
 
-If you enjoy tinkering and don't mind the occasional troubleshooting session, CrossOver's lower cost and lighter footprint make more sense.
+| Term            | Meaning                                                     |
+| --------------- | ----------------------------------------------------------- |
+| x86 / ARM       | The instruction sets Intel and Apple chips execute          |
+| Rosetta 2       | Apple's x86-to-ARM translator                               |
+| DirectX / Metal | The graphics APIs on Windows and macOS                      |
+| Wine            | The free Windows-to-macOS translation layer                 |
+| CrossOver       | Wine packaged and supported by the people who help build it |
+| DXMT / D3DMetal | The backends that convert DirectX calls into Metal          |
+| Anti-cheat      | Kernel-level cheat detection that blocks translation layers |
 
----
-
-## Getting Started
-
-### Setting Up CrossOver
-
-**Time required:** 10–15 minutes
-
-1. Download from [codeweavers.com/crossover](https://www.codeweavers.com/crossover) and install
-2. Launch CrossOver and click "Install a Windows Application"
-3. Search for your game or choose "Install an unlisted application"
-4. CrossOver downloads dependencies and configures the bottle automatically
-5. Install your game from Steam, GOG, or an installer file
-
-**Checking compatibility first:** Search the [Mac Gaming DB for CrossOver titles](https://macgamingdb.app/?playMethod=CROSSOVER) before buying. User reports include specific settings and performance notes for your Mac model.
-
-### Setting Up Parallels
-
-**Time required:** 45–60 minutes
-
-1. Download from [parallels.com](https://www.parallels.com) and install
-2. Parallels will prompt to download Windows 11 ARM—this takes 20–30 minutes depending on your connection
-3. Complete Windows setup (Microsoft account optional but nagged)
-4. In Parallels settings, allocate 8GB RAM and enable GPU acceleration
-5. Install Steam or your game launcher inside Windows
-6. Download and play
-
-**Optimization tip:** Enable "Game Mode" in Parallels settings for better frame rates. Close unnecessary Mac apps while gaming to free up resources.
-
-**Checking compatibility:** Search the [Mac Gaming DB for Parallels titles](https://macgamingdb.app/?playMethod=PARALLELS) to see what works and expected performance on your hardware.
-
----
-
-## Frequently Asked Questions
-
-**Can I play my entire Steam library on Mac?**
-
-Not every game—anti-cheat is the main blocker, not compatibility. Check the [Mac Gaming DB](https://macgamingdb.app/?playMethod=CROSSOVER) for CrossOver compatibility or [Parallels listings](https://macgamingdb.app/?playMethod=PARALLELS) to see what works with each method.
-
-**Do I need to buy Windows for CrossOver?**
-
-No. CrossOver doesn't use Windows at all—it translates Windows API calls directly to macOS. This is one of its biggest advantages.
-
-**What about anti-cheat games like Fortnite or Valorant?**
-
-Most kernel-level anti-cheat systems (Easy Anti-Cheat, Vanguard, BattlEye) don't work reliably in either CrossOver or Parallels. Parallels has slightly better odds since it's running "real" Windows, but many competitive multiplayer titles remain problematic on Mac regardless of method.
-
-**Which is faster—CrossOver or Parallels?**
-
-CrossOver, often by a significant margin. With direct-to-Metal translation (DXMT, D3DMetal) and Rosetta 2's efficient x86 translation, CrossOver runs games with minimal overhead. Parallels has to run an entire Windows OS underneath your game, which eats into performance.
-
-**Is there a free alternative?**
-
-Whisky was a popular free option, but development ended in April 2025. The developer recommended switching to CrossOver. Apple's Game Porting Toolkit is free but requires significant technical setup and is intended for developers, not end users.
-
-**Which is better for M1/M2/M3/M4 Macs?**
-
-CrossOver, in most cases. Rosetta 2 is extremely efficient, and the direct-to-Metal translation layers (DXMT, D3DMetal) were designed with Apple Silicon in mind. Parallels works on Apple Silicon but adds VM overhead that hurts frame rates.
-
-**Can I run both CrossOver and Parallels?**
-
-Yes, though not for the same game simultaneously. The smart approach: try CrossOver first. If the game runs, you'll get better performance. Only use Parallels for games that specifically require a full Windows environment (usually anti-cheat games).
-
----
-
-## Bottom Line
-
-**Start with CrossOver** for the best gaming performance. With translation layers like DXMT and D3DMetal going directly to Metal—and Rosetta 2 handling x86 translation with minimal overhead—CrossOver consistently outperforms Parallels by a significant margin on compatible games. Modern AAA titles work fine as long as they don't use kernel-level anti-cheat. The 14-day trial lets you test your must-play games before committing.
-
-**Go with Parallels** only if you need Windows for work anyway, or if your specific games require anti-cheat systems that won't run in CrossOver. You'll pay more, use more resources, and get worse frame rates—but you'll have a full Windows environment for the games that genuinely require it.
-
-The performance gap isn't subtle. CrossOver runs games with essentially no overhead beyond the translation itself. Parallels runs an entire operating system underneath your game. For any title that works in both, CrossOver wins.
-
----
-
-_Last updated: February 2026_
+_Last updated: July 2026_
