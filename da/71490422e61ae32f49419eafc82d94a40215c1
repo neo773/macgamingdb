@@ -1,0 +1,19 @@
+src/app/layout.tsx
+  s_984ca0195f01ec::t_59bce4c62b2a37 18-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "da71490422e61ae32f49419eafc82d94a40215c1",
+  "prompts": {},
+  "sessions": {
+    "s_984ca0195f01ec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bac9ceae-bd5c-4746-b991-ae001a0ab666",
+        "model": "claude-opus-5"
+      },
+      "human_author": "neo773 <62795688+neo773@users.noreply.github.com>"
+    }
+  }
+}
