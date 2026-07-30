@@ -15,6 +15,10 @@ export const metadata: Metadata = {
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
   },
+  itunes: {
+    appId: '6777818274',
+    appArgument: 'https://macgamingdb.app',
+  },
 };
 
 export const viewport: Viewport = {
