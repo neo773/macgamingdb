@@ -1,4 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { fetchWithRetryOrThrow } from '../http/utils/fetch-with-retry-or-throw.util';
+
+const REVALIDATION_REQUEST_TIMEOUT_MS = 5_000;
 
 @Injectable()
 export class PageRevalidationService {
@@ -13,13 +16,17 @@ export class PageRevalidationService {
     }
 
     try {
-      await fetch(`${webAppUrl}/api/revalidate`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-revalidate-secret': secret,
+      await fetchWithRetryOrThrow({
+        url: `${webAppUrl}/api/revalidate`,
+        init: {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'x-revalidate-secret': secret,
+          },
+          body: JSON.stringify({ paths }),
         },
-        body: JSON.stringify({ paths }),
+        timeoutMs: REVALIDATION_REQUEST_TIMEOUT_MS,
       });
     } catch (error) {
       this.logger.warn(

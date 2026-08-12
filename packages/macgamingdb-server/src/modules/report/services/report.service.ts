@@ -6,8 +6,13 @@ import { isNonEmptyString } from '@sniptt/guards';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import { gameReviews, users } from '../../../database/schema';
+import {
+  createLogger,
+  type Logger,
+} from '../../../engine/core-modules/logger/create-logger.util';
 import { deriveDisplayNameFromEmail } from '../../../engine/utils/derive-display-name-from-email.util';
 import { MODERATION_LLM } from '../constants/moderation-llm.constant';
+import { type ModerationFailureStage } from '../types/moderation-failure-stage.type';
 import { type ModerationLlm } from '../types/moderation-llm.type';
 import { type ModerationVerdict } from '../dtos/moderation-verdict.dto';
 import { type ReportReason } from '../dtos/report-reason.dto';
@@ -36,6 +41,7 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 @Injectable()
 export class ReportService {
   private readonly reportTimestampsByUser = new Map<string, number[]>();
+  private readonly logger: Logger = createLogger(ReportService.name);
 
   constructor(
     @Inject(DRIZZLE_CLIENT) private readonly db: DrizzleDB,
@@ -109,8 +115,17 @@ export class ReportService {
       return;
     }
 
+    let verdict: ModerationVerdict;
+
     try {
-      const verdict = await this.judgeReviewOrThrow(review, event.reason);
+      verdict = await this.judgeReviewOrThrow(review, event.reason);
+    } catch (error) {
+      await this.releaseAlert(event.reviewId);
+      await this.announceModerationFailure(review, 'judge', error);
+      return;
+    }
+
+    try {
       const reporterName = await this.resolveReporterName(event.reporterUserId);
       await this.postModerationAlert(
         review,
@@ -119,8 +134,8 @@ export class ReportService {
         event.reason,
       );
     } catch (error) {
-      console.error('Failed to dispatch moderation alert:', error);
       await this.releaseAlert(event.reviewId);
+      await this.announceModerationFailure(review, 'dispatch', error);
     }
   }
 
@@ -134,7 +149,7 @@ export class ReportService {
     try {
       verdict = await this.judgeReviewOrThrow(review);
     } catch (error) {
-      console.error('Failed to screen new review:', error);
+      await this.announceModerationFailure(review, 'judge', error);
       return;
     }
 
@@ -149,8 +164,39 @@ export class ReportService {
     try {
       await this.postModerationAlert(review, verdict, 'Auto-moderation');
     } catch (error) {
-      console.error('Failed to post auto-moderation alert:', error);
       await this.releaseAlert(reviewId);
+      await this.announceModerationFailure(review, 'dispatch', error);
+    }
+  }
+
+  private async announceModerationFailure(
+    review: ReviewWithGame,
+    stage: ModerationFailureStage,
+    error: unknown,
+  ): Promise<void> {
+    const failureMessage =
+      error instanceof Error ? error.message : String(error);
+
+    this.logger.error(
+      `Moderation ${stage} failed for review ${review.id}`,
+      error instanceof Error ? error.stack : undefined,
+      { reviewId: review.id, stage },
+    );
+
+    try {
+      await this.discordMessageService.postModerationFailureAlert({
+        reviewId: review.id,
+        gameName: review.game.name ?? 'Unknown game',
+        reviewUrl: buildReviewUrl(review.game.slug ?? review.gameId),
+        stage,
+        failureMessage,
+      });
+    } catch (alertError) {
+      this.logger.error(
+        `Could not announce moderation failure for review ${review.id}`,
+        alertError instanceof Error ? alertError.stack : undefined,
+        { reviewId: review.id, stage },
+      );
     }
   }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { GameException } from '../../../exceptions/game.exception';
 import { TWITCH_TOKEN_URL } from '../constants/twitch-token-url.constant';
 import { IGDB_API_BASE_URL } from '../constants/igdb-api-base-url.constant';
@@ -110,7 +111,10 @@ export class IgdbApiClientService {
       `&client_secret=${encodeURIComponent(clientSecret)}` +
       `&grant_type=client_credentials`;
 
-    const response = await fetch(url, { method: 'POST' });
+    const response = await fetchWithRetryOrThrow({
+      url,
+      init: { method: 'POST' },
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -169,14 +173,17 @@ export class IgdbApiClientService {
       );
     }
 
-    return fetch(`${IGDB_API_BASE_URL}/${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Client-ID': clientId,
-        Authorization: `Bearer ${accessToken}`,
-        Accept: 'application/json',
+    return fetchWithRetryOrThrow({
+      url: `${IGDB_API_BASE_URL}/${endpoint}`,
+      init: {
+        method: 'POST',
+        headers: {
+          'Client-ID': clientId,
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/json',
+        },
+        body: query,
       },
-      body: query,
     });
   }
 

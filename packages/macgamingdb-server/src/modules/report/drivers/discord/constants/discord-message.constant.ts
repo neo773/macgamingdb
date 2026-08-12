@@ -1,4 +1,5 @@
 import { type ModerationVerdict } from '../../../dtos/moderation-verdict.dto';
+import { type ModerationFailureStage } from '../../../types/moderation-failure-stage.type';
 
 type VerdictPresentation = {
   emoji: string;
@@ -25,6 +26,13 @@ export const VERDICT_PRESENTATION: Record<
   flag: { emoji: '🚩', label: 'Flagged', color: 0xed4245 },
   ok: { emoji: '✅', label: 'Looks OK', color: 0x57f287 },
   uncertain: { emoji: '🤔', label: 'Uncertain', color: 0xfee75c },
+};
+
+export const MODERATION_FAILURE_COLOR = 0x992d22;
+
+export const FAILURE_STAGE_LABEL: Record<ModerationFailureStage, string> = {
+  judge: 'LLM verdict',
+  dispatch: 'Discord dispatch',
 };
 
 export const CATEGORY_LABEL: Record<ModerationVerdict['category'], string> = {
