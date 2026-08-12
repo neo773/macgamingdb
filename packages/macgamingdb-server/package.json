@@ -41,6 +41,7 @@
     "discord-interactions": "^4.4.0",
     "express": "^5.2.1",
     "fuse.js": "^7.4.2",
+    "ky": "^2.0.2",
     "macgamingdb-shared": "workspace:*",
     "nest-commander": "^3.20.1",
     "nestjs-trpc": "^2.12.0",

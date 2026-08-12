@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { fetchWithRetryOrThrow } from '../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { TrafficException } from '../exceptions/traffic.exception';
 
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL!;
@@ -35,10 +36,13 @@ export class TrafficService {
         ],
       };
 
-      const response = await fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(discordPayload),
+      const response = await fetchWithRetryOrThrow({
+        url: DISCORD_WEBHOOK_URL,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(discordPayload),
+        },
       });
 
       if (!response.ok) {

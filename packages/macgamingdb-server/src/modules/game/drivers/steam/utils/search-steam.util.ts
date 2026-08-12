@@ -1,6 +1,7 @@
 import { parseHTML } from 'linkedom';
 import { z } from 'zod';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { extractReleaseYear } from '../../../utils/extract-release-year.util';
 import type { SteamGameSearchObject } from '../types/steam-game-search-object.type';
 
@@ -13,7 +14,7 @@ export const searchSteam = async (
     const encodedTerm = encodeURIComponent(term);
     const url = `https://store.steampowered.com/search/?term=${encodedTerm}&category1=998`;
 
-    const response = await fetch(url);
+    const response = await fetchWithRetryOrThrow({ url });
     const html = await response.text();
 
     const { document } = parseHTML(html);

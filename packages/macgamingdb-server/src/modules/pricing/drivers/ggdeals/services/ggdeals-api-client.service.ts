@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { PricingException } from '../../../exceptions/pricing.exception';
 import { GG_DEALS_PRICES_ENDPOINT } from '../constants/gg-deals-prices-endpoint.constant';
 import { GG_DEALS_DEFAULT_REGION } from '../constants/gg-deals-default-region.constant';
@@ -30,7 +31,7 @@ export class GgDealsApiClientService {
     url.searchParams.set('key', apiKey);
     url.searchParams.set('region', region);
 
-    const response = await fetch(url);
+    const response = await fetchWithRetryOrThrow({ url: url.toString() });
     if (!response.ok) {
       const body = await response.text().catch(() => '');
       console.error(

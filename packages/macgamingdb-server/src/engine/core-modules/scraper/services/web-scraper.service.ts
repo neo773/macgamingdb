@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { fetchWithRetryOrThrow } from '../../http/utils/fetch-with-retry-or-throw.util';
 import { OXYLABS_API_ENDPOINT } from '../constants/oxylabs-api-endpoint.constant';
+import { OXYLABS_REQUEST_TIMEOUT_MS } from '../constants/oxylabs-request-timeout-ms.constant';
 
 type ScrapingResponse = {
   results: Array<{
@@ -31,16 +33,20 @@ export class WebScraperService {
     }
 
     try {
-      const response = await fetch(OXYLABS_API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Basic ${btoa(apiCredentials)}`,
+      const response = await fetchWithRetryOrThrow({
+        url: OXYLABS_API_ENDPOINT,
+        init: {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${btoa(apiCredentials)}`,
+          },
+          body: JSON.stringify({
+            source: 'universal',
+            url,
+          }),
         },
-        body: JSON.stringify({
-          source: 'universal',
-          url,
-        }),
+        timeoutMs: OXYLABS_REQUEST_TIMEOUT_MS,
       });
 
       if (!response.ok) {

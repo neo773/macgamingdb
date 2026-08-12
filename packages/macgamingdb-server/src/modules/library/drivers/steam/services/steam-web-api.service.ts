@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { STEAM_API_BASE_URL } from '../constants/steam-api-base-url.constant';
 import { SteamLibraryPrivateError } from '../exceptions/steam-library-private.exception';
 import { type SteamOwnedGame } from '../types/steam-owned-game.type';
@@ -32,7 +33,7 @@ export class SteamWebApiService {
     url.searchParams.set('include_played_free_games', '1');
     url.searchParams.set('format', 'json');
 
-    const response = await fetch(url);
+    const response = await fetchWithRetryOrThrow({ url: url.toString() });
     if (!response.ok) {
       throw new Error(`Steam GetOwnedGames returned ${response.status}`);
     }

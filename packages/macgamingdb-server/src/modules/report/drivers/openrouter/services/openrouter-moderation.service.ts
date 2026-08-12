@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { isNonEmptyString } from '@sniptt/guards';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { type ModerationVerdict } from '../../../dtos/moderation-verdict.dto';
 import { ReportException } from '../../../exceptions/report.exception';
 import { type JudgeReviewParams } from '../../../types/judge-review-params.type';
@@ -10,6 +11,8 @@ import {
   DEFAULT_MODERATION_MODEL,
   MODERATION_MAX_ATTEMPTS,
   OPENROUTER_COMPLETIONS_URL,
+  OPENROUTER_MAX_ATTEMPTS,
+  OPENROUTER_REQUEST_TIMEOUT_MS,
 } from '../constants/openrouter-request.constant';
 import { buildModerationPrompt } from '../utils/build-moderation-prompt.util';
 import { parseModerationVerdict } from '../utils/parse-moderation-verdict.util';
@@ -63,18 +66,23 @@ export class OpenRouterModerationService implements ModerationLlm {
     params: JudgeReviewParams;
     webContext: string[];
   }): Promise<string> {
-    const response = await fetch(OPENROUTER_COMPLETIONS_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${params.apiKey}`,
-        'Content-Type': 'application/json',
+    const response = await fetchWithRetryOrThrow({
+      url: OPENROUTER_COMPLETIONS_URL,
+      init: {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${params.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: params.model,
+          temperature: 0,
+          response_format: { type: 'json_object' },
+          messages: buildModerationPrompt(params.params, params.webContext),
+        }),
       },
-      body: JSON.stringify({
-        model: params.model,
-        temperature: 0,
-        response_format: { type: 'json_object' },
-        messages: buildModerationPrompt(params.params, params.webContext),
-      }),
+      timeoutMs: OPENROUTER_REQUEST_TIMEOUT_MS,
+      maxAttempts: OPENROUTER_MAX_ATTEMPTS,
     });
 
     if (!response.ok) {

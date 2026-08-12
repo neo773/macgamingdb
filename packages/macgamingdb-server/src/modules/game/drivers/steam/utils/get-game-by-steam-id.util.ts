@@ -1,3 +1,4 @@
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 import { GameException } from '../../../exceptions/game.exception';
 import type { SteamAppData } from '../types/steam-app-data.type';
 
@@ -10,9 +11,9 @@ export const getGameBySteamId = async (
   steamId: string,
 ): Promise<SteamAppData | null> => {
   try {
-    const response = await fetch(
-      `https://store.steampowered.com/api/appdetails?appids=${steamId}`,
-    );
+    const response = await fetchWithRetryOrThrow({
+      url: `https://store.steampowered.com/api/appdetails?appids=${steamId}`,
+    });
     const gameDetails: SteamAppsDetailsResponse = await response.json();
 
     const appDetails = gameDetails?.[steamId];

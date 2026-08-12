@@ -16,6 +16,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      'macgamingdb-shared': path.resolve(
+        __dirname,
+        './packages/macgamingdb-shared/src',
+      ),
     },
   },
 });

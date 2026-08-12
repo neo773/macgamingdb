@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { isNonEmptyString } from '@sniptt/guards';
+import { fetchWithRetryOrThrow } from '../../../../../engine/core-modules/http/utils/fetch-with-retry-or-throw.util';
 
 const EXA_SEARCH_URL = 'https://api.exa.ai/search';
 const EXA_NUM_RESULTS = 4;
 const EXA_MAX_CHARACTERS = 350;
+const EXA_REQUEST_TIMEOUT_MS = 15_000;
 
 const exaResponseSchema = z.object({
   results: z.array(
@@ -25,15 +27,19 @@ export class ExaSearchService {
     }
 
     try {
-      const response = await fetch(EXA_SEARCH_URL, {
-        method: 'POST',
-        headers: { 'x-api-key': apiKey, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          query,
-          numResults: EXA_NUM_RESULTS,
-          type: 'auto',
-          contents: { text: { maxCharacters: EXA_MAX_CHARACTERS } },
-        }),
+      const response = await fetchWithRetryOrThrow({
+        url: EXA_SEARCH_URL,
+        init: {
+          method: 'POST',
+          headers: { 'x-api-key': apiKey, 'content-type': 'application/json' },
+          body: JSON.stringify({
+            query,
+            numResults: EXA_NUM_RESULTS,
+            type: 'auto',
+            contents: { text: { maxCharacters: EXA_MAX_CHARACTERS } },
+          }),
+        },
+        timeoutMs: EXA_REQUEST_TIMEOUT_MS,
       });
 
       if (!response.ok) {
