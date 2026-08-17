@@ -5,7 +5,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['packages/macgamingdb-server/src/**/*.spec.ts'],
+    env: { LOG_LEVEL: 'silent' },
+    include: [
+      'packages/macgamingdb-server/src/**/*.spec.ts',
+      'packages/macgamingdb-server/test/**/*.integration-spec.ts',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

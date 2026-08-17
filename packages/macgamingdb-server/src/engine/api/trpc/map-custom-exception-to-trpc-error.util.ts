@@ -24,17 +24,39 @@ const codeToTrpcCode = (code: string): TRPC_ERROR_CODE_KEY => {
   return 'INTERNAL_SERVER_ERROR';
 };
 
-export const mapCustomExceptionToTrpcError = (error: unknown): never => {
-  if (error instanceof TRPCError) {
-    throw error;
+const MAX_CAUSE_DEPTH = 5;
+
+const findDomainException = (error: unknown): CustomException | null => {
+  let current: unknown = error;
+
+  for (let depth = 0; depth < MAX_CAUSE_DEPTH; depth += 1) {
+    if (current instanceof CustomException) {
+      return current;
+    }
+
+    if (!(current instanceof Error)) {
+      return null;
+    }
+
+    current = current.cause;
   }
 
-  if (error instanceof CustomException) {
+  return null;
+};
+
+export const mapCustomExceptionToTrpcError = (error: unknown): never => {
+  const domainException = findDomainException(error);
+
+  if (domainException) {
     throw new TRPCError({
-      code: codeToTrpcCode(error.code),
-      message: error.userFriendlyMessage ?? error.message,
-      cause: error,
+      code: codeToTrpcCode(domainException.code),
+      message: domainException.userFriendlyMessage ?? domainException.message,
+      cause: domainException,
     });
+  }
+
+  if (error instanceof TRPCError) {
+    throw error;
   }
 
   throw new TRPCError({

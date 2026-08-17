@@ -5,6 +5,7 @@ import superjson from 'superjson';
 import { DatabaseModule } from './database/database.module';
 import { AppContext } from './engine/api/trpc/app.context';
 import { ExceptionMappingMiddleware } from './engine/api/trpc/exception-mapping.middleware';
+import { EmailModule } from './engine/core-modules/email/email.module';
 import { PageRevalidationModule } from './engine/core-modules/page-revalidation/page-revalidation.module';
 import { FileStorageModule } from './engine/core-modules/file-storage/file-storage.module';
 import { ModulesModule } from './modules/modules.module';
@@ -13,6 +14,7 @@ import { ModulesModule } from './modules/modules.module';
   imports: [
     EventEmitterModule.forRoot(),
     DatabaseModule,
+    EmailModule,
     PageRevalidationModule,
     FileStorageModule,
     TRPCModule.forRoot({

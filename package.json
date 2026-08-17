@@ -26,6 +26,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "test": "vitest",
+    "test:integration": "vitest run packages/macgamingdb-server/test",
     "test:coverage": "vitest run --coverage",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
