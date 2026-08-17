@@ -30,7 +30,6 @@ export type TestApp = {
   caller: ReturnType<AppRouter['createCaller']>;
   moderationLlm: FakeModerationLlm;
   discord: FakeDiscordMessageService;
-  get: INestApplication['get'];
   signInAs: (userId: string | null) => void;
   close: () => Promise<void>;
 };
@@ -81,7 +80,6 @@ export const createTestApp = async (): Promise<TestApp> => {
     caller,
     moderationLlm,
     discord,
-    get: app.get.bind(app),
     signInAs: (userId: string | null) => {
       signedInUser = userId === null ? null : { id: userId };
     },
