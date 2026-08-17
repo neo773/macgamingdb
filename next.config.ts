@@ -3,7 +3,14 @@ import createMDX from '@next/mdx';
 import { apiRewrites } from './api-rewrites';
 
 const nextConfig = {
-  serverExternalPackages: ['@libsql/client'],
+  // Resend renders the email templates with react-dom/server, which the
+  // react-server condition bans — keep them out of the bundler's RSC graph
+  serverExternalPackages: [
+    '@libsql/client',
+    'resend',
+    '@react-email/render',
+    '@react-email/components',
+  ],
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   output: 'standalone' as const,
   // Pinned because a package.json above the repo makes Turbopack infer the

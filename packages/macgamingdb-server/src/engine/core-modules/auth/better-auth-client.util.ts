@@ -4,8 +4,12 @@ import { magicLink } from 'better-auth/plugins/magic-link';
 import { bearer } from 'better-auth/plugins/bearer';
 import { emailOTP } from 'better-auth/plugins/email-otp';
 import { expo } from '@better-auth/expo';
+import { Resend } from 'resend';
 import { SignJWT, importPKCS8 } from 'jose';
-import { sendEmailViaApiOrThrow } from '../email/utils/send-email-via-api-or-throw.util';
+import {
+  MacGamingDBMagicLinkEmail,
+  MacGamingDBMagicLinkEmailText,
+} from 'macgamingdb-emails/magic-link';
 import { type DrizzleDB } from '../../../database/drizzle';
 import * as schema from '../../../database/schema';
 import { REVIEW_ACCOUNT_EMAIL, REVIEW_ACCOUNT_OTP } from './auth.const';
@@ -105,10 +109,20 @@ export const BetterAuthClient = async (
             console.log(`Sending OTP to ${email}: ${otp}`);
             return;
           }
+          const resend = new Resend(process.env.RESEND_API_KEY);
 
-          await sendEmailViaApiOrThrow({
-            path: 'verification-otp',
-            payload: { email, otp },
+          await resend.emails.send({
+            from: 'MacGamingDB <hello@macgamingdb.app>',
+            replyTo: 'support@macgamingdb.app',
+            to: email,
+            subject: `${otp} is your MacGamingDB verification code`,
+            text: [
+              `Your MacGamingDB verification code is: ${otp}`,
+              '',
+              'It expires in 10 minutes. If you did not request this, you can ignore this email.',
+              '',
+              `@macgamingdb.app #${otp}`,
+            ].join('\n'),
           });
         },
       }),
@@ -118,10 +132,15 @@ export const BetterAuthClient = async (
             console.log(`Sending magic link to ${email} with url ${url}`);
             return;
           }
+          const resend = new Resend(process.env.RESEND_API_KEY);
 
-          await sendEmailViaApiOrThrow({
-            path: 'magic-link',
-            payload: { email, magicLink: url },
+          await resend.emails.send({
+            from: 'MacGamingDB <hello@macgamingdb.app>',
+            replyTo: 'support@macgamingdb.app',
+            to: email,
+            subject: 'Log in to MacGamingDB with this magic link',
+            react: MacGamingDBMagicLinkEmail({ magicLink: url }),
+            text: MacGamingDBMagicLinkEmailText({ magicLink: url }),
           });
         },
       }),
