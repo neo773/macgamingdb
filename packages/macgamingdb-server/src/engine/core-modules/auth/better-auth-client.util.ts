@@ -4,12 +4,8 @@ import { magicLink } from 'better-auth/plugins/magic-link';
 import { bearer } from 'better-auth/plugins/bearer';
 import { emailOTP } from 'better-auth/plugins/email-otp';
 import { expo } from '@better-auth/expo';
-import { Resend } from 'resend';
 import { SignJWT, importPKCS8 } from 'jose';
-import {
-  MacGamingDBMagicLinkEmail,
-  MacGamingDBMagicLinkEmailText,
-} from 'macgamingdb-emails/magic-link';
+import { sendEmailViaApiOrThrow } from '../email/utils/send-email-via-api-or-throw.util';
 import { type DrizzleDB } from '../../../database/drizzle';
 import * as schema from '../../../database/schema';
 import { REVIEW_ACCOUNT_EMAIL, REVIEW_ACCOUNT_OTP } from './auth.const';
@@ -101,50 +97,31 @@ export const BetterAuthClient = async (
         generateOTP: ({ email }) =>
           email === REVIEW_ACCOUNT_EMAIL ? REVIEW_ACCOUNT_OTP : undefined,
         async sendVerificationOTP({ email, otp }) {
-          console.log(`Sending OTP to ${email}: ${otp}`);
-
           if (email === REVIEW_ACCOUNT_EMAIL) {
             return;
           }
 
           if (process.env.NODE_ENV !== 'production') {
+            console.log(`Sending OTP to ${email}: ${otp}`);
             return;
           }
-          const resend = new Resend(process.env.RESEND_API_KEY);
 
-          await resend.emails.send({
-            from: 'MacGamingDB <hello@macgamingdb.app>',
-            replyTo: 'support@macgamingdb.app',
-            to: email,
-            subject: `${otp} is your MacGamingDB verification code`,
-            text: [
-              `Your MacGamingDB verification code is: ${otp}`,
-              '',
-              'It expires in 10 minutes. If you did not request this, you can ignore this email.',
-              '',
-              `@macgamingdb.app #${otp}`,
-            ].join('\n'),
+          await sendEmailViaApiOrThrow({
+            path: 'verification-otp',
+            payload: { email, otp },
           });
         },
       }),
       magicLink({
-        sendMagicLink: async ({ email, token, url }) => {
-          console.log(
-            `Sending magic link to ${email} with token ${token} and url ${url}`,
-          );
-
+        sendMagicLink: async ({ email, url }) => {
           if (process.env.NODE_ENV !== 'production') {
+            console.log(`Sending magic link to ${email} with url ${url}`);
             return;
           }
-          const resend = new Resend(process.env.RESEND_API_KEY);
 
-          await resend.emails.send({
-            from: 'MacGamingDB <hello@macgamingdb.app>',
-            replyTo: 'support@macgamingdb.app',
-            to: email,
-            subject: 'Log in to MacGamingDB with this magic link',
-            react: MacGamingDBMagicLinkEmail({ magicLink: url }),
-            text: MacGamingDBMagicLinkEmailText({ magicLink: url }),
+          await sendEmailViaApiOrThrow({
+            path: 'magic-link',
+            payload: { email, magicLink: url },
           });
         },
       }),

@@ -43,6 +43,7 @@ Hard rules for this repo. PRs violating them get rejected. Backend rules apply t
 - Exceptions carry a `userFriendlyMessage` separate from the technical message when they surface to users.
 - CLI/backfill work = nest-commander `.command.ts` under the domain's `commands/`, always with `--dry-run`.
 - Unit tests on utils only, colocated `__tests__/*.spec.ts`; services get exercised through API integration tests, and bug fixes include a regression test.
+- API integration tests live in `packages/macgamingdb-server/test/` as `*.integration-spec.ts`. They boot the real `AppModule` against an in-memory sqlite db (migrations applied) and call the real tRPC router via `createTestApp()`. Override only the edges — auth, vendor drivers, revalidation — never the module under test. Fakes go in `test/fakes/`, data builders in `test/factories/` as `createTestX(overrides)`.
 
 ## Frontend (`src/`, `packages/macgamingdb-ui`)
 
