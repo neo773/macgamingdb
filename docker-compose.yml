@@ -1,8 +1,18 @@
 services:
+  libsql:
+    image: ghcr.io/tursodatabase/libsql-server:fc98e19
+    environment:
+      - SQLD_NODE=primary
+      - SQLD_AUTH_JWT_KEY=${SQLD_AUTH_JWT_KEY}
+    volumes:
+      - /home/opc/sqld-data:/var/lib/sqld
+    restart: unless-stopped
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
+    depends_on:
+      - libsql
     environment:
       - SERVER_PORT=4000
       - LIBSQL_DATABASE_URL=${LIBSQL_DATABASE_URL}
