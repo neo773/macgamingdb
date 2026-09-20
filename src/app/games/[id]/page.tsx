@@ -36,8 +36,9 @@ export const generateMetadata = async ({
 
   try {
     const helpers = await createServerHelpers();
-    const { game } = await helpers.game.getById.fetch({ id });
+    const { game, reviews } = await helpers.game.getById.fetch({ id });
     const canonicalId = game.slug ?? id;
+    const hasMacData = isNonEmptyArray(reviews);
 
     return {
       title: buildGamePageTitle(game.name),
@@ -45,6 +46,7 @@ export const generateMetadata = async ({
       alternates: {
         canonical: `${SITE_URL}/games/${canonicalId}`,
       },
+      ...(hasMacData ? {} : { robots: { index: false, follow: true } }),
       openGraph: {
         title: buildGamePageTitle(game.name),
         description: `How ${game.name} runs on Apple Silicon: community FPS reports for Native, CrossOver and Parallels.`,
