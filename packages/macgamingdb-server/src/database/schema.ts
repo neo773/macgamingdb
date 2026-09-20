@@ -113,6 +113,8 @@ export const games = sqliteTable(
       'aggregatedPerformance',
     ).$type<PerformanceRating>(),
     reviewCount: integer('reviewCount').notNull().default(0),
+    criticRating: integer('criticRating'),
+    criticRatingCount: integer('criticRatingCount'),
   },
   (table) => [
     uniqueIndex('Game_slug_key').on(table.slug),

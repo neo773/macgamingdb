@@ -1,12 +1,14 @@
 import { isNonEmptyString } from '@sniptt/guards';
 
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { normalizeGenres } from 'macgamingdb-shared/utils/normalizeGenres';
 
 import { IGDB_WEBSITE_CATEGORY_OFFICIAL } from '../constants/igdb-website-category-official.constant';
 import type { NormalizedGameDetails } from '../../../types/normalized-game-details.type';
 import type { IgdbGameData } from '../types/igdb-game-data.type';
 import { igdbImageUrl } from './igdb-image-url.util';
 import { getSteamAppIdFromIgdb } from './get-steam-app-id-from-igdb.util';
+import { extractIgdbCriticRating } from './extract-igdb-critic-rating.util';
 
 const escapeHtml = (value: string): string =>
   value
@@ -49,8 +51,11 @@ export const normalizeIgdbGameDetails = (
   data: IgdbGameData,
 ): NormalizedGameDetails => {
   const steamAppId = getSteamAppIdFromIgdb(data);
+  const { criticRating, criticRatingCount } = extractIgdbCriticRating(data);
 
   return {
+    criticRating,
+    criticRatingCount,
     name: data.name,
     headerImage: data.cover
       ? igdbImageUrl({ imageId: data.cover.image_id, size: 't_720p' })
@@ -70,7 +75,7 @@ export const normalizeIgdbGameDetails = (
     releaseYear: isDefined(data.first_release_date)
       ? new Date(data.first_release_date * 1000).getUTCFullYear()
       : null,
-    genres: (data.genres ?? []).map((genre) => genre.name),
+    genres: normalizeGenres((data.genres ?? []).map((genre) => genre.name)),
     screenshots: (data.screenshots ?? []).map((screenshot) =>
       igdbImageUrl({ imageId: screenshot.image_id, size: 't_screenshot_big' }),
     ),

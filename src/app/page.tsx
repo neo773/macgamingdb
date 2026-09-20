@@ -5,15 +5,28 @@ import { HomeClient } from './home-client';
 import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 import { createFilterConfig } from '@/modules/search/utils/createFilterConfig';
 import { Container } from 'macgamingdb-ui/layout/Container';
+import { type Metadata } from 'next';
+import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
+import { SearchURLParamsKeys } from '@/modules/search/constants/SearchURLParamsKeys';
 
 export const dynamic = 'force-dynamic';
 
+export const generateMetadata = async ({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> => {
+  const params = await searchParams;
+  const isSearchResultPage = Object.hasOwn(params, SearchURLParamsKeys.QUERY);
+
+  return {
+    alternates: { canonical: SITE_URL },
+    ...(isSearchResultPage && { robots: { index: false, follow: true } }),
+  };
+};
+
 const Home = async () => {
-  const defaultFilterConfig = createFilterConfig(
-    undefined,
-    undefined,
-    undefined,
-  );
+  const defaultFilterConfig = createFilterConfig({});
   const helpers = await createServerHelpers();
 
   const GamesPage = await helpers.game.getGames.fetch(defaultFilterConfig);

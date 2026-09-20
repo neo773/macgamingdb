@@ -1,0 +1,16 @@
+export const CANONICAL_GENRES = [
+  'Action',
+  'Adventure',
+  'Arcade',
+  'Casual',
+  'Indie',
+  'MMO',
+  'Music',
+  'Puzzle',
+  'RPG',
+  'Racing',
+  'Shooter',
+  'Simulation',
+  'Sports',
+  'Strategy',
+] as const;

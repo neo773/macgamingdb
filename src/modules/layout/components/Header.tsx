@@ -33,9 +33,9 @@ export const Header = () => {
             <nav className="bg-input/30 border-2 border-input/70 backdrop-blur-sm rounded-full px-5 py-3 grid grid-cols-[auto_1fr_auto] items-center shadow-lg">
               <Link href={'/'} className="flex items-center">
                 <LogoIcon className="size-6 mr-2" />
-                <h1 className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
+                <span className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400">
                   MacGamingDB
-                </h1>
+                </span>
               </Link>
 
               <div className="hidden sm:flex items-center justify-center space-x-4">

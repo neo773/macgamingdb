@@ -1,4 +1,5 @@
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { normalizeGenres } from 'macgamingdb-shared/utils/normalizeGenres';
 
 import { extractReleaseYear } from '../../../utils/extract-release-year.util';
 import type { NormalizedGameDetails } from '../../../types/normalized-game-details.type';
@@ -15,10 +16,14 @@ export const normalizeSteamGameDetails = (
   website: data.website ?? null,
   releaseDate: data.release_date?.date ?? null,
   releaseYear: extractReleaseYear(data.release_date?.date) ?? null,
-  genres: (data.genres ?? []).map((genre) => genre.description),
+  genres: normalizeGenres(
+    (data.genres ?? []).map((genre) => genre.description),
+  ),
   screenshots: (data.screenshots ?? []).map(
     (screenshot) => screenshot.path_full,
   ),
+  criticRating: null,
+  criticRatingCount: null,
   externalIds: isDefined(data.steam_appid)
     ? { steam: String(data.steam_appid) }
     : {},

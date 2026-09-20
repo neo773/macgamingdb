@@ -4,6 +4,7 @@ import {
   type ChipsetVariantEnum,
   type PlayMethod,
 } from 'macgamingdb-server/schema';
+import { type CanonicalGenre } from 'macgamingdb-shared/types/CanonicalGenre';
 import { type PerformanceFilter } from '@/modules/search/types/PerformanceFilter';
 
 export type FilterConfig = {
@@ -12,4 +13,5 @@ export type FilterConfig = {
   chipset?: z.infer<typeof ChipsetEnum>;
   chipsetVariant?: z.infer<typeof ChipsetVariantEnum>;
   playMethod?: PlayMethod;
+  genre?: CanonicalGenre;
 };

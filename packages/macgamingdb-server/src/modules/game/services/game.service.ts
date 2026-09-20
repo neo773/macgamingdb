@@ -11,6 +11,8 @@ import {
 } from 'drizzle-orm';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
+import { type CanonicalGenre } from 'macgamingdb-shared/types/CanonicalGenre';
+import { buildGenreCondition } from '../utils/build-genre-condition.util';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
 import { type DrizzleDB } from '../../../database/drizzle';
 import {
@@ -96,14 +98,21 @@ export class GameService {
     return { headerImage: game.headerImage };
   }
 
-  private async getUnfilteredCounts(): Promise<RatingCounts> {
+  private async getUnfilteredCounts(
+    genre?: CanonicalGenre,
+  ): Promise<RatingCounts> {
     const counts = await this.db
       .select({
         aggregatedPerformance: games.aggregatedPerformance,
         count: count(),
       })
       .from(games)
-      .where(isNotNull(games.aggregatedPerformance))
+      .where(
+        and(
+          isNotNull(games.aggregatedPerformance),
+          buildGenreCondition(genre),
+        ),
+      )
       .groupBy(games.aggregatedPerformance);
 
     const result = createEmptyCounts();
@@ -118,8 +127,18 @@ export class GameService {
 
   private async getFilteredCounts(
     reviewFilter: ReviewFilter,
+    genre?: CanonicalGenre,
   ): Promise<RatingCounts> {
     const conditions: SQL[] = [];
+    const genreCondition = buildGenreCondition(genre);
+    if (isDefined(genreCondition)) {
+      conditions.push(
+        inArray(
+          visibleGameReviews.gameId,
+          this.db.select({ id: games.id }).from(games).where(genreCondition),
+        ),
+      );
+    }
     if (reviewFilter.chipset)
       conditions.push(eq(visibleGameReviews.chipset, reviewFilter.chipset));
     if (reviewFilter.chipsetVariant)
@@ -160,9 +179,10 @@ export class GameService {
     chipset?: Chipset;
     chipsetVariant?: ChipsetVariant;
     playMethod: 'ALL' | PlayMethod;
+    genre?: CanonicalGenre;
   }): Promise<RatingCounts> {
     this.assertValidChipsetVariant(input);
-    const { chipset, chipsetVariant, playMethod } = input;
+    const { chipset, chipsetVariant, playMethod, genre } = input;
 
     const reviewFilter: ReviewFilter = {
       ...(chipset && { chipset }),
@@ -173,10 +193,10 @@ export class GameService {
     const hasFilters = isNonEmptyArray(Object.keys(reviewFilter));
 
     if (hasFilters) {
-      return this.getFilteredCounts(reviewFilter);
+      return this.getFilteredCounts(reviewFilter, genre);
     }
 
-    return this.getUnfilteredCounts();
+    return this.getUnfilteredCounts(genre);
   }
 
   async getGames(input: {
@@ -186,6 +206,7 @@ export class GameService {
     chipset?: Chipset;
     chipsetVariant?: ChipsetVariant;
     playMethod: 'ALL' | PlayMethod;
+    genre?: CanonicalGenre;
   }) {
     this.assertValidChipsetVariant(input);
     try {
@@ -196,7 +217,10 @@ export class GameService {
         chipset,
         chipsetVariant,
         playMethod,
+        genre,
       } = input;
+
+      const genreCondition = buildGenreCondition(genre);
 
       const hasChipsetOrPlayMethodFilter = chipset || playMethod !== 'ALL';
 
@@ -227,7 +251,7 @@ export class GameService {
         const gamesForIds = await this.db
           .select({ id: games.id })
           .from(games)
-          .where(inArray(games.id, matchingGameIds))
+          .where(and(inArray(games.id, matchingGameIds), genreCondition))
           .orderBy(desc(games.reviewCount))
           .offset(offset)
           .limit(limit * 3);
@@ -288,6 +312,9 @@ export class GameService {
       const conditions: SQL[] = [];
       if (performance !== 'ALL') {
         conditions.push(eq(games.aggregatedPerformance, performance));
+      }
+      if (isDefined(genreCondition)) {
+        conditions.push(genreCondition);
       }
 
       const matchedGames = await this.db

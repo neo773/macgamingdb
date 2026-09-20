@@ -67,7 +67,7 @@ export const PriceDisplay = ({ gameId, compact }: PriceDisplayProps) => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl text-white font-semibold">Pricing</h1>
+        <h2 className="text-2xl text-white font-semibold">Pricing</h2>
         <a
           href={priceData.url}
           target="_blank"

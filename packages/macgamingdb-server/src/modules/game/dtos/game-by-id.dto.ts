@@ -25,6 +25,8 @@ export const GameByIdSchema = z.object({
     updatedAt: z.string(),
     aggregatedPerformance: PerformanceEnum.nullable(),
     reviewCount: z.number(),
+    criticRating: z.number().nullable(),
+    criticRatingCount: z.number().nullable(),
   }),
   reviews: z.array(GameReviewWithMacConfigSchema),
   stats: GameStatsSchema.nullable(),

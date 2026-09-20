@@ -11,5 +11,7 @@ export type NormalizedGameDetails = {
   releaseYear: number | null;
   genres: string[];
   screenshots: string[];
+  criticRating: number | null;
+  criticRatingCount: number | null;
   externalIds: Partial<Record<GameSource, string>>;
 };

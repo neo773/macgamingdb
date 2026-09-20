@@ -6,6 +6,14 @@
     "./utils/*": {
       "types": "./src/utils/*.ts",
       "default": "./dist/utils/*.js"
+    },
+    "./constants/*": {
+      "types": "./src/constants/*.ts",
+      "default": "./dist/constants/*.js"
+    },
+    "./types/*": {
+      "types": "./src/types/*.ts",
+      "default": "./dist/types/*.js"
     }
   },
   "scripts": {

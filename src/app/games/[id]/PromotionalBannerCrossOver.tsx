@@ -75,13 +75,13 @@ export const PromotionalBannerCrossOver = () => {
 
           {/* Headline */}
           <header className="mb-6">
-            <h1 className="font-extrabold text-2xl mb-1 tracking-wider">
+            <p className="font-extrabold text-2xl mb-1 tracking-wider">
               <GradientText>PLAY</GradientText>
               <GradientText color="cyan" className="mx-2 glow-text">
                 WINDOWS
               </GradientText>
               <GradientText>GAMES</GradientText>
-            </h1>
+            </p>
             <h2 className="font-extrabold text-2xl tracking-wider">
               <GradientText>ON</GradientText>
               <GradientText color="blue" className="mx-2 glow-text">

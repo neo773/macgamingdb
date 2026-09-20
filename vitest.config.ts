@@ -9,6 +9,8 @@ export default defineConfig({
     include: [
       'packages/macgamingdb-server/src/**/*.spec.ts',
       'packages/macgamingdb-server/test/**/*.integration-spec.ts',
+      'packages/macgamingdb-shared/src/**/*.spec.ts',
+      'src/**/*.spec.ts',
     ],
     coverage: {
       provider: 'v8',
