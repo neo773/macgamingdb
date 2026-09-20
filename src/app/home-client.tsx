@@ -25,13 +25,16 @@ export const HomeClient = ({ GamesPage }: HomeClientProps) => {
     performanceFilter,
     chipsetFilter,
     playMethodFilter,
+    genreFilter,
     isDefaultFilter,
     chipsetGroups,
     playMethodOptions,
+    genreOptions,
     filterConfig,
     handleFilterChange,
     handleChipsetChange,
     handlePlayMethodChange,
+    handleGenreChange,
     resetFilters,
   } = useHomeFilters();
 
@@ -69,6 +72,7 @@ export const HomeClient = ({ GamesPage }: HomeClientProps) => {
       chipsetVariant: filterConfig.chipsetVariant,
     }),
     ...(filterConfig.playMethod && { playMethod: filterConfig.playMethod }),
+    ...(filterConfig.genre && { genre: filterConfig.genre }),
   };
 
   const { data: ratingCounts } = trpc.game.getFilterCounts.useQuery(
@@ -114,12 +118,15 @@ export const HomeClient = ({ GamesPage }: HomeClientProps) => {
           chipsetFilter={chipsetFilter}
           playMethodFilter={playMethodFilter}
           performanceFilter={performanceFilter}
+          genreFilter={genreFilter}
           chipsetGroups={chipsetGroups}
           playMethodOptions={playMethodOptions}
+          genreOptions={genreOptions}
           ratingCounts={isDefaultFilter ? GamesPage.ratingCounts : ratingCounts}
           onChipsetChange={handleChipsetChange}
           onPlayMethodChange={handlePlayMethodChange}
           onPerformanceChange={handleFilterChange}
+          onGenreChange={handleGenreChange}
         />
       )}
 

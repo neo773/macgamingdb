@@ -71,6 +71,13 @@
       "when": 1784492970934,
       "tag": "0009_old_valeria_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1789918641925,
+      "tag": "0010_wonderful_switch",
+      "breakpoints": true
     }
   ]
 }

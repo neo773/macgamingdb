@@ -31,9 +31,9 @@ export const AdSpaceAvailableBanner = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="font-semibold text-3xl text-white mb-3 tracking-tight leading-tight">
+          <p className="font-semibold text-3xl text-white mb-3 tracking-tight leading-tight">
             Your Ad Could Be Here
-          </h1>
+          </p>
 
           {/* Description */}
           <p className="text-gray-400 text-base mb-8 max-w-sm leading-relaxed font-normal">

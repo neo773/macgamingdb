@@ -19,6 +19,8 @@ import { GameSearchResultSchema } from '../dtos/game-search-result.dto';
 import { RatingCountsSchema } from '../dtos/rating-counts.dto';
 import { SitemapEntrySchema } from '../dtos/sitemap-entry.dto';
 import { type PerformanceRating } from '../../../database/schema';
+import { CANONICAL_GENRES } from 'macgamingdb-shared/constants/CANONICAL_GENRES';
+import { type CanonicalGenre } from 'macgamingdb-shared/types/CanonicalGenre';
 import { getRegion } from '../../../engine/utils/get-region.util';
 import { GameService } from '../services/game.service';
 
@@ -75,6 +77,7 @@ export class GameRouter {
       chipset: ChipsetEnum.optional(),
       chipsetVariant: ChipsetVariantEnum.optional(),
       playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      genre: z.enum(CANONICAL_GENRES).optional(),
     }),
     output: RatingCountsSchema,
     meta: {
@@ -92,6 +95,7 @@ export class GameRouter {
       chipset?: Chipset;
       chipsetVariant?: ChipsetVariant;
       playMethod: 'ALL' | PlayMethod;
+      genre?: CanonicalGenre;
     },
   ) {
     return this.gameService.getFilterCounts(input);
@@ -105,6 +109,7 @@ export class GameRouter {
       chipset: ChipsetEnum.optional(),
       chipsetVariant: ChipsetVariantEnum.optional(),
       playMethod: z.enum(['ALL', ...PlayMethodEnum.options]).default('ALL'),
+      genre: z.enum(CANONICAL_GENRES).optional(),
     }),
     output: GamesPageSchema,
     meta: {
@@ -125,6 +130,7 @@ export class GameRouter {
       chipset?: Chipset;
       chipsetVariant?: ChipsetVariant;
       playMethod: 'ALL' | PlayMethod;
+      genre?: CanonicalGenre;
     },
   ) {
     return this.gameService.getGames(input);

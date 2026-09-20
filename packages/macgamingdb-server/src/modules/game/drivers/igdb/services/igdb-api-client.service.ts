@@ -10,6 +10,7 @@ import { EXTERNAL_GAME_SOURCE_STEAM } from '../constants/external-game-source-st
 import { SEARCHABLE_IGDB_GAME_TYPES } from '../constants/searchable-igdb-game-types.constant';
 import { escapeIgdbQueryValue } from '../utils/escape-igdb-query-value.util';
 import type { IgdbGameData } from '../types/igdb-game-data.type';
+import type { IgdbCriticRatingBySteamAppId } from '../types/igdb-critic-rating-by-steam-app-id.type';
 
 type TwitchAccessToken = {
   accessToken: string;
@@ -95,6 +96,38 @@ export class IgdbApiClientService {
     return externalGames[0]?.game ?? null;
   }
 
+  async getCriticRatingsBySteamAppIds({
+    steamAppIds,
+  }: {
+    steamAppIds: string[];
+  }): Promise<IgdbCriticRatingBySteamAppId[]> {
+    const quotedIds = steamAppIds
+      .map((steamAppId) => `"${escapeIgdbQueryValue(steamAppId)}"`)
+      .join(',');
+
+    const apicalypseQuery =
+      `fields uid, game.aggregated_rating, game.aggregated_rating_count;` +
+      ` where uid = (${quotedIds})` +
+      ` & external_game_source = ${EXTERNAL_GAME_SOURCE_STEAM};` +
+      ` limit ${steamAppIds.length};`;
+
+    const externalGames = await this.queryIgdb<
+      Array<{
+        uid: string;
+        game?: Pick<
+          IgdbGameData,
+          'aggregated_rating' | 'aggregated_rating_count'
+        >;
+      }>
+    >({ endpoint: 'external_games', query: apicalypseQuery });
+
+    return externalGames.map((externalGame) => ({
+      steamAppId: externalGame.uid,
+      aggregated_rating: externalGame.game?.aggregated_rating,
+      aggregated_rating_count: externalGame.game?.aggregated_rating_count,
+    }));
+  }
+
   private async requestTwitchAccessToken(): Promise<string> {
     const clientId = process.env.TWITCH_CLIENT_ID;
     const clientSecret = process.env.TWITCH_CLIENT_SECRET;
@@ -106,14 +139,19 @@ export class IgdbApiClientService {
       );
     }
 
-    const url =
-      `${TWITCH_TOKEN_URL}?client_id=${encodeURIComponent(clientId)}` +
-      `&client_secret=${encodeURIComponent(clientSecret)}` +
-      `&grant_type=client_credentials`;
+    const credentials = new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: 'client_credentials',
+    });
 
     const response = await fetchWithRetryOrThrow({
-      url,
-      init: { method: 'POST' },
+      url: TWITCH_TOKEN_URL,
+      init: {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: credentials.toString(),
+      },
     });
 
     if (!response.ok) {

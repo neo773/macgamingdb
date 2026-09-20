@@ -28,6 +28,8 @@ const gameColumnsFromDetails = (details: NormalizedGameDetails) => ({
   publishers: details.publishers,
   genres: details.genres,
   screenshots: details.screenshots,
+  criticRating: details.criticRating,
+  criticRatingCount: details.criticRatingCount,
 });
 
 @Injectable()

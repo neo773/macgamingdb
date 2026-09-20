@@ -1,8 +1,17 @@
 import Link from 'next/link';
+import { type Metadata } from 'next';
 import { Picture } from 'macgamingdb-ui/display/Picture';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
+
+export const metadata: Metadata = {
+  title: 'Mac Gaming Guides & Benchmarks – Blog',
+  description:
+    'Guides on running Windows games on Apple Silicon: CrossOver, Parallels and Game Porting Toolkit, with real benchmarks.',
+  alternates: { canonical: `${SITE_URL}/blog` },
+};
 
 type BlogPost = {
   slug: string;

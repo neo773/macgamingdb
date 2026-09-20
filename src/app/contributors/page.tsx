@@ -1,10 +1,19 @@
+import { type Metadata } from 'next';
 import { Header } from '@/modules/layout/components/Header';
 import { Footer } from '@/modules/layout/components/Footer';
 import { createServerHelpers } from '@/modules/trpc/utils/createServerHelpers';
 import { ContributorsClient } from './client';
 import { Container } from 'macgamingdb-ui/layout/Container';
+import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Contributors – MacGamingDB',
+  description:
+    'The community members reporting Mac gaming performance: FPS benchmarks and compatibility results for Apple Silicon.',
+  alternates: { canonical: `${SITE_URL}/contributors` },
+};
 
 const ContributorsPage = async () => {
   const helpers = await createServerHelpers();

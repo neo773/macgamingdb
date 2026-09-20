@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Script from 'next/script';
 import { type Metadata } from 'next';
 import { permanentRedirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
@@ -11,6 +10,12 @@ import { generateGameJsonLd } from '@/modules/game/utils/generateGameJsonLd';
 import { GameDetailHeader } from '@/modules/game/components/GameDetailHeader';
 import { GameInfoCard } from '@/modules/game/components/GameInfoCard';
 import { GameStatsCard } from '@/modules/game/components/GameStatsCard';
+import { CriticScoreBadge } from '@/modules/game/components/CriticScoreBadge';
+import { GameMetaBadges } from '@/modules/game/components/GameMetaBadges';
+import { MacVerdictSummary } from '@/modules/game/components/MacVerdictSummary';
+import { buildMacVerdict } from '@/modules/game/utils/buildMacVerdict';
+import { buildGamePageTitle } from '@/modules/game/utils/buildGamePageTitle';
+import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
 import { ExperienceReportsSection } from '@/modules/game/components/ExperienceReportsSection';
 import { GamePageError } from '@/modules/game/components/GamePageError';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
@@ -35,14 +40,14 @@ export const generateMetadata = async ({
     const canonicalId = game.slug ?? id;
 
     return {
-      title: `${game.name} – Mac Compatibility & Apple Silicon Performance | MacGamingDB`,
-      description: `Can you play ${game.name} on Mac? Check Apple Silicon (M1–M4) compatibility, FPS benchmarks, and user reports for Native, Rosetta 2, CrossOver, Parallels & Game Porting Toolkit.`,
+      title: buildGamePageTitle(game.name),
+      description: `Does ${game.name} run on Mac? Apple Silicon compatibility, FPS reports and settings for Native, CrossOver and Parallels.`,
       alternates: {
-        canonical: `https://macgamingdb.app/games/${canonicalId}`,
+        canonical: `${SITE_URL}/games/${canonicalId}`,
       },
       openGraph: {
-        title: `${game.name} – Mac Compatibility & Apple Silicon Performance`,
-        description: `Discover how ${game.name} runs on macOS. Includes benchmarks, compatibility layers (Rosetta, CrossOver, Parallels, GPTK), and community reviews.`,
+        title: buildGamePageTitle(game.name),
+        description: `How ${game.name} runs on Apple Silicon: community FPS reports for Native, CrossOver and Parallels.`,
         type: 'website',
       },
     };
@@ -78,9 +83,8 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div className="min-h-dvh flex flex-col bg-black">
-      <Script
+      <script
         type="application/ld+json"
-        id={`jsonLdGame${game.id}`}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
@@ -97,9 +101,26 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
         <GameDetailHeader game={game} />
 
+        <div className="mb-8 flex flex-col gap-4">
+          <MacVerdictSummary
+            gameName={game.name}
+            verdict={buildMacVerdict(reviews)}
+          />
+          <div className="flex flex-wrap items-center gap-3">
+            <GameMetaBadges
+              releaseYear={game.releaseYear}
+              genres={game.genres}
+            />
+            <CriticScoreBadge
+              criticRating={game.criticRating}
+              criticRatingCount={game.criticRatingCount}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <GameInfoCard description={game.descriptionHtml ?? ''} />
           <GameStatsCard stats={stats} />
+          <GameInfoCard description={game.descriptionHtml ?? ''} />
         </div>
 
         <PriceDisplay gameId={identifier} />

@@ -37,7 +37,8 @@ export type IgdbGameData = {
     external_game_source?: number;
     uid: string;
   }>;
-  total_rating?: number;
+  aggregated_rating?: number;
+  aggregated_rating_count?: number;
   videos?: Array<{
     video_id: string;
   }>;

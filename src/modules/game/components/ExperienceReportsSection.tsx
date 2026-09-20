@@ -49,7 +49,7 @@ export const ExperienceReportsSection = ({
       ) : (
         <Card className="bg-primary-gradient">
           <CardContent className="flex flex-col items-center justify-center py-8 gap-4">
-            <h1 className="text-xl font-medium">No experience reports yet</h1>
+            <p className="text-xl font-medium">No experience reports yet</p>
             <CreateReviewDialog gameId={gameId} gameName={gameName} />
           </CardContent>
         </Card>

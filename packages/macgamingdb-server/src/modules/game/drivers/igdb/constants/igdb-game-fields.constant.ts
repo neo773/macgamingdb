@@ -21,6 +21,7 @@ export const IGDB_GAME_FIELDS = [
   'external_games.category',
   'external_games.external_game_source',
   'external_games.uid',
-  'total_rating',
+  'aggregated_rating',
+  'aggregated_rating_count',
   'videos.video_id',
 ].join(',');
