@@ -76,7 +76,8 @@ export const MacVerdictSummary = ({
     <p className="text-gray-300">
       <span className="font-medium text-white">{gameName}</span> runs{' '}
       {methodSentence} on Apple Silicon. Based on{' '}
-      {pluralizeReports(verdict.reportCount)} across {summarizeChips(verdict.chips)}.
+      {pluralizeReports(verdict.reportCount)} across{' '}
+      {summarizeChips(verdict.chips)}.
     </p>
   );
 };

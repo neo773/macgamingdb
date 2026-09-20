@@ -29,9 +29,9 @@ describe('normalizeGenres', () => {
   });
 
   it('should drop storefront labels that are not genres', () => {
-    expect(normalizeGenres(['Free To Play', 'Early Access', 'Utilities'])).toEqual(
-      [],
-    );
+    expect(
+      normalizeGenres(['Free To Play', 'Early Access', 'Utilities']),
+    ).toEqual([]);
     expect(normalizeGenres(['Action', 'Early Access'])).toEqual(['Action']);
   });
 
@@ -40,9 +40,9 @@ describe('normalizeGenres', () => {
   });
 
   it('should deduplicate and sort the result', () => {
-    expect(normalizeGenres(['Strategy', 'Azione', 'Action', 'Strategia'])).toEqual(
-      ['Action', 'Strategy'],
-    );
+    expect(
+      normalizeGenres(['Strategy', 'Azione', 'Action', 'Strategia']),
+    ).toEqual(['Action', 'Strategy']);
   });
 
   it('should return an empty array when given no genres', () => {

@@ -7,22 +7,22 @@ Every "verdict" row was checked against a current source. Myths are marked as su
 
 ## Status (updated 2026-09-20, verified against the running app)
 
-| # | Issue | Status |
-|---|---|---|
-| 1 | No category / hub pages | Done — 19 pages |
-| 2 | Only 14 real backlinks | Not started (digital PR, not code) |
-| 3 | Steam boilerplate on top | Done — Mac verdict first, gated by report count |
-| 4 | Titles too long / duplicated | Done |
-| 5 | `/blog` broken | Partly — unique title/description/canonical; still one 61-word post |
-| 6 | `/roadmap` 404 | **FALSE FINDING — withdrawn, see below** |
-| 7 | Meta descriptions over-long | Done |
-| 8 | Filter URLs uncontrolled | Done |
-| 9 | Sitemap incomplete | Done |
-| 10 | JSON-LD client-side only | Done |
-| 11 | Zero AI Overview citations | Inputs shipped (3 + 10); citations now depend on Google |
-| 12 | Six `<h1>` per page | Done |
-| 13 | Page weight 528KB | Not started |
-| 14 | 443 spam backlinks | Decided: ignore. Manual-action check still outstanding |
+| #   | Issue                        | Status                                                              |
+| --- | ---------------------------- | ------------------------------------------------------------------- |
+| 1   | No category / hub pages      | Done — 19 pages                                                     |
+| 2   | Only 14 real backlinks       | Not started (digital PR, not code)                                  |
+| 3   | Steam boilerplate on top     | Done — Mac verdict first, gated by report count                     |
+| 4   | Titles too long / duplicated | Done                                                                |
+| 5   | `/blog` broken               | Partly — unique title/description/canonical; still one 61-word post |
+| 6   | `/roadmap` 404               | **FALSE FINDING — withdrawn, see below**                            |
+| 7   | Meta descriptions over-long  | Done                                                                |
+| 8   | Filter URLs uncontrolled     | Done                                                                |
+| 9   | Sitemap incomplete           | Done                                                                |
+| 10  | JSON-LD client-side only     | Done                                                                |
+| 11  | Zero AI Overview citations   | Inputs shipped (3 + 10); citations now depend on Google             |
+| 12  | Six `<h1>` per page          | Done                                                                |
+| 13  | Page weight 528KB            | Not started                                                         |
+| 14  | 443 spam backlinks           | Decided: ignore. Manual-action check still outstanding              |
 
 Measured after the fixes:
 
@@ -87,21 +87,22 @@ https://www.clickrank.ai/is-domain-authority/
 
 ### 3. Steam boilerplate occupies the top of every game page
 
-**Evidence.** Measured across 10 pages: Steam text averages 25% of visible words but sits *first*.
+**Evidence.** Measured across 10 pages: Steam text averages 25% of visible words but sits _first_.
 Unique Mac data starts ~15% down. On thin pages it dominates: half-sword 308 of 381 words (81%),
 astroneer 317 of 485 (65%).
 
 **Verdict — MYTH CORRECTED.** There is **no duplicate content penalty**. Google has said so
 consistently for over a decade. What actually happens: Google picks one version and filters the
-rest, diluting signals. Duplicate text is not poison — it is *dead weight in the best real estate*,
+rest, diluting signals. Duplicate text is not poison — it is _dead weight in the best real estate_,
 and in 2026 it also influences which version AI Overviews and ChatGPT/Perplexity cite.
 
-**Also MYTH CORRECTED.** There is no minimum word count. Short is not thin; *valueless* is thin.
+**Also MYTH CORRECTED.** There is no minimum word count. Short is not thin; _valueless_ is thin.
 So deleting the Steam text to "avoid duplicate content" would be fixing a non-problem while
 gutting pages like half-sword (the #3 non-brand query, 2,666 impressions, position 7.4).
 
 **Fix.** Do not delete. Demote below the Mac data, truncate to 2–3 sentences behind a "Read more",
 and auto-generate a unique first paragraph from the existing review database:
+
 > "Trackmania runs Excellent on Apple Silicon through CrossOver. Based on 8 reports averaging
 > 4.6/5 across M1 to M4 Pro. Best results with DXMT at Ultra; D3DMetal fails to load Ubisoft overlays."
 
@@ -110,12 +111,12 @@ use definitive language.
 
 **GATE THIS — do not generate it for all 1,572 games.** A 40-game spread sample of the sitemap found:
 
-| Reports per game | Share |
-|---|---|
-| 0 | 0% |
-| 1–2 | **78%** |
-| 3+ | 23% |
-| 3+ *and* ≥50% FPS filled | **18%** |
+| Reports per game         | Share   |
+| ------------------------ | ------- |
+| 0                        | 0%      |
+| 1–2                      | **78%** |
+| 3+                       | 23%     |
+| 3+ _and_ ≥50% FPS filled | **18%** |
 
 Median game has **1 report**. Across games with any report, FPS is filled on 62%, resolution 55%,
 RAM 64%. Generating a confident verdict paragraph from a single anonymous report — then shipping it
@@ -125,6 +126,7 @@ patterns are "heavily templated pages with only token swaps" and "thin or low-va
 minimal main content."
 
 **Rules.**
+
 - ≥3 reports with specs → generate the confident verdict paragraph.
 - 1–2 reports → state it plainly instead: "One report: CrossOver 25.0, M1 Air, playable, no FPS
   recorded." Honest, still unique text, no invented authority.
@@ -148,7 +150,7 @@ https://cxl.com/blog/google-ai-overview-citation-sources/
 ### 4. Titles too long, and duplicated across pages
 
 **Evidence.** Game page title = 87 chars. Worse: `/`, `/blog` and `/contributors` all serve the
-*identical* title, "MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks".
+_identical_ title, "MacGamingDB | Apple Silicon Mac Games – Compatibility & Benchmarks".
 
 **Verdict — real.** Optimal is 50–60 chars / ~600px. Google's cut is pixel width, not character
 count. Google rewrote ~76% of titles in Q1 2025; titles of 51–55 chars had the **lowest** rewrite
@@ -234,12 +236,13 @@ server-rendered `<script type="application/ld+json">`. No `AggregateRating` desp
 (e.g. 3.7/5 from 45 reports).
 
 **Verdict — NUANCED; my earlier call was too harsh, then too dismissive.**
+
 - Structured data is **not a ranking factor**. Confirmed repeatedly by Google.
 - Googlebot **does** render client-side JSON-LD on a deferred pass. It is reaching Google — GSC
   shows 41,523 impressions with Product snippets.
 - **But** GPTBot, ClaudeBot and PerplexityBot are plain HTTP crawlers that do **not** execute JS.
   Client-side JSON-LD is invisible to every AI crawler.
-- And the site's existing rich results *underperform*: Product snippets 1.81% CTR vs 3.65% for
+- And the site's existing rich results _underperform_: Product snippets 1.81% CTR vs 3.65% for
   plain results. So do not expect a CTR win.
 
 **Fix.** Low priority for Google. Worth doing for AI visibility — see issue 11.
@@ -308,6 +311,7 @@ Source: https://whitelabelcoders.com/blog/how-important-are-core-web-vitals-for-
 carry an identical fake testimonial naming "SEOExpress.org".
 
 **Verdict — IGNORE. Do not disavow.**
+
 - Timing rules it out as the cause of the Dec 2025–Jan 2026 crash; the spam began May 2026.
 - No observable harm: Jul 2026 (2,407 clicks) and Aug 2026 (2,440) were the best months on record,
   during the heaviest blasting.
@@ -328,4 +332,4 @@ Source: https://almcorp.com/blog/google-disavow-tool/
 - **robots.txt is correct** and explicitly welcomes AI crawlers.
 - **Ahrefs is blind to this niche.** It reports 23 keywords / 7 monthly visits against GSC's
   1,000+ keywords and ~2,400 monthly clicks. Its keyword database does not carry queries this
-  long-tail. Use `docs/keyword-gap.md` instead. Ahrefs remains trustworthy for *links*.
+  long-tail. Use `docs/keyword-gap.md` instead. Ahrefs remains trustworthy for _links_.

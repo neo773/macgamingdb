@@ -30,9 +30,7 @@ export const CriticScoreBadge = ({
     <div
       className={`inline-flex items-baseline gap-2 rounded-lg border bg-white/5 px-3 py-2 ${toneFor(criticRating)}`}
     >
-      <span className="text-lg font-semibold tabular-nums">
-        {criticRating}
-      </span>
+      <span className="text-lg font-semibold tabular-nums">{criticRating}</span>
       <span className="text-xs text-gray-400">
         critic score from {criticRatingCount}{' '}
         {criticRatingCount === 1 ? 'review' : 'reviews'} · via IGDB

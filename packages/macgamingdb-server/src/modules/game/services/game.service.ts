@@ -108,10 +108,7 @@ export class GameService {
       })
       .from(games)
       .where(
-        and(
-          isNotNull(games.aggregatedPerformance),
-          buildGenreCondition(genre),
-        ),
+        and(isNotNull(games.aggregatedPerformance), buildGenreCondition(genre)),
       )
       .groupBy(games.aggregatedPerformance);
 

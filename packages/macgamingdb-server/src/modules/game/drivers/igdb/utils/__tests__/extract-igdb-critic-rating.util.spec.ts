@@ -22,15 +22,17 @@ describe('extractIgdbCriticRating', () => {
   });
 
   it('should return null when the count is missing', () => {
-    expect(
-      extractIgdbCriticRating({ aggregated_rating: 91 }),
-    ).toEqual({ criticRating: null, criticRatingCount: null });
+    expect(extractIgdbCriticRating({ aggregated_rating: 91 })).toEqual({
+      criticRating: null,
+      criticRatingCount: null,
+    });
   });
 
   it('should return null when the rating is missing', () => {
-    expect(
-      extractIgdbCriticRating({ aggregated_rating_count: 5 }),
-    ).toEqual({ criticRating: null, criticRatingCount: null });
+    expect(extractIgdbCriticRating({ aggregated_rating_count: 5 })).toEqual({
+      criticRating: null,
+      criticRatingCount: null,
+    });
   });
 
   it('should return null when the payload carries neither field', () => {

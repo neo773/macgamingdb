@@ -35,7 +35,6 @@ export const createFilterConfig = ({
   const genre = genreParam || DEFAULT_GENRE_FILTER;
 
   const config: FilterConfig = {
-
     limit: HOME_PAGE_SIZE,
     performance,
   };

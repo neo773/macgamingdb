@@ -65,10 +65,7 @@ const MacGamesPage = async () => {
           <h2 className="mb-6 text-xl font-semibold text-gray-200">
             All games
           </h2>
-          <CategoryGameGrid
-            category={{}}
-            initialGamesPage={initialGamesPage}
-          />
+          <CategoryGameGrid category={{}} initialGamesPage={initialGamesPage} />
         </div>
       </Container>
       <Footer />

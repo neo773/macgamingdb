@@ -3,9 +3,9 @@ import type { CanonicalGenre } from '../types/CanonicalGenre';
 export const GENRE_ALIASES: Record<string, CanonicalGenre> = {
   action: 'Action',
   azione: 'Action',
-  'ação': 'Action',
-  'экшены': 'Action',
-  '액션': 'Action',
+  ação: 'Action',
+  экшены: 'Action',
+  액션: 'Action',
   "hack and slash/beat 'em up": 'Action',
 
   adventure: 'Adventure',
@@ -20,7 +20,7 @@ export const GENRE_ALIASES: Record<string, CanonicalGenre> = {
   occasionnel: 'Casual',
 
   indie: 'Indie',
-  '인디': 'Indie',
+  인디: 'Indie',
 
   mmo: 'MMO',
   'massively multiplayer': 'MMO',
@@ -42,7 +42,7 @@ export const GENRE_ALIASES: Record<string, CanonicalGenre> = {
   simulator: 'Simulation',
   simulazione: 'Simulation',
   simulationen: 'Simulation',
-  '시뮬레이션': 'Simulation',
+  시뮬레이션: 'Simulation',
 
   sports: 'Sports',
   sport: 'Sports',
@@ -50,6 +50,6 @@ export const GENRE_ALIASES: Record<string, CanonicalGenre> = {
   strategy: 'Strategy',
   strategia: 'Strategy',
   strategie: 'Strategy',
-  'stratégie': 'Strategy',
+  stratégie: 'Strategy',
   'turn-based strategy (tbs)': 'Strategy',
 };
