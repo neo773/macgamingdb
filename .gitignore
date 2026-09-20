@@ -58,3 +58,9 @@ packages/macgamingdb-server/prisma/prod-migration-test.db
 packages/*/dist/
 /dist/
 .vinext/
+
+# PM2 deploy descriptor (contains prod host IP; deploy runs locally, never committed)
+ecosystem.config.cjs
+.env.prod
+findings/
+.deepsec
