@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { eq } from 'drizzle-orm';
+import { asc, eq, gt } from 'drizzle-orm';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { normalizeGenres } from 'macgamingdb-shared/utils/normalizeGenres';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
@@ -11,6 +11,8 @@ import { createLogger } from '../../../engine/core-modules/logger/create-logger.
 const logger = createLogger('BackfillGameGenres');
 
 const SAMPLE_SIZE = 10;
+const READ_BATCH_SIZE = 5000;
+const PROGRESS_INTERVAL = 20000;
 
 type BackfillGameGenresOptions = {
   dryRun?: boolean;
@@ -32,24 +34,44 @@ export class BackfillGameGenresCommand extends CommandRunner {
   ): Promise<void> {
     const dryRun = options?.dryRun ?? false;
 
-    const allGames = await this.db
-      .select({ id: games.id, name: games.name, genres: games.genres })
-      .from(games);
+    const changes: Array<{
+      id: string;
+      name: string | null;
+      before: string[];
+      after: string[];
+    }> = [];
+    let scannedCount = 0;
+    let lastSeenId = '';
 
-    logger.log(`Scanning ${allGames.length} games`);
+    for (;;) {
+      const batch = await this.db
+        .select({ id: games.id, name: games.name, genres: games.genres })
+        .from(games)
+        .where(gt(games.id, lastSeenId))
+        .orderBy(asc(games.id))
+        .limit(READ_BATCH_SIZE);
 
-    const changes = allGames
-      .map((game) => ({
-        id: game.id,
-        name: game.name,
-        before: game.genres ?? [],
-        after: normalizeGenres(game.genres ?? []),
-      }))
-      .filter(
-        (change) =>
-          JSON.stringify(change.before) !== JSON.stringify(change.after),
-      );
+      if (!isNonEmptyArray(batch)) {
+        break;
+      }
 
+      scannedCount += batch.length;
+      lastSeenId = batch[batch.length - 1].id;
+
+      for (const game of batch) {
+        const before = game.genres ?? [];
+        const after = normalizeGenres(before);
+        if (JSON.stringify(before) !== JSON.stringify(after)) {
+          changes.push({ id: game.id, name: game.name, before, after });
+        }
+      }
+
+      if (scannedCount % PROGRESS_INTERVAL === 0) {
+        logger.log(`Scanned ${scannedCount} games`);
+      }
+    }
+
+    logger.log(`Scanned ${scannedCount} games`);
     logger.log(`${changes.length} games need their genres rewritten`);
 
     const emptied = changes.filter((change) => !isNonEmptyArray(change.after));
