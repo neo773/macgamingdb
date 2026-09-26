@@ -17,6 +17,8 @@ const SEED_PATH = path.join(
   '..',
   '..',
   '..',
+  '..',
+  'src',
   'database',
   'seeds',
   'mac-configs.json',
