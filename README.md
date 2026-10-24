@@ -47,4 +47,4 @@ Edit `packages/macgamingdb-server/src/database/schema.ts`, then `bun run db:gene
 
 ## Deployment
 
-Coolify runs `docker-compose.yml` from this repo: an internal-only `api` service (`Dockerfile.api`) and the public `web` service (`Dockerfile.web`), both on `node:22-slim`. The api container self-migrates on boot and refuses to serve if validation fails. Push to `master` → Coolify builds and deploys both.
+Coolify runs `docker-compose.yml` from this repo: an internal-only `api` service (`Dockerfile.api`) and the public `web` service (`Dockerfile.web`), both on `node:26.12.1-slim`. The api container self-migrates on boot and refuses to serve if validation fails. Push to `master` → Coolify builds and deploys both.
