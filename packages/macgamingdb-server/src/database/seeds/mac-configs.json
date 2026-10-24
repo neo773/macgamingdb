@@ -804,6 +804,18 @@
     "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M5 Pro 18 CPU/20 GPU 14\",\"identifier\":\"Mac17,9\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":18,\"gpuCores\":20,\"year\":2026,\"ram\":64}"
   },
   {
+    "identifier": "Mac18,5-M6-BASE-12-12-16-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M6 12 CPU/12 GPU 2026\",\"identifier\":\"Mac18,5\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":16}"
+  },
+  {
+    "identifier": "Mac18,5-M6-BASE-12-12-24-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M6 12 CPU/12 GPU 2026\",\"identifier\":\"Mac18,5\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "Mac18,5-M6-BASE-12-12-32-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M6 12 CPU/12 GPU 2026\",\"identifier\":\"Mac18,5\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":32}"
+  },
+  {
     "identifier": "MacBookAir10,1-M1-BASE-8-7-16-2020",
     "metadata": "{\"family\":\"MacBookAir\",\"model\":\"MacBook Air M1 8 CPU/7 GPU 13\",\"identifier\":\"MacBookAir10,1\",\"chip\":\"M1\",\"chipVariant\":\"BASE\",\"cpuCores\":8,\"gpuCores\":7,\"year\":2020,\"ram\":16}"
   },
