@@ -112,25 +112,26 @@ jobs:
             api.github.com:443
             objects.githubusercontent.com:443
             results.receiver.actions.githubusercontent.com:443
-            ${{ secrets.COOLIFY_EGRESS_ENDPOINT }}
+            ${{ secrets.DEPLOY_SSH_HOST }}:69
 
       - name: Trigger deployment
         env:
-          COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
-          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
-          COOLIFY_APP_UUID: ${{ secrets.COOLIFY_APP_UUID }}
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
         run: |
           set -euo pipefail
-          response=$(curl --silent --show-error \
-            --max-time 60 \
-            --write-out '\n%{http_code}' \
-            --request POST \
-            --header "Authorization: Bearer ${COOLIFY_TOKEN}" \
-            "${COOLIFY_URL}/api/v1/deploy?uuid=${COOLIFY_APP_UUID}")
-          status=$(printf '%s' "${response}" | tail -n 1)
-          body=$(printf '%s' "${response}" | sed '$d')
-          echo "Coolify responded ${status}: ${body}"
-          if [ "${status}" != "200" ]; then
-            echo "::error::Coolify deploy request failed (HTTP ${status})"
-            exit 1
-          fi
+          umask 077
+          key_file="${RUNNER_TEMP}/deploy_key"
+          known_hosts_file="${RUNNER_TEMP}/known_hosts"
+          printf '%s\n' "${DEPLOY_SSH_KEY}" > "${key_file}"
+          printf '%s\n' "${DEPLOY_SSH_KNOWN_HOSTS}" > "${known_hosts_file}"
+          trap 'rm -f "${key_file}" "${known_hosts_file}"' EXIT
+          ssh -i "${key_file}" \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="${known_hosts_file}" \
+            -o ConnectTimeout=30 \
+            -p 69 \
+            "deployer@${DEPLOY_SSH_HOST}" deploy
