@@ -71,6 +71,9 @@ export const RAM_LIMITS: RamLimitsStructure = {
     M4: {
       [ChipsetVariant.BASE]: 64,
     },
+    M6: {
+      [ChipsetVariant.BASE]: 32,
+    },
   },
   MacStudio: {
     M2: {
