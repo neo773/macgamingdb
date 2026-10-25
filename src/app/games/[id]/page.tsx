@@ -19,7 +19,9 @@ import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
 import { ExperienceReportsSection } from '@/modules/game/components/ExperienceReportsSection';
 import { GamePageError } from '@/modules/game/components/GamePageError';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
-import { isNonEmptyArray } from '@sniptt/guards';
+import { buildGameBackLink } from '@/modules/game/utils/buildGameBackLink';
+import { buildSearchQueryString } from '@/modules/search/utils/buildSearchQueryString';
+import { isNonEmptyArray, isNonEmptyString } from '@sniptt/guards';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
 
@@ -61,8 +63,15 @@ export const generateMetadata = async ({
   }
 };
 
-const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
+type GamePageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const GamePage = async ({ params, searchParams }: GamePageProps) => {
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
+  const backLink = buildGameBackLink({ searchParams: resolvedSearchParams });
   const helpers = await createServerHelpers();
 
   let data;
@@ -70,13 +79,19 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
     data = await helpers.game.getById.fetch({ id });
   } catch (error) {
     console.error('Error in server component:', error);
-    return <GamePageError />;
+    return <GamePageError backLink={backLink} />;
   }
 
   const { game, reviews, stats } = data;
 
   if (game.slug && id !== game.slug) {
-    permanentRedirect(`/games/${game.slug}`);
+    const queryString = buildSearchQueryString({
+      searchParams: resolvedSearchParams,
+    });
+    const redirectUrl = isNonEmptyString(queryString)
+      ? `/games/${game.slug}?${queryString}`
+      : `/games/${game.slug}`;
+    permanentRedirect(redirectUrl);
   }
 
   const identifier = game.slug ?? game.id;
@@ -93,11 +108,11 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <Container>
         <div className="mb-4">
           <Link
-            href="/"
+            href={backLink.href}
             className="text-blue-400 hover:text-blue-300 inline-flex items-center"
           >
             <ChevronLeft className="text-blue-400" />
-            Home
+            {backLink.label}
           </Link>
         </div>
 

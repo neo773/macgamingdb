@@ -18,7 +18,15 @@ export const useGameSearch = ({ onClear }: UseGameSearchOptions = {}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const urlQuery = searchParams.get('q') ?? '';
+  const [query, setQuery] = useState(urlQuery);
+  const [previousUrlQuery, setPreviousUrlQuery] = useState(urlQuery);
+
+  if (urlQuery !== previousUrlQuery) {
+    setPreviousUrlQuery(urlQuery);
+    setQuery(urlQuery);
+  }
+
   const [debouncedQuery] = useDebounce(query, 300);
 
   const { data, isLoading } = trpc.game.search.useQuery(

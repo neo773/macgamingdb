@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { type PerformanceRating } from 'macgamingdb-server/drizzle/types';
 import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { useState } from 'react';
 import { LogoIcon } from '@/modules/layout/components/LogoIcon';
+import { buildGameCardHref } from '../utils/buildGameCardHref';
 
 type GameCardGame = {
   ref: string;
@@ -15,12 +17,22 @@ type GameCardGame = {
   performanceRating?: PerformanceRating;
 };
 
-export const GameCard = ({ game }: { game: GameCardGame }) => {
+type GameCardProps = {
+  game: GameCardGame;
+};
+
+export const GameCard = ({ game }: GameCardProps) => {
   const [showFallback, setShowFallback] = useState(false);
+  const searchParams = useSearchParams();
+
+  const href = buildGameCardHref({
+    identifier: game.slug ?? game.ref,
+    searchParams,
+  });
 
   return (
     <Link
-      href={`/games/${game.slug ?? game.ref}`}
+      href={href}
       className="relative group cursor-pointer transition-transform duration-200 hover:scale-105 block"
     >
       <div className="aspect-[460/215] rounded-xl overflow-hidden relative ring-1 ring-gray-800 shadow-lg shadow-blue-900/20">

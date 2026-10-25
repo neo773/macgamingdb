@@ -4,19 +4,26 @@ import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { Header } from '@/modules/layout/components/Header';
 import { Footer } from '@/modules/layout/components/Footer';
 import { Container } from 'macgamingdb-ui/layout/Container';
+import { type GameBackLink } from '../types/GameBackLink';
 
-export const GamePageError = () => {
+type GamePageErrorProps = {
+  backLink?: GameBackLink;
+};
+
+export const GamePageError = ({
+  backLink = { href: '/', label: 'Home' },
+}: GamePageErrorProps = {}) => {
   return (
     <div className="min-h-dvh flex flex-col bg-black">
       <Header />
       <Container>
         <div className="mb-4">
           <Link
-            href="/"
+            href={backLink.href}
             className="text-blue-400 hover:text-blue-300 inline-flex items-center"
           >
             <ChevronLeft className="text-blue-400" />
-            Home
+            {backLink.label}
           </Link>
         </div>
 
