@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Activity, BookOpen, Github, Map, Trophy } from 'lucide-react';
+import { Activity, BookOpen, Github, Mail, Map, Trophy } from 'lucide-react';
 import { LogoIcon } from './LogoIcon';
 
 export const Footer = () => {
@@ -47,6 +47,13 @@ export const Footer = () => {
               >
                 <Map className="size-3.5" />
                 Roadmap
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm text-gray-500 hover:text-white transition-colors w-fit flex items-center gap-2"
+              >
+                <Mail className="size-3.5" />
+                Contact
               </Link>
             </nav>
           </div>
