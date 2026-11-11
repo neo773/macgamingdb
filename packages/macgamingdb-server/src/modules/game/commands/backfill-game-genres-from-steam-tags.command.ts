@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { and, eq, isNotNull, type SQL } from 'drizzle-orm';
+import { and, asc, eq, gt, isNotNull, type SQL } from 'drizzle-orm';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { deriveGenresFromSteamTags } from 'macgamingdb-shared/utils/deriveGenresFromSteamTags';
 import { DRIZZLE_CLIENT } from '../../../database/constants/drizzle-client.constant';
@@ -11,7 +11,7 @@ import { SteamStoreTagsService } from '../drivers/steam/services/steam-store-tag
 
 const logger = createLogger('BackfillGameGenresFromSteamTags');
 
-const FETCH_CHUNK_SIZE = 1000;
+const PAGE_SIZE = 1000;
 const SAMPLE_SIZE = 10;
 
 type BackfillGameGenresFromSteamTagsOptions = {
@@ -39,24 +39,6 @@ export class BackfillGameGenresFromSteamTagsCommand extends CommandRunner {
     const dryRun = options?.dryRun ?? false;
     const reviewedOnly = options?.reviewedOnly ?? false;
 
-    const conditions: SQL[] = [eq(gameSourceLinks.source, 'steam')];
-    if (reviewedOnly) {
-      conditions.push(isNotNull(games.aggregatedPerformance));
-    }
-
-    const linkedGames = await this.db
-      .select({
-        gameId: games.id,
-        name: games.name,
-        genres: games.genres,
-        steamAppId: gameSourceLinks.externalId,
-      })
-      .from(games)
-      .innerJoin(gameSourceLinks, eq(gameSourceLinks.gameId, games.id))
-      .where(and(...conditions));
-
-    logger.log(`Found ${linkedGames.length} Steam-linked games`);
-
     const changes: Array<{
       gameId: string;
       name: string | null;
@@ -64,19 +46,44 @@ export class BackfillGameGenresFromSteamTagsCommand extends CommandRunner {
       after: string[];
     }> = [];
     let untaggedCount = 0;
+    let scannedCount = 0;
+    let lastSeenGameId = '';
 
-    for (
-      let offset = 0;
-      offset < linkedGames.length;
-      offset += FETCH_CHUNK_SIZE
-    ) {
-      const chunk = linkedGames.slice(offset, offset + FETCH_CHUNK_SIZE);
+    for (;;) {
+      const conditions: SQL[] = [
+        eq(gameSourceLinks.source, 'steam'),
+        gt(games.id, lastSeenGameId),
+      ];
+      if (reviewedOnly) {
+        conditions.push(isNotNull(games.aggregatedPerformance));
+      }
+
+      const page = await this.db
+        .select({
+          gameId: games.id,
+          name: games.name,
+          genres: games.genres,
+          steamAppId: gameSourceLinks.externalId,
+        })
+        .from(games)
+        .innerJoin(gameSourceLinks, eq(gameSourceLinks.gameId, games.id))
+        .where(and(...conditions))
+        .orderBy(asc(games.id))
+        .limit(PAGE_SIZE);
+
+      if (!isNonEmptyArray(page)) {
+        break;
+      }
+
+      scannedCount += page.length;
+      lastSeenGameId = page[page.length - 1].gameId;
+
       const tagVotesByAppId =
         await this.steamStoreTagsService.fetchTagVotesByAppIds({
-          steamAppIds: chunk.map((linkedGame) => linkedGame.steamAppId),
+          steamAppIds: page.map((linkedGame) => linkedGame.steamAppId),
         });
 
-      for (const linkedGame of chunk) {
+      for (const linkedGame of page) {
         const before = linkedGame.genres ?? [];
         const after = deriveGenresFromSteamTags({
           tagVotes: tagVotesByAppId.get(linkedGame.steamAppId) ?? {},
@@ -97,9 +104,7 @@ export class BackfillGameGenresFromSteamTagsCommand extends CommandRunner {
         }
       }
 
-      logger.log(
-        `Fetched tags for ${Math.min(offset + FETCH_CHUNK_SIZE, linkedGames.length)}/${linkedGames.length}`,
-      );
+      logger.log(`Fetched tags for ${scannedCount} Steam-linked games`);
     }
 
     logger.log(
