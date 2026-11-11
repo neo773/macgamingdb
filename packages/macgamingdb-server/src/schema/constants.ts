@@ -41,7 +41,7 @@ export const CHIPSET_VARIANTS: Record<
   M2: ['BASE', 'PRO', 'MAX', 'ULTRA'],
   M3: ['BASE', 'PRO', 'MAX', 'ULTRA'],
   M4: ['BASE', 'PRO', 'MAX'],
-  M5: ['BASE', 'PRO', 'MAX'],
+  M5: ['BASE', 'PRO', 'MAX', 'ULTRA'],
   M6: ['BASE'],
 };
 

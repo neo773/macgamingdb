@@ -660,6 +660,78 @@
     "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M4 Max 16 CPU/40 GPU\",\"identifier\":\"Mac16,9\",\"chip\":\"M4\",\"chipVariant\":\"MAX\",\"cpuCores\":16,\"gpuCores\":40,\"year\":2025,\"ram\":64}"
   },
   {
+    "identifier": "Mac17,14-M5-MAX-18-32-128-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/32 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":32,\"year\":2026,\"ram\":128}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-32-36-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/32 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":32,\"year\":2026,\"ram\":36}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-32-48-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/32 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":32,\"year\":2026,\"ram\":48}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-32-64-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/32 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":32,\"year\":2026,\"ram\":64}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-40-128-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/40 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":40,\"year\":2026,\"ram\":128}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-40-48-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/40 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":40,\"year\":2026,\"ram\":48}"
+  },
+  {
+    "identifier": "Mac17,14-M5-MAX-18-40-64-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Max 18 CPU/40 GPU\",\"identifier\":\"Mac17,14\",\"chip\":\"M5\",\"chipVariant\":\"MAX\",\"cpuCores\":18,\"gpuCores\":40,\"year\":2026,\"ram\":64}"
+  },
+  {
+    "identifier": "Mac17,15-M5-ULTRA-30-64-256-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Ultra 30 CPU/64 GPU\",\"identifier\":\"Mac17,15\",\"chip\":\"M5\",\"chipVariant\":\"ULTRA\",\"cpuCores\":30,\"gpuCores\":64,\"year\":2026,\"ram\":256}"
+  },
+  {
+    "identifier": "Mac17,15-M5-ULTRA-30-64-96-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Ultra 30 CPU/64 GPU\",\"identifier\":\"Mac17,15\",\"chip\":\"M5\",\"chipVariant\":\"ULTRA\",\"cpuCores\":30,\"gpuCores\":64,\"year\":2026,\"ram\":96}"
+  },
+  {
+    "identifier": "Mac17,15-M5-ULTRA-36-80-256-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Ultra 36 CPU/80 GPU\",\"identifier\":\"Mac17,15\",\"chip\":\"M5\",\"chipVariant\":\"ULTRA\",\"cpuCores\":36,\"gpuCores\":80,\"year\":2026,\"ram\":256}"
+  },
+  {
+    "identifier": "Mac17,15-M5-ULTRA-36-80-512-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Ultra 36 CPU/80 GPU\",\"identifier\":\"Mac17,15\",\"chip\":\"M5\",\"chipVariant\":\"ULTRA\",\"cpuCores\":36,\"gpuCores\":80,\"year\":2026,\"ram\":512}"
+  },
+  {
+    "identifier": "Mac17,15-M5-ULTRA-36-80-96-2026",
+    "metadata": "{\"family\":\"MacStudio\",\"model\":\"Mac Studio M5 Ultra 36 CPU/80 GPU\",\"identifier\":\"Mac17,15\",\"chip\":\"M5\",\"chipVariant\":\"ULTRA\",\"cpuCores\":36,\"gpuCores\":80,\"year\":2026,\"ram\":96}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-15-16-24-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 15 CPU/16 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":15,\"gpuCores\":16,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-15-16-48-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 15 CPU/16 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":15,\"gpuCores\":16,\"year\":2026,\"ram\":48}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-15-16-64-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 15 CPU/16 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":15,\"gpuCores\":16,\"year\":2026,\"ram\":64}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-18-20-24-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 18 CPU/20 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":18,\"gpuCores\":20,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-18-20-48-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 18 CPU/20 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":18,\"gpuCores\":20,\"year\":2026,\"ram\":48}"
+  },
+  {
+    "identifier": "Mac17,16-M5-PRO-18-20-64-2026",
+    "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M5 Pro 18 CPU/20 GPU 2026\",\"identifier\":\"Mac17,16\",\"chip\":\"M5\",\"chipVariant\":\"PRO\",\"cpuCores\":18,\"gpuCores\":20,\"year\":2026,\"ram\":64}"
+  },
+  {
     "identifier": "Mac17,2-M5-BASE-10-10-16-2025",
     "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M5 10 CPU/10 GPU 14\",\"identifier\":\"Mac17,2\",\"chip\":\"M5\",\"chipVariant\":\"BASE\",\"cpuCores\":10,\"gpuCores\":10,\"year\":2025,\"ram\":16}"
   },
@@ -904,6 +976,18 @@
     "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M1 Max 10 CPU/32 GPU 14\",\"identifier\":\"MacBookPro18,4\",\"chip\":\"M1\",\"chipVariant\":\"MAX\",\"cpuCores\":10,\"gpuCores\":32,\"year\":2021,\"ram\":64}"
   },
   {
+    "identifier": "MacBookProPending-M6-BASE-12-12-16-2026",
+    "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M6 12 CPU/12 GPU 14\",\"identifier\":\"MacBookProPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":16}"
+  },
+  {
+    "identifier": "MacBookProPending-M6-BASE-12-12-24-2026",
+    "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M6 12 CPU/12 GPU 14\",\"identifier\":\"MacBookProPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "MacBookProPending-M6-BASE-12-12-32-2026",
+    "metadata": "{\"family\":\"MacBookPro\",\"model\":\"MacBook Pro M6 12 CPU/12 GPU 14\",\"identifier\":\"MacBookProPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":32}"
+  },
+  {
     "identifier": "Macmini9,1-M1-BASE-8-8-16-2020",
     "metadata": "{\"family\":\"MacMini\",\"model\":\"Mac mini M1 8 CPU/8 GPU 2020\",\"identifier\":\"Macmini9,1\",\"chip\":\"M1\",\"chipVariant\":\"BASE\",\"cpuCores\":8,\"gpuCores\":8,\"year\":2020,\"ram\":16}"
   },
@@ -926,5 +1010,25 @@
   {
     "identifier": "iMac21,2-M1-BASE-8-7-8-2021",
     "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M1 8 CPU/7 GPU/2 Ports 24\",\"identifier\":\"iMac21,2\",\"chip\":\"M1\",\"chipVariant\":\"BASE\",\"cpuCores\":8,\"gpuCores\":7,\"ram\":8,\"year\":2021}"
+  },
+  {
+    "identifier": "iMacPending-M6-BASE-10-10-16-2026",
+    "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M6 10 CPU/10 GPU/2 Ports 24\",\"identifier\":\"iMacPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":10,\"gpuCores\":10,\"year\":2026,\"ram\":16}"
+  },
+  {
+    "identifier": "iMacPending-M6-BASE-10-10-24-2026",
+    "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M6 10 CPU/10 GPU/2 Ports 24\",\"identifier\":\"iMacPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":10,\"gpuCores\":10,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "iMacPending-M6-BASE-12-12-16-2026",
+    "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M6 12 CPU/12 GPU/4 Ports 24\",\"identifier\":\"iMacPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":16}"
+  },
+  {
+    "identifier": "iMacPending-M6-BASE-12-12-24-2026",
+    "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M6 12 CPU/12 GPU/4 Ports 24\",\"identifier\":\"iMacPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":24}"
+  },
+  {
+    "identifier": "iMacPending-M6-BASE-12-12-32-2026",
+    "metadata": "{\"family\":\"iMac\",\"model\":\"iMac M6 12 CPU/12 GPU/4 Ports 24\",\"identifier\":\"iMacPending\",\"chip\":\"M6\",\"chipVariant\":\"BASE\",\"cpuCores\":12,\"gpuCores\":12,\"year\":2026,\"ram\":32}"
   }
 ]
