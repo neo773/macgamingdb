@@ -35,7 +35,7 @@ describe('getChipsetCombinations', () => {
 
   it('includes all chipset generations', () => {
     const combinations = getChipsetCombinations();
-    const chipsets = ['A18', 'M1', 'M2', 'M3', 'M4', 'M5'];
+    const chipsets = ['A18', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6'];
 
     for (const chipset of chipsets) {
       const hasChipset = combinations.some((combination) =>
