@@ -4,6 +4,7 @@ import { GameService } from './services/game.service';
 import { GameSearchService } from './services/game-search.service';
 import { GameMaterializationService } from './services/game-materialization.service';
 import { SteamGameSourceService } from './drivers/steam/services/steam-game-source.service';
+import { SteamStoreTagsService } from './drivers/steam/services/steam-store-tags.service';
 import { IgdbApiClientService } from './drivers/igdb/services/igdb-api-client.service';
 import { IgdbGameSourceService } from './drivers/igdb/services/igdb-game-source.service';
 import { GameRouter } from './routers/game.router';
@@ -15,6 +16,7 @@ import { GameRouter } from './routers/game.router';
     GameSearchService,
     GameMaterializationService,
     SteamGameSourceService,
+    SteamStoreTagsService,
     IgdbApiClientService,
     IgdbGameSourceService,
     GameRouter,
