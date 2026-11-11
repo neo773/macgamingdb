@@ -1,0 +1,1 @@
+export const STEAM_STORE_ITEMS_TAG_COUNT = 20;
