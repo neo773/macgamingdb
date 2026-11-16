@@ -1,0 +1,1 @@
+export const CROSSOVER_DISCOUNT_PERCENT = 15;

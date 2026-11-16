@@ -19,6 +19,10 @@ import { SITE_URL } from '@/modules/layout/constants/SITE_URL';
 import { ExperienceReportsSection } from '@/modules/game/components/ExperienceReportsSection';
 import { GamePageError } from '@/modules/game/components/GamePageError';
 import { PriceDisplay } from '@/modules/game/components/PriceDisplay';
+import { CrossOverPitchCard } from '@/modules/affiliate/components/CrossOverPitchCard';
+import { buildCrossOverPitch } from '@/modules/affiliate/utils/buildCrossOverPitch';
+import { buildSteamLibraryCapsuleUrl } from '@/modules/game/utils/buildSteamLibraryCapsuleUrl';
+import { isDefined } from 'macgamingdb-shared/utils/isDefined';
 import { isNonEmptyArray } from '@sniptt/guards';
 
 export const revalidate = 31536000; // 1 year, revalidated on-demand via mutations
@@ -80,7 +84,7 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   const identifier = game.slug ?? game.id;
-  const hasReviews = isNonEmptyArray(reviews);
+  const crossOverPitch = buildCrossOverPitch({ reviews });
   const jsonLd = generateGameJsonLd(identifier, game, stats);
 
   return (
@@ -131,7 +135,21 @@ const GamePage = async ({ params }: { params: Promise<{ id: string }> }) => {
           gameId={identifier}
           gameName={game.name}
           reviews={reviews}
-          showCrossoverAffiliate={hasReviews}
+          promotion={
+            isDefined(crossOverPitch) && (
+              <CrossOverPitchCard
+                gameId={identifier}
+                gameName={game.name}
+                gameArtworkUrls={[
+                  buildSteamLibraryCapsuleUrl({
+                    sourceLinks: game.sourceLinks,
+                  }),
+                  game.headerImage ?? undefined,
+                ].filter(isDefined)}
+                pitch={crossOverPitch}
+              />
+            )
+          }
         />
       </Container>
       <Footer />
