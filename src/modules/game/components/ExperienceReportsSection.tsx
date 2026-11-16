@@ -1,8 +1,8 @@
+import { type ReactNode } from 'react';
 import { isNonEmptyArray } from '@sniptt/guards';
 import { Card, CardContent } from 'macgamingdb-ui/display/Card';
 import { CreateReviewDialog } from '@/modules/review/components/CreateReviewDialog';
 import { ReviewCard } from '@/modules/review/components/ReviewCard';
-import { PromotionalBannerCrossOver } from '@/app/games/[id]/PromotionalBannerCrossOver';
 import {
   type GameReview,
   type MacConfig,
@@ -17,14 +17,14 @@ interface ExperienceReportsSectionProps {
   gameId: string;
   gameName: string;
   reviews: ReviewWithMacConfig[] | null;
-  showCrossoverAffiliate: boolean;
+  promotion?: ReactNode;
 }
 
 export const ExperienceReportsSection = ({
   gameId,
   gameName,
   reviews,
-  showCrossoverAffiliate,
+  promotion,
 }: ExperienceReportsSectionProps) => {
   const hasReviews = isNonEmptyArray(reviews);
 
@@ -39,9 +39,10 @@ export const ExperienceReportsSection = ({
         )}
       </div>
 
+      {promotion && <div className="mb-6">{promotion}</div>}
+
       {hasReviews ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {showCrossoverAffiliate && <PromotionalBannerCrossOver />}
           {reviews.map((review) => (
             <ReviewCard review={review} key={review.id} />
           ))}

@@ -1,0 +1,1 @@
+export const CROSSOVER_PROMO_CODE = 'MGDB15';

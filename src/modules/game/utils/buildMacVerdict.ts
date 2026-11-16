@@ -1,6 +1,7 @@
 import { type RouterOutputs } from '@/modules/trpc/types/RouterOutputs';
 import { type MacVerdict } from '@/modules/game/types/MacVerdict';
 import { type PlayMethodSummary } from '@/modules/game/types/PlayMethodSummary';
+import { computeMedian } from '@/modules/game/utils/computeMedian';
 
 const MIN_REPORTS_FOR_CONFIDENCE = 3;
 const MIN_FPS_COVERAGE = 0.5;
@@ -24,17 +25,6 @@ const formatChip = (review: Pick<GameReview, 'chipset' | 'chipsetVariant'>) =>
     ? review.chipset
     : `${review.chipset} ${review.chipsetVariant.charAt(0)}${review.chipsetVariant.slice(1).toLowerCase()}`;
 
-const medianOf = (values: number[]): number | undefined => {
-  if (values.length === 0) {
-    return undefined;
-  }
-  const sorted = [...values].sort((first, second) => first - second);
-  const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0
-    ? Math.round((sorted[middle - 1] + sorted[middle]) / 2)
-    : sorted[middle];
-};
-
 const summarizeMethod = (
   playMethod: string,
   methodReviews: GameReview[],
@@ -50,7 +40,7 @@ const summarizeMethod = (
     playMethod,
     reportCount: methodReviews.length,
     bestPerformance: best.performance,
-    medianFps: medianOf(
+    medianFps: computeMedian(
       methodReviews
         .map((review) => review.fps)
         .filter((fps): fps is number => fps !== null),

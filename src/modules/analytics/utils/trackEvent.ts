@@ -15,6 +15,13 @@ type AnalyticsEvent =
   | { name: 'search-performed' }
   | { name: 'review-submitted'; data: { gameId: string } }
   | { name: 'ggdeals-click'; data: { gameId: string } }
+  | {
+      name: 'crossover-click';
+      data: {
+        gameId: string;
+        action: 'start-trial' | 'send-to-mac' | 'copy-code';
+      };
+    }
   | { name: 'steam-library-link-click' };
 
 export const trackEvent = (event: AnalyticsEvent) => {
